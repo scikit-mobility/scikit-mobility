@@ -1,0 +1,37 @@
+# Sphinx documentation
+doc/generated/
+doc/_static/
+doc/_templates/
+doc/_build/
+
+.ipynb_checkpoints
+
+*.pyc
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+skmob_dev/
+
+# mkdocs documentation
+/site
+
+# settings
+settings.py
+
+#pycharm
+.idea/*
+__pycache__
+
+.DS_Store
+
