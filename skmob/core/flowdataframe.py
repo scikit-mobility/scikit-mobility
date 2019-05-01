@@ -81,6 +81,7 @@ class FlowDataFrame(pd.DataFrame):
                 if tessellation.crs is None:
                     warn("The tessellation crs is None. It will be set to the default crs WGS84 (EPSG:4326).")
 
+
                 # Check consistency
                 origin = self[constants.ORIGIN]
                 destination = self[constants.DESTINATION]

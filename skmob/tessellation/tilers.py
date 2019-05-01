@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 import math
 import geopandas as gpd
-import shapely
+from shapely.geometry import Polygon, Point
+from shapely.ops import cascaded_union
 from ..utils import constants, utils
 import numpy as np
+
 
 class TessellationTilers:
 
@@ -56,7 +58,7 @@ class VoronoiTessellationTiler(TessellationTiler):
 
             if isinstance(points, gpd.GeoDataFrame):
 
-                if not all(isinstance(x, shapely.geometry.Point) for x in points.geometry):
+                if not all(isinstance(x, Point) for x in points.geometry):
                     raise ValueError("Not valid points object. Accepted type is GeoDataFrame.")
 
         return self._build(points, crs)
@@ -87,16 +89,22 @@ class SquaredTessellationTiler(TessellationTiler):
                 # Try to obatain the base shape from OSMNX
                 base_shape = utils.bbox_from_name(base_shape)
 
-            elif isinstance(base_shape, gpd.GeoDataFrame):
+            elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
 
-                if all(isinstance(x, shapely.geometry.Point) for x in base_shape.geometry):
+                if all(isinstance(x, Point) for x in base_shape.geometry):
                     # Build a base shape that contains all the points in the given geodataframe
                     base_shape = utils.bbox_from_points(base_shape)
 
-                elif not all(isinstance(x, shapely.geometry.Polygon) for x in base_shape.geometry):
-                    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
+                elif all(isinstance(x, Polygon) for x in base_shape.geometry) and len(base_shape) > 1:
+
+                    # Merge all the polygons
+                    polygons = base_shape.geometry.values
+                    base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
+
+                #elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
+                #    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
             else:
-                raise ValueError("Not valid base_shape object. Accepted types are str or GeoDataFrame.")
+                raise ValueError("Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
 
         return self._build(base_shape, meters, crs)
 
@@ -139,7 +147,7 @@ class SquaredTessellationTiler(TessellationTiler):
                 polygon_desc = {}
 
                 # Create shape (polygon)
-                p = shapely.geometry.Polygon([(x1, y1), (x1, y2), (x2, y2), (x2, y1)])
+                p = Polygon([(x1, y1), (x1, y2), (x2, y2), (x2, y1)])
 
                 # s = boros_shape.intersection(p)
                 s = shape.intersects(p)
@@ -150,7 +158,6 @@ class SquaredTessellationTiler(TessellationTiler):
                     # shape.intersection(p) ATTENTION! If you use the intersection than the crawler fails!
                     polygon_desc['geometry'] = p
                     polygons.append(polygon_desc)
-
 
         gdf = gpd.GeoDataFrame(polygons, crs=tmp_crs)
         gdf = gdf.reset_index().rename(columns={"index": constants.TILE_ID})
