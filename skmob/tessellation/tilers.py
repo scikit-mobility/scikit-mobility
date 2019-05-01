@@ -147,7 +147,7 @@ class SquaredTessellationTiler(TessellationTiler):
                 polygon_desc = {}
 
                 # Create shape (polygon)
-                p = shapely.geometry.Polygon([(x1, y1), (x1, y2), (x2, y2), (x2, y1)])
+                p = Polygon([(x1, y1), (x1, y2), (x2, y2), (x2, y1)])
 
                 # s = boros_shape.intersection(p)
                 s = shape.intersects(p)
@@ -158,7 +158,6 @@ class SquaredTessellationTiler(TessellationTiler):
                     # shape.intersection(p) ATTENTION! If you use the intersection than the crawler fails!
                     polygon_desc['geometry'] = p
                     polygons.append(polygon_desc)
-
 
         gdf = gpd.GeoDataFrame(polygons, crs=tmp_crs)
         gdf = gdf.reset_index().rename(columns={"index": constants.TILE_ID})
