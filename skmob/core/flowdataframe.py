@@ -135,9 +135,11 @@ class FlowDataFrame(pd.DataFrame):
 
             # Step 2: map origin and destination points into the tessellation
 
-            origin = gpd.GeoDataFrame(df.copy(), geometry=gpd.points_from_xy(df[origin_lng], df[origin_lat]))
+            origin = gpd.GeoDataFrame(df.copy(), geometry=gpd.points_from_xy(df[origin_lng], df[origin_lat]),
+                                      crs=tessellation.crs)
             destination = gpd.GeoDataFrame(df.copy(),
-                                           geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]))
+                                           geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]),
+                                           crs=tessellation.crs)
 
             if all(isinstance(x, shapely.geometry.Polygon) for x in tessellation.geometry):
 
@@ -159,17 +161,9 @@ class FlowDataFrame(pd.DataFrame):
 
             elif all(isinstance(x, shapely.geometry.Point) for x in tessellation.geometry):
 
-                unary_union = tessellation.unary_union
+                df.loc[:, constants.ORIGIN] = utils.ckdnearest(origin, tessellation, 'tile_ID')
+                df.loc[:, constants.DESTINATION] = utils.ckdnearest(origin, tessellation, 'tile_ID')
 
-                origin.loc[:, constants.ORIGIN] = origin.apply(utils.nearest, geom_union=unary_union,
-                                                               df2=tessellation, src_column=constants.TILE_ID, axis=1)
-
-                destination.loc[:, constants.DESTINATION] = destination.apply(utils.nearest, geom_union=unary_union,
-                                                                              df2=tessellation,
-                                                                              src_column=constants.TILE_ID, axis=1)
-
-                df.loc[:, constants.ORIGIN] = origin[constants.TILE_ID]
-                df.loc[:, constants.DESTINATION] = destination[constants.TILE_ID]
                 df.drop([origin_lat, origin_lng, destination_lat, destination_lng], inplace=True, axis=1)
 
         # Step 3: call the constructor

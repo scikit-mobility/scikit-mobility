@@ -2,9 +2,10 @@ from ..utils import constants
 import pandas as pd
 import geopandas as gpd
 import shapely
+import numpy as np
 import os
 import errno
-from shapely.ops import nearest_points
+from scipy.spatial import cKDTree
 import osmnx
 from ..core.trajectorydataframe import TrajDataFrame
 
@@ -219,12 +220,16 @@ def bbox_from_name(area_name, crs=None):
     return boundary.to_crs(crs)
 
 
-def nearest(row, geom_union, df2, geom1_col='geometry', geom2_col='geometry', src_column=None):
+def ckdnearest(origin, tessellation, bcol):
 
-    """Find the nearest point and return the corresponding value from specified column."""
-    # Find the geometry that is closest
-    nearest = df2[geom2_col] == nearest_points(row[geom1_col], geom_union)[1]
+    # Convert to universal CRS to compute euclidean distance
+    gdA = origin.to_crs(constants.UNIVERSAL_CRS)
+    gdB = tessellation.to_crs(constants.UNIVERSAL_CRS)
 
-    # Get the corresponding value from df2 (matching is based on the geometry)
-    value = df2[nearest][src_column].get_values()[0]
-    return value
+    nA = np.array(list(zip(gdA.geometry.x, gdA.geometry.y)))
+    nB = np.array(list(zip(gdB.geometry.x, gdB.geometry.y)))
+
+    btree = cKDTree(nB)
+    dist, idx = btree.query(nA, k=1)
+
+    return gdB.loc[idx, bcol].values
