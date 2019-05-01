@@ -101,8 +101,8 @@ class SquaredTessellationTiler(TessellationTiler):
                     polygons = base_shape.geometry.values
                     base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
 
-                elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
-                    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
+                #elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
+                #    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
             else:
                 raise ValueError("Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
 
