@@ -104,7 +104,7 @@ class SquaredTessellationTiler(TessellationTiler):
                 elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
                     raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
             else:
-                raise ValueError("Not valid base_shape object. Accepted types are str or GeoDataFrame.")
+                raise ValueError("Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
 
         return self._build(base_shape, meters, crs)
 
