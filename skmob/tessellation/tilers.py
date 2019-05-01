@@ -58,7 +58,7 @@ class VoronoiTessellationTiler(TessellationTiler):
 
             if isinstance(points, gpd.GeoDataFrame):
 
-                if not all(isinstance(x, shapely.geometry.Point) for x in points.geometry):
+                if not all(isinstance(x, Point) for x in points.geometry):
                     raise ValueError("Not valid points object. Accepted type is GeoDataFrame.")
 
         return self._build(points, crs)
