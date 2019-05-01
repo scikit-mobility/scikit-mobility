@@ -81,12 +81,6 @@ class FlowDataFrame(pd.DataFrame):
         else:
             raise AttributeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
-        #elif isinstance(tessellation, base.Tessellation):
-        #    self._tessellation = tessellation
-        #elif isinstance(tessellation, gpd.GeoDataFrame):
-            # Create generic tessellation
-        #    self._tessellation = tessellation
-
         # TODO: Check tessellation consistency: all the IDs in the flowdataframe must appear in the tessellation
 
         if not isinstance(data, pd.core.internals.BlockManager):
