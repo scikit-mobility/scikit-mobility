@@ -169,7 +169,6 @@ class FlowDataFrame(pd.DataFrame):
         # Step 3: call the constructor
 
         if parameters is None:
-            # Init prop dictionary
             parameters = {'from_file': filename}
 
         return cls(df, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=flow, dates=dates,
