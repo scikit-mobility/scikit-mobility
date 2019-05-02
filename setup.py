@@ -3,7 +3,7 @@ from setuptools import setup
 long_description = open('README.md').read()
 
 DEPENDENCIES = ['numpy', 'pandas','geopandas', 'networkx', 'infomap', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
-                'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely']
+                'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely', 'geopy']
 
 TEST_DEPENDENCIES = [
     'hypothesis',

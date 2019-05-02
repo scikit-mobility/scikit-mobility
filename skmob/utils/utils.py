@@ -2,10 +2,9 @@ from ..utils import constants
 import pandas as pd
 import geopandas as gpd
 import shapely
-import numpy as np
 import os
 import errno
-from scipy.spatial import cKDTree
+from geopy.distance import distance
 import osmnx
 from ..core.trajectorydataframe import TrajDataFrame
 
@@ -220,16 +219,32 @@ def bbox_from_name(area_name, crs=None):
     return boundary.to_crs(crs)
 
 
-def ckdnearest(origin, tessellation, bcol):
+def nearest(origin, tessellation, col):
+    """
+    Brute force approach to find, for each point in a geodataframe, the nearest point into another geodataframe. It
+    returns a Pandas Series containing the value in col for each matching row.
+    :param origin: GeoDataFrame
+    :param tessellation: GeoDataFrame
+    :param col: column containing the value to return from the tessellation
+    :return: Series
+    """
 
-    # Convert to universal CRS to compute euclidean distance
-    gdA = origin.to_crs(constants.UNIVERSAL_CRS)
-    gdB = tessellation.to_crs(constants.UNIVERSAL_CRS)
+    def _nearest(df, points):
 
-    nA = np.array(list(zip(gdA.geometry.x, gdA.geometry.y)))
-    nB = np.array(list(zip(gdB.geometry.x, gdB.geometry.y)))
+        near = float("+inf")
+        point = None
 
-    btree = cKDTree(nB)
-    dist, idx = btree.query(nA, k=1)
+        main = (df['geometry'].y, df['geometry'].x)
 
-    return gdB.loc[idx, bcol].values
+        for index, row in points.iterrows():
+
+            p = row['geometry']
+            d = distance(main, (p.y, p.x))
+
+            if d < near:
+                near = d
+                point = index
+
+        return point
+
+    return tessellation.iloc[origin.apply(_nearest, args=(tessellation,), axis=1)][col]

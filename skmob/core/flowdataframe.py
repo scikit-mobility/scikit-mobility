@@ -81,7 +81,6 @@ class FlowDataFrame(pd.DataFrame):
                 if tessellation.crs is None:
                     warn("The tessellation crs is None. It will be set to the default crs WGS84 (EPSG:4326).")
 
-
                 # Check consistency
                 origin = self[constants.ORIGIN]
                 destination = self[constants.DESTINATION]
@@ -162,8 +161,8 @@ class FlowDataFrame(pd.DataFrame):
 
             elif all(isinstance(x, shapely.geometry.Point) for x in tessellation.geometry):
 
-                df.loc[:, constants.ORIGIN] = utils.ckdnearest(origin, tessellation, 'tile_ID')
-                df.loc[:, constants.DESTINATION] = utils.ckdnearest(origin, tessellation, 'tile_ID')
+                df.loc[:, constants.ORIGIN] = utils.nearest(origin, tessellation, 'tile_ID')
+                df.loc[:, constants.DESTINATION] = utils.nearest(destination, tessellation, 'tile_ID')
 
                 df.drop([origin_lat, origin_lng, destination_lat, destination_lng], inplace=True, axis=1)
 
