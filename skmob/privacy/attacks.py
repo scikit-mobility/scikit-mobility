@@ -7,11 +7,6 @@ import pandas as pd
 from ..utils.utils import TEMP, COUNT, PROBABILITY, PROPORTION, PRECISION_LEVELS, FREQUENCY, PRIVACY_RISK, \
     REIDENTIFICATION_PROBABILITY, INSTANCE, frequency_vector, probability_vector, date_time_precision
 
-latitude = constants.LATITUDE
-longitude = constants.LONGITUDE
-date_time = constants.DATETIME
-user_id = constants.UID
-
 
 class Attack(object):
     """
@@ -67,14 +62,14 @@ class Attack(object):
             targets = traj
         else:
             if isinstance(targets, list):
-                targets = traj[traj[user_id].isin(targets)]
+                targets = traj[traj[constants.UID].isin(targets)]
             if isinstance(targets, TrajDataFrame) or isinstance(targets, pd.DataFrame):
-                targets = traj[traj[user_id].isin(targets[user_id])]
+                targets = traj[traj[constants.UID].isin(targets[constants.UID])]
         if progress:
             tqdm.pandas(desc="computing risk")
-            risks = targets.groupby(user_id).progress_apply(lambda x: self._risk(x, traj, instance_analysis))
+            risks = targets.groupby(constants.UID).progress_apply(lambda x: self._risk(x, traj, instance_analysis))
         else:
-            risks = targets.groupby(user_id).apply(lambda x: self._risk(x, traj, instance_analysis))
+            risks = targets.groupby(constants.UID).apply(lambda x: self._risk(x, traj, instance_analysis))
         if instance_analysis:
             risks = risks.droplevel(1)
         else:
@@ -120,7 +115,7 @@ class Attack(object):
         combs = list()
         probs = list()
         for instance in instances:
-            prob = 1.0 / traj.groupby(user_id).apply(lambda x: self._match(x, instance)).sum()
+            prob = 1.0 / traj.groupby(constants.UID).apply(lambda x: self._match(x, instance)).sum()
             if instance_analysis:
                 combs.append(instance)
                 probs.append(prob)
@@ -216,7 +211,7 @@ class LocationAttack(Attack):
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
-        traj = traj.sort_values(by=[user_id, date_time])
+        traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
         return self._all_risks(traj, targets, instance_analysis, progress)
 
     def _match(self, single_traj, instance):
@@ -235,11 +230,11 @@ class LocationAttack(Attack):
         :return: int
             1 if the instance matches the trajectory, 0 otherwise.
         """
-        locs = single_traj.groupby([latitude, longitude]).size().reset_index(name=COUNT)
+        locs = single_traj.groupby([constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=COUNT)
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
         inst = inst.astype(dtype=dict(single_traj.dtypes))
-        inst = inst.groupby([latitude, longitude]).size().reset_index(name=COUNT + "inst")
-        locs_inst = pd.merge(locs, inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        inst = inst.groupby([constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=COUNT + "inst")
+        locs_inst = pd.merge(locs, inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) != len(inst.index):
             return 0
         else:
@@ -284,7 +279,7 @@ class LocationSequenceAttack(Attack):
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
-        traj = traj.sort_values(by=[user_id, date_time])
+        traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
         return self._all_risks(traj, targets, instance_analysis, progress)
 
     def _match(self, single_traj, instance):
@@ -307,7 +302,7 @@ class LocationSequenceAttack(Attack):
         inst_line = next(inst_iterator)[1]
         count = 0
         for index, row in single_traj.iterrows():
-            if inst_line[latitude] == row[latitude] and inst_line[longitude] == row[longitude]:
+            if inst_line[constants.LATITUDE] == row[constants.LATITUDE] and inst_line[constants.LONGITUDE] == row[constants.LONGITUDE]:
                 count += 1
                 try:
                     inst_line = next(inst_iterator)[1]
@@ -361,8 +356,8 @@ class LocationTimeAttack(Attack):
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
-        traj = traj.sort_values(by=[user_id, date_time])
-        traj[TEMP] = traj[date_time].apply(lambda x: date_time_precision(x, self.time_precision))
+        traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
+        traj[TEMP] = traj[constants.DATETIME].apply(lambda x: date_time_precision(x, self.time_precision))
         return self._all_risks(traj, targets, instance_analysis, progress)
 
     def _match(self, single_traj, instance):
@@ -382,8 +377,8 @@ class LocationTimeAttack(Attack):
             1 if the instance matches the trajectory, 0 otherwise.
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
-        locs_inst = pd.merge(single_traj, inst, left_on=[latitude, longitude, TEMP],
-                             right_on=[latitude, longitude, TEMP])
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE, TEMP],
+                             right_on=[constants.LATITUDE, constants.LONGITUDE, TEMP])
         if len(locs_inst.index) == len(inst.index):
             return 1
         else:
@@ -445,7 +440,7 @@ class UniqueLocationAttack(Attack):
             1 if the instance matches the trajectory, 0 otherwise.
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
-        locs_inst = pd.merge(single_traj, inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) == len(inst.index):
             return 1
         else:
@@ -518,7 +513,7 @@ class LocationFrequencyAttack(Attack):
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
         inst.rename(columns={FREQUENCY: FREQUENCY + "inst"}, inplace=True)
-        locs_inst = pd.merge(single_traj, inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) != len(inst.index):
             return 0
         else:
@@ -599,7 +594,7 @@ class LocationProbabilityAttack(Attack):
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
         inst.rename(columns={PROBABILITY: PROBABILITY + "inst"}, inplace=True)
-        locs_inst = pd.merge(single_traj, inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) != len(inst.index):
             return 0
         else:
@@ -683,7 +678,7 @@ class LocationProportionAttack(Attack):
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
         inst.rename(columns={FREQUENCY: FREQUENCY + "inst"}, inplace=True)
-        locs_inst = pd.merge(single_traj, inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) != len(inst.index):
             return 0
         else:
@@ -768,7 +763,7 @@ class HomeWorkAttack(Attack):
             1 if the instance matches the trajectory, 0 otherwise.
         """
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
-        locs_inst = pd.merge(single_traj[:2], inst, left_on=[latitude, longitude], right_on=[latitude, longitude])
+        locs_inst = pd.merge(single_traj[:2], inst, left_on=[constants.LATITUDE, constants.LONGITUDE], right_on=[constants.LATITUDE, constants.LONGITUDE])
         if len(locs_inst.index) == len(inst.index):
             return 1
         else:
