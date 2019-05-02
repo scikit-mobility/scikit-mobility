@@ -140,11 +140,29 @@ def group_df_by_time(df, freq_str='1D', offset_value=0, offset_unit='hours', add
 
 
 def frequency_vector(trajectory):
+    """
+    Transforms a trajectory data frame in a frequency vector. A frequency vector maintains, for each user,
+    the distinct locations he visited and the number of times he visited them.
+
+    :param trajectory: TrajDataFrame
+        the dataframe to be transformed into a frequency vector
+    :return: pandas Dataframe
+        a frequency vector, sorted by user id and frequency of visit
+    """
     freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
     return freq.sort_values(by=[UID, FREQUENCY])
 
 
 def probability_vector(trajectory):
+    """
+    Transforms a trajectory data frame in a probability vector. A probability vector maintains, for each user,
+    the distinct locations he visited and the relative probability of visit for each location.
+
+    :param trajectory: TrajDataFrame
+        the dataframe to be transformed into a probability vector
+    :return: pandas Dataframe
+        a probability vector, sorted by user id and frequency of visit
+    """
     freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
     prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
     prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
@@ -153,6 +171,17 @@ def probability_vector(trajectory):
 
 
 def date_time_precision(dt, precision):
+    """
+    Cuts a datetime a a certain precision, returning a string that represents only the requested part.
+
+    :param dt: datetime
+        the datetime to be cut
+    :param precision: string
+        a string indicating the precision at which to cut the datetime.
+        The possible precisions are: Year, Month, Day, Hour, Minute, Second.
+    :return: string
+        a string representing the requested cut
+    """
     result = ""
     if precision == "Year" or precision == "year":
         result += str(dt.year)
