@@ -20,6 +20,17 @@ FLOW = 'flow'
 TILE_ID = 'tile_ID'
 CLUSTER = 'cluster'
 LEAVING_DATETIME = 'leaving_datetime'
+FREQUENCY = "freq"
+PROBABILITY = "prob"
+TOTAL_FREQ = "T_freq"
+COUNT = "count"
+TEMP = "tmp"
+PROPORTION = "prop"
+PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
+                    "second"]
+PRIVACY_RISK = "risk"
+INSTANCE = "instance"
+REIDENTIFICATION_PROBABILITY = "reid_prob"
 
 # PROPERTIES KEY
 CRS = 'crs'

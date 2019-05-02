@@ -8,25 +8,9 @@ from shapely.ops import nearest_points
 import osmnx
 from ..core.trajectorydataframe import TrajDataFrame
 
-LATITUDE = constants.LATITUDE
-LONGITUDE = constants.LONGITUDE
-DATETIME = constants.DATETIME
-UID = constants.UID
-FREQUENCY = "freq"
-PROBABILITY = "prob"
-TOTAL_FREQ = "T_freq"
-COUNT = "count"
-TEMP = "tmp"
-PROPORTION = "prop"
-PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
-                    "second"]
-PRIVACY_RISK = "risk"
-INSTANCE = "instance"
-REIDENTIFICATION_PROBABILITY = "reid_prob"
-
 
 def diff_seconds(t_0, t_1):
-    return (t_1-t_0).total_seconds()
+    return (t_1 - t_0).total_seconds()
 
 
 def is_multi_user(data):
@@ -149,8 +133,9 @@ def frequency_vector(trajectory):
     :return: pandas Dataframe
         a frequency vector, sorted by user id and frequency of visit
     """
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    return freq.sort_values(by=[UID, FREQUENCY])
+    freq = trajectory.groupby([constants.UID,
+                               constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=constants.FREQUENCY)
+    return freq.sort_values(by=[constants.UID, constants.FREQUENCY])
 
 
 def probability_vector(trajectory):
@@ -163,11 +148,15 @@ def probability_vector(trajectory):
     :return: pandas Dataframe
         a probability vector, sorted by user id and frequency of visit
     """
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
-    prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
+    freq = trajectory.groupby([constants.UID,
+                               constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=constants.FREQUENCY)
+    prob = pd.merge(freq, trajectory.groupby(constants.UID).size().reset_index(name=constants.TOTAL_FREQ),
+                    left_on=constants.UID, right_on=constants.UID)
+    prob[constants.PROBABILITY] = prob[constants.FREQUENCY] / prob[constants.TOTAL_FREQ]
 
-    return prob[UID, LATITUDE, LONGITUDE, PROBABILITY].sort_values(by=[UID, PROBABILITY])
+    return prob[constants.UID,
+                constants.LATITUDE,
+                constants.LONGITUDE, constants.PROBABILITY].sort_values(by=[constants.UID, constants.PROBABILITY])
 
 
 def date_time_precision(dt, precision):
@@ -200,7 +189,6 @@ def date_time_precision(dt, precision):
 
 
 def bbox_from_points(points, crs=None):
-
     coords = points.total_bounds
 
     base = shapely.geometry.box(coords[0], coords[1], coords[2], coords[3], ccw=True)
@@ -213,14 +201,13 @@ def bbox_from_points(points, crs=None):
 
 
 def bbox_from_area(area, bbox_side_len=500, crs=None):
-
     centroid = area.iloc[0].geometry.centroid
 
     # get North-East corner
-    ne = [float(coord)+(bbox_side_len/2) for coord in centroid]
+    ne = [float(coord) + (bbox_side_len / 2) for coord in centroid]
 
     # get South-West corner
-    sw = [float(coord)-(bbox_side_len/2) for coord in centroid]
+    sw = [float(coord) - (bbox_side_len / 2) for coord in centroid]
 
     # build bbox from NE,SW corners
     bbox = shapely.geometry.box(sw[0], sw[1], ne[0], ne[1], ccw=True)
@@ -234,12 +221,10 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
 
 
 def bbox_from_name(area_name, crs=None):
-
     # Get the shape by using osmnx, it returns the shape in DEFAULT_CRS
     boundary = osmnx.gdf_from_place(area_name)
 
     if isinstance(boundary.loc[0]['geometry'], shapely.geometry.Point):
-
         boundary = osmnx.gdf_from_place(area_name, which_result=2)
 
     if crs is None:
@@ -249,7 +234,6 @@ def bbox_from_name(area_name, crs=None):
 
 
 def nearest(row, geom_union, df2, geom1_col='geometry', geom2_col='geometry', src_column=None):
-
     """Find the nearest point and return the corresponding value from specified column."""
     # Find the geometry that is closest
     nearest = df2[geom2_col] == nearest_points(row[geom1_col], geom_union)[1]
