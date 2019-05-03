@@ -4,13 +4,28 @@ import geopandas as gpd
 import shapely
 import os
 import errno
-from shapely.ops import nearest_points
+from geopy.distance import distance
 import osmnx
-from ..core.trajectorydataframe import TrajDataFrame
+
+LATITUDE = constants.LATITUDE
+LONGITUDE = constants.LONGITUDE
+DATETIME = constants.DATETIME
+UID = constants.UID
+FREQUENCY = "freq"
+PROBABILITY = "prob"
+TOTAL_FREQ = "T_freq"
+COUNT = "count"
+TEMP = "tmp"
+PROPORTION = "prop"
+PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
+                    "second"]
+PRIVACY_RISK = "risk"
+INSTANCE = "instance"
+REIDENTIFICATION_PROBABILITY = "reid_prob"
 
 
 def diff_seconds(t_0, t_1):
-    return (t_1 - t_0).total_seconds()
+    return (t_1-t_0).total_seconds()
 
 
 def is_multi_user(data):
@@ -64,6 +79,7 @@ def assign_crs(shape, crs):
 
 def to_geodataframe(df, keep=False, latitude=constants.LATITUDE, longitude=constants.LONGITUDE,
                     crs=constants.DEFAULT_CRS):
+
     geometry = [shapely.geometry.Point(xy) for xy in zip(df[longitude], df[latitude])]
 
     gdf = gpd.GeoDataFrame(df, crs=crs, geometry=geometry)
@@ -124,53 +140,19 @@ def group_df_by_time(df, freq_str='1D', offset_value=0, offset_unit='hours', add
 
 
 def frequency_vector(trajectory):
-    """
-    Transforms a trajectory data frame in a frequency vector. A frequency vector maintains, for each user,
-    the distinct locations he visited and the number of times he visited them.
-
-    :param trajectory: TrajDataFrame
-        the dataframe to be transformed into a frequency vector
-    :return: pandas Dataframe
-        a frequency vector, sorted by user id and frequency of visit
-    """
-    freq = trajectory.groupby([constants.UID,
-                               constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=constants.FREQUENCY)
-    return freq.sort_values(by=[constants.UID, constants.FREQUENCY])
+    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
+    return freq.sort_values(by=[UID, FREQUENCY])
 
 
 def probability_vector(trajectory):
-    """
-    Transforms a trajectory data frame in a probability vector. A probability vector maintains, for each user,
-    the distinct locations he visited and the relative probability of visit for each location.
+    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
+    prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
+    prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
 
-    :param trajectory: TrajDataFrame
-        the dataframe to be transformed into a probability vector
-    :return: pandas Dataframe
-        a probability vector, sorted by user id and frequency of visit
-    """
-    freq = trajectory.groupby([constants.UID,
-                               constants.LATITUDE, constants.LONGITUDE]).size().reset_index(name=constants.FREQUENCY)
-    prob = pd.merge(freq, trajectory.groupby(constants.UID).size().reset_index(name=constants.TOTAL_FREQ),
-                    left_on=constants.UID, right_on=constants.UID)
-    prob[constants.PROBABILITY] = prob[constants.FREQUENCY] / prob[constants.TOTAL_FREQ]
-
-    return prob[constants.UID,
-                constants.LATITUDE,
-                constants.LONGITUDE, constants.PROBABILITY].sort_values(by=[constants.UID, constants.PROBABILITY])
+    return prob[UID, LATITUDE, LONGITUDE, PROBABILITY].sort_values(by=[UID, PROBABILITY])
 
 
 def date_time_precision(dt, precision):
-    """
-    Cuts a datetime a a certain precision, returning a string that represents only the requested part.
-
-    :param dt: datetime
-        the datetime to be cut
-    :param precision: string
-        a string indicating the precision at which to cut the datetime.
-        The possible precisions are: Year, Month, Day, Hour, Minute, Second.
-    :return: string
-        a string representing the requested cut
-    """
     result = ""
     if precision == "Year" or precision == "year":
         result += str(dt.year)
@@ -189,6 +171,7 @@ def date_time_precision(dt, precision):
 
 
 def bbox_from_points(points, crs=None):
+
     coords = points.total_bounds
 
     base = shapely.geometry.box(coords[0], coords[1], coords[2], coords[3], ccw=True)
@@ -201,13 +184,14 @@ def bbox_from_points(points, crs=None):
 
 
 def bbox_from_area(area, bbox_side_len=500, crs=None):
+
     centroid = area.iloc[0].geometry.centroid
 
     # get North-East corner
-    ne = [float(coord) + (bbox_side_len / 2) for coord in centroid]
+    ne = [float(coord)+(bbox_side_len/2) for coord in centroid]
 
     # get South-West corner
-    sw = [float(coord) - (bbox_side_len / 2) for coord in centroid]
+    sw = [float(coord)-(bbox_side_len/2) for coord in centroid]
 
     # build bbox from NE,SW corners
     bbox = shapely.geometry.box(sw[0], sw[1], ne[0], ne[1], ccw=True)
@@ -221,10 +205,12 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
 
 
 def bbox_from_name(area_name, crs=None):
+
     # Get the shape by using osmnx, it returns the shape in DEFAULT_CRS
     boundary = osmnx.gdf_from_place(area_name)
 
     if isinstance(boundary.loc[0]['geometry'], shapely.geometry.Point):
+
         boundary = osmnx.gdf_from_place(area_name, which_result=2)
 
     if crs is None:
@@ -233,11 +219,32 @@ def bbox_from_name(area_name, crs=None):
     return boundary.to_crs(crs)
 
 
-def nearest(row, geom_union, df2, geom1_col='geometry', geom2_col='geometry', src_column=None):
-    """Find the nearest point and return the corresponding value from specified column."""
-    # Find the geometry that is closest
-    nearest = df2[geom2_col] == nearest_points(row[geom1_col], geom_union)[1]
+def nearest(origin, tessellation, col):
+    """
+    Brute force approach to find, for each point in a geodataframe, the nearest point into another geodataframe. It
+    returns a Pandas Series containing the value in col for each matching row.
+    :param origin: GeoDataFrame
+    :param tessellation: GeoDataFrame
+    :param col: column containing the value to return from the tessellation
+    :return: Series
+    """
 
-    # Get the corresponding value from df2 (matching is based on the geometry)
-    value = df2[nearest][src_column].get_values()[0]
-    return value
+    def _nearest(df, points):
+
+        near = float("+inf")
+        point = None
+
+        main = (df['geometry'].y, df['geometry'].x)
+
+        for index, row in points.iterrows():
+
+            p = row['geometry']
+            d = distance(main, (p.y, p.x))
+
+            if d < near:
+                near = d
+                point = index
+
+        return point
+
+    return tessellation.iloc[origin.apply(_nearest, args=(tessellation,), axis=1)][col]

@@ -4,10 +4,7 @@ from ..utils import constants, utils
 import numpy as np
 from warnings import warn
 from ..tessellation.tilers import tiler
-import shapely
-
-
-# ------------------------------ FLOW DATA STRUCTURES ------------------------------
+from shapely.geometry import Point, Polygon
 
 
 class FlowSeries(pd.Series):
@@ -26,10 +23,11 @@ class FlowDataFrame(pd.DataFrame):
     _metadata = ['_crs', '_tessellation', '_parameters']
 
     def __init__(self, data, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=constants.FLOW,
-                 dates=constants.DATETIME, timestamp=False, tessellation=None, parameters={}):
+                 dates=constants.DATETIME, timestamp=False, tessellation=None, tile_id=constants.TILE_ID,
+                 parameters={}):
 
-        original2default = {origin: constants.LONGITUDE,
-                            destination: constants.DATETIME,
+        original2default = {origin: constants.ORIGIN,
+                            destination: constants.DESTINATION,
                             flow: constants.FLOW,
                             dates: constants.DATETIME}
 
@@ -71,19 +69,31 @@ class FlowDataFrame(pd.DataFrame):
         else:
             raise AttributeError("Parameters must be a dictionary.")
 
-        # CRS
-        if (tessellation is None) and (tessellation.crs is None):
-            warn("The tessellation crs is None. It will be set to the default crs WGS84 (EPSG:4326).")
-
-        # Tessellation
-        if isinstance(tessellation, gpd.GeoDataFrame):
-            self._tessellation = tessellation
-        else:
-            raise AttributeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
-
-        # TODO: Check tessellation consistency: all the IDs in the flowdataframe must appear in the tessellation
-
         if not isinstance(data, pd.core.internals.BlockManager):
+
+            if tessellation is None:
+                raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
+
+            elif isinstance(tessellation, gpd.GeoDataFrame):
+                self._tessellation = tessellation.copy()
+                self._tessellation.rename(columns={tile_id: constants.TILE_ID}, inplace=True)
+
+                if tessellation.crs is None:
+                    warn("The tessellation crs is None. It will be set to the default crs WGS84 (EPSG:4326).")
+
+                # Check consistency
+                origin = self[constants.ORIGIN]
+                destination = self[constants.DESTINATION]
+
+                if not all(origin.isin(self._tessellation[constants.TILE_ID])) or \
+                        not all(destination.isin(self._tessellation[constants.TILE_ID])):
+                    raise ValueError("Inconsistency - origin and destination IDs must be present in the tessellation.")
+
+                # Cleaning the index to make sure it is incremental
+                self._tessellation.reset_index(inplace=True, drop=True)
+
+            else:
+                raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
             if dates in columns:
 
@@ -93,79 +103,112 @@ class FlowDataFrame(pd.DataFrame):
                 if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
                     self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME])
 
+    def get_flow(self, origin_id, destination_id):
+        """
+        Get the flow between two locations. If there is no flow between two locations it returns 0.
+        :param origin_id: the id of the origin tile
+        :param destination_id: the id of the tessellation tile
+        :return: The flow between the two locations
+        :rtype: int
+        """
+
+        if (origin_id not in self._tessellation[constants.TILE_ID]) or \
+                (destination_id not in self._tessellation[constants.TILE_ID]):
+            raise ValueError("Both origin_id and destination_id must be present in the tessellation.")
+
+        tmp = self[(self[constants.ORIGIN] == origin_id) & (self[constants.DESTINATION] == destination_id)]
+        if len(tmp) == 0:
+            return 0
+        else:
+            return tmp[constants.FLOW].item()
+
+    def to_matrix(self):
+
+        m = np.zeros((len(self._tessellation), len(self._tessellation)))
+
+        def _to_matrix(df, matrix, tessellation):
+            o = tessellation.index[tessellation['tile_ID'] == df['origin']].item()
+            d = tessellation.index[tessellation['tile_ID'] == df['destination']].item()
+
+            matrix[o][d] = df['flow']
+
+        self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
+
+        return m
+
     @classmethod
     def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
                   destination_lng=None, flow=constants.FLOW, dates=constants.DATETIME, timestamp=False, sep="\t",
-                  crs=constants.DEFAULT_CRS, tessellation=None, usecols=None, header='infer', parameters=None):
+                  tessellation=None, tile_id=constants.TILE_ID, usecols=None, header='infer', parameters=None,
+                  remove_na=False):
 
         # Case 1: origin, destination, flow, [datetime]
-        if (origin is not None) and (destination is not None) and (not isinstance(tessellation, gpd.GeoDataFrame)):
-            raise AttributeError("tessellation must be a GeoDataFrame.")
+        if (origin is not None) and (destination is not None):
+
+            if not isinstance(tessellation, gpd.GeoDataFrame):
+                raise AttributeError("tessellation must be a GeoDataFrame.")
 
         df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols)
 
         # Case 2: origin_lat, origin_lng, destination_lat, destination_lng, flow, [datetime]
-        if (origin_lat is not None) and (origin_lng is not None) and (destination_lat is not None) and (destination_lng is not None):
+        if (origin_lat is not None) and (origin_lng is not None) and (destination_lat is not None) and \
+                (destination_lng is not None):
 
             # Step 1: if tessellation is None infer it from data
             if tessellation is None:
-                a = df[df[constants.ORIGIN_LAT], df[constants.ORIGIN_LNG]].rename(columns={constants.ORIGIN_LAT: 'lat',
-                                                                                       constants.ORIGIN_LNG: 'lng'})
 
-                b = df[df[constants.DESTINATION_LAT], df[constants.DESTINATION_LNG]].rename(
-                    columns={constants.DESTINATION_LAT: 'lat', constants.DESTINATION_LNG: 'lng'})
+                a = df[[origin_lat, origin_lng]].rename(columns={origin_lat: 'lat', origin_lng: 'lng'})
+
+                b = df[[destination_lat, destination_lng]].rename(columns={destination_lat: 'lat',
+                                                                           destination_lng: 'lng'})
 
                 # DropDuplicates has to be applied now because Geopandas doesn't support removing duplicates in geometry
                 points = pd.concat([a, b]).drop_duplicates(['lat', 'lng'])
-                points = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(points['lng'], points['lat']))
+                points = gpd.GeoDataFrame(geometry=gpd.points_from_xy(points['lng'], points['lat']),
+                                          crs=constants.DEFAULT_CRS)
 
-                tessellation = tiler.get('voronoi', points)
+                tessellation = tiler.get('voronoi', points=points)
 
             # Step 2: map origin and destination points into the tessellation
 
-            origin = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df[constants.ORIGIN_LNG],
-                                                                      df[constants.DESTINATION_LAT]))
+            origin = gpd.GeoDataFrame(df.copy(), geometry=gpd.points_from_xy(df[origin_lng], df[origin_lat]),
+                                      crs=tessellation.crs)
+            destination = gpd.GeoDataFrame(df.copy(),
+                                           geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]),
+                                           crs=tessellation.crs)
 
-            destination = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df[constants.DESTINATION_LNG],
-                                                                           df[constants.DESTINATION_LAT]))
+            if all(isinstance(x, Polygon) for x in tessellation.geometry):
 
-            if all(isinstance(x, shapely.geometry.Polygon) for x in points.geometry):
+                if remove_na:
+                    how = 'inner'
+                else:
+                    how = 'left'
 
-                origin_join = gpd.sjoin(tessellation, origin, how='left', op='within')
+                origin_join = gpd.sjoin(origin, tessellation, how=how, op='within').drop("geometry", axis=1)
+                destination_join = gpd.sjoin(destination, tessellation, how=how, op='within').drop("geometry", axis=1)
 
-                destination_join = gpd.sjoin(tessellation, destination, how='left', op='within')
-
+                df = df.merge(origin_join[[constants.TILE_ID]], left_index=True, right_index=True)
                 df.loc[:, constants.ORIGIN] = origin_join[constants.TILE_ID]
+                df.drop([constants.ORIGIN_LAT, constants.ORIGIN_LNG, constants.TILE_ID], axis=1, inplace=True)
+
+                df = df.merge(destination_join[[constants.TILE_ID]], left_index=True, right_index=True)
                 df.loc[:, constants.DESTINATION] = destination_join[constants.TILE_ID]
-                df.drop([constants.ORIGIN_LAT, constants.ORIGIN_LNG, constants.DESTINATION_LAT,
-                         constants.DESTINATION_LNG])
+                df.drop([constants.DESTINATION_LAT, constants.DESTINATION_LNG, constants.TILE_ID], axis=1, inplace=True)
 
-            elif all(isinstance(x, shapely.geometry.Points) for x in points.geometry):
+            elif all(isinstance(x, Point) for x in tessellation.geometry):
 
-                unary_union = tessellation.unary_union
+                df.loc[:, constants.ORIGIN] = utils.nearest(origin, tessellation, constants.TILE_ID)
+                df.loc[:, constants.DESTINATION] = utils.nearest(destination, tessellation, constants.TILE_ID)
 
-                origin.loc[:, constants.ORIGIN] = origin.apply(utils.nearest, geom_union=unary_union,
-                                                               tessellation=tessellation, geom1_col='centroid',
-                                                               src_column=constants.TILE_ID, axis=1)
-
-                destination.loc[:, constants.DESTINATION] = destination.apply(utils.nearest, geom_union=unary_union,
-                                                                              tessellation=tessellation,
-                                                                              geom1_col='centroid',
-                                                                              src_column=constants.TILE_ID, axis=1)
-
-                df.loc[:, constants.ORIGIN] = origin[constants.TILE_ID]
-                df.loc[:, constants.DESTINATION] = destination[constants.TILE_ID]
-                df.drop([constants.ORIGIN_LAT, constants.ORIGIN_LNG, constants.DESTINATION_LAT,
-                         constants.DESTINATION_LNG])
+                df.drop([origin_lat, origin_lng, destination_lat, destination_lng], inplace=True, axis=1)
 
         # Step 3: call the constructor
 
         if parameters is None:
-            # Init prop dictionary
             parameters = {'from_file': filename}
 
-        return cls(df, origin=origin, destination=destination, flow=flow, dates=dates, timestamp=timestamp,
-                   tessellation=tessellation, parameters=parameters)
+        return cls(df, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=flow, dates=dates,
+                   timestamp=timestamp, tessellation=tessellation, parameters=parameters, tile_id=tile_id)
 
     @property
     def origin(self):
@@ -194,6 +237,10 @@ class FlowDataFrame(pd.DataFrame):
             raise AttributeError("The FlowDataFrame does not contain the column '%s.'" % constants.DATETIME)
 
         return self[constants.DATETIME]
+
+    @property
+    def tessellation(self):
+        return self._tessellation
 
     @property
     def _constructor(self):

@@ -1,8 +1,10 @@
 import pandas as pd
-from ..utils import constants, plot
+from ..utils import constants, plot, utils
 import numpy as np
 from warnings import warn
-
+from shapely.geometry import Polygon, Point
+import geopandas as gpd
+from .flowdataframe import FlowDataFrame
 
 class TrajSeries(pd.Series):
 
@@ -86,11 +88,66 @@ class TrajDataFrame(pd.DataFrame):
             if not pd.core.dtypes.common.is_float_dtype(self[constants.LATITUDE].dtype):
                 self[constants.LATITUDE] = self[constants.LATITUDE].astype('float')
 
-    def _valid_trajdataframe(self):
+    def to_flowdataframe(self, tessellation, remove_na=False, self_loop=True):
+        """
 
-        if (constants.LATITUDE not in self) or (constants.LONGITUDE not in self) or (constants.DATETIME not in self):
-            raise AttributeError("No point data set yet (expected in column '%s, %s, % s')."
-                                 % (constants.LATITUDE, constants.LONGITUDE, constants.DATETIME))
+        :param tessellation:
+        :param remove_na:
+        :param self_loop: if True, it counts self movements (default True)
+        :return:
+        """
+
+        # Step 1: order the dataframe by user_id, traj_id, datetime
+        self.sort_values(by=self.__operate_on(), ascending=True, inplace=True)
+
+        # Step 2: map the trajectory onto the tessellation
+        flow = self.mapping(tessellation, remove_na=remove_na)
+
+        # Step 3: groupby tile_id and sum to obtain the flow
+        flow.loc[:, 'destination'] = flow[constants.TILE_ID].shift(-1)
+        flow = flow.groupby([constants.TILE_ID, 'destination']).size().reset_index(name=constants.FLOW)
+        flow.rename(columns={constants.TILE_ID: constants.ORIGIN}, inplace=True)
+
+        if not self_loop:
+            flow = flow[flow[constants.ORIGIN] != flow[constants.DESTINATION]]
+
+        return FlowDataFrame(flow, tessellation=tessellation)
+
+    def to_geodataframe(self):
+
+        gdf = gpd.GeoDataFrame(self, geometry=gpd.points_from_xy(self[constants.LONGITUDE], self[constants.LATITUDE]),
+                               crs=self._crs)
+
+        return gdf
+
+    def mapping(self, tessellation, remove_na=False):
+        """
+        Method to assign to each point of the TrajDataFrame a corresponding tile_id of a given tessellation.
+        :param tessellation: GeoDataFrame containing a tessellation (geometry of points or polygons).
+        :param remove_na: (default False) it removes points that do not have a corresponding tile_id
+        :return: TrajDataFrame with an additional column containing the tile_ids.
+        """
+
+        gdf = self.to_geodataframe()
+
+        if all(isinstance(x, Polygon) for x in tessellation.geometry):
+
+            if remove_na:
+                how = 'inner'
+            else:
+                how = 'left'
+
+            tile_ids = gpd.sjoin(gdf, tessellation, how=how, op='within')[[constants.TILE_ID]]
+
+        elif all(isinstance(x, Point) for x in tessellation.geometry):
+
+            tile_ids = utils.nearest(gdf, tessellation, constants.TILE_ID)
+
+        new_data = self._constructor(self).__finalize__(self) #TrajDataFrame(self)
+        new_data = new_data.merge(tile_ids, right_index=True, left_index=True)
+
+        return new_data
+
 
     @classmethod
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
@@ -181,6 +238,24 @@ class TrajDataFrame(pd.DataFrame):
 
         # TODO: check if parameters are correct
         self._parameters = dict(parameters)
+
+    def __operate_on(self):
+        """
+        Check which optional fields are present and return a list of them plus mandatory fields to which apply
+        built-in pandas functions such as sort_values or groupby.
+        :return: list
+        """
+
+        cols = []
+
+        if constants.UID in self:
+            cols.append(constants.UID)
+        if constants.TID in self:
+            cols.append(constants.TID)
+
+        cols.append(constants.DATETIME)
+
+        return cols
 
     # Sorting
     def sort_by_uid_and_datetime(self):
