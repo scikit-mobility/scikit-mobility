@@ -2,7 +2,6 @@ import numpy as np
 from scipy import stats
 import pandas as pd
 from datetime import timedelta
-import networkx as nx
 from collections import defaultdict
 from skmob.measures.individual import home_location
 from ..utils import constants
