@@ -2,7 +2,7 @@ from setuptools import setup
 
 long_description = open('README.md').read()
 
-DEPENDENCIES = ['numpy', 'pandas','geopandas', 'networkx', 'infomap', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
+DEPENDENCIES = ['numpy', 'pandas','geopandas', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
                 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely', 'geopy']
 
 TEST_DEPENDENCIES = [
@@ -16,6 +16,7 @@ setup(
     version='0.0.1dev',
     packages=['skmob'],
     license='MIT',
+    python_requires='>=3.6',
     description='A toolbox for analyzing and processing mobility data.',
     long_description=long_description,
     maintainer='skmob Developers',
