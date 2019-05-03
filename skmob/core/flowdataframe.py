@@ -4,7 +4,7 @@ from ..utils import constants, utils
 import numpy as np
 from warnings import warn
 from ..tessellation.tilers import tiler
-import shapely
+from shapely.geometry import Point, Polygon
 
 
 class FlowSeries(pd.Series):
@@ -89,6 +89,9 @@ class FlowDataFrame(pd.DataFrame):
                         not all(destination.isin(self._tessellation[constants.TILE_ID])):
                     raise ValueError("Inconsistency - origin and destination IDs must be present in the tessellation.")
 
+                # Cleaning the index to make sure it is incremental
+                self._tessellation.reset_index(inplace=True, drop=True)
+
             else:
                 raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
@@ -99,6 +102,39 @@ class FlowDataFrame(pd.DataFrame):
 
                 if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
                     self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME])
+
+    def get_flow(self, origin_id, destination_id):
+        """
+        Get the flow between two locations. If there is no flow between two locations it returns 0.
+        :param origin_id: the id of the origin tile
+        :param destination_id: the id of the tessellation tile
+        :return: The flow between the two locations
+        :rtype: int
+        """
+
+        if (origin_id not in self._tessellation[constants.TILE_ID]) or \
+                (destination_id not in self._tessellation[constants.TILE_ID]):
+            raise ValueError("Both origin_id and destination_id must be present in the tessellation.")
+
+        tmp = self[(self[constants.ORIGIN] == origin_id) & (self[constants.DESTINATION] == destination_id)]
+        if len(tmp) == 0:
+            return 0
+        else:
+            return tmp[constants.FLOW].item()
+
+    def to_matrix(self):
+
+        m = np.zeros((len(self._tessellation), len(self._tessellation)))
+
+        def _to_matrix(df, matrix, tessellation):
+            o = tessellation.index[tessellation['tile_ID'] == df['origin']].item()
+            d = tessellation.index[tessellation['tile_ID'] == df['destination']].item()
+
+            matrix[o][d] = df['flow']
+
+        self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
+
+        return m
 
     @classmethod
     def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
@@ -141,7 +177,7 @@ class FlowDataFrame(pd.DataFrame):
                                            geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]),
                                            crs=tessellation.crs)
 
-            if all(isinstance(x, shapely.geometry.Polygon) for x in tessellation.geometry):
+            if all(isinstance(x, Polygon) for x in tessellation.geometry):
 
                 if remove_na:
                     how = 'inner'
@@ -159,10 +195,10 @@ class FlowDataFrame(pd.DataFrame):
                 df.loc[:, constants.DESTINATION] = destination_join[constants.TILE_ID]
                 df.drop([constants.DESTINATION_LAT, constants.DESTINATION_LNG, constants.TILE_ID], axis=1, inplace=True)
 
-            elif all(isinstance(x, shapely.geometry.Point) for x in tessellation.geometry):
+            elif all(isinstance(x, Point) for x in tessellation.geometry):
 
-                df.loc[:, constants.ORIGIN] = utils.nearest(origin, tessellation, 'tile_ID')
-                df.loc[:, constants.DESTINATION] = utils.nearest(destination, tessellation, 'tile_ID')
+                df.loc[:, constants.ORIGIN] = utils.nearest(origin, tessellation, constants.TILE_ID)
+                df.loc[:, constants.DESTINATION] = utils.nearest(destination, tessellation, constants.TILE_ID)
 
                 df.drop([origin_lat, origin_lng, destination_lat, destination_lng], inplace=True, axis=1)
 

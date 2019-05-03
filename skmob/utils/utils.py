@@ -6,7 +6,6 @@ import os
 import errno
 from geopy.distance import distance
 import osmnx
-from ..core.trajectorydataframe import TrajDataFrame
 
 LATITUDE = constants.LATITUDE
 LONGITUDE = constants.LONGITUDE
@@ -80,6 +79,7 @@ def assign_crs(shape, crs):
 
 def to_geodataframe(df, keep=False, latitude=constants.LATITUDE, longitude=constants.LONGITUDE,
                     crs=constants.DEFAULT_CRS):
+
     geometry = [shapely.geometry.Point(xy) for xy in zip(df[longitude], df[latitude])]
 
     gdf = gpd.GeoDataFrame(df, crs=crs, geometry=geometry)
