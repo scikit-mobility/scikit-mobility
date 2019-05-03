@@ -1,6 +1,9 @@
 import numpy as np
 # import csv
-import statsmodels.api as sm
+try:
+    import statsmodels.api as sm
+except ImportError:
+    import statsmodels as sm
 from tqdm import tqdm
 import operator
 import pandas as pd
@@ -150,14 +153,14 @@ class Gravity:
         return distance_matrix
 
     
-    def generate(self, spatial_tessellation, out_format='flows'):
+    def generate(self, spatial_tessellation, relevance=constants.RELEVANCE, out_format='flows'):
         
         if out_format not in ['flows', 'probabilities']:
             print('Output format \"%s\" not available. Flows will be used.\nAvailable output formats are [flows, probabilities]' % out_format)
             out_format = "flows"
         
         n_locs = len(spatial_tessellation)
-        relevances = np.array([info['relevance'] for location, info in spatial_tessellation.items()])
+        relevances = np.array([info[relevance] for location, info in spatial_tessellation.items()])
 
         # if outflows are specified in a "tot_outflows" column then use that column,
         # otherwise use the "relevance" column

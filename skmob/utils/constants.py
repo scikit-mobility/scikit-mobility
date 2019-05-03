@@ -31,6 +31,7 @@ PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", 
 PRIVACY_RISK = "risk"
 INSTANCE = "instance"
 REIDENTIFICATION_PROBABILITY = "reid_prob"
+RELEVANCE = 'relevance'
 
 # PROPERTIES KEY
 CRS = 'crs'

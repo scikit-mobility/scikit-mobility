@@ -23,13 +23,13 @@ class FlowDataFrame(pd.DataFrame):
     _metadata = ['_crs', '_tessellation', '_parameters']
 
     def __init__(self, data, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=constants.FLOW,
-                 dates=constants.DATETIME, timestamp=False, tessellation=None, tile_id=constants.TILE_ID,
+                 datetime=constants.DATETIME, tile_id=constants.TILE_ID, timestamp=False, tessellation=None,
                  parameters={}):
 
         original2default = {origin: constants.ORIGIN,
                             destination: constants.DESTINATION,
                             flow: constants.FLOW,
-                            dates: constants.DATETIME}
+                            datetime: constants.DATETIME}
 
         columns = None
 
@@ -95,7 +95,7 @@ class FlowDataFrame(pd.DataFrame):
             else:
                 raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
-            if dates in columns:
+            if datetime in columns:
 
                 if timestamp:
                     self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME], unit='s')
@@ -138,7 +138,7 @@ class FlowDataFrame(pd.DataFrame):
 
     @classmethod
     def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
-                  destination_lng=None, flow=constants.FLOW, dates=constants.DATETIME, timestamp=False, sep="\t",
+                  destination_lng=None, flow=constants.FLOW, datetime=constants.DATETIME, timestamp=False, sep="\t",
                   tessellation=None, tile_id=constants.TILE_ID, usecols=None, header='infer', parameters=None,
                   remove_na=False):
 
@@ -207,7 +207,7 @@ class FlowDataFrame(pd.DataFrame):
         if parameters is None:
             parameters = {'from_file': filename}
 
-        return cls(df, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=flow, dates=dates,
+        return cls(df, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=flow, datetime=datetime,
                    timestamp=timestamp, tessellation=tessellation, parameters=parameters, tile_id=tile_id)
 
     @property
