@@ -171,11 +171,11 @@ class FlowDataFrame(pd.DataFrame):
 
             # Step 2: map origin and destination points into the tessellation
 
-            origin = gpd.GeoDataFrame(df.copy(), geometry=gpd.points_from_xy(df[origin_lng], df[origin_lat]),
-                                      crs=tessellation.crs)
-            destination = gpd.GeoDataFrame(df.copy(),
-                                           geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]),
-                                           crs=tessellation.crs)
+            gdf_origin = gpd.GeoDataFrame(df.copy(), geometry=gpd.points_from_xy(df[origin_lng], df[origin_lat]),
+                                          crs=tessellation.crs)
+            gdf_destination = gpd.GeoDataFrame(df.copy(),
+                                               geometry=gpd.points_from_xy(df[destination_lng], df[destination_lat]),
+                                               crs=tessellation.crs)
 
             if all(isinstance(x, Polygon) for x in tessellation.geometry):
 
@@ -184,8 +184,9 @@ class FlowDataFrame(pd.DataFrame):
                 else:
                     how = 'left'
 
-                origin_join = gpd.sjoin(origin, tessellation, how=how, op='within').drop("geometry", axis=1)
-                destination_join = gpd.sjoin(destination, tessellation, how=how, op='within').drop("geometry", axis=1)
+                origin_join = gpd.sjoin(gdf_origin, tessellation, how=how, op='within').drop("geometry", axis=1)
+                destination_join = gpd.sjoin(gdf_destination, tessellation, how=how, op='within').drop("geometry",
+                                                                                                       axis=1)
 
                 df = df.merge(origin_join[[constants.TILE_ID]], left_index=True, right_index=True)
                 df.loc[:, constants.ORIGIN] = origin_join[constants.TILE_ID]
@@ -197,10 +198,15 @@ class FlowDataFrame(pd.DataFrame):
 
             elif all(isinstance(x, Point) for x in tessellation.geometry):
 
-                df.loc[:, constants.ORIGIN] = utils.nearest(origin, tessellation, constants.TILE_ID)
-                df.loc[:, constants.DESTINATION] = utils.nearest(destination, tessellation, constants.TILE_ID)
+                df.loc[:, constants.ORIGIN] = utils.nearest(gdf_origin, tessellation, constants.TILE_ID).values
+                df.loc[:, constants.DESTINATION] = utils.nearest(gdf_destination, tessellation,
+                                                                 constants.TILE_ID).values
 
                 df.drop([origin_lat, origin_lng, destination_lat, destination_lng], inplace=True, axis=1)
+
+            else:
+                raise AttributeError("In case of expanded format (coordinates instead of ids), the tessellation must "
+                                     "contains either all Polygon or all Point. Mixed types are not allowed.")
 
         # Step 3: call the constructor
 
