@@ -32,11 +32,6 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
     
         source activate skmob
 
-2. optional: create the jupyter kernel
-
-        env=$(basename `echo $CONDA_PREFIX`)
-        python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
-
 3. Install skmob
 
         cd scikit_mobility
