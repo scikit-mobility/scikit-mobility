@@ -88,7 +88,7 @@ class TrajDataFrame(pd.DataFrame):
             if not pd.core.dtypes.common.is_float_dtype(self[constants.LATITUDE].dtype):
                 self[constants.LATITUDE] = self[constants.LATITUDE].astype('float')
 
-    def to_flowdataframe(self, tessellation, remove_na=False, self_loop=True):
+    def to_flowdataframe(self, tessellation, remove_na=False, self_loops=True):
         """
 
         :param tessellation:
@@ -108,7 +108,7 @@ class TrajDataFrame(pd.DataFrame):
         flow = flow.groupby([constants.TILE_ID, 'destination']).size().reset_index(name=constants.FLOW)
         flow.rename(columns={constants.TILE_ID: constants.ORIGIN}, inplace=True)
 
-        if not self_loop:
+        if not self_loops:
             flow = flow[flow[constants.ORIGIN] != flow[constants.DESTINATION]]
 
         return FlowDataFrame(flow, tessellation=tessellation)
