@@ -1,4 +1,6 @@
-# scikit-mobility - Human Mobility analysis in Python
+# scikit-mobility
+
+### Human Mobility analysis in Python
 
 `scikit-mobility` is a library for human mobility analysis in Python. The library allows to: 
 
@@ -36,7 +38,8 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 
         cd scikit_mobility
         python setup.py develop
-        
+
+    If the installation of a required library fails, reinstall it with `conda install`.      
 
 4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
