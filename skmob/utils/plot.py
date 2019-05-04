@@ -149,10 +149,11 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
 
     df = cstdf[cstdf[constants.UID] == user]
 
+    # TODO: add warning if days between start_datetime and end_datetime do not overlap with cstdf
     if start_datetime is None:
-        start_datetime = df.datetime.min()
+        start_datetime = df[constants.DATETIME].min()
     if end_datetime is None:
-        end_datetime = df.leaving_datetime.max()
+        end_datetime = df[constants.LEAVING_DATETIME].max()
 
     for idx, row in df.iterrows():
 

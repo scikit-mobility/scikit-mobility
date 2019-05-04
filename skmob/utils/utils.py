@@ -7,6 +7,7 @@ import errno
 from geopy.distance import distance
 import osmnx
 
+
 LATITUDE = constants.LATITUDE
 LONGITUDE = constants.LONGITUDE
 DATETIME = constants.DATETIME
@@ -62,12 +63,6 @@ def to_dataframe(data, columns):
     df = pd.DataFrame(data, columns=columns)
 
     return df
-
-
-def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
-    df = pd.DataFrame(trajectory_array, columns=columns)
-    tdf = TrajDataFrame(df, parameters=parameters)
-    return tdf
 
 
 def assign_crs(shape, crs):

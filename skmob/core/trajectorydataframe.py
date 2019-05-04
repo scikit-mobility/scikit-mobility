@@ -259,7 +259,7 @@ class TrajDataFrame(pd.DataFrame):
 
     # Sorting
     def sort_by_uid_and_datetime(self):
-        self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True], inplace=True)
+        return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True]) #, inplace=True)
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='OpenStreetMap',
@@ -274,3 +274,9 @@ class TrajDataFrame(pd.DataFrame):
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
+
+
+def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
+    df = pd.DataFrame(trajectory_array, columns=columns)
+    tdf = TrajDataFrame(df, parameters=parameters)
+    return tdf

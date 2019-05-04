@@ -1,4 +1,5 @@
 from ..utils import gislib, utils, constants
+from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
@@ -22,7 +23,7 @@ def compress(tdf, spatial_radius=0.2):
         .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
     """
     # Sort
-    tdf.sort_by_uid_and_datetime()
+    tdf = tdf.sort_by_uid_and_datetime()
 
     # Save function arguments and values in a dictionary
     frame = inspect.currentframe()
@@ -55,7 +56,7 @@ def _compress_trajectory(tdf, spatial_radius):
 
     compressed_traj = _compress_array(lat_lng_dtime_other, spatial_radius)
 
-    compressed_traj = utils.nparray_to_trajdataframe(compressed_traj, utils.get_columns(tdf), {})
+    compressed_traj = nparray_to_trajdataframe(compressed_traj, utils.get_columns(tdf), {})
     # Put back to the original order
     compressed_traj = compressed_traj[columns_order]
 

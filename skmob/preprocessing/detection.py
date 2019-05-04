@@ -1,8 +1,9 @@
 from ..utils import gislib, utils, constants
+from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=None, leaving_time=True):
+def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=0.2,  leaving_time=True):
     """
     Detect a stop when the user spends at least `minutes_for_a_stop` minutes
     within a distance (`stop_radius_factor` * `spatial_radius`) km
@@ -35,7 +36,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=N
         .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
     """
     # Sort
-    tdf.sort_by_uid_and_datetime()
+    tdf = tdf.sort_by_uid_and_datetime()
 
     # Save function arguments and values in a dictionary
     frame = inspect.currentframe()
@@ -49,6 +50,11 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=N
     if utils.is_multi_trajectory(tdf):
         groupby.append(constants.TID)
 
+    # Use the spatial_radius in the tdf parameters, if present, otherwise use the default argument.
+    try:
+        spatial_radius = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius']
+    except KeyError:
+        pass
     stop_radius = spatial_radius * stop_radius_factor
 
     if len(groupby) > 0:
@@ -75,7 +81,7 @@ def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time):
 
     #print(utils.get_columns(data))
     # stops = utils.to_dataframe(stops, utils.get_columns(data))
-    stops = utils.nparray_to_trajdataframe(stops, utils.get_columns(tdf), {})
+    stops = nparray_to_trajdataframe(stops, utils.get_columns(tdf), {})
 
     # Put back to the original order
     stops = stops[columns_order]
