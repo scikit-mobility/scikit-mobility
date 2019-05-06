@@ -25,7 +25,7 @@ def _radius_of_gyration_individual(traj):
     return rg
 
 
-def radius_of_gyration(traj):
+def radius_of_gyration(traj, show_progress=True):
     """
     Compute the radii of gyration (in kilometers) of a set of individuals given a TrajDataFrame.
     The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by
@@ -33,6 +33,9 @@ def radius_of_gyration(traj):
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
 
     :return: the radii of gyration of the individuals
     :rtype: DataFrame
@@ -59,7 +62,10 @@ def radius_of_gyration(traj):
 
     .. seealso:: :func:`k_radius_of_gyration`
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _radius_of_gyration_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _radius_of_gyration_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _radius_of_gyration_individual(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name}) 
 
 
@@ -88,7 +94,7 @@ def _k_radius_of_gyration_individual(traj, k=2):
     return krg
 
 
-def k_radius_of_gyration(traj, k=2):
+def k_radius_of_gyration(traj, k=2, show_progress=True):
     """
     Compute the k-radius of gyration (in kilometers) of a set of individuals given a TrajDataFrame.
     The k-radius of gyration :math:`r_g^{(k)}(u)` indicates the characteristic distance travelled by an individual
@@ -98,7 +104,10 @@ def k_radius_of_gyration(traj, k=2):
     :type traj: TrajDataFrame
 
     :param int k: the number of most frequent locations to consider, default=2, range=[2, +inf]
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the k-radii of gyration of the individuals
     :rtype: pandas DataFrame
 
@@ -122,7 +131,10 @@ def k_radius_of_gyration(traj, k=2):
         .. [pappalardo2015returners] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. "Returners and Explorers dichotomy in human mobility.", Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).
         .. [barbosa2016returners] Barbosa H.S., de Lima Neto F.B., Evsukoff A., Menezes R. "Returners and Explorers Dichotomy in Web Browsing Behavior - A Human Mobility Approach.". Complex Networks VII. Studies in Computational Intelligence, vol 644. (2016).
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _k_radius_of_gyration_individual(x, k))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _k_radius_of_gyration_individual(x, k))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _k_radius_of_gyration_individual(x, k))
     return pd.DataFrame(df).reset_index().rename(columns={0: '%s%s' % (k, sys._getframe().f_code.co_name)})
 
 
@@ -140,14 +152,17 @@ def _random_entropy_individual(traj):
     return entropy
 
 
-def random_entropy(traj):
+def random_entropy(traj, show_progress=True):
     """
     Compute the random entropy of a set of individuals given a TrajDataFrame.
     The random entropy :math:`E_{rand}(u)` (in base 2) of an individual :math:`u` captures the degree of predictability of :math:`u`'s whereabouts if each location is visited with equal probability.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the random entropies of the individuals
     :rtype: pandas DataFrame
 
@@ -172,7 +187,10 @@ def random_entropy(traj):
         .. [eagle2009eigenbehaviors] Eagle, Nathan and Pentland, Alex Sandy. "Eigenbehaviors: identifying structure in routine." Behavioral Ecology and Sociobiology 63 , no. 7 (2009): 1057--1066.
         .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _random_entropy_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _random_entropy_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _random_entropy_individual(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
@@ -199,7 +217,7 @@ def _uncorrelated_entropy_individual(traj, normalize=False):
     return entropy
 
 
-def uncorrelated_entropy(traj, normalize=False):
+def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     """
     Compute the temporal-uncorrelated entropy of a set of individuals given a TrajDataFrame. The temporal-uncorrelated entropy :math:`E_{unc}(u)` (in base 2) of an individual :math:`u` is the historical probability that a location :math:`j` was visited by :math:`u` and characterizes the heterogeneity of :math:`u`'s visitation patterns.
 
@@ -208,6 +226,9 @@ def uncorrelated_entropy(traj, normalize=False):
 
     :param boolean normalize: if True normalize the entropy by dividing by log2(N), where N is the number of
         distinct locations visited by the individual
+
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
 
     :return: the temporal-uncorrelated entropies of the individuals
     :rtype: pandas DataFrame
@@ -234,7 +255,10 @@ def uncorrelated_entropy(traj, normalize=False):
         .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
         .. [pappalardo2016analytical] Pappalardo, Luca, et al. "An analytical framework to nowcast well-being using mobile phone data." International Journal of Data Science and Analytics 2, no. 75 (2016)
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _uncorrelated_entropy_individual(x, normalize=normalize))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _uncorrelated_entropy_individual(x, normalize=normalize))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _uncorrelated_entropy_individual(x, normalize=normalize))
     column_name = sys._getframe().f_code.co_name
     if normalize:
         column_name = 'norm_%s' % sys._getframe().f_code.co_name
@@ -281,16 +305,19 @@ def _real_entropy_individual(traj):
     return entropy
 
 
-def real_entropy(traj):
+def real_entropy(traj, show_progress=True):
     """
     Compute the real entropy of a set of individuals given a TrajDataFrame. The real entropy :math:`E(u)` of an individual :math:`u` depends not only on the frequency of visitation, but also the order in which the nodes were visited and the time spent at each location, thus capturing the full spatiotemporal order present in an :math:`u`'s mobility patterns.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the real entropies of the individuals
     :rtype: pandas DataFrame
-
+    
     Examples:
         Computing the real entropy of each individual from a DataFrame of trajectories
 
@@ -311,7 +338,10 @@ def real_entropy(traj):
     References:
         .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _real_entropy_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _real_entropy_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _real_entropy_individual(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
@@ -330,7 +360,7 @@ def _jump_lengths_individual(traj):
     return lengths
 
 
-def jump_lengths(traj):
+def jump_lengths(traj, show_progress=True, merge=False):
     """
     Compute the jump lengths (also called trip distances) (in kilometers) given a TrajDataFrame.
     A jump length (or trip distance) is defined as the geographic distance between the position of a visit and the next one.
@@ -338,8 +368,14 @@ def jump_lengths(traj):
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
 
-    :return: the jump lengths for each individual (a NaN indicate that an individual visited just one location)
-    :rtype: pandas DataFrame
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
+    :param merge: if True merge the individuals' lists into one list (default: False)
+    :type merge: boolean
+    
+    :return: the jump lengths for each individual (a NaN indicate that an individual visited just one location) or a list with all jumps together
+    :rtype: pandas DataFrame or list
 
     Examples:
         Computing the jump lenghts of each individual from a DataFrame of trajectories
@@ -368,17 +404,33 @@ https://scholar.google.it/citations?user=88VJDhcAAAAJ&hl=it&oi=ao
         .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
         .. [zhao2015explaining] K. Zhao, M. Musolesi, P. Hui, W. Rao, S. Tarkoma, Explaining the power-law distribution of human mobility through transportation modality decomposition, Scientific reports 5. 2015
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _jump_lengths_individual(x))
-    return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _jump_lengths_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _jump_lengths_individual(x))
+    
+    df = pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
+    
+    if merge:
+        # merge all lists 
+        jl_list =[]
+        for x in df.jump_lengths:
+            jl_list.extend(x)
+        return jl_list
+        
+    return df
 
 
-def maximum_distance(traj):
+def maximum_distance(traj, show_progress=True):
     """
     Compute the maximum distance (in kilometers) traveled by the individuals.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the maximum traveled distance for each individual (a NaN indicate that an individual visited just one location)
     :rtype: pandas DataFrame
 
@@ -408,18 +460,24 @@ def maximum_distance(traj):
         if len(jumps) > 0:
             return max(jumps)
         return np.NaN
-    df = traj.groupby(constants.UID).progress_apply(lambda x: get_max_distance(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: get_max_distance(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: get_max_distance(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
-def distance_straight_line(traj):
+def distance_straight_line(traj, show_progress=True):
     """
     Compute the distance (in kilometers) traveled straight line by each individual,
     i.e., the sum of the distances traveled by the individual
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the straight line distance traveled by the individual (a NaN indicate that an individual visited just one location)
     :rtype: pandas DataFrame
 
@@ -448,7 +506,10 @@ def distance_straight_line(traj):
         if len(jumps) > 0:
             return sum(jumps)
         return 0.0
-    df = traj.groupby(constants.UID).progress_apply(lambda x: get_sum_distances(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: get_sum_distances(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: get_sum_distances(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
@@ -466,15 +527,21 @@ def _waiting_times_individual(traj):
     return wtimes
 
 
-def waiting_times(traj):
+def waiting_times(traj, show_progress=True, merge=False):
     """
     Compute the waiting times (or inter-times) between the movements of an individual.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
 
-    :return: the list of waiting times of the individual (a NaN indicate that an individual visited just one location)
-    :rtype: pandas DataFrame
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+
+    :param merge: if True merge the individuals' lists into one list (default: False)
+    :type merge: boolean
+
+    :return: the list of waiting times of the individual (a NaN indicate that an individual visited just one location) or a list with all waiting times together
+    :rtype: pandas DataFrame or list
 
     Examples:
         Computing the waiting times of each individual from a DataFrame of trajectories
@@ -496,8 +563,20 @@ def waiting_times(traj):
         .. [pappalardo2016human] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939
         .. [pappalardo2017data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _waiting_times_individual(x))
-    return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _waiting_times_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _waiting_times_individual(x))
+    
+    df = pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
+    
+    if merge:
+        wl_list =[]
+        for x in df.waiting_times:
+            wl_list.extend(x)
+        return wl_list
+    
+    return df
 
 
 def _number_of_locations_individual(traj):
@@ -513,13 +592,16 @@ def _number_of_locations_individual(traj):
     return n_locs
 
 
-def number_of_locations(traj):
+def number_of_locations(traj, show_progress=True):
     """
     Compute the number of distinct locations visited by an individual.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the number of distinct locations visited by the individuals
     :rtype: pandas DataFrame
 
@@ -544,7 +626,10 @@ def number_of_locations(traj):
     .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D., Giannotti, F. "Understanding the patterns of car travel." European Physics Journal Special Topics 215, no. 61 (2013).
     .. [williams2014measures] Williams, Nathalie E., Thomas, Timothy A., Dunbar, Matthew, Eagle, Nathan and Dobra, Adrian. "Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data." CoRR abs/1408.5420 (2014).
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _number_of_locations_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _number_of_locations_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _number_of_locations_individual(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
@@ -567,7 +652,7 @@ def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
     return home_coords
 
 
-def home_location(traj, start_night='22:00', end_night='07:00'):
+def home_location(traj, start_night='22:00', end_night='07:00', show_progress=True):
     """
     Compute the home location of an individual
 
@@ -576,7 +661,10 @@ def home_location(traj, start_night='22:00', end_night='07:00'):
     
     :param str start_night: the starting hour for the night
     :param str end_night: the ending hour for the night
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the home location of the individuals
     :rtype: pandas DataFrame
 
@@ -598,7 +686,10 @@ def home_location(traj, start_night='22:00', end_night='07:00'):
         .. [csaji2012exploring] Csáji, Balázs Csanád, Browet, Arnaud, Traag, Vincent A., Delvenne, Jean-Charles, Huens, Etienne, Dooren, Paul Van, Smoreda, Zbigniew and Blondel, Vincent D. "Exploring the Mobility of Mobile Phone Users." CoRR abs/1211.6014 (2012).
         .. [phithakkitnukoon2012socio] Phithakkitnukoon, Santi, Smoreda, Zbigniew and Olivier, Patrick. "Socio-geography of human mobility: A study using longitudinal mobile phone data." PloS ONE 7 , no. 6 (2012): e39253.
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
     return df.apply(pd.Series).reset_index().rename(columns={0: constants.LATITUDE, 1: constants.LONGITUDE})
 
 
@@ -611,16 +702,16 @@ def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:
 
     :param str start_night: the starting hour for the night
     :param str end_night: the ending hour for the night
-
+    
     :return: float
     """
-    home = home_location(traj, start_night=start_night, end_night=end_night).iloc[0]
+    home = home_location(traj, start_night=start_night, end_night=end_night, show_progress=False).iloc[0]
     lats_lngs = traj.sort_values(by=constants.DATETIME)[[constants.LATITUDE, constants.LONGITUDE]].values
     lengths = np.array([getDistanceByHaversine((lat, lng), (home[constants.LATITUDE], home[constants.LONGITUDE])) for i, (lat, lng) in enumerate(lats_lngs)])
     return lengths.max()
 
 
-def max_distance_from_home(traj, start_night='22:00', end_night='07:00'):
+def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_progress=True):
     """
     Compute the maximum distance from home (in kilometers) traveled by an individual.
 
@@ -629,7 +720,10 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00'):
     
     :param str start_night: the starting hour for the night
     :param str end_night: the ending hour for the night
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the maximum distance from home of the individuals
     :rtype: pandas DataFrame
 
@@ -653,17 +747,23 @@ date_time
     References:
         .. [canzian2015trajectories] Luca Canzian and Mirco Musolesi. "Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis." In Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp '15), 1293--1304, 2015.
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _max_distance_from_home_individual(x, start_night=start_night, end_night=end_night))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _max_distance_from_home_individual(x, start_night=start_night, end_night=end_night))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _max_distance_from_home_individual(x, start_night=start_night, end_night=end_night))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
-def number_of_visits(traj):
+def number_of_visits(traj, show_progress=True):
     """
     Compute the number of visits or points in an individual's trajectory
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the number of visits or points per each individual
     :rtype: pandas DataFrame
 
@@ -682,7 +782,10 @@ def number_of_visits(traj):
     3    4               375
     4    5               245
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: len(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: len(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: len(x))
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
@@ -701,7 +804,7 @@ def _location_frequency_individual(traj, normalize=True):
     return freqs
 
 
-def location_frequency(traj, normalize=True):
+def location_frequency(traj, normalize=True, show_progress=True):
     """
     Visitation frequency of each location
 
@@ -709,7 +812,10 @@ def location_frequency(traj, normalize=True):
     :type traj: TrajDataFrame
     
     :param boolean normalize: if True, the frequencies are normalized (divided by the individual's total number of visits)
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the location frequency for each location of the individuals
     :rtype: pandas DataFrame
 
@@ -734,7 +840,10 @@ def location_frequency(traj, normalize=True):
         .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
         .. [pappalardo2018data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
     """
-    df = pd.DataFrame(traj.groupby(constants.UID).progress_apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
+    if show_progress:
+        df = pd.DataFrame(traj.groupby(constants.UID).progress_apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
+    else:
+        df = pd.DataFrame(traj.groupby(constants.UID).apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
     return df.rename(columns={constants.DATETIME: 'location_frequency'})
 
 
@@ -770,14 +879,17 @@ def _individual_mobility_network_individual(traj, self_loops=False):
                                        constants.LATITUDE + '_dest', constants.LONGITUDE + '_dest', 'n_trips'])
 
 
-def individual_mobility_network(traj, self_loops=False):
+def individual_mobility_network(traj, self_loops=False, show_progress=True):
     """
     Compute the individual mobility network of an individual.
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
     :param boolean self_loops: if True adds self loops also
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the graph describing the individual mobility network
     :rtype: networkx Graph
 
@@ -802,8 +914,12 @@ def individual_mobility_network(traj, self_loops=False):
         .. [bagrow2012mesoscopic] Bagrow, James P. and Lin, Yu-Ru. "Mesoscopic Structure and Social Aspects of Human Mobility." PLoS ONE 7 , no. 5 (2012): e37676.
         .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
     """
-    return traj.groupby(constants.UID).progress_apply(lambda x: _individual_mobility_network_individual(x,
-            self_loops=self_loops)).reset_index().drop('level_1', axis=1)
+    if show_progress:
+        return traj.groupby(constants.UID).progress_apply(lambda x: _individual_mobility_network_individual(x,
+                self_loops=self_loops)).reset_index().drop('level_1', axis=1)
+    else:
+        return traj.groupby(constants.UID).apply(lambda x: _individual_mobility_network_individual(x,
+                self_loops=self_loops)).reset_index().drop('level_1', axis=1)
 
 
 def _recency_rank_individual(traj):
@@ -814,13 +930,16 @@ def _recency_rank_individual(traj):
     return traj[[constants.LATITUDE, constants.LONGITUDE, 'recency_rank']]
 
 
-def recency_rank(traj):
+def recency_rank(traj, show_progress=True):
     """
     Compute the recency rank of the locations of the individual
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the recency rank for each location of the individuals
     :rtype: pandas DataFrame
 
@@ -845,7 +964,10 @@ def recency_rank(traj):
     References:
         .. [barbosa2015effect] Barbosa, Hugo, de Lima-Neto, Fernando B., Evsukoff, Alexandre, Menezes, Ronaldo."The effect of recency to human mobility", EPJ Data Science 4:21 (2015)
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _recency_rank_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _recency_rank_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _recency_rank_individual(x))
     return pd.DataFrame(df)
 
 
@@ -861,13 +983,16 @@ def _frequency_rank_individual(traj):
     return traj[[constants.LATITUDE, constants.LONGITUDE, 'frequency_rank']]
 
 
-def frequency_rank(traj):
+def frequency_rank(traj, show_progress=True):
     """
     Compute the frequency rank of the locations of the individual
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the frequency rank for each location of the individuals
     :rtype: pandas DataFrame
 
@@ -892,5 +1017,8 @@ def frequency_rank(traj):
     References:
         .. [barbosa2015effect] Barbosa, Hugo, de Lima-Neto, Fernando B., Evsukoff, Alexandre, Menezes, Ronaldo."The effect of recency to human mobility", EPJ Data Science 4:21 (2015)
     """
-    df = traj.groupby(constants.UID).progress_apply(lambda x: _frequency_rank_individual(x))
+    if show_progress:
+        df = traj.groupby(constants.UID).progress_apply(lambda x: _frequency_rank_individual(x))
+    else:
+        df = traj.groupby(constants.UID).apply(lambda x: _frequency_rank_individual(x))
     return df
