@@ -7,22 +7,6 @@ import errno
 from geopy.distance import distance
 import osmnx
 
-LATITUDE = constants.LATITUDE
-LONGITUDE = constants.LONGITUDE
-DATETIME = constants.DATETIME
-UID = constants.UID
-FREQUENCY = "freq"
-PROBABILITY = "prob"
-TOTAL_FREQ = "T_freq"
-COUNT = "count"
-TEMP = "tmp"
-PROPORTION = "prop"
-PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
-                    "second"]
-PRIVACY_RISK = "risk"
-INSTANCE = "instance"
-REIDENTIFICATION_PROBABILITY = "reid_prob"
-
 
 def diff_seconds(t_0, t_1):
     return (t_1 - t_0).total_seconds()
@@ -133,15 +117,19 @@ def group_df_by_time(df, freq_str='1D', offset_value=0, offset_unit='hours', add
 
 
 def frequency_vector(trajectory):
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    return freq.sort_values(by=[UID, FREQUENCY])
+    freq = trajectory.groupby([constants.UID, constants.LATITUDE, constants.LONGITUDE]).size().reset_index(
+        name=constants.FREQUENCY)
+    return freq.sort_values(by=[constants.UID, constants.FREQUENCY])
 
 
 def probability_vector(trajectory):
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
-    prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
-    return prob[UID, LATITUDE, LONGITUDE, PROBABILITY].sort_values(by=[UID, PROBABILITY])
+    freq = trajectory.groupby([constants.UID, constants.LATITUDE, constants.LONGITUDE]).size().reset_index(
+        name=constants.FREQUENCY)
+    prob = pd.merge(freq, trajectory.groupby(constants.UID).size().reset_index(name=constants.TOTAL_FREQ),
+                    left_on=constants.UID, right_on=constants.UID)
+    prob[constants.PROBABILITY] = prob[constants.FREQUENCY] / prob[constants.TOTAL_FREQ]
+    return prob[[constants.UID, constants.LATITUDE, constants.LONGITUDE, constants.PROBABILITY]].sort_values(
+        by=[constants.UID, constants.PROBABILITY])
 
 
 def date_time_precision(dt, precision):
