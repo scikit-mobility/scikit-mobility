@@ -6,7 +6,7 @@ import os
 import errno
 from geopy.distance import distance
 import osmnx
-
+import numpy as np
 
 def diff_seconds(t_0, t_1):
     return (t_1 - t_0).total_seconds()
@@ -223,3 +223,15 @@ def nearest(origin, tessellation, col):
         return point
 
     return tessellation.iloc[origin.apply(_nearest, args=(tessellation,), axis=1)][col]
+
+
+def get_geom_centroid(geom):
+    if type(geom) == shapely.geometry.multipolygon.MultiPolygon:
+        m_n = [[np.mean(pol.exterior.xy, axis=1), len(pol.exterior.xy[0])] for pol in geom]
+        lonO, latO = np.sum([[ln*n, la*n] for (ln,la),n in m_n], axis=0) / np.sum(m_n, axis=0)[1]
+    elif type(geom) == shapely.geometry.polygon.Polygon:
+        lonO, latO = np.mean(geom.exterior.xy, axis=1)
+    else:
+        lonO, latO = np.mean(geom.xy, axis=1)
+    return [lonO, latO]
+

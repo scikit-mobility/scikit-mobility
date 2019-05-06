@@ -1,9 +1,9 @@
-from ..utils import constants
+from ..utils import constants, utils
 import folium
-from geojson import LineString
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from geojson import Point, LineString, Polygon
 
 
 COLOR = {
@@ -119,25 +119,20 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='OpenStreetMap', zoom=12,
             except (KeyError, NameError):
                 cl = ''
 
+            fpoly = folium.RegularPolygonMarker([la, lo],
+                                        radius=12,
+                                        color=color,
+                                        fill_color=color,
+                                        fill_opacity=opacity
+                                        )
             if popup:
-                popup_str = 'User: {}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a><BR>Arr: {}<BR>Dep: {}{}' \
+                popup = folium.Popup('User: {}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a><BR>Arr: {}<BR>Dep: {}{}' \
                     .format(u, la, lo, np.round(la, 4), np.round(lo, 4),
                             pd.datetime.strftime(t0, '%Y/%m/%d %H:%M'),
-                            pd.datetime.strftime(t1, '%Y/%m/%d %H:%M'), cl)
-                folium.RegularPolygonMarker([la, lo],
-                                            radius=12,
-                                            popup=popup_str,
-                                            color=color,
-                                            fill_color=color,
-                                            fill_opacity=opacity
-                                            ).add_to(map_f)
-            else:
-                folium.RegularPolygonMarker([la, lo],
-                                            radius=12,
-                                            color=color,
-                                            fill_color=color,
-                                            fill_opacity=opacity
-                                            ).add_to(map_f)
+                            pd.datetime.strftime(t1, '%Y/%m/%d %H:%M'), cl), max_width=300)
+                fpoly = fpoly.add_child(popup)
+
+            fpoly.add_to(map_f)
 
     return map_f
 
@@ -174,3 +169,72 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
     ax.set_title('user %s' % user)
 
     return ax
+
+
+
+flow_style_function = lambda color, weight, weight_factor, flow_exp: \
+    (lambda feature: dict(color=color, weight=weight_factor * weight ** flow_exp, opacity=0.5)) #, dashArray='5, 5'))
+
+
+def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', flow_weight=5,
+               num_od_popup=5, flow_exp=0.5,
+               style_function=flow_style_function, flow_popup=False, tile_popup=True, radius_origin_point=5,
+               color_origin_point='#3186cc'):
+
+    if map_f == None:
+        # initialise map
+        lon, lat = np.mean(np.array(list(fdf.tessellation.geometry.apply(utils.get_geom_centroid).values)), axis=0)
+        map_f = folium.Map(location=[lat,lon], tiles=tiles, zoom_start=zoom)
+
+    mean_flows = fdf['flow'].mean()
+
+    O_groups = fdf.groupby(by=constants.ORIGIN)
+    for O, OD in O_groups:
+
+        geom = fdf.get_geometry(O)
+        lonO, latO = utils.get_geom_centroid(geom)
+
+        for D, T in OD[['destination', 'flow']].values:
+            if O == D:
+                continue
+            if T < min_flow:
+                continue
+
+            geom = fdf.get_geometry(D)
+            lonD, latD = utils.get_geom_centroid(geom)
+
+            gjc = LineString([(lonO,latO), (lonD,latD)])
+
+            fgeojson = folium.GeoJson(gjc,
+                                      name='geojson',
+                                      style_function = style_function(flow_color, T / mean_flows, flow_weight, flow_exp)
+                                      )
+            if flow_popup:
+                popup = folium.Popup('flow from %s to %s: %s'%(O, D, int(T)), max_width=300)
+                fgeojson = fgeojson.add_child(popup)
+
+            fgeojson.add_to(map_f)
+
+    if radius_origin_point > 0:
+        for O, OD in O_groups:
+
+            name = 'origin: %s' % O.replace('\'', '_')
+            T_D = [[T, D] for D, T in OD[['destination', 'flow']].values]
+            trips_info = '<br/>'.join(["flow to %s: %s" %
+                                       (dd.replace('\'', '_'), int(tt)) \
+                                       for tt, dd in sorted(T_D, reverse=True)[:num_od_popup]])
+
+            geom = fdf.get_geometry(O)
+            lonO, latO = utils.get_geom_centroid(geom)
+            fmarker = folium.CircleMarker([latO, lonO],
+                                          radius=radius_origin_point,
+                                          weight=2,
+                                          color=color_origin_point,
+                                          fill=True, fill_color=color_origin_point
+                                          )
+            if tile_popup:
+                popup = folium.Popup(name+'<br/>'+trips_info, max_width=300)
+                fmarker = fmarker.add_child(popup)
+            fmarker.add_to(map_f)
+
+    return map_f
