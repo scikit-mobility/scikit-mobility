@@ -325,12 +325,12 @@ class LocationTimeAttack(Attack):
         the length of the background knowledge that we want to simulate. For this attack, it is the number of
         locations with timestamps known to the adversary.
 
-    :param time_precision: string
+    :param time_precision: string, default 'Hour'
         the precision at which to consider the timestamps for the visits.
         The possible precisions are: Year, Month, Day, Hour, Minute, Second.
     """
 
-    def __init__(self, k, time_precision):
+    def __init__(self, k, time_precision="Hour"):
         if time_precision not in constants.PRECISION_LEVELS:
             raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
         self.time_precision = time_precision
@@ -343,7 +343,7 @@ class LocationTimeAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
