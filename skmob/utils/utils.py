@@ -7,7 +7,6 @@ import errno
 from geopy.distance import distance
 import osmnx
 
-
 LATITUDE = constants.LATITUDE
 LONGITUDE = constants.LONGITUDE
 DATETIME = constants.DATETIME
@@ -26,7 +25,7 @@ REIDENTIFICATION_PROBABILITY = "reid_prob"
 
 
 def diff_seconds(t_0, t_1):
-    return (t_1-t_0).total_seconds()
+    return (t_1 - t_0).total_seconds()
 
 
 def is_multi_user(data):
@@ -74,7 +73,6 @@ def assign_crs(shape, crs):
 
 def to_geodataframe(df, keep=False, latitude=constants.LATITUDE, longitude=constants.LONGITUDE,
                     crs=constants.DEFAULT_CRS):
-
     geometry = [shapely.geometry.Point(xy) for xy in zip(df[longitude], df[latitude])]
 
     gdf = gpd.GeoDataFrame(df, crs=crs, geometry=geometry)
@@ -143,7 +141,6 @@ def probability_vector(trajectory):
     freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
     prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
     prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
-
     return prob[UID, LATITUDE, LONGITUDE, PROBABILITY].sort_values(by=[UID, PROBABILITY])
 
 
@@ -161,12 +158,10 @@ def date_time_precision(dt, precision):
         result += str(dt.year) + str(dt.month) + str(dt.day) + str(dt.month) + str(dt.minute)
     elif precision == "Second" or precision == "second":
         result += str(dt.year) + str(dt.month) + str(dt.day) + str(dt.month) + str(dt.minute) + str(dt.second)
-
     return result
 
 
 def bbox_from_points(points, crs=None):
-
     coords = points.total_bounds
 
     base = shapely.geometry.box(coords[0], coords[1], coords[2], coords[3], ccw=True)
@@ -179,14 +174,13 @@ def bbox_from_points(points, crs=None):
 
 
 def bbox_from_area(area, bbox_side_len=500, crs=None):
-
     centroid = area.iloc[0].geometry.centroid
 
     # get North-East corner
-    ne = [float(coord)+(bbox_side_len/2) for coord in centroid]
+    ne = [float(coord) + (bbox_side_len / 2) for coord in centroid]
 
     # get South-West corner
-    sw = [float(coord)-(bbox_side_len/2) for coord in centroid]
+    sw = [float(coord) - (bbox_side_len / 2) for coord in centroid]
 
     # build bbox from NE,SW corners
     bbox = shapely.geometry.box(sw[0], sw[1], ne[0], ne[1], ccw=True)
@@ -200,12 +194,10 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
 
 
 def bbox_from_name(area_name, crs=None):
-
     # Get the shape by using osmnx, it returns the shape in DEFAULT_CRS
     boundary = osmnx.gdf_from_place(area_name)
 
     if isinstance(boundary.loc[0]['geometry'], shapely.geometry.Point):
-
         boundary = osmnx.gdf_from_place(area_name, which_result=2)
 
     if crs is None:
@@ -243,4 +235,3 @@ def nearest(origin, tessellation, col):
         return point
 
     return tessellation.iloc[origin.apply(_nearest, args=(tessellation,), axis=1)][col]
-
