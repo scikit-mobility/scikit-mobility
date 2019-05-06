@@ -33,6 +33,9 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 2. Activate 
     
         source activate skmob
+    or 
+    
+        conda activate skmob
 
 3. Install skmob
 
