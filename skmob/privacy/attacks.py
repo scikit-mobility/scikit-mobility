@@ -141,7 +141,7 @@ class Attack(object):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -196,7 +196,7 @@ class LocationAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -265,7 +265,7 @@ class LocationSequenceAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -335,6 +335,18 @@ class LocationTimeAttack(Attack):
             raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
         self.time_precision = time_precision
         super(LocationTimeAttack, self).__init__(k)
+
+    def set_time_precision(self, time_precision):
+        """
+        Sets the precision at which to consider the temporal information.
+
+        :param time_precision: string
+        the precision at which to consider the timestamps for the visits.
+        The possible precisions are: Year, Month, Day, Hour, Minute, Second.
+        """
+        if time_precision not in constants.PRECISION_LEVELS:
+            raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
+        self.time_precision = time_precision
 
     def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
         """
@@ -408,7 +420,7 @@ class UniqueLocationAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -461,7 +473,7 @@ class LocationFrequencyAttack(Attack):
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their frequency known to the adversary.
 
-    :param tolerance: float
+    :param tolerance: float, default 0
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
@@ -471,6 +483,16 @@ class LocationFrequencyAttack(Attack):
         self.tolerance = tolerance
         super(LocationFrequencyAttack, self).__init__(k)
 
+    def set_tolerance(self, tolerance):
+        """
+        Sets the tolerance level for the matching of the frequency.
+        :param tolerance:
+            the tolarance with which to match the frequency. It can assume values between 0 and 1.
+        """
+        if tolerance > 1.0 or tolerance < 0.0:
+            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+        self.tolerance = tolerance
+
     def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
@@ -479,7 +501,7 @@ class LocationFrequencyAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -543,7 +565,7 @@ class LocationProbabilityAttack(Attack):
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their probability known to the adversary.
 
-    :param tolerance: float
+    :param tolerance: float, default 0
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
@@ -553,6 +575,16 @@ class LocationProbabilityAttack(Attack):
         self.tolerance = tolerance
         super(LocationProbabilityAttack, self).__init__(k)
 
+    def set_tolerance(self, tolerance):
+        """
+        Sets the tolerance level for the matching of the frequency.
+        :param tolerance:
+            the tolarance with which to match the frequency. It can assume values between 0 and 1.
+        """
+        if tolerance > 1.0 or tolerance < 0.0:
+            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+        self.tolerance = tolerance
+
     def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
@@ -561,7 +593,7 @@ class LocationProbabilityAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -627,7 +659,7 @@ class LocationProportionAttack(Attack):
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their proportion of frequencies known to the adversary.
 
-    :param tolerance: float
+    :param tolerance: float, default 0
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
@@ -637,6 +669,16 @@ class LocationProportionAttack(Attack):
         self.tolerance = tolerance
         super(LocationProportionAttack, self).__init__(k)
 
+    def set_tolerance(self, tolerance):
+        """
+        Sets the tolerance level for the matching of the frequency.
+        :param tolerance:
+            the tolarance with which to match the frequency. It can assume values between 0 and 1.
+        """
+        if tolerance > 1.0 or tolerance < 0.0:
+            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+        self.tolerance = tolerance
+
     def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
@@ -645,7 +687,7 @@ class LocationProportionAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
@@ -738,7 +780,7 @@ class HomeWorkAttack(Attack):
         :param traj: TrajectoryDataFrame
             the dataframe on which to assess privacy risk
 
-        :param targets: TrajectoryDataFrame or list
+        :param targets: TrajectoryDataFrame or list, default None
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
