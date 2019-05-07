@@ -804,7 +804,7 @@ def _location_frequency_individual(traj, normalize=True):
     return freqs
 
 
-def location_frequency(traj, normalize=True, show_progress=True):
+def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True):
     """
     Visitation frequency of each location
 
@@ -813,11 +813,14 @@ def location_frequency(traj, normalize=True, show_progress=True):
     
     :param boolean normalize: if True, the frequencies are normalized (divided by the individual's total number of visits)
     
+    :param as_ranks: if True return a list where element i indicates the average visitation frequency of the i-th most frequent location
+    :type as_ranks: boolean
+    
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
     
-    :return: the location frequency for each location of the individuals
-    :rtype: pandas DataFrame
+    :return: the location frequency for each location of the individuals or ranks list
+    :rtype: pandas DataFrame or list
 
     Examples:
             Computing the number of visits per location from a DataFrame of trajectories
@@ -844,7 +847,18 @@ def location_frequency(traj, normalize=True, show_progress=True):
         df = pd.DataFrame(traj.groupby(constants.UID).progress_apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
     else:
         df = pd.DataFrame(traj.groupby(constants.UID).apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
-    return df.rename(columns={constants.DATETIME: 'location_frequency'})
+    
+    df = df.rename(columns={constants.DATETIME: 'location_frequency'})
+    
+    if as_ranks:
+        ranks = [[] for i in range(df.groupby('uid').count().max().location_frequency)]
+        for i, group in df.groupby('uid'):
+            for j, (index, row) in enumerate(group.iterrows()):
+                ranks[j].append(row.location_frequency)
+        ranks = [np.mean(rr) for rr in ranks]
+        return ranks
+    
+    return df
 
 
 def _individual_mobility_network_individual(traj, self_loops=False):
@@ -876,7 +890,7 @@ def _individual_mobility_network_individual(traj, self_loops=False):
         for loc2, weight in loc2weight.items():
             rows.append([loc1[0], loc1[1], loc2[0], loc2[1], weight])
     return pd.DataFrame(rows, columns=[constants.LATITUDE + '_origin', constants.LONGITUDE + '_origin',
-                                       constants.LATITUDE + '_dest', constants.LONGITUDE + '_dest', 'n_trips'])
+                                       theconstants.LATITUDE + '_dest', constants.LONGITUDE + '_dest', 'n_trips'])
 
 
 def individual_mobility_network(traj, self_loops=False, show_progress=True):
