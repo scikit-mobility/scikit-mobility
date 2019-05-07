@@ -3,7 +3,7 @@ from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
-def filter(tdf, max_speed=500., include_loops=False, speed=5., max_loop=6, ratio_max=0.25):
+def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=6, ratio_max=0.25):
     """
     Filter out trajectory points that are considered noise or outliers.
 
@@ -48,12 +48,12 @@ def filter(tdf, max_speed=500., include_loops=False, speed=5., max_loop=6, ratio
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
-        ftdf = tdf.groupby(groupby, group_keys=False).apply(_filter_trajectory, max_speed=max_speed,
-                                                            include_loops=include_loops, speed=speed,
+        ftdf = tdf.groupby(groupby, group_keys=False).apply(_filter_trajectory, max_speed=max_speed_kmh,
+                                                            include_loops=include_loops, speed=speed_kmh,
                                                              max_loop=max_loop, ratio_max=ratio_max)
 
     else:
-        ftdf = _filter_trajectory(tdf, speed=speed, max_speed=max_speed,
+        ftdf = _filter_trajectory(tdf, speed=speed_kmh, max_speed=max_speed_kmh,
                         max_loop=max_loop, ratio_max=ratio_max,
                         include_loops=include_loops)
 

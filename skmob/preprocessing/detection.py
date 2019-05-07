@@ -3,7 +3,7 @@ from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=0.2,  leaving_time=True):
+def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2,  leaving_time=True):
     """
     Detect a stop when the user spends at least `minutes_for_a_stop` minutes
     within a distance (`stop_radius_factor` * `spatial_radius`) km
@@ -52,10 +52,10 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius=0
 
     # Use the spatial_radius in the tdf parameters, if present, otherwise use the default argument.
     try:
-        spatial_radius = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius']
+        spatial_radius_km = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius_km']
     except KeyError:
         pass
-    stop_radius = spatial_radius * stop_radius_factor
+    stop_radius = spatial_radius_km * stop_radius_factor
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
