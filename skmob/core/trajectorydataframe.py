@@ -264,7 +264,7 @@ class TrajDataFrame(pd.DataFrame):
         return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True]) #, inplace=True)
 
     # Plot methods
-    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='OpenStreetMap',
+    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='cartodbpositron',
                         zoom=12, hex_color=-1, weight=2, opacity=0.75):
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, imin=imin, imax=imax,
                                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity)

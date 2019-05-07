@@ -50,7 +50,7 @@ def random_hex():
 
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1,
-                    tiles='OpenStreetMap', zoom=12, hex_color=-1, weight=2, opacity=0.75):
+                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
     # group by user and keep only the first `max_users`
     nu = 0
     for user, df in tdf.groupby(constants.UID):
@@ -93,7 +93,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax
     return map_f
 
 
-def plot_stops(stdf, map_f=None, max_users=10, tiles='OpenStreetMap', zoom=12,
+def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
                hex_color=-1, opacity=0.3, popup=True):
     if map_f == None:
         # initialise map
