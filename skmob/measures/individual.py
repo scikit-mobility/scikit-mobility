@@ -890,7 +890,7 @@ def _individual_mobility_network_individual(traj, self_loops=False):
         for loc2, weight in loc2weight.items():
             rows.append([loc1[0], loc1[1], loc2[0], loc2[1], weight])
     return pd.DataFrame(rows, columns=[constants.LATITUDE + '_origin', constants.LONGITUDE + '_origin',
-                                       theconstants.LATITUDE + '_dest', constants.LONGITUDE + '_dest', 'n_trips'])
+                                       constants.LATITUDE + '_dest', constants.LONGITUDE + '_dest', 'n_trips'])
 
 
 def individual_mobility_network(traj, self_loops=False, show_progress=True):
