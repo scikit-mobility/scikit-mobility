@@ -279,3 +279,9 @@ class FlowDataFrame(pd.DataFrame):
                                flow_weight=flow_weight, flow_exp=flow_exp, num_od_popup=num_od_popup,
                                style_function=style_function, flow_popup=flow_popup, tile_popup=tile_popup,
                                radius_origin_point=radius_origin_point, color_origin_point=color_origin_point)
+
+    def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
+                          tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+
+        return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
+                             popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

@@ -3,7 +3,10 @@ import folium
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from geojson import Point, LineString, Polygon
+import shapely
+from geojson import LineString
+import geopandas as gpd
+import json
 
 
 COLOR = {
@@ -39,6 +42,11 @@ def get_color(k=-1, color_dict=COLOR):
         return np.random.choice(list(color_dict.values()))  # color_dict[random.randint(0,20)]
     else:
         return color_dict[k % 21]
+
+
+def random_hex():
+    r = lambda: np.random.randint(0,255)
+    return '#%02X%02X%02X' % (r(),r(),r())
 
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1,
@@ -181,7 +189,7 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
                style_function=flow_style_function, flow_popup=False, tile_popup=True, radius_origin_point=5,
                color_origin_point='#3186cc'):
 
-    if map_f == None:
+    if map_f is None:
         # initialise map
         lon, lat = np.mean(np.array(list(fdf.tessellation.geometry.apply(utils.get_geom_centroid).values)), axis=0)
         map_f = folium.Map(location=[lat,lon], tiles=tiles, zoom_start=zoom)
@@ -238,3 +246,131 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
             fmarker.add_to(map_f)
 
     return map_f
+
+
+
+default_style_func_args = {'weight': 1, 'color': 'random', 'opacity': 0.5, 'fillColor': 'red', 'fillOpacity': 0.25}
+
+geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: \
+    (lambda feature: dict(weight=weight, color=color, opacity=opacity, fillColor=fillColor, fillOpacity=fillOpacity))
+
+
+def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
+    weight, color, opacity, fillColor, fillOpacity = [
+        style_func_args[k] if k in style_func_args else default_style_func_args[k]
+        for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']]
+
+    if type(gway) == shapely.geometry.multipolygon.MultiPolygon:
+
+        # Multipolygon
+        for gg in gway:
+            if color == 'random':
+                color = random_hex()
+                fillColor = color
+
+            vertices = list(zip(*gg.exterior.xy))
+            gj = folium.GeoJson({"type": "Polygon", "coordinates": [vertices]},
+                                style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                      fillColor=fillColor, fillOpacity=fillOpacity))
+
+    elif type(gway) == shapely.geometry.polygon.Polygon:
+
+        # Polygon
+        if color == 'random':
+            color = random_hex()
+            fillColor = color
+
+        vertices = list(zip(*gway.exterior.xy))
+        gj = folium.GeoJson({"type": "Polygon", "coordinates": [vertices]},
+                            style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                  fillColor=fillColor, fillOpacity=fillOpacity))
+
+    elif type(gway) == shapely.geometry.multilinestring.MultiLineString:
+
+        # MultiLine
+        for gg in gway:
+            if color == 'random':
+                color = random_hex()
+                fillColor = color
+
+            vertices = list(zip(*gg.xy))
+            gj = folium.GeoJson({"type": "LineString", "coordinates": vertices},
+                                style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                      fillColor=fillColor, fillOpacity=fillOpacity))
+
+    elif type(gway) == shapely.geometry.linestring.LineString:
+
+        # LineString
+        if color == 'random':
+            color = random_hex()
+            fillColor = color
+        vertices = list(zip(*gway.xy))
+        gj = folium.GeoJson({"type": "LineString", "coordinates": vertices},
+                            style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                  fillColor=fillColor, fillOpacity=fillOpacity))
+
+    else:
+
+        # Point
+        if color == 'random':
+            color = random_hex()
+            fillColor = color
+
+        point = list(zip(*gway.xy))[0]
+        #         gj = folium.CircleMarker(
+        gj = folium.Circle(
+            location=point[::-1],
+            radius=5,
+            color=color,  # '#3186cc',
+            fill=True,
+            fill_color=fillColor
+        )
+
+    popup = []
+    for pf in popup_features:
+        try:
+            popup += ['%s: %s' % (pf, g[pf])]
+        except KeyError:
+            pass
+
+    try:
+        popup = '<br>'.join(popup)
+        popup += json.dumps(g.tags)
+        popup = popup.replace("""'""", """_""")
+    except AttributeError:
+        pass
+    if len(popup) > 0:
+        gj.add_child(folium.Popup(popup, max_width=300))
+
+    gj.add_to(map_osm)
+
+    return map_osm
+
+
+def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[],
+            tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+
+    if map_osm is None:
+        # initialise map
+        lon, lat = np.mean(np.array(list(gdf[geom_col].apply(utils.get_geom_centroid).values)), axis=0)
+        map_osm = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom)
+
+    count = 0
+    for k in gdf.index:
+        g = gdf.loc[k]
+
+        if type(g[geom_col]) == gpd.geoseries.GeoSeries:
+            for i in range(len(g[geom_col])):
+                map_osm = add_to_map(g[geom_col].iloc[i], g.iloc[i], map_osm,
+                                     popup_features=popup_features,
+                                     style_func_args=style_func_args)
+        else:
+            map_osm = add_to_map(g[geom_col], g, map_osm,
+                                 popup_features=popup_features,
+                                 style_func_args=style_func_args)
+
+        count += 1
+        if count == maxitems:
+            break
+
+    return map_osm
