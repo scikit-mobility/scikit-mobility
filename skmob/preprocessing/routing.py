@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import osmnx as ox
 from geopy.distance import distance
+from ..utils import constants
 
 
 def route(tdf, G=None, index_origin=0, index_destin=-1):
@@ -22,15 +23,19 @@ def route(tdf, G=None, index_origin=0, index_destin=-1):
 
     tdf1.plot_trajectory(map_f=m)
     """
-    tdf1 = tdf[index_origin: index_destin]
+    if index_destin == -1:
+        index_destin_last = None
+    else:
+        index_destin_last = index_destin
+    tdf1 = tdf[index_origin: index_destin_last]
 
-    origin_coords = tuple(tdf1.iloc[index_origin][['lat', 'lng']].values)
-    destin_coords = tuple(tdf1.iloc[index_destin][['lat', 'lng']].values)
+    origin_coords = tuple(tdf1.iloc[index_origin][[constants.LATITUDE, constants.LONGITUDE]].values)
+    destin_coords = tuple(tdf1.iloc[index_destin][[constants.LATITUDE, constants.LONGITUDE]].values)
 
     if G is None:
         mid_point = tuple(np.mean(np.array([origin_coords, destin_coords]), axis=0))
         # all distances from mid_point
-        all_dists = pd.DataFrame(tdf1[['lat', 'lng']]).apply(
+        all_dists = pd.DataFrame(tdf1[[constants.LATITUDE, constants.LONGITUDE]]).apply(
             lambda x: distance(mid_point, tuple(x.values)).m, axis=1).values
         max_dist = 1.1 * max(all_dists)
         G = ox.graph_from_point(mid_point, distance=max_dist)
