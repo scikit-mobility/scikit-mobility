@@ -24,16 +24,20 @@ def _uncorrelated_location_entropy_individual(traj, normalize=True):
     return entropy
 
 
-def uncorrelated_location_entropy(traj, normalize=False):
+def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
     """number of distinct locations visited by the
     The temporal-uncorrelated location entropy :math:`LE_{unc}(j)` of a location :math:`j` is the historical probability
     that an individual :math:`u` visited location :math:`j`.
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
+    
     :param boolean normalize: if True normalize the entropy by dividing by log2(N), where N is the number of
         distinct users that visited a location
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the temporal-uncorrelated location entropies of the individuals
     :rtype: pandas Series
 
@@ -57,7 +61,10 @@ def uncorrelated_location_entropy(traj, normalize=False):
     References:
         .. [cho2011frienship] Eunjoon Cho, Seth A. Myers, and Jure Leskovec. "Friendship and mobility: user movement in location-based social networks." In Proceedings of the 17th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD '11). 1082-1090, 2011.
     """
-    df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).progress_apply(lambda x: _uncorrelated_location_entropy_individual(x, normalize=normalize)))
+    if show_progress:
+        df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).progress_apply(lambda x: _uncorrelated_location_entropy_individual(x, normalize=normalize)))
+    else:
+        df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).apply(lambda x: _uncorrelated_location_entropy_individual(x, normalize=normalize)))
     column_name = sys._getframe().f_code.co_name
     if normalize:
         column_name = 'norm_%s' % sys._getframe().f_code.co_name
@@ -72,15 +79,21 @@ def _square_displacement(traj, delta_t):
     return square_displacement
 
 
-def mean_square_displacement(traj, days=0, hours=1, minutes=0):
+def mean_square_displacement(traj, days=0, hours=1, minutes=0, show_progress=True):
     """
     Compute the mean square displacement across the individuals.
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
+    
     :param int days: the days since the starting time
+    
     :param int hours: the hours since the days since the starting time
+    
     :param int minutes: the minutes sine the hours since the days since the starting time
+
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
 
     :return float: the mean square displacement
 
@@ -102,7 +115,10 @@ def mean_square_displacement(traj, days=0, hours=1, minutes=0):
         .. [vazquez1999diffusion] A. Vazquez, O. Sotolongo-Costa, F. Brouers, "Diffusion regimes in levy flights with  trapping",  Physica  A:  Statistical  Mechanics  and  its  Applications  264  (3) (1999) 424–431.
     """
     delta_t = timedelta(days=days, hours=hours, minutes=minutes)
-    return traj.groupby(constants.UID).progress_apply(lambda x: _square_displacement(x, delta_t)).mean()
+    if show_progress:
+        return traj.groupby(constants.UID).progress_apply(lambda x: _square_displacement(x, delta_t)).mean()
+    else:
+        return traj.groupby(constants.UID).apply(lambda x: _square_displacement(x, delta_t)).mean()
 
 
 def visits_per_location(trajs):
@@ -211,14 +227,17 @@ def visits_per_time_unit(traj, time_unit='1h'):
     return pd.DataFrame(traj.set_index(pd.DatetimeIndex(traj[constants.DATETIME])).groupby(pd.Grouper(freq=time_unit)).count()[constants.UID]).rename(columns={constants.UID: 'n_visits'})
 
 
-def origin_destination_matrix(traj, self_loops=False):
+def origin_destination_matrix(traj, self_loops=False, show_progress=True):
     """
     Compute an origin-destination matrix from the trajectories of the individuals.
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
     :param boolean directed: if True returns a directed network, otherwise an undirected network
-
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
     :return: the graph describing the origin destination matrix
     :rtype: networkx Graph
 
@@ -265,8 +284,11 @@ def origin_destination_matrix(traj, self_loops=False):
             else:
                 pass
             i += 1
-
-    traj.sort_values(by=constants.DATETIME).groupby(constants.UID).progress_apply(lambda x: _update_od_matrix(x))
+    
+    if show_progress:
+        traj.sort_values(by=constants.DATETIME).groupby(constants.UID).progress_apply(lambda x: _update_od_matrix(x))
+    else:
+        traj.sort_values(by=constants.DATETIME).groupby(constants.UID).apply(lambda x: _update_od_matrix(x))
     rows = []
     for loc1, loc2weight in loc2loc2weight.items():
         for loc2, weight in loc2weight.items():
