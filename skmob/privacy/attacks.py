@@ -34,7 +34,7 @@ class Attack(object):
             raise ValueError("Parameter k should not be less than 1")
         self.k = k
 
-    def _all_risks(self, traj, targets=None, instance_analysis=False, progress=False):
+    def _all_risks(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Computes risk for all the users in the data. It applies the risk function to every individual in the data.
         If it is not required to compute the risk for the entire data, the targets parameter can be used to select
@@ -51,7 +51,7 @@ class Attack(object):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param: progress: boolean, default False
+        :param: show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
@@ -64,7 +64,7 @@ class Attack(object):
                 targets = traj[traj[constants.UID].isin(targets)]
             if isinstance(targets, TrajDataFrame) or isinstance(targets, pd.DataFrame):
                 targets = traj[traj[constants.UID].isin(targets[constants.UID])]
-        if progress:
+        if show_progress:
             tqdm.pandas(desc="computing risk")
             risks = targets.groupby(constants.UID).progress_apply(lambda x: self._risk(x, traj, instance_analysis))
         else:
@@ -130,7 +130,7 @@ class Attack(object):
             return risk
 
     @abstractmethod
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Abstract function to assess privacy risk for a whole dataframe of trajectories.
         An attack must implement an assessing strategy. This could involve some preprocessing, for example
@@ -149,7 +149,7 @@ class Attack(object):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
@@ -189,7 +189,7 @@ class LocationAttack(Attack):
     def __init__(self, k):
         super(LocationAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -204,14 +204,14 @@ class LocationAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
-        return self._all_risks(traj, targets, instance_analysis, progress)
+        return self._all_risks(traj, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -258,7 +258,7 @@ class LocationSequenceAttack(Attack):
     def __init__(self, k):
         super(LocationSequenceAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -273,14 +273,14 @@ class LocationSequenceAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
-        return self._all_risks(traj, targets, instance_analysis, progress)
+        return self._all_risks(traj, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -348,7 +348,7 @@ class LocationTimeAttack(Attack):
             raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
         self.time_precision = time_precision
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -363,7 +363,7 @@ class LocationTimeAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
@@ -371,7 +371,7 @@ class LocationTimeAttack(Attack):
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
         traj[constants.TEMP] = traj[constants.DATETIME].apply(lambda x: date_time_precision(x, self.time_precision))
-        return self._all_risks(traj, targets, instance_analysis, progress)
+        return self._all_risks(traj, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -412,7 +412,7 @@ class UniqueLocationAttack(Attack):
     def __init__(self, k):
         super(UniqueLocationAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -428,14 +428,14 @@ class UniqueLocationAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, progress)
+        return self._all_risks(freq, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -493,7 +493,7 @@ class LocationFrequencyAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -509,14 +509,14 @@ class LocationFrequencyAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, progress)
+        return self._all_risks(freq, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -543,9 +543,9 @@ class LocationFrequencyAttack(Attack):
             return 0
         else:
             condition1 = locs_inst[constants.FREQUENCY + "inst"] >= locs_inst[constants.FREQUENCY] - (
-                        locs_inst[constants.FREQUENCY] * self.tolerance)
+                    locs_inst[constants.FREQUENCY] * self.tolerance)
             condition2 = locs_inst[constants.FREQUENCY + "inst"] <= locs_inst[constants.FREQUENCY] + (
-                        locs_inst[constants.FREQUENCY] * self.tolerance)
+                    locs_inst[constants.FREQUENCY] * self.tolerance)
             if len(locs_inst[condition1 & condition2].index) != len(inst.index):
                 return 0
             else:
@@ -585,7 +585,7 @@ class LocationProbabilityAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to probability vectors.
@@ -601,14 +601,14 @@ class LocationProbabilityAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         prob = probability_vector(traj)
-        return self._all_risks(prob, targets, instance_analysis, progress)
+        return self._all_risks(prob, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -679,7 +679,7 @@ class LocationProportionAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -695,14 +695,14 @@ class LocationProportionAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, progress)
+        return self._all_risks(freq, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -772,7 +772,7 @@ class HomeWorkAttack(Attack):
         """
         return [single_traj[:2].values]
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, progress=False):
+    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -788,14 +788,14 @@ class HomeWorkAttack(Attack):
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
-        :param progress: boolean, default False
+        :param show_progress: boolean, default False
             if True, shows the progress of the computation
 
         :return: Pandas DataFrame
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, progress)
+        return self._all_risks(freq, targets, instance_analysis, show_progress)
 
     def _match(self, single_traj, instance):
         """
