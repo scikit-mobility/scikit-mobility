@@ -5,6 +5,8 @@ from warnings import warn
 from shapely.geometry import Polygon, Point
 import geopandas as gpd
 from .flowdataframe import FlowDataFrame
+from skmob.preprocessing import routing
+
 
 class TrajSeries(pd.Series):
 
@@ -79,6 +81,8 @@ class TrajDataFrame(pd.DataFrame):
         self._crs = crs
 
         if not isinstance(data, pd.core.internals.BlockManager):
+            print(type(self))
+            print(self)
             if timestamp:
                 self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME], unit='s')
             if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
@@ -148,6 +152,24 @@ class TrajDataFrame(pd.DataFrame):
 
         return new_data
 
+    def __getitem__(self, key):
+        """
+        It the result contains lat, lng and datetime, return a TrajDataFrame, else a pandas DataFrame.
+        """
+        result = super(TrajDataFrame, self).__getitem__(key)
+
+        if (isinstance(result, TrajDataFrame)) and (constants.LATITUDE in result) and \
+                (constants.LONGITUDE in result) and (constants.DATETIME in result):
+            result.__class__ = TrajDataFrame
+            result.crs = self._crs
+            result.parameters = self._parameters
+
+        elif isinstance(result, TrajDataFrame) and not ((constants.LATITUDE in result) and
+                                                        (constants.LONGITUDE in result) and
+                                                        (constants.DATETIME in result)):
+            result.__class__ = pd.DataFrame
+
+        return result
 
     @classmethod
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
@@ -259,10 +281,10 @@ class TrajDataFrame(pd.DataFrame):
 
     # Sorting
     def sort_by_uid_and_datetime(self):
-        self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True], inplace=True)
+        return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True]) #, inplace=True)
 
     # Plot methods
-    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='OpenStreetMap',
+    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='cartodbpositron',
                         zoom=12, hex_color=-1, weight=2, opacity=0.75):
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, imin=imin, imax=imax,
                                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity)
@@ -274,3 +296,12 @@ class TrajDataFrame(pd.DataFrame):
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
+
+    def route(self, G=None, index_origin=0, index_destin=-1):
+        return routing.route(self, G=G, index_origin=index_origin, index_destin=index_destin)
+
+
+def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
+    df = pd.DataFrame(trajectory_array, columns=columns)
+    tdf = TrajDataFrame(df, parameters=parameters)
+    return tdf

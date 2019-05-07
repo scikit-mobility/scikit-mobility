@@ -6,26 +6,10 @@ import os
 import errno
 from geopy.distance import distance
 import osmnx
-
-LATITUDE = constants.LATITUDE
-LONGITUDE = constants.LONGITUDE
-DATETIME = constants.DATETIME
-UID = constants.UID
-FREQUENCY = "freq"
-PROBABILITY = "prob"
-TOTAL_FREQ = "T_freq"
-COUNT = "count"
-TEMP = "tmp"
-PROPORTION = "prop"
-PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
-                    "second"]
-PRIVACY_RISK = "risk"
-INSTANCE = "instance"
-REIDENTIFICATION_PROBABILITY = "reid_prob"
-
+import numpy as np
 
 def diff_seconds(t_0, t_1):
-    return (t_1-t_0).total_seconds()
+    return (t_1 - t_0).total_seconds()
 
 
 def is_multi_user(data):
@@ -64,12 +48,6 @@ def to_dataframe(data, columns):
     return df
 
 
-def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
-    df = pd.DataFrame(trajectory_array, columns=columns)
-    tdf = TrajDataFrame(df, parameters=parameters)
-    return tdf
-
-
 def assign_crs(shape, crs):
     if crs is not None:
         return shape.to_crs(crs)
@@ -79,7 +57,6 @@ def assign_crs(shape, crs):
 
 def to_geodataframe(df, keep=False, latitude=constants.LATITUDE, longitude=constants.LONGITUDE,
                     crs=constants.DEFAULT_CRS):
-
     geometry = [shapely.geometry.Point(xy) for xy in zip(df[longitude], df[latitude])]
 
     gdf = gpd.GeoDataFrame(df, crs=crs, geometry=geometry)
@@ -140,16 +117,19 @@ def group_df_by_time(df, freq_str='1D', offset_value=0, offset_unit='hours', add
 
 
 def frequency_vector(trajectory):
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    return freq.sort_values(by=[UID, FREQUENCY])
+    freq = trajectory.groupby([constants.UID, constants.LATITUDE, constants.LONGITUDE]).size().reset_index(
+        name=constants.FREQUENCY)
+    return freq.sort_values(by=[constants.UID, constants.FREQUENCY])
 
 
 def probability_vector(trajectory):
-    freq = trajectory.groupby([UID, LATITUDE, LONGITUDE]).size().reset_index(name=FREQUENCY)
-    prob = pd.merge(freq, trajectory.groupby(UID).size().reset_index(name=TOTAL_FREQ), left_on=UID, right_on=UID)
-    prob[PROBABILITY] = prob[FREQUENCY] / prob[TOTAL_FREQ]
-
-    return prob[UID, LATITUDE, LONGITUDE, PROBABILITY].sort_values(by=[UID, PROBABILITY])
+    freq = trajectory.groupby([constants.UID, constants.LATITUDE, constants.LONGITUDE]).size().reset_index(
+        name=constants.FREQUENCY)
+    prob = pd.merge(freq, trajectory.groupby(constants.UID).size().reset_index(name=constants.TOTAL_FREQ),
+                    left_on=constants.UID, right_on=constants.UID)
+    prob[constants.PROBABILITY] = prob[constants.FREQUENCY] / prob[constants.TOTAL_FREQ]
+    return prob[[constants.UID, constants.LATITUDE, constants.LONGITUDE, constants.PROBABILITY]].sort_values(
+        by=[constants.UID, constants.PROBABILITY])
 
 
 def date_time_precision(dt, precision):
@@ -166,12 +146,10 @@ def date_time_precision(dt, precision):
         result += str(dt.year) + str(dt.month) + str(dt.day) + str(dt.month) + str(dt.minute)
     elif precision == "Second" or precision == "second":
         result += str(dt.year) + str(dt.month) + str(dt.day) + str(dt.month) + str(dt.minute) + str(dt.second)
-
     return result
 
 
 def bbox_from_points(points, crs=None):
-
     coords = points.total_bounds
 
     base = shapely.geometry.box(coords[0], coords[1], coords[2], coords[3], ccw=True)
@@ -184,14 +162,13 @@ def bbox_from_points(points, crs=None):
 
 
 def bbox_from_area(area, bbox_side_len=500, crs=None):
-
     centroid = area.iloc[0].geometry.centroid
 
     # get North-East corner
-    ne = [float(coord)+(bbox_side_len/2) for coord in centroid]
+    ne = [float(coord) + (bbox_side_len / 2) for coord in centroid]
 
     # get South-West corner
-    sw = [float(coord)-(bbox_side_len/2) for coord in centroid]
+    sw = [float(coord) - (bbox_side_len / 2) for coord in centroid]
 
     # build bbox from NE,SW corners
     bbox = shapely.geometry.box(sw[0], sw[1], ne[0], ne[1], ccw=True)
@@ -205,12 +182,10 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
 
 
 def bbox_from_name(area_name, crs=None):
-
     # Get the shape by using osmnx, it returns the shape in DEFAULT_CRS
     boundary = osmnx.gdf_from_place(area_name)
 
     if isinstance(boundary.loc[0]['geometry'], shapely.geometry.Point):
-
         boundary = osmnx.gdf_from_place(area_name, which_result=2)
 
     if crs is None:
@@ -248,4 +223,15 @@ def nearest(origin, tessellation, col):
         return point
 
     return tessellation.iloc[origin.apply(_nearest, args=(tessellation,), axis=1)][col]
+
+
+def get_geom_centroid(geom):
+    if type(geom) == shapely.geometry.multipolygon.MultiPolygon:
+        m_n = [[np.mean(pol.exterior.xy, axis=1), len(pol.exterior.xy[0])] for pol in geom]
+        lonO, latO = np.sum([[ln*n, la*n] for (ln,la),n in m_n], axis=0) / np.sum(m_n, axis=0)[1]
+    elif type(geom) == shapely.geometry.polygon.Polygon:
+        lonO, latO = np.mean(geom.exterior.xy, axis=1)
+    else:
+        lonO, latO = np.mean(geom.xy, axis=1)
+    return [lonO, latO]
 

@@ -1,6 +1,6 @@
 import pandas as pd
 import geopandas as gpd
-from ..utils import constants, utils
+from ..utils import constants, utils, plot
 import numpy as np
 from warnings import warn
 from ..tessellation.tilers import tiler
@@ -71,12 +71,16 @@ class FlowDataFrame(pd.DataFrame):
 
         if not isinstance(data, pd.core.internals.BlockManager):
 
+            self[constants.ORIGIN] = self[constants.ORIGIN].astype('str')
+            self[constants.DESTINATION] = self[constants.DESTINATION].astype('str')
+
             if tessellation is None:
                 raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
             elif isinstance(tessellation, gpd.GeoDataFrame):
                 self._tessellation = tessellation.copy()
                 self._tessellation.rename(columns={tile_id: constants.TILE_ID}, inplace=True)
+                self._tessellation[constants.TILE_ID] = self._tessellation[constants.TILE_ID].astype('str')
 
                 if tessellation.crs is None:
                     warn("The tessellation crs is None. It will be set to the default crs WGS84 (EPSG:4326).")
@@ -112,8 +116,8 @@ class FlowDataFrame(pd.DataFrame):
         :rtype: int
         """
 
-        if (origin_id not in self._tessellation[constants.TILE_ID]) or \
-                (destination_id not in self._tessellation[constants.TILE_ID]):
+        if (origin_id not in self._tessellation[constants.TILE_ID].values) or \
+                (destination_id not in self._tessellation[constants.TILE_ID].values):
             raise ValueError("Both origin_id and destination_id must be present in the tessellation.")
 
         tmp = self[(self[constants.ORIGIN] == origin_id) & (self[constants.DESTINATION] == destination_id)]
@@ -121,6 +125,12 @@ class FlowDataFrame(pd.DataFrame):
             return 0
         else:
             return tmp[constants.FLOW].item()
+
+    def get_geometry(self, tile_id):
+        if tile_id not in self._tessellation[constants.TILE_ID].values:
+            raise ValueError("tile_id \"%s\" is not in the tessellation." % tile_id)
+
+        return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.item()
 
     def to_matrix(self):
 
@@ -259,3 +269,19 @@ class FlowDataFrame(pd.DataFrame):
     @property
     def _constructor_expanddim(self):
         return FlowDataFrame
+
+    # Plot methods
+    def plot_flows(self, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', flow_weight=5,
+                   flow_exp=0.5, num_od_popup=5, style_function=plot.flow_style_function, flow_popup=False,
+                   tile_popup=True, radius_origin_point=5, color_origin_point='#3186cc'):
+
+        return plot.plot_flows(self, map_f=map_f, min_flow=min_flow,  tiles=tiles, zoom=zoom, flow_color=flow_color,
+                               flow_weight=flow_weight, flow_exp=flow_exp, num_od_popup=num_od_popup,
+                               style_function=style_function, flow_popup=flow_popup, tile_popup=tile_popup,
+                               radius_origin_point=radius_origin_point, color_origin_point=color_origin_point)
+
+    def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
+                          tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+
+        return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
+                             popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

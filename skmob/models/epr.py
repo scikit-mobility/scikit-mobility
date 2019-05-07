@@ -210,7 +210,7 @@ class SpatialEPR:
     def __init__(self, name='Spatial EPR model',
                  rho=0.6, gamma=0.21,
                  beta=0.8, tau=17,
-                 min_wait_time_minutes=10):
+                 min_wait_time_minutes=20):
 
         self._name = name
         
@@ -597,7 +597,7 @@ class DensityEPR:
         .. [pappalardo2016modelling] Pappalardo, L., Simini, F. Rinzivillo, S., "Human Mobility Modelling: exploration and preferential return meet the gravity model", Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).
     """
 
-    def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=10):
+    def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
 
         self._name = name
         

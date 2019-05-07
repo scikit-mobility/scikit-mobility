@@ -1,8 +1,9 @@
 from ..utils import gislib, utils, constants
+from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
-def filter(tdf, max_speed=500., include_loops=False, speed=5., max_loop=6, ratio_max=0.25):
+def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=6, ratio_max=0.25):
     """
     Filter out trajectory points that are considered noise or outliers.
 
@@ -31,7 +32,7 @@ def filter(tdf, max_speed=500., include_loops=False, speed=5., max_loop=6, ratio
         .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
     """
     # Sort
-    tdf.sort_by_uid_and_datetime()
+    tdf = tdf.sort_by_uid_and_datetime()
 
     # Save function arguments and values in a dictionary
     frame = inspect.currentframe()
@@ -47,12 +48,12 @@ def filter(tdf, max_speed=500., include_loops=False, speed=5., max_loop=6, ratio
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
-        ftdf = tdf.groupby(groupby, group_keys=False).apply(_filter_trajectory, max_speed=max_speed,
-                                                            include_loops=include_loops, speed=speed,
+        ftdf = tdf.groupby(groupby, group_keys=False).apply(_filter_trajectory, max_speed=max_speed_kmh,
+                                                            include_loops=include_loops, speed=speed_kmh,
                                                              max_loop=max_loop, ratio_max=ratio_max)
 
     else:
-        ftdf = _filter_trajectory(tdf, speed=speed, max_speed=max_speed,
+        ftdf = _filter_trajectory(tdf, speed=speed_kmh, max_speed=max_speed_kmh,
                         max_loop=max_loop, ratio_max=ratio_max,
                         include_loops=include_loops)
 
@@ -68,7 +69,7 @@ def _filter_trajectory(tdf, max_speed, include_loops, speed, max_loop, ratio_max
 
     trajectory = _filter_array(lat_lng_dtime_other, max_speed, include_loops, speed, max_loop, ratio_max)
 
-    filtered_traj = utils.nparray_to_trajdataframe(trajectory, utils.get_columns(tdf), {})
+    filtered_traj = nparray_to_trajdataframe(trajectory, utils.get_columns(tdf), {})
     # Put back to the original order
     filtered_traj = filtered_traj[columns_order]
 

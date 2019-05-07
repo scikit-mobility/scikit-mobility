@@ -1,4 +1,5 @@
 from ..utils import utils, constants
+from ..core.trajectorydataframe import *
 from sklearn.cluster import DBSCAN
 import numpy as np
 import inspect
@@ -31,7 +32,7 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
         .. [hariharan2004project] Hariharan, Ramaswamy, and Kentaro Toyama. "Project Lachesis: parsing and modeling location histories." In International Conference on Geographic Information Science, pp. 106-124. Springer, Berlin, Heidelberg, 2004.
     """
     # Sort
-    tdf.sort_by_uid_and_datetime()
+    tdf = tdf.sort_by_uid_and_datetime()
 
     # Save function arguments and values in a dictionary
     frame = inspect.currentframe()
@@ -68,7 +69,7 @@ def _cluster_trajectory(tdf, cluster_radius_km, min_samples):
 
     l2x, cluster_IDs = _cluster_array(lat_lng_dtime_other, cluster_radius_km, min_samples)
 
-    clusters_df = utils.nparray_to_trajdataframe(lat_lng_dtime_other, utils.get_columns(tdf), {})
+    clusters_df = nparray_to_trajdataframe(lat_lng_dtime_other, utils.get_columns(tdf), {})
     # Put back to the original order
     clusters_df = clusters_df[columns_order]
 
