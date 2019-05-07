@@ -5,6 +5,8 @@ from warnings import warn
 from shapely.geometry import Polygon, Point
 import geopandas as gpd
 from .flowdataframe import FlowDataFrame
+from skmob.preprocessing import routing
+
 
 class TrajSeries(pd.Series):
 
@@ -274,6 +276,9 @@ class TrajDataFrame(pd.DataFrame):
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
+
+    def route(self, G=None, index_origin=0, index_destin=-1):
+        return routing.route(self, G=G, index_origin=index_origin, index_destin=index_destin)
 
 
 def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
