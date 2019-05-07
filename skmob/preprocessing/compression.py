@@ -3,7 +3,7 @@ from ..core.trajectorydataframe import *
 import numpy as np
 import inspect
 
-def compress(tdf, spatial_radius=0.2):
+def compress(tdf, spatial_radius_km=0.2):
     """
     Reduce the number of points in a trajectory.
     All points within a radius of `spatial_radius` km from a given initial point are compressed into
@@ -39,10 +39,10 @@ def compress(tdf, spatial_radius=0.2):
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
-        ctdf = tdf.groupby(groupby, group_keys=False).apply(_compress_trajectory, spatial_radius=spatial_radius)
+        ctdf = tdf.groupby(groupby, group_keys=False).apply(_compress_trajectory, spatial_radius=spatial_radius_km)
 
     else:
-        ctdf = _compress_trajectory(tdf, spatial_radius=spatial_radius)
+        ctdf = _compress_trajectory(tdf, spatial_radius=spatial_radius_km)
 
     ctdf.parameters = tdf.parameters
     ctdf.set_parameter(constants.COMPRESSION_PARAMS, arguments)

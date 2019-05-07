@@ -194,7 +194,7 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
         lon, lat = np.mean(np.array(list(fdf.tessellation.geometry.apply(utils.get_geom_centroid).values)), axis=0)
         map_f = folium.Map(location=[lat,lon], tiles=tiles, zoom_start=zoom)
 
-    mean_flows = fdf['flow'].mean()
+    mean_flows = fdf[constants.FLOW].mean()
 
     O_groups = fdf.groupby(by=constants.ORIGIN)
     for O, OD in O_groups:
@@ -202,7 +202,7 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
         geom = fdf.get_geometry(O)
         lonO, latO = utils.get_geom_centroid(geom)
 
-        for D, T in OD[['destination', 'flow']].values:
+        for D, T in OD[[constants.DESTINATION, constants.FLOW]].values:
             if O == D:
                 continue
             if T < min_flow:
@@ -227,7 +227,7 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
         for O, OD in O_groups:
 
             name = 'origin: %s' % O.replace('\'', '_')
-            T_D = [[T, D] for D, T in OD[['destination', 'flow']].values]
+            T_D = [[T, D] for D, T in OD[[constants.DESTINATION, constants.FLOW]].values]
             trips_info = '<br/>'.join(["flow to %s: %s" %
                                        (dd.replace('\'', '_'), int(tt)) \
                                        for tt, dd in sorted(T_D, reverse=True)[:num_od_popup]])
