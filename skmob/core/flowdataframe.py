@@ -126,6 +126,15 @@ class FlowDataFrame(pd.DataFrame):
         else:
             return tmp[constants.FLOW].item()
 
+    def settings_from(self, flowdataframe):
+        """
+        Method to copy attributes from another FlowDataFrame.
+        :param flowdataframe: FlowDataFrame from which copy the attributes.
+        """
+        for k in flowdataframe.metadata:
+            value = getattr(flowdataframe, k)
+            setattr(self, k, value)
+
     def get_geometry(self, tile_id):
         if tile_id not in self._tessellation[constants.TILE_ID].values:
             raise ValueError("tile_id \"%s\" is not in the tessellation." % tile_id)
@@ -145,6 +154,30 @@ class FlowDataFrame(pd.DataFrame):
         self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
 
         return m
+
+    def _is_flowdataframe(self):
+
+        if (constants.ORIGIN in self) and (constants.DESTINATION in self) and (constants.FLOW in self):
+            return True
+
+        return False
+
+    def __getitem__(self, key):
+        """
+        It the result contains lat, lng and datetime, return a TrajDataFrame, else a pandas DataFrame.
+        """
+        result = super(FlowDataFrame, self).__getitem__(key)
+
+        if (isinstance(result, FlowDataFrame)) and result._is_flowdataframe():
+            result.__class__ = FlowDataFrame
+            result.crs = self._crs
+            result.tessellation = self._tessellation
+            result.parameters = self._parameters
+
+        elif isinstance(result, FlowDataFrame) and not result._is_flowdataframe():
+            result.__class__ = pd.DataFrame
+
+        return result
 
     @classmethod
     def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
@@ -257,6 +290,12 @@ class FlowDataFrame(pd.DataFrame):
     @property
     def tessellation(self):
         return self._tessellation
+
+    @property
+    def metadata(self):
+
+        md = ['crs', 'parameters', 'tessellation']    # Add here all the metadata that are accessible from the object
+        return md
 
     @property
     def _constructor(self):

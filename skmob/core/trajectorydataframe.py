@@ -284,7 +284,7 @@ class TrajDataFrame(pd.DataFrame):
     @parameters.setter
     def parameters(self, parameters):
 
-        self._parameters = parameters #dict(parameters)
+        self._parameters = dict(parameters)
 
     def __operate_on(self):
         """
@@ -306,7 +306,7 @@ class TrajDataFrame(pd.DataFrame):
 
     # Sorting
     def sort_by_uid_and_datetime(self):
-        return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True]) #, inplace=True)
+        return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True])
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='cartodbpositron',
