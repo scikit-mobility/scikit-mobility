@@ -21,7 +21,7 @@ class TrajSeries(pd.Series):
 
 class TrajDataFrame(pd.DataFrame):
 
-    _metadata = ['_parameters','_crs']
+    _metadata = ['_parameters', '_crs'] # All the metadata that should be accessible must be also in the metadata method
 
     def __init__(self, data, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
                  user_id=constants.UID, trajectory_id=constants.TID,
@@ -167,7 +167,7 @@ class TrajDataFrame(pd.DataFrame):
 
             tile_ids = utils.nearest(gdf, tessellation, constants.TILE_ID)
 
-        new_data = self._constructor(self).__finalize__(self) #TrajDataFrame(self)
+        new_data = self._constructor(self).__finalize__(self)
         new_data = new_data.merge(tile_ids, right_index=True, left_index=True)
 
         return new_data
@@ -187,6 +187,15 @@ class TrajDataFrame(pd.DataFrame):
             result.__class__ = pd.DataFrame
 
         return result
+
+    def settings_from(self, trajdataframe):
+        """
+        Method to copy attributes from another TrajDataFrame.
+        :param trajdataframe: TrajDataFrame from which copy the attributes.
+        """
+        for k in trajdataframe.metadata:
+            value = getattr(trajdataframe, k)
+            setattr(self, k, value)
 
     @classmethod
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
@@ -232,6 +241,11 @@ class TrajDataFrame(pd.DataFrame):
     def _constructor_expanddim(self):
         return TrajDataFrame
 
+    @property
+    def metadata(self):
+
+        md = ['crs', 'parameters']    # Add here all the metadata that are accessible from the object
+        return md
 
     def __finalize__(self, other, method=None, **kwargs):
 
