@@ -21,11 +21,11 @@ class TrajSeries(pd.Series):
 
 class TrajDataFrame(pd.DataFrame):
 
-    _metadata = ['_crs', '_parameters']
+    _metadata = ['_parameters','_crs']
 
     def __init__(self, data, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
                  user_id=constants.UID, trajectory_id=constants.TID,
-                 timestamp=False, crs=constants.DEFAULT_CRS, parameters=None):
+                 timestamp=False, crs={"init": "epsg:4326"}, parameters={}):
 
         original2default = {latitude: constants.LATITUDE,
                             longitude: constants.LONGITUDE,
@@ -63,14 +63,6 @@ class TrajDataFrame(pd.DataFrame):
 
         super(TrajDataFrame, self).__init__(tdf, columns=columns)
 
-        if parameters is None:
-            # Init empty prop dictionary
-            self._parameters = {}
-        elif isinstance(parameters, dict):
-            self._parameters = parameters
-        else:
-            raise AttributeError("Parameters must be a dictionary.")
-
         # Check crs consistency
         if crs is None:
             warn("crs will be set to the default crs WGS84 (EPSG:4326).")
@@ -80,17 +72,45 @@ class TrajDataFrame(pd.DataFrame):
 
         self._crs = crs
 
-        if not isinstance(data, pd.core.internals.BlockManager):
-            print(type(self))
-            print(self)
-            if timestamp:
-                self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME], unit='s')
-            if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
-                self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME])
-            if not pd.core.dtypes.common.is_float_dtype(self[constants.LONGITUDE].dtype):
-                self[constants.LONGITUDE] = self[constants.LONGITUDE].astype('float')
-            if not pd.core.dtypes.common.is_float_dtype(self[constants.LATITUDE].dtype):
-                self[constants.LATITUDE] = self[constants.LATITUDE].astype('float')
+        if not isinstance(parameters, dict):
+            raise AttributeError("parameters must be a dictionary.")
+
+        self._parameters = parameters
+
+        if self._is_trajdataframe():
+            self._set_traj(timestamp=timestamp, inplace=True)
+
+    def _is_trajdataframe(self):
+
+        if (constants.DATETIME in self) and (constants.LATITUDE in self) and (constants.LONGITUDE in self):
+            return True
+
+        return False
+
+    def _set_traj(self, timestamp=False, inplace=False):
+
+        if not inplace:
+            frame = self.copy()
+        else:
+            frame = self
+
+        if timestamp:
+            frame[constants.DATETIME] = pd.to_datetime(frame[constants.DATETIME], unit='s')
+
+        if not pd.core.dtypes.common.is_datetime64_any_dtype(frame[constants.DATETIME].dtype):
+            frame[constants.DATETIME] = pd.to_datetime(frame[constants.DATETIME])
+
+        if not pd.core.dtypes.common.is_float_dtype(frame[constants.LONGITUDE].dtype):
+            frame[constants.LONGITUDE] = frame[constants.LONGITUDE].astype('float')
+
+        if not pd.core.dtypes.common.is_float_dtype(frame[constants.LATITUDE].dtype):
+            frame[constants.LATITUDE] = frame[constants.LATITUDE].astype('float')
+
+        frame.parameters = self._parameters
+        frame.crs = self._crs
+
+        if not inplace:
+            return frame
 
     def to_flowdataframe(self, tessellation, remove_na=False, self_loops=True):
         """
@@ -158,15 +178,12 @@ class TrajDataFrame(pd.DataFrame):
         """
         result = super(TrajDataFrame, self).__getitem__(key)
 
-        if (isinstance(result, TrajDataFrame)) and (constants.LATITUDE in result) and \
-                (constants.LONGITUDE in result) and (constants.DATETIME in result):
+        if (isinstance(result, TrajDataFrame)) and result._is_trajdataframe():
             result.__class__ = TrajDataFrame
             result.crs = self._crs
             result.parameters = self._parameters
 
-        elif isinstance(result, TrajDataFrame) and not ((constants.LATITUDE in result) and
-                                                        (constants.LONGITUDE in result) and
-                                                        (constants.DATETIME in result)):
+        elif isinstance(result, TrajDataFrame) and not result._is_trajdataframe():
             result.__class__ = pd.DataFrame
 
         return result
@@ -174,7 +191,7 @@ class TrajDataFrame(pd.DataFrame):
     @classmethod
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
                   user_id=constants.UID, trajectory_id=constants.TID,
-                  usecols=None, header='infer', timestamp=False, crs=constants.DEFAULT_CRS, sep="\t", parameters=None):
+                  usecols=None, header='infer', timestamp=False, crs={"init": "epsg:4326"}, sep="\t", parameters=None):
 
         df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols)
 
@@ -189,24 +206,18 @@ class TrajDataFrame(pd.DataFrame):
     def lat(self):
         if constants.LATITUDE not in self:
             raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'" % constants.LATITUDE)
-        # if not pd.core.dtypes.common.is_float_dtype(self[constants.LATITUDE].dtype):
-        #     self[constants.LATITUDE] = self[constants.LATITUDE].astype('float')
         return self[constants.LATITUDE]
 
     @property
     def lng(self):
         if constants.LONGITUDE not in self:
             raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'"%constants.LONGITUDE)
-        # if not pd.core.dtypes.common.is_float_dtype(self[constants.LONGITUDE].dtype):
-        #     self[constants.LONGITUDE] = self[constants.LONGITUDE].astype('float')
         return self[constants.LONGITUDE]
 
     @property
     def datetime(self):
         if constants.DATETIME not in self:
             raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'"%constants.DATETIME)
-        # if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
-        #     self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME])
         return self[constants.DATETIME]
 
     @property
@@ -220,6 +231,7 @@ class TrajDataFrame(pd.DataFrame):
     @property
     def _constructor_expanddim(self):
         return TrajDataFrame
+
 
     def __finalize__(self, other, method=None, **kwargs):
 
@@ -258,8 +270,7 @@ class TrajDataFrame(pd.DataFrame):
     @parameters.setter
     def parameters(self, parameters):
 
-        # TODO: check if parameters are correct
-        self._parameters = dict(parameters)
+        self._parameters = parameters #dict(parameters)
 
     def __operate_on(self):
         """
@@ -305,3 +316,14 @@ def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
     df = pd.DataFrame(trajectory_array, columns=columns)
     tdf = TrajDataFrame(df, parameters=parameters)
     return tdf
+
+def _dataframe_set_geometry(self, col, timestampe=False, drop=False, inplace=False, crs=None):
+    if inplace:
+        raise ValueError("Can't do inplace setting when converting from"
+                         " DataFrame to GeoDataFrame")
+    gf = TrajDataFrame(self)
+
+    # this will copy so that BlockManager gets copied
+    return gf._set_traj() #.set_geometry(col, drop=drop, inplace=False, crs=crs)
+
+pd.DataFrame._set_traj = _dataframe_set_geometry
