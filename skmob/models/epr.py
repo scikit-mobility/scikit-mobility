@@ -7,12 +7,16 @@ import math
 from math import sqrt, sin, cos, pi, asin, pow, ceil, log
 import csv
 from tqdm import tqdm
-from ..utils import constants
+from ..utils import constants, utils
 from scipy.sparse import lil_matrix
 import random
 import logging
 import inspect
 from ..core.trajectorydataframe import TrajDataFrame
+from ..models.migration import Gravity
+
+from geopy.distance import distance
+earth_distance = (lambda p0,p1: distance(p0,p1).km)
 
 latitude = constants.LATITUDE
 longitude = constants.LONGITUDE
@@ -20,40 +24,40 @@ date_time = constants.DATETIME
 user_id = constants.UID
 
 
-def earth_distance(lat_lng1, lat_lng2):
-    """
-    Compute the distance (in km) along earth between two lat/lon pairs
-    :param lat_lng1: tuple
-        the first lat/lon pair
-    :param lat_lng2: tuple
-        the second lat/lon pair
+# def earth_distance(lat_lng1, lat_lng2):
+#     """
+#     Compute the distance (in km) along earth between two lat/lon pairs
+#     :param lat_lng1: tuple
+#         the first lat/lon pair
+#     :param lat_lng2: tuple
+#         the second lat/lon pair
+#
+#     :return: float
+#         the distance along earth in km
+#     """
+#     lat1, lng1 = [l*pi/180 for l in lat_lng1]
+#     lat2, lng2 = [l*pi/180 for l in lat_lng2]
+#     dlat, dlng = lat1-lat2, lng1-lng2
+#     ds = 2 * asin(sqrt(sin(dlat/2.0) ** 2 + cos(lat1) * cos(lat2) * sin(dlng/2.0) ** 2))
+#     return 6371.01 * ds  # spherical earth...
 
-    :return: float
-        the distance along earth in km
-    """
-    lat1, lng1 = [l*pi/180 for l in lat_lng1]
-    lat2, lng2 = [l*pi/180 for l in lat_lng2]
-    dlat, dlng = lat1-lat2, lng1-lng2
-    ds = 2 * asin(sqrt(sin(dlat/2.0) ** 2 + cos(lat1) * cos(lat2) * sin(dlng/2.0) ** 2))
-    return 6371.01 * ds  # spherical earth...
-
-def _earth_distance_vectorized(lat_lng1, lat_lng2):
-
-    s_lat, s_lng = lat_lng1
-    e_lat, e_lng = lat_lng2
-    # approximate radius of earth in km
-    R = 6373.0
-
-    s_lat = s_lat*np.pi/180.0
-    s_lng = np.deg2rad(s_lng)
-    e_lat = np.deg2rad(e_lat)
-    e_lng = np.deg2rad(e_lng)
-
-    d = np.sin((e_lat - s_lat)/2)**2 + np.cos(s_lat)*np.cos(e_lat) * np.sin((e_lng - s_lng)/2)**2
-    return 2 * R * np.arcsin(np.sqrt(d))
+# def _earth_distance_vectorized(lat_lng1, lat_lng2):
+#
+#     s_lat, s_lng = lat_lng1
+#     e_lat, e_lng = lat_lng2
+#     # approximate radius of earth in km
+#     R = 6373.0
+#
+#     s_lat = s_lat*np.pi/180.0
+#     s_lng = np.deg2rad(s_lng)
+#     e_lat = np.deg2rad(e_lat)
+#     e_lng = np.deg2rad(e_lng)
+#
+#     d = np.sin((e_lat - s_lat)/2)**2 + np.cos(s_lat)*np.cos(e_lat) * np.sin((e_lng - s_lng)/2)**2
+#     return 2 * R * np.arcsin(np.sqrt(d))
 
 
-def compute_od_matrix(spatial_tessellation, use_relevance=True):
+def compute_od_matrix(spatial_tessellation, gravity_singly, tile_id_column=constants.TILE_ID, relevance_column=constants.RELEVANCE):
     """
     Compute a weighted origin destination matrix where an element A_{ij} is the
     probability p_{ij} of moving between two locations in the spatial tessellation
@@ -73,26 +77,63 @@ def compute_od_matrix(spatial_tessellation, use_relevance=True):
     od_matrix: numpy array
         a bidimensional numpy array describing the weighted origin destination matrix
     """
-    n = len(spatial_tessellation)
-    od_matrix = np.zeros((n, n))
-    for id_i in tqdm(spatial_tessellation):
-        lat_i, lon_i = spatial_tessellation[id_i][latitude], spatial_tessellation[id_i][longitude]
-        d_i = spatial_tessellation[id_i]['relevance']
-        for id_j in spatial_tessellation:
-            if id_j != id_i:
-                lat_j, lon_j = spatial_tessellation[id_j][latitude], spatial_tessellation[id_j][longitude]
-                if use_relevance:
-                    d_j = spatial_tessellation[id_j]['relevance']
-                    p_ij = (d_i * d_j) / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
-                else:
-                    p_ij = 1.0 / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
-                od_matrix[id_i, id_j] = p_ij
-
-        # normalization by row
-        sum_odm = np.sum(od_matrix[id_i])
-        if sum_odm > 0.0:
-            od_matrix[id_i] /= sum_odm
+    # n = len(spatial_tessellation)
+    # od_matrix = np.zeros((n, n))
+    # for id_i in tqdm(spatial_tessellation):
+    #     lat_i, lon_i = spatial_tessellation[id_i][latitude], spatial_tessellation[id_i][longitude]
+    #     d_i = spatial_tessellation[id_i]['relevance']
+    #     for id_j in spatial_tessellation:
+    #         if id_j != id_i:
+    #             lat_j, lon_j = spatial_tessellation[id_j][latitude], spatial_tessellation[id_j][longitude]
+    #             if use_relevance:
+    #                 d_j = spatial_tessellation[id_j]['relevance']
+    #                 p_ij = (d_i * d_j) / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
+    #             else:
+    #                 p_ij = 1.0 / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
+    #             od_matrix[id_i, id_j] = p_ij
+    #
+    #     # normalization by row
+    #     sum_odm = np.sum(od_matrix[id_i])
+    #     if sum_odm > 0.0:
+    #         od_matrix[id_i] /= sum_odm
+    # return od_matrix
+    od_matrix = gravity_singly.generate(spatial_tessellation,
+                                           tile_id_column=tile_id_column,
+                                           tot_outflows_column=None,
+                                           relevance_column= relevance_column,
+                                           out_format='probabilities')
     return od_matrix
+
+
+def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
+    """
+    Populate the od matrix with the probability to move from the location in input to all other locations
+    in the spatial tessellation
+
+    :param location: int
+        the identifier of a location
+    """
+    # probs = []
+    # for id_j in spatial_tessellation:
+    #     if id_j != location:
+    #         lat_j, lon_j = spatial_tessellation[id_j][latitude], spatial_tessellation[id_j][longitude]
+    #         d_j = spatial_tessellation[id_j][constants.RELEVANCE]
+    #         p_ij = (d_i * d_j) / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
+    #         probs.append(p_ij)
+    #     else:
+    #         probs.append(0.0)
+    #
+    # # normalization by row
+    # sum_odm = sum(probs)
+    # if sum_odm > 0.0:
+    #     self._od_matrix[location, :] = np.array(probs) / sum_odm
+
+    ll_origin = lats_lngs[location]
+    distances = np.array([earth_distance(ll_origin, l) for l in lats_lngs])
+
+    scores = gravity_singly.compute_gravity_score(distances, relevances[location], relevances)
+    return scores / sum(scores)
+
 
 
 def load_spatial_tessellation(filename='location2info_trentino', delimiter=','):
@@ -302,7 +343,7 @@ class SpatialEPR:
         :return: int
             the identifier of the new location to explore
         """
-        if self._is_sparse:  # t_2413if the od matrix is not precomputed
+        if self._is_sparse:  # if the od matrix is not precomputed
 
             prob_array = self._od_matrix.getrowview(current_location)
             if prob_array.nnz == 0:
@@ -675,9 +716,9 @@ class DensityEPR:
         """
         next_location = self._weighted_random_selection()
         if self._log_file is not None:
-            logging.info('RETURN to %s (%s, %s)' % (next_location,
-                                                        self._spatial_tessellation[next_location][latitude],
-                                                        self._spatial_tessellation[next_location][longitude]))
+            logging.info('RETURN to %s (%s, %s)' % (next_location, self.lats_lngs[next_location]))
+                                                        # self._spatial_tessellation[next_location][latitude],
+                                                        # self._spatial_tessellation[next_location][longitude]))
             logging.info('\t frequency = %s' % self._location2visits[next_location])
         return next_location
 
@@ -697,9 +738,11 @@ class DensityEPR:
             prob_array = self._od_matrix.getrowview(current_location)
             if prob_array.nnz == 0:
                 # if the row has been not populated
-                self._populate_od_matrix(current_location)
-            locations = np.arange(len(self._spatial_tessellation))
-            weights = prob_array.toarray()[0]
+                weights = populate_od_matrix(current_location, self.lats_lngs, self.relevances, self.gravity_singly)
+                self._od_matrix[current_location, :] = weights
+            else:
+                weights = prob_array.toarray()[0]
+            locations = np.arange(len(self.lats_lngs))
             location = np.random.choice(locations, size=1, p=weights)[0]
 
         else:  # if the matrix is precomputed
@@ -708,37 +751,37 @@ class DensityEPR:
             location = np.random.choice(locations, size=1, p=weights)[0]
 
         if self._log_file is not None:
-            logging.info('EXPLORATION to %s (%s, %s)' % (location,
-                                                         self._spatial_tessellation[location][latitude],
-                                                         self._spatial_tessellation[location][longitude]))
+            logging.info('EXPLORATION to %s (%s, %s)' % (location, self.lats_lngs[location]))
+                                                         # self._spatial_tessellation[location][latitude],
+                                                         # self._spatial_tessellation[location][longitude]))
 
         return location
 
-    def _populate_od_matrix(self, location):
-        """
-        Populate the od matrix with the probability to move from the location in input to all other locations
-        in the spatial tessellation
-
-        :param location: int
-            the identifier of a location
-        """
-        lat_i, lon_i = self._spatial_tessellation[location][latitude], self._spatial_tessellation[location][longitude]
-        d_i = self._spatial_tessellation[location]['relevance']
-
-        probs = []
-        for id_j in self._spatial_tessellation:
-            if id_j != location:
-                lat_j, lon_j = self._spatial_tessellation[id_j][latitude], self._spatial_tessellation[id_j][longitude]
-                d_j = self._spatial_tessellation[id_j]['relevance']
-                p_ij = (d_i * d_j) / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
-                probs.append(p_ij)
-            else:
-                probs.append(0.0)
-
-        # normalization by row
-        sum_odm = sum(probs)
-        if sum_odm > 0.0:
-            self._od_matrix[location, :] = np.array(probs) / sum_odm
+    # def _populate_od_matrix(self, location):
+    #     """
+    #     Populate the od matrix with the probability to move from the location in input to all other locations
+    #     in the spatial tessellation
+    #
+    #     :param location: int
+    #         the identifier of a location
+    #     """
+    #     lat_i, lon_i = self._spatial_tessellation[location][latitude], self._spatial_tessellation[location][longitude]
+    #     d_i = self._spatial_tessellation[location]['relevance']
+    #
+    #     probs = []
+    #     for id_j in self._spatial_tessellation:
+    #         if id_j != location:
+    #             lat_j, lon_j = self._spatial_tessellation[id_j][latitude], self._spatial_tessellation[id_j][longitude]
+    #             d_j = self._spatial_tessellation[id_j]['relevance']
+    #             p_ij = (d_i * d_j) / (earth_distance((lat_i, lon_i), (lat_j, lon_j)) ** 2)
+    #             probs.append(p_ij)
+    #         else:
+    #             probs.append(0.0)
+    #
+    #     # normalization by row
+    #     sum_odm = sum(probs)
+    #     if sum_odm > 0.0:
+    #         self._od_matrix[location, :] = np.array(probs) / sum_odm
 
     def _get_trajdataframe(self, parameters):
         """
@@ -748,8 +791,10 @@ class DensityEPR:
         :rtype pandas DataFrame
         """
         df = pd.DataFrame(self._trajectories_, columns=[user_id, date_time, 'location'])
-        df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self._spatial_tessellation[s][latitude],
-                                                                    longitude: self._spatial_tessellation[s][longitude]}))
+        # df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self._spatial_tessellation[s][latitude],
+        #                                                             longitude: self._spatial_tessellation[s][longitude]}))
+        df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self.lats_lngs[s][0],
+                                                                    longitude: self.lats_lngs[s][1]}))
         df = df.sort_values(by=[user_id, date_time]).drop('location', axis=1)
         return TrajDataFrame(df, parameters=parameters)
 
@@ -773,8 +818,10 @@ class DensityEPR:
             # PREFERENTIAL EXPLORATION
             agent_id, current_time, current_location = self._trajectories_[-1]  # the last visited location
             next_location = self._preferential_exploration(current_location)
-            while next_location in self._location2visits:
-                next_location = self._preferential_exploration(current_location)
+            # TODO: remove the part below and exclude visited locations
+            #  from the list of potential destinations in _preferential_exploration
+            # while next_location in self._location2visits:
+            #     next_location = self._preferential_exploration(current_location)
             return next_location
 
         else:
@@ -792,7 +839,8 @@ class DensityEPR:
         time_to_wait = self._time_generator.generate_random()[0]
         return time_to_wait
 
-    def generate(self, start_date, end_date, spatial_tessellation, n_agents=1, starting_location=None, od_matrix=None,
+    def generate(self, start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1, starting_location=None, od_matrix=None,
+                 tile_id_column=constants.TILE_ID, relevance_column=constants.RELEVANCE,
                  random_state=None, log_file=None, verbose=False):
         """
         Start the simulation of the agent at time "start_date" till time "end_date".
@@ -819,7 +867,9 @@ class DensityEPR:
         :param random_state: if int, random_state is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random (default: None)
         :type random_state: int or None
         """
-        
+        if gravity_singly == {}:
+            self.gravity_singly = Gravity(gravity_type='singly constrained')
+
         # Save function arguments and values in a dictionary
         frame = inspect.currentframe()
         args, _, _, arg_values = inspect.getargvalues(frame)
@@ -841,11 +891,16 @@ class DensityEPR:
         self._trajectories_ = []
 
         # setting of spatial tessellation
-        self._spatial_tessellation = spatial_tessellation
+        self.num_locs = len(spatial_tessellation)
+        self.lats_lngs = spatial_tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
+        self.relevances = spatial_tessellation[relevance_column].fillna(0).values
+        # self._spatial_tessellation = dict([(i, {constants.LATITUDE: self.lats_lngs[i][0],
+        #                                         constants.LONGITUDE: lats_lngs[i][1],
+        #                                         constants.RELEVANCE: rel}) for i, rel in enumerate(relevances)])
 
         # initialization of od matrix
         if od_matrix is None:
-            n = len(self._spatial_tessellation)
+            n = self.num_locs
             self._od_matrix = lil_matrix((n, n))
             self._is_sparse = True
         else:
@@ -860,7 +915,8 @@ class DensityEPR:
         for agent_id in loop:
             self._location2visits = defaultdict(int)
             if starting_location is None:
-                self._starting_loc = np.random.choice(np.fromiter(self._spatial_tessellation.keys(), dtype=int), size=1)[0]
+                # self._starting_loc = np.random.choice(np.fromiter(self._spatial_tessellation.keys(), dtype=int), size=1)[0]
+                self._starting_loc = np.random.choice(np.fromiter(range(self.num_locs), dtype=int), size=1)[0]
             else:
                 self._starting_loc = starting_location
 
@@ -1102,6 +1158,7 @@ class Ditras:
 
     def generate(self, start_date, end_date, spatial_tessellation, n_agents=1, starting_location=None, od_matrix=None,
                  random_state=None, verbose=False):
+
         """
         Start the simulation of the agent at time "start_date" till time "end_date".
 

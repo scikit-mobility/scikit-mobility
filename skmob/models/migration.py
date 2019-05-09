@@ -8,8 +8,12 @@ from tqdm import tqdm
 import operator
 import pandas as pd
 # from collections import defaultdict
-from ..utils import constants
+from ..utils import constants, utils
 from ..utils.gislib import getDistanceByHaversine
+from ..core.flowdataframe import FlowDataFrame
+
+from geopy.distance import distance
+distfunc = (lambda p0,p1: distance(p0,p1).km)
 
 
 def ci(i, number_locs):
@@ -41,6 +45,35 @@ def powerlaw_deterrence_func(x, exponent):
     Power law deterrence function
     """
     return np.power(x, exponent)
+
+
+def compute_distance_matrix(spatial_tessellation, origins):
+    """
+    Compute the matrix of distances between origin locations and all other locations
+
+    Parameters
+    ----------
+    spatial_tessellation: GeoDataFrame tessellation
+
+    origins: list, indexes of the locations of origin
+
+    Returns
+    -------
+    distance_matrix: numpy array or scipy sparse array
+    """
+    coordinates = spatial_tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
+
+    n = len(spatial_tessellation)
+    distance_matrix = np.zeros((n, n))
+
+    for id_i in tqdm(origins):
+        lat_i, lng_i = coordinates[id_i]
+        for id_j in range(id_i + 1, n):
+            lat_j, lng_j = coordinates[id_j]
+            distance = distfunc((lat_i, lng_i), (lat_j, lng_j))
+            distance_matrix[id_i, id_j] = distance
+            distance_matrix[id_j, id_i] = distance
+    return distance_matrix
 
 
 class Gravity:
@@ -126,76 +159,91 @@ class Gravity:
         return self._gravity_type
 
     def __str__(self):
-        return 'Gravity(name=\"%s\", deterrence_func_type=\"%s\", deterrence_func_args=%s, origin_exp=%s, destination_exp=%s, gravity_type=\"%s\")' % (self._name, self._deterrence_func_type, self._deterrence_func_args, self._origin_exp, self._destination_exp, self._gravity_type)
-    
-    @staticmethod
-    def _compute_distance_matrix(spatial_tessellation):
-        """
-        Compute the matrix of distances between all pairs of locations
+        return 'Gravity(name=\"%s\", deterrence_func_type=\"%s\", deterrence_func_args=%s, origin_exp=%s, destination_exp=%s, gravity_type=\"%s\")' % \
+               (self._name, self._deterrence_func_type, self._deterrence_func_args, self._origin_exp, self._destination_exp, self._gravity_type)
 
-        Parameters
-        ----------
-        coords: numpy array
+    def compute_gravity_score(self, distance_matrix, relevances_orig, relevances_dest):
+        trip_probs_matrix = self._deterrence_func(distance_matrix, *self._deterrence_func_args)
+        # trip_probs_matrix = np.transpose(
+        #     trip_probs_matrix * relevances ** self.destination_exp) * relevances ** self._origin_exp
+        trip_probs_matrix = trip_probs_matrix * relevances_dest ** self.destination_exp * \
+                            np.expand_dims(relevances_orig ** self._origin_exp, axis=1)
+        # put the NaN and Inf to 0.0
+        np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
+        np.putmask(trip_probs_matrix, np.isinf(trip_probs_matrix), 0.0)
+        return trip_probs_matrix
 
-        Returns
-        -------
-        distance_matrix: numpy array
-        """
-        n = len(spatial_tessellation)
-        distance_matrix = np.zeros((n, n))
-        for id_i in tqdm(spatial_tessellation):
-            lat_i, lng_i = spatial_tessellation[id_i][constants.LATITUDE], spatial_tessellation[id_i][constants.LONGITUDE]
-            for id_j in range(id_i + 1, n):
-                lat_j, lng_j = spatial_tessellation[id_j][constants.LATITUDE], spatial_tessellation[id_j][constants.LONGITUDE]
-                distance = getDistanceByHaversine((lat_i, lng_i), (lat_j, lng_j))
-                distance_matrix[id_i, id_j] = distance
-                distance_matrix[id_j, id_i] = distance
-        return distance_matrix
+    def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
+                 tot_outflows_column=constants.TOT_OUTFLOW, relevance_column=constants.RELEVANCE, out_format='flows'):
 
-    
-    def generate(self, spatial_tessellation, relevance=constants.RELEVANCE, out_format='flows'):
-        
+        self._tile_id = tile_id_column
+        self._tot_outflows = tot_outflows_column
+        self._relevance = relevance_column
+        self._spatial_tessellation = spatial_tessellation
+
         if out_format not in ['flows', 'probabilities']:
             print('Output format \"%s\" not available. Flows will be used.\nAvailable output formats are [flows, probabilities]' % out_format)
             out_format = "flows"
-        
-        n_locs = len(spatial_tessellation)
-        relevances = np.array([info[relevance] for location, info in spatial_tessellation.items()])
 
         # if outflows are specified in a "tot_outflows" column then use that column,
         # otherwise use the "relevance" column
-        try:
-            tot_outflows = np.array([info['tot_outflows'] for location, info in spatial_tessellation.items()])
-        except KeyError:
-            tot_outflows = relevances
+        # try:
+        #     tot_outflows = np.array([info[tot_outflows] for location, info in spatial_tessellation.items()])
+        # except KeyError:
+        #     tot_outflows = relevances
+        if out_format == 'flows':
+            if self._tot_outflows not in spatial_tessellation.columns:
+                raise KeyError("The column 'tot_outflows' must be present in the tessellation.")
+            tot_outflows = spatial_tessellation[self._tot_outflows].fillna(0).values
+
+        n_locs = len(spatial_tessellation)
+        # relevances = np.array([info[relevance] for location, info in spatial_tessellation.items()])
+        relevances = spatial_tessellation[self._relevance].values
+
+        # the origin locations are all locations
+        origins = np.arange(n_locs)
 
         # compute the distances between all pairs of locations
-        distance_matrix = self._compute_distance_matrix(spatial_tessellation)
+        distance_matrix = compute_distance_matrix(spatial_tessellation, origins)
 
-        trip_probs_matrix = self._deterrence_func(distance_matrix, * self._deterrence_func_args)
-        trip_probs_matrix[trip_probs_matrix == trip_probs_matrix[0, 0]] = 0.0
-
-        trip_probs_matrix = np.transpose(trip_probs_matrix * relevances ** self.destination_exp) * relevances ** self._origin_exp
+        # compute scores
+        # trip_probs_matrix = self._deterrence_func(distance_matrix, * self._deterrence_func_args)
+        # # trip_probs_matrix[trip_probs_matrix == trip_probs_matrix[0, 0]] = 0.0
+        # trip_probs_matrix = np.transpose(trip_probs_matrix * relevances ** self.destination_exp) * relevances ** self._origin_exp
+        # # put the NaN and Inf to 0.0
+        # np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
+        # np.putmask(trip_probs_matrix, np.isinf(trip_probs_matrix), 0.0)
+        trip_probs_matrix = self.compute_gravity_score(distance_matrix, relevances, relevances)
 
         if self._gravity_type == 'globally constrained':  # globally constrained gravity model
             trip_probs_matrix /= np.sum(trip_probs_matrix)
-            # put the NaN to 0.0
-            np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
 
-            # generate random fluxes according to trip probabilities
-            od_matrix = np.reshape(np.random.multinomial(np.sum(tot_outflows), trip_probs_matrix.flatten()), (n_locs, n_locs))
+            if out_format == 'flows':
+                # generate random fluxes according to trip probabilities
+                od_matrix = np.reshape(np.random.multinomial(np.sum(tot_outflows), trip_probs_matrix.flatten()), (n_locs, n_locs))
+                return self._from_matrix_to_flowdf(od_matrix, origins)
+            else:
+                return trip_probs_matrix
 
         else:  # singly constrained gravity model
             trip_probs_matrix = np.transpose(trip_probs_matrix / np.sum(trip_probs_matrix, axis=1))
             # put the NaN to 0.0
-            np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
-            # generate random fluxes according to trip probabilities
-            od_matrix = np.array([np.random.multinomial(tot_outflows[i], row) for i, row in enumerate(trip_probs_matrix)])
-        
-        if out_format == 'flows':
-            return od_matrix
-        else:
-            return trip_probs_matrix
+            # np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
+
+            if out_format == 'flows':
+                # generate random fluxes according to trip probabilities
+                od_matrix = np.array([np.random.multinomial(tot_outflows[i], trip_probs_matrix[i]) for i in origins])
+                return self._from_matrix_to_flowdf(od_matrix, origins)
+            else:
+                return trip_probs_matrix
+
+
+    def _from_matrix_to_flowdf(self, flow_matrix, origins):
+        index2tileid = dict([(i, tileid) for i, tileid in enumerate(self._spatial_tessellation[self._tile_id].values)])
+        output_list = [[index2tileid[i], index2tileid[j], flow]
+                       for i in origins for j, flow in enumerate(flow_matrix[i]) if flow > 0.]
+        return FlowDataFrame(output_list, origin=0, destination=1, flow=2,
+                             tile_id=self._tile_id, tessellation=self._spatial_tessellation)
 
     def _update_training_set(self, flow_example):
         id_origin, id_destination, trips = flow_example.origin, flow_example.destination, flow_example.flow
@@ -238,7 +286,7 @@ class Gravity:
 
         self.y += [float(trips)]
     
-    def fit(self, spatial_tessellation, flow_df, delimiter=',', quotechar='"'):
+    def fit(self, flow_df):
         """
         Fit the gravity model parameters to the flows in file `filename`.
         Can fit globally or singly constrained gravity models using a
@@ -246,25 +294,10 @@ class Gravity:
 
         Parameters
         ----------
-        locations_info  :  pandas DataFrame with info about the spatial tessellation.
-            Must contain the columns:
-            "id": str, name or identifier of the location
-            "lat": float, latitude of the location's centroid
-            "lon": float, longitude of the location's centroid
+        flow_df  :  FlowDataFrame where the flows are stored and with info about the spatial tessellation.
+            In addition to the default columns, the spatial tessellation must contain the column
             "relevance": float, number of opportunities at the location
                 (e.g., population or total number of visits).
-            Optional columns:
-            "tot_outflow": float, total outgoing flow from the location.
-
-        filename  :  str; the path to the file where the flows are store.
-            File format: "origin location ID", "destination location ID", flow.
-            The location ids must match the "id"s in `locations_info`.
-
-        delimiter  :  str; column delimiter in file `filename`. Default: ','.
-
-        quotechar  :  str; one-character string used to quote fields containing
-            special characters in file `filename`. Default: '"'.
-
 
         Returns
         -------
@@ -274,9 +307,9 @@ class Gravity:
         y   :  list of dependent varibles (flows) used in the GLM fit.
 
         poisson_results  :  statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
-            statsmodels object with information on the fit's qualityand predictions.
+            statsmodels object with information on the fit's quality and predictions.
 
-        Referencesfilter_threshold=1,
+        References
         ----------
 
         .. [1] Agresti, Alan.
@@ -288,7 +321,7 @@ class Gravity:
             Journal of regional science 22.2 (1982): 191-202.
 
         """
-        self._spatial_tessellation = spatial_tessellation
+        self._spatial_tessellation = flow_df.tessellation
         self.X, self.y = [], [] # independent (X) and dependent (y) variables
         
         flow_df.progress_apply(lambda flow_example: self._update_training_set(flow_example), 
@@ -406,9 +439,12 @@ class Radiation:
 
         """
         edges = []
-        origin_lat = self._spatial_tessellation[origin][constants.LATITUDE]
-        origin_lng = self._spatial_tessellation[origin][constants.LONGITUDE]
-        origin_relevance = float(self._spatial_tessellation[origin]['relevance'])
+        # origin_lat = self._spatial_tessellation[origin][constants.LATITUDE]
+        # origin_lng = self._spatial_tessellation[origin][constants.LONGITUDE]
+        # origin_relevance = float(self._spatial_tessellation[origin]['relevance'])
+        origin_gdf = self._spatial_tessellation[self._spatial_tessellation[constants.TILE_ID] == origin]
+        origin_lng, origin_lat = utils.get_geom_centroid(origin_gdf.geometry.item())
+        origin_relevance = float(origin_gdf['relevance'])
 
         try:
             origin_outflow = self._spatial_tessellation[origin]['outflow']
@@ -478,7 +514,7 @@ class Radiation:
             - "probs" : the probability of movement between two locations
             default : "flows_average"
         """
-        self._spatial_tessellation = spatial_tessellation
+        # self._spatial_tessellation = spatial_tessellation
         self._out_format = out_format
 
         # check if arguments are valid
@@ -487,10 +523,11 @@ class Radiation:
                 'Value of out_format "%s" is not valid. \nValid values: flows_average, flows_sample, probs.' % out_format)
 
         # compute the total relevance, i.e., the sum of relevances of all the locations
-        total_relevance = sum([info['relevance'] for location, info in self._spatial_tessellation.items()])
+        # total_relevance = sum([info['relevance'] for location, info in spatial_tessellation.items()])
+        total_relevance = spatial_tessellation['relevance'].sum()
 
         all_flows = []
-        for origin in tqdm(self._spatial_tessellation):  # tqdm print a progress bar
+        for origin in tqdm(spatial_tessellation):  # tqdm print a progress bar
 
             # get the edges for the current origin location
             flows_from_origin = self._get_flows(origin, total_relevance)
