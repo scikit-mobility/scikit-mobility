@@ -237,7 +237,6 @@ class Gravity:
             else:
                 return trip_probs_matrix
 
-
     def _from_matrix_to_flowdf(self, flow_matrix, origins):
         index2tileid = dict([(i, tileid) for i, tileid in enumerate(self._spatial_tessellation[self._tile_id].values)])
         output_list = [[index2tileid[i], index2tileid[j], flow]
@@ -246,14 +245,18 @@ class Gravity:
                              tile_id=self._tile_id, tessellation=self._spatial_tessellation)
 
     def _update_training_set(self, flow_example):
-        id_origin, id_destination, trips = flow_example.origin, flow_example.destination, flow_example.flow
+
+        id_origin = flow_example[constants.ORIGIN]
+        id_destination = flow_example[constants.DESTINATION]
+        trips = flow_example[constants.FLOW]
 
         if id_origin == id_destination:
             return
 
         try:
-            coords_origin = self._spatial_tessellation[id_origin]['lat'], self._spatial_tessellation[id_origin]['lng']
-            weight_origin = self._spatial_tessellation[id_origin]['relevance']
+            coords_origin = self._spatial_tessellation[id_origin][[constants.LATITUDE, constants.LONGITUDE]]
+            # coords_origin = self._spatial_tessellation[id_origin]['lat'], self._spatial_tessellation[id_origin]['lng']
+            # weight_origin = self._spatial_tessellation[id_origin]['relevance']
         except KeyError:
             print('Missing information for location ' + \
                   '"%s" in spatial tessellation. Skipping ...' % id_origin)
