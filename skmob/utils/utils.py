@@ -234,3 +234,4 @@ def get_geom_centroid(geom):
     else:
         lonO, latO = np.mean(geom.xy, axis=1)
     return [lonO, latO]
+
