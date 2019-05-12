@@ -181,7 +181,7 @@ class FlowDataFrame(pd.DataFrame):
 
     @classmethod
     def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
-                  destination_lng=None, flow=constants.FLOW, datetime=constants.DATETIME, timestamp=False, sep="\t",
+                  destination_lng=None, flow=constants.FLOW, datetime=constants.DATETIME, timestamp=False, sep=",",
                   tessellation=None, tile_id=constants.TILE_ID, usecols=None, header='infer', parameters=None,
                   remove_na=False):
 
