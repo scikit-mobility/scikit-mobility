@@ -77,10 +77,10 @@ class TrajDataFrame(pd.DataFrame):
 
         self._parameters = parameters
 
-        if self._is_trajdataframe():
+        if self._has_traj_columns():
             self._set_traj(timestamp=timestamp, inplace=True)
 
-    def _is_trajdataframe(self):
+    def _has_traj_columns(self):
 
         if (constants.DATETIME in self) and (constants.LATITUDE in self) and (constants.LONGITUDE in self):
             return True

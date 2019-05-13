@@ -99,7 +99,7 @@ class FlowDataFrame(pd.DataFrame):
             else:
                 raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
-            if self._is_flowdataframe():
+            if self._has_flow_columns():
                 self._set_flow(timestamp=timestamp, inplace=True)
 
     def get_flow(self, origin_id, destination_id):
@@ -150,7 +150,7 @@ class FlowDataFrame(pd.DataFrame):
 
         return m
 
-    def _is_flowdataframe(self):
+    def _has_flow_columns(self):
 
         if (constants.ORIGIN in self) \
                 and (constants.DESTINATION in self) \
