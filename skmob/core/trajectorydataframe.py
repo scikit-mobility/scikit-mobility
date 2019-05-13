@@ -87,6 +87,16 @@ class TrajDataFrame(pd.DataFrame):
 
         return False
 
+    def _is_trajdataframe(self):
+
+        if ((constants.DATETIME in self) and pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME]))\
+                and ((constants.LONGITUDE in self) and pd.core.dtypes.common.is_float_dtype(self[constants.LONGITUDE])) \
+                and ((constants.LATITUDE in self) and pd.core.dtypes.common.is_float_dtype(self[constants.LATITUDE])):
+
+            return True
+
+        return False
+
     def _set_traj(self, timestamp=False, inplace=False):
 
         if not inplace:

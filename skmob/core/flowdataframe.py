@@ -152,12 +152,26 @@ class FlowDataFrame(pd.DataFrame):
 
     def _has_flow_columns(self):
 
-        if (constants.ORIGIN in self) \
-                and (constants.DESTINATION in self) \
-                and (constants.FLOW in self):
+        if (constants.ORIGIN in self) and (constants.DESTINATION in self) and (constants.FLOW in self):
             return True
 
         return False
+
+    def _is_flowdataframe(self):
+
+        if ((constants.ORIGIN in self) and
+                pd.core.dtypes.common.is_string_dtype(self[constants.ORIGIN])) \
+            and ((constants.DESTINATION in self) and
+                 pd.core.dtypes.common.is_string_dtype(self[constants.DESTINATION])) \
+            and ((constants.TILE_ID in self._tessellation) and
+                 pd.core.dtypes.common.is_string_dtype(self._tessellation[constants.TILE_ID])) \
+            and ((constants.FLOW in self) and
+                 (pd.core.dtypes.common.is_float_dtype(self[constants.FLOW]) or
+                  pd.core.dtypes.common.is_integer_dtype(self[constants.FLOW]))):
+            return True
+
+        return False
+
 
     def _set_flow(self, timestamp=False, inplace=False):
 
