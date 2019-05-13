@@ -173,7 +173,7 @@ class FlowDataFrame(pd.DataFrame):
         frame.tessellation = self._tessellation
 
         # Set dtypes on columns
-        if not pd.core.dtypes.common.is_string_dtype(frame[constants.TILE_ID]):
+        if not pd.core.dtypes.common.is_string_dtype(frame._tessellation[constants.TILE_ID]):
             frame._tessellation[constants.TILE_ID] = frame._tessellation[constants.TILE_ID].astype('str')
 
         if not pd.core.dtypes.common.is_string_dtype(frame[constants.ORIGIN]):
