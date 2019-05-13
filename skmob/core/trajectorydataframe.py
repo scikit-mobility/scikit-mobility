@@ -188,6 +188,7 @@ class TrajDataFrame(pd.DataFrame):
 
         return result
 
+
     def settings_from(self, trajdataframe):
         """
         Method to copy attributes from another TrajDataFrame.
