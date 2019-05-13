@@ -68,6 +68,9 @@ class VoronoiTessellationTiler(TessellationTiler):
         gdf = gpd.GeoDataFrame(points.copy(), crs=crs)
         gdf.loc[:, constants.TILE_ID] = list(np.arange(0, len(gdf)))
 
+        # Convert TILE_ID to have str type
+        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype('str')
+
         return gdf[[constants.TILE_ID, 'geometry']]
 
 
@@ -161,6 +164,9 @@ class SquaredTessellationTiler(TessellationTiler):
 
         gdf = gpd.GeoDataFrame(polygons, crs=tmp_crs)
         gdf = gdf.reset_index().rename(columns={"index": constants.TILE_ID})
+
+        # Convert TILE_ID to have str type
+        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype('str')
 
         return gdf.to_crs(crs)
 

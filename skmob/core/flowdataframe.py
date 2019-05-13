@@ -20,7 +20,7 @@ class FlowSeries(pd.Series):
 
 class FlowDataFrame(pd.DataFrame):
 
-    _metadata = ['_crs', '_tessellation', '_parameters']
+    _metadata = ['_tessellation', '_parameters']
 
     def __init__(self, data, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=constants.FLOW,
                  datetime=constants.DATETIME, tile_id=constants.TILE_ID, timestamp=False, tessellation=None,
@@ -99,13 +99,8 @@ class FlowDataFrame(pd.DataFrame):
             else:
                 raise TypeError("tessellation must be a GeoDataFrame with tile_id and geometry.")
 
-            if datetime in columns:
-
-                if timestamp:
-                    self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME], unit='s')
-
-                if not pd.core.dtypes.common.is_datetime64_any_dtype(self[constants.DATETIME].dtype):
-                    self[constants.DATETIME] = pd.to_datetime(self[constants.DATETIME])
+            if self._is_flowdataframe():
+                self._set_flow(timestamp=timestamp, inplace=True)
 
     def get_flow(self, origin_id, destination_id):
         """
@@ -157,10 +152,38 @@ class FlowDataFrame(pd.DataFrame):
 
     def _is_flowdataframe(self):
 
-        if (constants.ORIGIN in self) and (constants.DESTINATION in self) and (constants.FLOW in self):
+        if (constants.ORIGIN in self) \
+                and (constants.DESTINATION in self) \
+                and (constants.FLOW in self):
             return True
 
         return False
+
+    def _set_flow(self, timestamp=False, inplace=False):
+
+        if not inplace:
+            frame = self.copy()
+        else:
+            frame = self
+
+        if timestamp:
+            frame[constants.DATETIME] = pd.to_datetime(frame[constants.DATETIME], unit='s')
+
+        frame.parameters = self._parameters
+        frame.tessellation = self._tessellation
+
+        # Set dtypes on columns
+        if not pd.core.dtypes.common.is_string_dtype(frame[constants.TILE_ID]):
+            frame._tessellation[constants.TILE_ID] = frame._tessellation[constants.TILE_ID].astype('str')
+
+        if not pd.core.dtypes.common.is_string_dtype(frame[constants.ORIGIN]):
+            frame._tessellation[constants.ORIGIN] = frame._tessellation[constants.ORIGIN].astype('str')
+
+        if not pd.core.dtypes.common.is_string_dtype(frame[constants.DESTINATION]):
+            frame._tessellation[constants.DESTINATION] = frame._tessellation[constants.DESTINATION].astype('str')
+
+        if not inplace:
+            return frame
 
     def __getitem__(self, key):
         """
@@ -170,7 +193,6 @@ class FlowDataFrame(pd.DataFrame):
 
         if (isinstance(result, FlowDataFrame)) and result._is_flowdataframe():
             result.__class__ = FlowDataFrame
-            result.crs = self._crs
             result.tessellation = self._tessellation
             result.parameters = self._parameters
 
@@ -290,6 +312,19 @@ class FlowDataFrame(pd.DataFrame):
     @property
     def tessellation(self):
         return self._tessellation
+
+    @tessellation.setter
+    def tessellation(self, tessellation):
+        self._tessellation = tessellation
+
+    @property
+    def parameters(self):
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, parameters):
+
+        self._parameters = dict(parameters)
 
     @property
     def metadata(self):
