@@ -26,6 +26,7 @@ TOTAL_FREQ = "T_freq"
 COUNT = "count"
 TEMP = "tmp"
 PROPORTION = "prop"
+TOT_OUTFLOW = "tot_outflow"
 PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
                     "second"]
 PRIVACY_RISK = "risk"
