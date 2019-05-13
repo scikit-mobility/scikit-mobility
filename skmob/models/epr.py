@@ -11,7 +11,7 @@ import random
 import logging
 import inspect
 from ..core.trajectorydataframe import TrajDataFrame
-from ..models.collective import Gravity
+from ..models.gravity import Gravity
 
 from geopy.distance import distance
 earth_distance_km = (lambda p0, p1: distance(p0, p1).km)
