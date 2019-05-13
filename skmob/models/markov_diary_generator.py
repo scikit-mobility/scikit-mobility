@@ -61,10 +61,10 @@ class MarkovDiaryGenerator:
                         self._markov_chain_[(h1, r1)][(h2, r2)] = 0.0
 
     @staticmethod
-    def _select_loc(individual_df, location2frequency):
+    def _select_loc(individual_df, location2frequency, location_column='location'):
 
-        if isinstance(individual_df.location, str): # if there is at least a location in the time slot
-            locations = individual_df.location.split(',')
+        if isinstance(individual_df[location_column], str): # if there is at least a location in the time slot
+            locations = individual_df[location_column].split(',')
 
             if len(locations) == 1:  # if there just one location, then assign that location to the time slot
                 return locations[0]
@@ -82,7 +82,7 @@ class MarkovDiaryGenerator:
         return np.nan
 
     @staticmethod
-    def _get_location2frequency(traj):
+    def _get_location2frequency(traj, location_column='location'):
         """
         Compute the visitation frequency and rank of each location of an individual
 
@@ -94,8 +94,8 @@ class MarkovDiaryGenerator:
         """
         location2frequency, location2rank = defaultdict(int), defaultdict(int)
         for i, row in traj.iterrows():
-            if isinstance(row.location, str):  # if it is not NaN
-                for location in row.location.split(','):
+            if isinstance(row[location_column], str):  # if it is not NaN
+                for location in row[location_column].split(','):
                     # we can have more than one location in a time slot
                     # so, every slot has a comma separated list of locations
                     location2frequency[location] += 1
@@ -136,12 +136,12 @@ class MarkovDiaryGenerator:
 
 
         # compute the frequency of every location visited by the individual
-        location2frequency, location2rank = self._get_location2frequency(traj)
+        location2frequency, location2rank = self._get_location2frequency(traj, location_column=lid)
 
         # select the location for every slot
         # ix = pd.DatetimeIndex(start=start_date, end=end_date, freq=self._time_slot_length)
         #ix = pd.date_range(start=start_date, end=end_date, freq=self._time_slot_length)
-        time_series = traj.apply(lambda x: self._select_loc(x, location2frequency), axis=1)#.reindex(ix)
+        time_series = traj.apply(lambda x: self._select_loc(x, location2frequency, location_column=lid), axis=1)#.reindex(ix)
 
         # fill the slots with NaN with the previous element or the next element ###
         time_series.fillna(method='ffill', inplace=True)

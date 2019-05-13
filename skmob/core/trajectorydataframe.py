@@ -315,7 +315,7 @@ class TrajDataFrame(pd.DataFrame):
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, imin=imin, imax=imax,
                                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity)
 
-    def plot_stops(self, map_f=None, max_users=10, tiles='OpenStreetMap', zoom=12, hex_color=-1, opacity=0.3,
+    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    popup=True):
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
                                hex_color=hex_color, opacity=opacity, popup=popup)
