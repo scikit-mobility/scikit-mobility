@@ -37,23 +37,8 @@ def earth_distance(lat_lng1, lat_lng2):
     ds = 2 * asin(sqrt(sin(dlat/2.0) ** 2 + cos(lat1) * cos(lat2) * sin(dlng/2.0) ** 2))
     return 6371.01 * ds  # spherical earth...
 
-def _earth_distance_vectorized(lat_lng1, lat_lng2):
 
-    s_lat, s_lng = lat_lng1
-    e_lat, e_lng = lat_lng2
-    # approximate radius of earth in km
-    R = 6373.0
-
-    s_lat = s_lat*np.pi/180.0
-    s_lng = np.deg2rad(s_lng)
-    e_lat = np.deg2rad(e_lat)
-    e_lng = np.deg2rad(e_lng)
-
-    d = np.sin((e_lat - s_lat)/2)**2 + np.cos(s_lat)*np.cos(e_lat) * np.sin((e_lng - s_lng)/2)**2
-    return 2 * R * np.arcsin(np.sqrt(d))
-
-
-def compute_od_matrix(spatial_tessellation, use_relevance=True):
+def compute_od_matrix(spatial_tessellation, use_relevance=True, show_progress=True):
     """
     Compute a weighted origin destination matrix where an element A_{ij} is the
     probability p_{ij} of moving between two locations in the spatial tessellation
@@ -75,7 +60,10 @@ def compute_od_matrix(spatial_tessellation, use_relevance=True):
     """
     n = len(spatial_tessellation)
     od_matrix = np.zeros((n, n))
-    for id_i in tqdm(spatial_tessellation):
+    loop = spatial_tessellation
+    if show_progress:
+        loop = tqdm(spatial_tessellation)
+    for id_i in loop:
         lat_i, lon_i = spatial_tessellation[id_i][latitude], spatial_tessellation[id_i][longitude]
         d_i = spatial_tessellation[id_i]['relevance']
         for id_j in spatial_tessellation:
@@ -93,35 +81,6 @@ def compute_od_matrix(spatial_tessellation, use_relevance=True):
         if sum_odm > 0.0:
             od_matrix[id_i] /= sum_odm
     return od_matrix
-
-
-def load_spatial_tessellation(filename='location2info_trentino', delimiter=','):
-    """
-    Load into a dictionary the locations and corresponding information (latitude, longitude, relevance)
-
-    Parameters
-    ----------
-    filename: str
-        the filename where the location info is stored
-
-    Returns
-    -------
-    dict
-        the dictionary of locations
-    """
-    spatial_tessellation = {}
-    f = csv.reader(open(filename), delimiter=delimiter)
-    f.__next__()  # delete header
-    i = 0
-    for line in tqdm(f):  # tqdm print a progress bar
-        relevance = int(line[2])
-        if relevance > 0:  # eliminate locations with zero relevance
-            spatial_tessellation[i] = {latitude: float(line[0]),
-                                       longitude: float(line[1]),
-                                       'relevance': relevance}
-            i += 1
-    return spatial_tessellation
-
 
 
 class SpatialEPR:
@@ -422,7 +381,7 @@ class SpatialEPR:
         return time_to_wait
 
     def generate(self, start_date, end_date, spatial_tessellation, n_agents=1, starting_location=None, od_matrix=None,
-                 random_state=None, log_file=None, verbose=False):
+                 random_state=None, log_file=None, show_progress=True):
         """
         Start the simulation for the agents, with a duration determined by "start_date" and "end_date".
 
@@ -482,7 +441,7 @@ class SpatialEPR:
 
         # for each agent
         loop = range(1, n_agents + 1)
-        if verbose:
+        if show_progress:
             loop = tqdm(range(1, n_agents + 1))
         
         for agent_id in loop:  # tqdm print a progress bar
@@ -648,9 +607,8 @@ class DensityEPR:
     def spatial_tessellation_(self):
         return self._spatial_tessellation
 
-    @property
-    def trajectories_(self):
-        return self._trajectories_
+    def __str__(self):
+        return 'DensityEPR(name=\"%s\", rho=\"%s\", gamma=%s, tau=%s, beta=%s, min_wait_time=%s)' % (self._name, self._rho, self._gamma, self._tau, self._beta, self._min_wait_time)
 
     def _weighted_random_selection(self):
         """
@@ -793,7 +751,7 @@ class DensityEPR:
         return time_to_wait
 
     def generate(self, start_date, end_date, spatial_tessellation, n_agents=1, starting_location=None, od_matrix=None,
-                 random_state=None, log_file=None, verbose=False):
+                 random_state=None, log_file=None, show_progress=True):
         """
         Start the simulation of the agent at time "start_date" till time "end_date".
 
@@ -854,7 +812,7 @@ class DensityEPR:
 
         # for each agent
         loop = range(1, n_agents + 1)
-        if verbose:
+        if show_progress:
             loop = tqdm(range(1, n_agents + 1))
             
         for agent_id in loop:

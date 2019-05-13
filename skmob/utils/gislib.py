@@ -93,7 +93,7 @@ def isWithinDistance(origin, loc, distance):
     else:
         return False
 
-def load_spatial_tessellation(filename='location2info_trentino', delimiter=',', positive_relevance=True):
+def load_spatial_tessellation(filename='location2info_trentino', delimiter=','):
     """
     Load into a dictionary the locations and corresponding information (latitude, longitude, relevance)
 
@@ -113,8 +113,6 @@ def load_spatial_tessellation(filename='location2info_trentino', delimiter=',', 
     i = 0
     for line in f:  # tqdm print a progress bar
         relevance = int(line[2])
-        if positive_relevance and relevance > 0:
-            continue
         spatial_tessellation[i] = {constants.LATITUDE: float(line[0]),
                                        constants.LONGITUDE: float(line[1]),
                                        'relevance': relevance}
