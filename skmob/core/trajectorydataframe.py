@@ -149,8 +149,8 @@ class TrajDataFrame(pd.DataFrame):
 
     def to_geodataframe(self):
 
-        gdf = gpd.GeoDataFrame(self, geometry=gpd.points_from_xy(self[constants.LONGITUDE], self[constants.LATITUDE]),
-                               crs=self._crs)
+        gdf = gpd.GeoDataFrame(self.copy(), geometry=gpd.points_from_xy(self[constants.LONGITUDE],
+                                                                        self[constants.LATITUDE]), crs=self._crs)
 
         return gdf
 
