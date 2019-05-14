@@ -58,7 +58,7 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
         ctdf = _cluster_trajectory(stops_df, cluster_radius_km=cluster_radius_km, min_samples=min_samples).reset_index(drop=True)
 
     ctdf.parameters = tdf.parameters
-    ctdf.set_parameter(constants.DETECTION_PARAMS, arguments)
+    ctdf.set_parameter(constants.CLUSTERING_PARAMS, arguments)
     return ctdf
 
 
