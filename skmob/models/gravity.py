@@ -1,8 +1,10 @@
 import numpy as np
-try:
-    import statsmodels.api as sm
-except ImportError:
-    import statsmodels as sm
+#try:
+#    import statsmodels.api as sm
+#except ImportError:
+#    import statsmodels as sm
+import statsmodels as sm
+from statsmodels.genmod.generalized_linear_model import GLM
 from tqdm import tqdm
 from ..utils import constants, utils
 from ..core.flowdataframe import FlowDataFrame
@@ -312,7 +314,7 @@ class Gravity:
         flow_df.apply(lambda flow_example: self._update_training_set(flow_example), axis=1)
 
         # Perform GLM fit
-        poisson_model = sm.GLM(self.y, self.X, family=sm.families.Poisson(link=sm.families.links.log))
+        poisson_model = GLM(self.y, self.X, family=sm.genmod.families.family.Poisson(link=sm.genmod.families.links.log))
         poisson_results = poisson_model.fit()
 
         # Set best fit parameters
