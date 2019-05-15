@@ -71,6 +71,7 @@ class Attack(object):
             risks = targets.groupby(constants.UID).apply(lambda x: self._risk(x, traj, force_instances))
         if force_instances:
             risks = risks.droplevel(1)
+            risks = risks.reset_index(drop=True)
         else:
             risks = risks.reset_index(name=constants.PRIVACY_RISK)
         return risks
