@@ -29,8 +29,10 @@ PROPORTION = "prop"
 TOT_OUTFLOW = "tot_outflow"
 PRECISION_LEVELS = ["Year", "Month", "Day", "Hour", "Minute", "Second", "year", "month", "day", "hour", "minute",
                     "second"]
+
 PRIVACY_RISK = "risk"
 INSTANCE = "instance"
+INSTANCE_ELEMENT = "instance_elem"
 REIDENTIFICATION_PROBABILITY = "reid_prob"
 RELEVANCE = 'relevance'
 

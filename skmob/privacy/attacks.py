@@ -34,7 +34,7 @@ class Attack(object):
             raise ValueError("Parameter k should not be less than 1")
         self.k = k
 
-    def _all_risks(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def _all_risks(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Computes risk for all the users in the data. It applies the risk function to every individual in the data.
         If it is not required to compute the risk for the entire data, the targets parameter can be used to select
@@ -47,7 +47,7 @@ class Attack(object):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -66,10 +66,10 @@ class Attack(object):
                 targets = traj[traj[constants.UID].isin(targets[constants.UID])]
         if show_progress:
             tqdm.pandas(desc="computing risk")
-            risks = targets.groupby(constants.UID).progress_apply(lambda x: self._risk(x, traj, instance_analysis))
+            risks = targets.groupby(constants.UID).progress_apply(lambda x: self._risk(x, traj, force_instances))
         else:
-            risks = targets.groupby(constants.UID).apply(lambda x: self._risk(x, traj, instance_analysis))
-        if instance_analysis:
+            risks = targets.groupby(constants.UID).apply(lambda x: self._risk(x, traj, force_instances))
+        if force_instances:
             risks = risks.droplevel(1)
         else:
             risks = risks.reset_index(name=constants.PRIVACY_RISK)
@@ -92,7 +92,7 @@ class Attack(object):
         else:
             return combinations(single_traj.values, self.k)
 
-    def _risk(self, single_traj, traj, instance_analysis=False):
+    def _risk(self, single_traj, traj, force_instances=False):
         """
         Computes the risk of reidentification of an individual with respect to the entire population in the data.
 
@@ -102,7 +102,7 @@ class Attack(object):
         :param traj: TrajectoryDataFrame
             the dataframe with the complete data
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -111,26 +111,38 @@ class Attack(object):
         """
         instances = self._generate_instances(single_traj)
         risk = 0
-        combs = list()
-        probs = list()
+        if force_instances:
+            inst_data = {constants.LATITUDE: list(), constants.LONGITUDE: list(),
+                       constants.DATETIME: list(), constants.UID: list(),
+                       constants.INSTANCE: list(), constants.INSTANCE_ELEMENT: list(),
+                         constants.PROBABILITY: list()}
+            inst_id = 1
         for instance in instances:
             prob = 1.0 / traj.groupby(constants.UID).apply(lambda x: self._match(x, instance)).sum()
-            if instance_analysis:
-                combs.append(instance)
-                probs.append(prob)
+            if force_instances:
+                elem_count = 1
+                for elem in instance:
+                    inst_data[constants.LATITUDE].append(elem[0])
+                    inst_data[constants.LONGITUDE].append(elem[1])
+                    inst_data[constants.DATETIME].append(elem[2])
+                    inst_data[constants.UID].append(elem[3])
+                    inst_data[constants.INSTANCE].append(inst_id)
+                    inst_data[constants.INSTANCE_ELEMENT].append(elem_count)
+                    inst_data[constants.PROBABILITY].append(prob)
+                    elem_count += 1
+                inst_id += 1
             else:
                 if prob > risk:
                     risk = prob
                 if risk == 1.0:
                     break
-        if instance_analysis:
-            ret = pd.DataFrame({constants.INSTANCE: combs, constants.REIDENTIFICATION_PROBABILITY: probs})
-            return ret
+        if force_instances:
+            return pd.DataFrame(inst_data)
         else:
             return risk
 
     @abstractmethod
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Abstract function to assess privacy risk for a whole dataframe of trajectories.
         An attack must implement an assessing strategy. This could involve some preprocessing, for example
@@ -145,7 +157,7 @@ class Attack(object):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -189,7 +201,7 @@ class LocationAttack(Attack):
     def __init__(self, k):
         super(LocationAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -200,7 +212,7 @@ class LocationAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -211,7 +223,7 @@ class LocationAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
-        return self._all_risks(traj, targets, instance_analysis, show_progress)
+        return self._all_risks(traj, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -258,7 +270,7 @@ class LocationSequenceAttack(Attack):
     def __init__(self, k):
         super(LocationSequenceAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -269,7 +281,7 @@ class LocationSequenceAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -280,7 +292,7 @@ class LocationSequenceAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
-        return self._all_risks(traj, targets, instance_analysis, show_progress)
+        return self._all_risks(traj, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -348,7 +360,7 @@ class LocationTimeAttack(Attack):
             raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
         self.time_precision = time_precision
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
 
@@ -359,7 +371,7 @@ class LocationTimeAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -371,7 +383,7 @@ class LocationTimeAttack(Attack):
         """
         traj = traj.sort_values(by=[constants.UID, constants.DATETIME])
         traj[constants.TEMP] = traj[constants.DATETIME].apply(lambda x: date_time_precision(x, self.time_precision))
-        return self._all_risks(traj, targets, instance_analysis, show_progress)
+        return self._all_risks(traj, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -412,7 +424,7 @@ class UniqueLocationAttack(Attack):
     def __init__(self, k):
         super(UniqueLocationAttack, self).__init__(k)
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -424,7 +436,7 @@ class UniqueLocationAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -435,7 +447,7 @@ class UniqueLocationAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, show_progress)
+        return self._all_risks(freq, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -493,7 +505,7 @@ class LocationFrequencyAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -505,7 +517,7 @@ class LocationFrequencyAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -516,7 +528,7 @@ class LocationFrequencyAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, show_progress)
+        return self._all_risks(freq, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -585,7 +597,7 @@ class LocationProbabilityAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to probability vectors.
@@ -597,7 +609,7 @@ class LocationProbabilityAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -608,7 +620,7 @@ class LocationProbabilityAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         prob = probability_vector(traj)
-        return self._all_risks(prob, targets, instance_analysis, show_progress)
+        return self._all_risks(prob, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -679,7 +691,7 @@ class LocationProportionAttack(Attack):
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
         self.tolerance = tolerance
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -691,7 +703,7 @@ class LocationProportionAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -702,7 +714,7 @@ class LocationProportionAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, show_progress)
+        return self._all_risks(freq, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
@@ -772,7 +784,7 @@ class HomeWorkAttack(Attack):
         """
         return [single_traj[:2].values]
 
-    def assess_risk(self, traj, targets=None, instance_analysis=False, show_progress=False):
+    def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
         Assess privacy risk for a whole dataframe of trajectories.
         Internally performs the conversion to frequency vectors.
@@ -784,7 +796,7 @@ class HomeWorkAttack(Attack):
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
             in which case risk is computed on all users in traj
 
-        :param instance_analysis: boolean, default False
+        :param force_instances: boolean, default False
             if True, returns all possible instances of background knowledge
             with their respective probability of reidentification
 
@@ -795,7 +807,7 @@ class HomeWorkAttack(Attack):
             a DataFrame in the form (user_id, risk)
         """
         freq = frequency_vector(traj)
-        return self._all_risks(freq, targets, instance_analysis, show_progress)
+        return self._all_risks(freq, targets, force_instances, show_progress)
 
     def _match(self, single_traj, instance):
         """
