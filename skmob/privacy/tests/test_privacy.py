@@ -61,7 +61,7 @@ fourth_instance = pd.concat([trjpro[4:5], trjpro[6:7]]).values
 @pytest.mark.parametrize('traj,instance,output',
                          [(trjdat, first_instance, 1.0 / 4.0), (trjdat, second_instance, 1.0 / 3.0)])
 def test_location_match(traj, instance, output):
-    at = attacks.LocationAttack(k=1)
+    at = attacks.LocationAttack(knowledge_length=1)
     results = []
     for i in range(1, 7):
         results.append(at._match(single_traj=traj[traj[user_id] == i], instance=instance))
@@ -71,7 +71,7 @@ def test_location_match(traj, instance, output):
 @pytest.mark.parametrize('traj,instance,output',
                          [(trjdat, first_instance, 1.0 / 3.0), (trjdat, second_instance, 1.0 / 2.0)])
 def test_location_sequence_match(traj, instance, output):
-    at = attacks.LocationSequenceAttack(k=1)
+    at = attacks.LocationSequenceAttack(knowledge_length=1)
     results = []
     for i in range(1, 7):
         results.append(at._match(single_traj=traj[traj[user_id] == i], instance=instance))
@@ -80,7 +80,7 @@ def test_location_sequence_match(traj, instance, output):
 
 @pytest.mark.parametrize('traj,prec,output', [(trjdat, "day", 1.0), (trjdat, "month", 1.0 / 3.0)])
 def test_location_time_match(traj, prec, output):
-    at = attacks.LocationTimeAttack(k=1, time_precision=prec)
+    at = attacks.LocationTimeAttack(knowledge_length=1, time_precision=prec)
     results = []
     trjdat[TEMP] = trjdat[date_time].apply(lambda x: date_time_precision(x, prec))
     first_instance = trjdat[:2].values
@@ -91,7 +91,7 @@ def test_location_time_match(traj, prec, output):
 
 @pytest.mark.parametrize('traj,tolerance,output', [(trjfre, 0.0, 1.0), (trjfre, 1.0, 1.0 / 4.0)])
 def test_location_frequency_match(traj, tolerance, output):
-    at = attacks.LocationFrequencyAttack(k=1, tolerance=tolerance)
+    at = attacks.LocationFrequencyAttack(knowledge_length=1, tolerance=tolerance)
     results = []
     for i in range(1, 7):
         results.append(at._match(single_traj=trjfre[trjfre[user_id] == i], instance=third_instance))
@@ -100,7 +100,7 @@ def test_location_frequency_match(traj, tolerance, output):
 
 @pytest.mark.parametrize('traj,tolerance,output', [(trjfre, 0.0, 1.0), (trjfre, 1.0, 1.0 / 4.0)])
 def test_location_probability_match(traj, tolerance, output):
-    at = attacks.LocationProbabilityAttack(k=1, tolerance=tolerance)
+    at = attacks.LocationProbabilityAttack(knowledge_length=1, tolerance=tolerance)
     results = []
     for i in range(1, 7):
         results.append(at._match(single_traj=trjpro[trjpro[user_id] == i], instance=fourth_instance))

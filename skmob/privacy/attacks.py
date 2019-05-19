@@ -13,26 +13,23 @@ class Attack(object):
     Provides basic functions to compute risk for all users in a trajectory dataframe.
     Requires the implementation of both a matching function and an assessment function, which are attack dependant.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate.
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, k):
-        if k < 1:
-            raise ValueError("Parameter k should not be less than 1")
-        self.k = k
+    def __init__(self, knowledge_length):
+        self.knowledge_length = knowledge_length
 
-    def set_k(self, k):
-        """
-        Sets the length of the background knowledge to k. Cannot set a length less than 1.
+    @property
+    def knowledge_length(self):
+        return self._knowledge_length
 
-        :param k: int
-            the length of the background knowledge that we want to simulate.
-        """
-        if k < 1:
-            raise ValueError("Parameter k should not be less than 1")
-        self.k = k
+    @knowledge_length.setter
+    def knowledge_length(self, val):
+        if val < 1:
+            raise ValueError("Parameter knowledge_length should not be less than 1")
+        self._knowledge_length = val
 
     def _all_risks(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -88,10 +85,10 @@ class Attack(object):
             records in the combination.
         """
         size = len(single_traj.index)
-        if self.k > size:
+        if self.knowledge_length > size:
             return combinations(single_traj.values, size)
         else:
-            return combinations(single_traj.values, self.k)
+            return combinations(single_traj.values, self.knowledge_length)
 
     def _risk(self, single_traj, traj, force_instances=False):
         """
@@ -114,13 +111,12 @@ class Attack(object):
         risk = 0
         if force_instances:
             inst_data = {constants.LATITUDE: list(), constants.LONGITUDE: list(),
-                       constants.DATETIME: list(), constants.UID: list(),
-                       constants.INSTANCE: list(), constants.INSTANCE_ELEMENT: list(),
+                         constants.DATETIME: list(), constants.UID: list(),
+                         constants.INSTANCE: list(), constants.INSTANCE_ELEMENT: list(),
                          constants.PROBABILITY: list()}
             inst_id = 1
-        for instance in instances:
-            prob = 1.0 / traj.groupby(constants.UID).apply(lambda x: self._match(x, instance)).sum()
-            if force_instances:
+            for instance in instances:
+                prob = 1.0 / traj.groupby(constants.UID).apply(lambda x: self._match(x, instance)).sum()
                 elem_count = 1
                 for elem in instance:
                     inst_data[constants.LATITUDE].append(elem[0])
@@ -132,14 +128,14 @@ class Attack(object):
                     inst_data[constants.PROBABILITY].append(prob)
                     elem_count += 1
                 inst_id += 1
-            else:
+            return pd.DataFrame(inst_data)
+        else:
+            for instance in instances:
+                prob = 1.0 / traj.groupby(constants.UID).apply(lambda x: self._match(x, instance)).sum()
                 if prob > risk:
                     risk = prob
                 if risk == 1.0:
                     break
-        if force_instances:
-            return pd.DataFrame(inst_data)
-        else:
             return risk
 
     @abstractmethod
@@ -194,13 +190,13 @@ class LocationAttack(Attack):
     In a location attack the adversary knows the coordinates of the locations visited by an individual and matches them
     against trajectories.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of
         locations known to the adversary.
     """
 
-    def __init__(self, k):
-        super(LocationAttack, self).__init__(k)
+    def __init__(self, knowledge_length):
+        super(LocationAttack, self).__init__(knowledge_length)
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -263,13 +259,13 @@ class LocationSequenceAttack(Attack):
     In a location sequence attack the adversary knows the coordinates of locations visited by an individual and
     the order in which they were visited and matches them against trajectories.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of
         locations known to the adversary.
     """
 
-    def __init__(self, k):
-        super(LocationSequenceAttack, self).__init__(k)
+    def __init__(self, knowledge_length):
+        super(LocationSequenceAttack, self).__init__(knowledge_length)
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -334,7 +330,7 @@ class LocationTimeAttack(Attack):
     in which they were visited and matches them against trajectories. The precision at which to consider the temporal
     information can also be specified.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of
         locations with timestamps known to the adversary.
 
@@ -343,23 +339,19 @@ class LocationTimeAttack(Attack):
         The possible precisions are: Year, Month, Day, Hour, Minute, Second.
     """
 
-    def __init__(self, k, time_precision="Hour"):
-        if time_precision not in constants.PRECISION_LEVELS:
-            raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
+    def __init__(self, knowledge_length, time_precision="Hour"):
         self.time_precision = time_precision
-        super(LocationTimeAttack, self).__init__(k)
+        super(LocationTimeAttack, self).__init__(knowledge_length)
 
-    def set_time_precision(self, time_precision):
-        """
-        Sets the precision at which to consider the temporal information.
+    @property
+    def time_precision(self):
+        return self._time_precision
 
-        :param time_precision: string
-        the precision at which to consider the timestamps for the visits.
-        The possible precisions are: Year, Month, Day, Hour, Minute, Second.
-        """
-        if time_precision not in constants.PRECISION_LEVELS:
+    @time_precision.setter
+    def time_precision(self, val):
+        if val not in constants.PRECISION_LEVELS:
             raise ValueError("Possible time precisions are: Year, Month, Day, Hour, Minute, Second")
-        self.time_precision = time_precision
+        self._time_precision = val
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -417,13 +409,13 @@ class UniqueLocationAttack(Attack):
     and matches them against frequency vectors. A frequency vector, is an aggregation on trajectory
     data showing the unique locations visited by an individual and the frequency with which he visited those locations.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations known to the adversary.
     """
 
-    def __init__(self, k):
-        super(UniqueLocationAttack, self).__init__(k)
+    def __init__(self, knowledge_length):
+        super(UniqueLocationAttack, self).__init__(knowledge_length)
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -482,7 +474,7 @@ class LocationFrequencyAttack(Attack):
     with which he visited those locations.
     It is possible to specify a tolerance level for the matching of the frequency.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their frequency known to the adversary.
 
@@ -490,21 +482,19 @@ class LocationFrequencyAttack(Attack):
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
-    def __init__(self, k, tolerance=0.0):
-        if tolerance > 1.0 or tolerance < 0.0:
-            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+    def __init__(self, knowledge_length, tolerance=0.0):
         self.tolerance = tolerance
-        super(LocationFrequencyAttack, self).__init__(k)
+        super(LocationFrequencyAttack, self).__init__(knowledge_length)
 
-    def set_tolerance(self, tolerance):
-        """
-        Sets the tolerance level for the matching of the frequency.
-        :param tolerance:
-            the tolarance with which to match the frequency. It can assume values between 0 and 1.
-        """
-        if tolerance > 1.0 or tolerance < 0.0:
+    @property
+    def tolerance(self):
+        return self._tolerance
+
+    @tolerance.setter
+    def tolerance(self, val):
+        if val > 1.0 or val < 0.0:
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
-        self.tolerance = tolerance
+        self._tolerance = val
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -574,7 +564,7 @@ class LocationProbabilityAttack(Attack):
     and the probability with which he visited those locations.
     It is possible to specify a tolerance level for the matching of the probability.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their probability known to the adversary.
 
@@ -582,21 +572,19 @@ class LocationProbabilityAttack(Attack):
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
-    def __init__(self, k, tolerance=0.0):
-        if tolerance > 1.0 or tolerance < 0.0:
-            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+    def __init__(self, knowledge_length, tolerance=0.0):
         self.tolerance = tolerance
-        super(LocationProbabilityAttack, self).__init__(k)
+        super(LocationProbabilityAttack, self).__init__(knowledge_length)
 
-    def set_tolerance(self, tolerance):
-        """
-        Sets the tolerance level for the matching of the frequency.
-        :param tolerance:
-            the tolarance with which to match the frequency. It can assume values between 0 and 1.
-        """
-        if tolerance > 1.0 or tolerance < 0.0:
+    @property
+    def tolerance(self):
+        return self._tolerance
+
+    @tolerance.setter
+    def tolerance(self, val):
+        if val > 1.0 or val < 0.0:
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
-        self.tolerance = tolerance
+        self._tolerance = val
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -668,7 +656,7 @@ class LocationProportionAttack(Attack):
     and the frequency with which he visited those locations.
     It is possible to specify a tolerance level for the matching of the proportion.
 
-    :param k: int
+    :param knowledge_length: int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
         locations and their proportion of frequencies known to the adversary.
 
@@ -676,21 +664,19 @@ class LocationProportionAttack(Attack):
         the tolarance with which to match the frequency. It can assume values between 0 and 1.
     """
 
-    def __init__(self, k, tolerance=0.0):
-        if tolerance > 1.0 or tolerance < 0.0:
-            raise ValueError("Tolerance should be in the interval [0.0,1.0]")
+    def __init__(self, knowledge_length, tolerance=0.0):
         self.tolerance = tolerance
-        super(LocationProportionAttack, self).__init__(k)
+        super(LocationProportionAttack, self).__init__(knowledge_length)
 
-    def set_tolerance(self, tolerance):
-        """
-        Sets the tolerance level for the matching of the frequency.
-        :param tolerance:
-            the tolarance with which to match the frequency. It can assume values between 0 and 1.
-        """
-        if tolerance > 1.0 or tolerance < 0.0:
+    @property
+    def tolerance(self):
+        return self._tolerance
+
+    @tolerance.setter
+    def tolerance(self, val):
+        if val > 1.0 or val < 0.0:
             raise ValueError("Tolerance should be in the interval [0.0,1.0]")
-        self.tolerance = tolerance
+        self._tolerance = val
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
@@ -765,13 +751,13 @@ class HomeWorkAttack(Attack):
     locations visited by an individual and the frequency with which he visited those locations.
     This attack does not require the generation of combinations to build the possible instances of background knowledge.
 
-    :param k: int
+    :param knowledge_length: int
         this parameter is not used for this attack and can be omitted.
 
     """
 
-    def __init__(self, k=0):
-        super(HomeWorkAttack, self).__init__(k)
+    def __init__(self, knowledge_length=0):
+        super(HomeWorkAttack, self).__init__(knowledge_length)
 
     def _generate_instances(self, single_traj):
         """
