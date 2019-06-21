@@ -61,6 +61,12 @@ def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
     References:
         .. [cho2011frienship] Eunjoon Cho, Seth A. Myers, and Jure Leskovec. "Friendship and mobility: user movement in location-based social networks." In Proceedings of the 17th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD '11). 1082-1090, 2011.
     """
+    # if 'uid' column in not present in the TrajDataFrame
+    if constants.UID not in traj.columns:
+        all_locations = traj[[constants.LATITUDE, constants.LONGITUDE]].drop_duplicates([constants.LATITUDE, constants.LONGITUDE])
+        all_locations['uncorrelated_location_entropy'] = 0.0
+        return all_locations
+    
     if show_progress:
         df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).progress_apply(lambda x: _uncorrelated_location_entropy_individual(x, normalize=normalize)))
     else:
@@ -115,6 +121,11 @@ def mean_square_displacement(traj, days=0, hours=1, minutes=0, show_progress=Tru
         .. [vazquez1999diffusion] A. Vazquez, O. Sotolongo-Costa, F. Brouers, "Diffusion regimes in levy flights with  trapping",  Physica  A:  Statistical  Mechanics  and  its  Applications  264  (3) (1999) 424–431.
     """
     delta_t = timedelta(days=days, hours=hours, minutes=minutes)
+    
+    # if 'uid' column in not present in the TrajDataFrame
+    if constants.UID not in traj.columns:
+        return _square_displacement(traj, delta_t)
+    
     if show_progress:
         return traj.groupby(constants.UID).progress_apply(lambda x: _square_displacement(x, delta_t)).mean()
     else:
@@ -156,9 +167,8 @@ def visits_per_location(trajs):
         .. [pappalardo2018data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
     """
     return trajs.groupby([constants.LATITUDE,
-                          constants.LONGITUDE]).count().sort_values(by=constants.UID,
-                                                                    ascending=False)[[constants.UID]].reset_index().rename({constants.UID: 'n_visits'},
-                                                                                                             axis=1)
+                          constants.LONGITUDE]).count().sort_values(by=constants.DATETIME,
+                                                                    ascending=False)[[constants.DATETIME]].reset_index().rename({constants.DATETIME: 'n_visits'}, axis=1)
 
 
 def homes_per_location(traj, start_night='22:00', end_night='07:00'):
@@ -187,12 +197,20 @@ def homes_per_location(traj, start_night='22:00', end_night='07:00'):
     References:
         .. [1] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939 http://dx.doi.org/10.1016/j.procs.2016.04.188.
     """
-    return home_location(traj,
+    # if column 'uid' is not present in the TrajDataFrame
+    uid_flag = False
+    if constants.UID not in traj.columns:
+        traj['uid'] = 0
+        uid_flag = True
+    df = home_location(traj,
                          start_night=start_night,
                          end_night=end_night).groupby([constants.LATITUDE,
                                                        constants.LONGITUDE]).count().sort_values(constants.UID,
                                                                                                  ascending=False).reset_index().rename(
         columns={constants.UID: 'n_homes'})
+    if uid_flag:
+        traj.drop('uid', axis=1, inplace=True)
+    return df
 
 
 def visits_per_time_unit(traj, time_unit='1h'):
@@ -224,7 +242,7 @@ def visits_per_time_unit(traj, time_unit='1h'):
     References:
         .. [1] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939 http://dx.doi.org/10.1016/j.procs.2016.04.188.
     """
-    return pd.DataFrame(traj.set_index(pd.DatetimeIndex(traj[constants.DATETIME])).groupby(pd.Grouper(freq=time_unit)).count()[constants.UID]).rename(columns={constants.UID: 'n_visits'})
+    return pd.DataFrame(traj.set_index(pd.DatetimeIndex(traj[constants.DATETIME])).groupby(pd.Grouper(freq=time_unit)).count()[constants.DATETIME]).rename(columns={constants.DATETIME: 'n_visits'})
 
 
 def origin_destination_matrix(traj, self_loops=False, show_progress=True):
@@ -285,10 +303,14 @@ def origin_destination_matrix(traj, self_loops=False, show_progress=True):
                 pass
             i += 1
     
-    if show_progress:
-        traj.sort_values(by=constants.DATETIME).groupby(constants.UID).progress_apply(lambda x: _update_od_matrix(x))
+    # if 'uid' column in not present in the TrajDataFrame
+    if constants.UID not in traj.columns:
+        _update_od_matrix(traj.sort_values(by=constants.DATETIME))
     else:
-        traj.sort_values(by=constants.DATETIME).groupby(constants.UID).apply(lambda x: _update_od_matrix(x))
+        if show_progress:
+            traj.sort_values(by=constants.DATETIME).groupby(constants.UID).progress_apply(lambda x: _update_od_matrix(x))
+        else:
+            traj.sort_values(by=constants.DATETIME).groupby(constants.UID).apply(lambda x: _update_od_matrix(x))
     rows = []
     for loc1, loc2weight in loc2loc2weight.items():
         for loc2, weight in loc2weight.items():
