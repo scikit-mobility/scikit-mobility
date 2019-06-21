@@ -27,9 +27,9 @@ def _radius_of_gyration_individual(traj):
 
 def radius_of_gyration(traj, show_progress=True):
     """
-    Compute the radii of gyration (in kilometers) of a set of individuals given a TrajDataFrame.
+    Compute the radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
     The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by
-    :math:`u` during a time period.
+    :math:`u`.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -37,15 +37,15 @@ def radius_of_gyration(traj, show_progress=True):
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
 
-    :return: the radii of gyration of the individuals
-    :rtype: DataFrame
+    :return: the radius of gyration of each individual
+    :rtype: pandas DataFrame
 
     Examples:
         Computing the radius of gyration of each individual from a DataFrame of trajectories
     >>> import skmob
     >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
+    >>> tdf = TrajDataFrame.from_file('mydata.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
     >>> radius_of_gyration(traj).head()
        uid  radius_of_gyration
     0    1           20.815129
@@ -64,7 +64,7 @@ def radius_of_gyration(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _radius_of_gyration_individual(traj)
+        return pd.DataFrame([_radius_of_gyration_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _radius_of_gyration_individual(x))
@@ -80,10 +80,11 @@ def _k_radius_of_gyration_individual(traj, k=2):
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :param k: the number of most frequent locations to consider
+    :param k: the number of most frequent locations to consider (default=2, range=[2, +inf])
     :type k: int
 
-    :return: float
+    :return: the k-radius of gyration of the individual 
+    :rtype: float
     """
     traj['visits'] = traj.groupby([constants.LATITUDE, constants.LONGITUDE]).transform('count')[constants.DATETIME]
     top_k_locations = traj.drop_duplicates(subset=[constants.LATITUDE, constants.LONGITUDE]).sort_values(by=['visits', constants.DATETIME],
@@ -100,14 +101,14 @@ def _k_radius_of_gyration_individual(traj, k=2):
 
 def k_radius_of_gyration(traj, k=2, show_progress=True):
     """
-    Compute the k-radius of gyration (in kilometers) of a set of individuals given a TrajDataFrame.
+    Compute the k-radius of gyration (in kilometers) of a set of individuals 
     The k-radius of gyration :math:`r_g^{(k)}(u)` indicates the characteristic distance travelled by an individual
     between their $k$ most frequent locations.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
 
-    :param int k: the number of most frequent locations to consider, default=2, range=[2, +inf]
+    :param int k: the number of most frequent locations to consider (default=2, range=[2, +inf])
     
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
@@ -116,7 +117,7 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the k-radius of gyration of each individual from a DataFrame of trajectories
+        Computing the k-radius of gyration of each individual in a TrajDataFrame
     >>> import skmob
     >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import radius_of_gyration
@@ -137,7 +138,7 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _k_radius_of_gyration_individual(traj, k=k)
+        return pd.DataFrame([_k_radius_of_gyration_individual(traj, k=k)], columns=['%s%s' % (k, sys._getframe().f_code.co_name)])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _k_radius_of_gyration_individual(x, k))
@@ -153,7 +154,8 @@ def _random_entropy_individual(traj):
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :return: float
+    :return: the random entropy of the individual 
+    :rtype: float
     """
     n_distinct_locs = len(traj.groupby([constants.LATITUDE, constants.LONGITUDE]))
     entropy = np.log2(n_distinct_locs)
@@ -162,7 +164,7 @@ def _random_entropy_individual(traj):
 
 def random_entropy(traj, show_progress=True):
     """
-    Compute the random entropy of a set of individuals given a TrajDataFrame.
+    Compute the random entropy of a set of individuals 
     The random entropy :math:`E_{rand}(u)` (in base 2) of an individual :math:`u` captures the degree of predictability of :math:`u`'s whereabouts if each location is visited with equal probability.
 
     :param traj: the trajectories of the individuals
@@ -175,7 +177,7 @@ def random_entropy(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the random entropy of each individual from a DataFrame of trajectories
+        Computing the random entropy of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import random_entropy
@@ -197,7 +199,7 @@ def random_entropy(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _random_entropy_individual(traj)
+        return pd.DataFrame([_random_entropy_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _random_entropy_individual(x))
@@ -213,9 +215,10 @@ def _uncorrelated_entropy_individual(traj, normalize=False):
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :param normalize: if True normalize the entropies
+    :param normalize: if True normalize the entropies in the range [0, 1]
 
-    :return: float
+    :return: the temporal-uncorrelated entropy of the individual
+    :rtype: float
     """
     n = len(traj)
     probs = [1.0 * len(group) / n for group in traj.groupby(by=[constants.LATITUDE, constants.LONGITUDE]).groups.values()]
@@ -236,8 +239,7 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
 
-    :param boolean normalize: if True normalize the entropy by dividing by log2(N), where N is the number of
-        distinct locations visited by the individual
+    :param boolean normalize: if True normalize the entropy in the range [0, 1] by dividing by log2(N), where N is the number of distinct locations visited by the individual
 
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
@@ -246,8 +248,8 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the temporal uncorrelated entropy of each individual from a DataFrame of trajectories
-
+        Computing the temporal uncorrelated entropy of each individual in a TrajDataFrame
+        
     >>> import skmob
     >>> from skmob.measures.individual import uncorrelated_entropy
     >>> from skmob import TrajDataFrame
@@ -267,18 +269,18 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
         .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
         .. [pappalardo2016analytical] Pappalardo, Luca, et al. "An analytical framework to nowcast well-being using mobile phone data." International Journal of Data Science and Analytics 2, no. 75 (2016)
     """
+    column_name = sys._getframe().f_code.co_name
+    if normalize:
+        column_name = 'norm_%s' % sys._getframe().f_code.co_name
     
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _uncorrelated_entropy_individual(traj)
+        return pd.DataFrame([_uncorrelated_entropy_individual(traj)], columns=[column_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _uncorrelated_entropy_individual(x, normalize=normalize))
     else:
         df = traj.groupby(constants.UID).apply(lambda x: _uncorrelated_entropy_individual(x, normalize=normalize))
-    column_name = sys._getframe().f_code.co_name
-    if normalize:
-        column_name = 'norm_%s' % sys._getframe().f_code.co_name
     return pd.DataFrame(df).reset_index().rename(columns={0: column_name})
 
 
@@ -314,8 +316,9 @@ def _real_entropy_individual(traj):
 
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
-
-    :return: float
+    
+    :return: the real entropy of the individual
+    :rtype: float
     """
     time_series = tuple(map(tuple, traj[[constants.LATITUDE, constants.LONGITUDE]].values))
     entropy = _true_entropy(time_series)
@@ -336,7 +339,7 @@ def real_entropy(traj, show_progress=True):
     :rtype: pandas DataFrame
     
     Examples:
-        Computing the real entropy of each individual from a DataFrame of trajectories
+        Computing the real entropy of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import real_entropy
@@ -357,7 +360,7 @@ def real_entropy(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _real_entropy_individual(traj)
+        return pd.DataFrame([_real_entropy_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _real_entropy_individual(x))
@@ -370,7 +373,9 @@ def _jump_lengths_individual(traj):
     """
     Compute the jump lengths (in kilometers) of a single individual from their TrajDataFrame
 
-    :param traj: the TrajDataFrame of a single individual
+    :param traj: the trajectories of the individual
+    :type traj: TrajDataFrame
+    
     :return: the list of distances (in kilometers) traveled by the individual
     :rtype: list
     """
@@ -383,7 +388,7 @@ def _jump_lengths_individual(traj):
 
 def jump_lengths(traj, show_progress=True, merge=False):
     """
-    Compute the jump lengths (also called trip distances) (in kilometers) given a TrajDataFrame.
+    Compute the jump lengths (in kilometers) of a set of individuals.
     A jump length (or trip distance) is defined as the geographic distance between the position of a visit and the next one.
 
     :param traj: the trajectories of the individuals
@@ -399,7 +404,7 @@ def jump_lengths(traj, show_progress=True, merge=False):
     :rtype: pandas DataFrame or list
 
     Examples:
-        Computing the jump lenghts of each individual from a DataFrame of trajectories
+        Computing the jump lenghts of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import jump_lengths
@@ -427,7 +432,7 @@ https://scholar.google.it/citations?user=88VJDhcAAAAJ&hl=it&oi=ao
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _jump_lengths_individual(traj)
+        return pd.DataFrame(pd.Series([_jump_lengths_individual(traj)]), columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _jump_lengths_individual(x))
@@ -446,6 +451,15 @@ https://scholar.google.it/citations?user=88VJDhcAAAAJ&hl=it&oi=ao
 
 
 def _maximum_distance_individual(traj):
+    """
+    Compute the maximum distance (in kilometers) traveled by an individual given their TrajDataFrame
+    
+    :param traj: the trajectories of the individual
+    :type traj: TrajDataFrame
+    
+    :return: the maximum traveled distance for the individual (a NaN indicate that an individual visited just one location)
+    :rtype: float
+    """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
         return max(jumps)
@@ -453,7 +467,7 @@ def _maximum_distance_individual(traj):
 
 def maximum_distance(traj, show_progress=True):
     """
-    Compute the maximum distance (in kilometers) traveled by the individuals.
+    Compute the maximum distance (in kilometers) traveled by a set of individuals.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -465,7 +479,7 @@ def maximum_distance(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the maximum distance traveled by each individual from a DataFrame of trajectories
+        Computing the maximum distance traveled by each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import maximum_distance
@@ -487,7 +501,7 @@ def maximum_distance(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _maximum_distance_individual(traj)
+        return pd.DataFrame([_maximum_distance_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _maximum_distance_individual(x))
@@ -496,6 +510,15 @@ def maximum_distance(traj, show_progress=True):
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 def _distance_straight_line_individual(traj):
+    """
+    Compute the distance straight line traveled by the individual given their TrajDataFrame
+    
+    param traj: the trajectories of the individual
+    :type traj: TrajDataFrame
+    
+    :return: the straight line distance traveled by the individual (a NaN indicate that the individual visited just one location)
+    :rtype: float
+    """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
         return sum(jumps)
@@ -503,8 +526,8 @@ def _distance_straight_line_individual(traj):
 
 def distance_straight_line(traj, show_progress=True):
     """
-    Compute the distance (in kilometers) traveled straight line by each individual,
-    i.e., the sum of the distances traveled by the individual
+    Compute the distance (in kilometers) traveled straight line by a set of individuals.
+    The distance straight line is the sum of the distances traveled by an individual.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -512,11 +535,11 @@ def distance_straight_line(traj, show_progress=True):
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
     
-    :return: the straight line distance traveled by the individual (a NaN indicate that an individual visited just one location)
+    :return: the straight line distance traveled by the individuals (a NaN indicate that an individual visited just one location)
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the distance straight line of each individual from a DataFrame of trajectories
+        Computing the distance straight line of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import distance_straight_line
@@ -537,7 +560,7 @@ def distance_straight_line(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _distance_straight_line_individual(traj)
+        return pd.DataFrame([_distance_straight_line_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _distance_straight_line_individual(x))
@@ -549,9 +572,12 @@ def distance_straight_line(traj, show_progress=True):
 def _waiting_times_individual(traj):
     """
     Compute the waiting times for a single individual, given their TrajDataFrame
+    
     :param traj: the trajectories of the individual
-    :type TrajDataFrame
-    :return: a pandas DataFrame
+    :type traj: TrajDataFrame
+    
+    :return: the waiting times of the individual
+    :rtype: list
     """
     if len(traj) == 1:
         return []
@@ -577,7 +603,7 @@ def waiting_times(traj, show_progress=True, merge=False):
     :rtype: pandas DataFrame or list
 
     Examples:
-        Computing the waiting times of each individual from a DataFrame of trajectories
+        Computing the waiting times of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import waiting_times
@@ -598,7 +624,7 @@ def waiting_times(traj, show_progress=True, merge=False):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _waiting_times_individual(traj)
+        return pd.DataFrame(pd.Series([_waiting_times_individual(traj)]), columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _waiting_times_individual(x))
@@ -623,7 +649,8 @@ def _number_of_locations_individual(traj):
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :return: int
+    :return: number of distinct locations visited by the individual 
+    :rtype: int
     """
     n_locs = len(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).groups)
     return n_locs
@@ -631,7 +658,7 @@ def _number_of_locations_individual(traj):
 
 def number_of_locations(traj, show_progress=True):
     """
-    Compute the number of distinct locations visited by an individual.
+    Compute the number of distinct locations visited by a set of individuals.
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -643,7 +670,7 @@ def number_of_locations(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the number of locations of each individual from a DataFrame of trajectories
+        Computing the number of locations of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import number_of_locations
@@ -665,7 +692,7 @@ def number_of_locations(traj, show_progress=True):
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _number_of_locations_individual(traj)
+        return pd.DataFrame([_number_of_locations_individual(traj)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _number_of_locations_individual(x))
@@ -676,13 +703,16 @@ def number_of_locations(traj, show_progress=True):
 
 def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
     """
-    Compute the home location of a single individual, given their TrajDataFrame
+    Compute the home location of a single individual given their TrajDataFrame
+    
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :param start_night:
-    :param end_night:
-    :return: tuple
+    :param start_night:the starting time for the night (format HH:MM)
+    :param end_night: the ending time for the night (format HH:MM)
+    
+    :return: the latitude and longitude coordinates of the individual's home location 
+    :type: tuple
     """
     night_visits = traj.set_index(pd.DatetimeIndex(traj.datetime)).between_time(start_night, end_night)
     if len(night_visits) != 0:
@@ -700,17 +730,17 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
     
-    :param str start_night: the starting hour for the night
-    :param str end_night: the ending hour for the night
+    :param str start_night: the starting time (format HH:MM)
+    :param str end_night: the ending time for the night (format HH:MM)
     
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
     
-    :return: the home location of the individuals
+    :return: the home location (in terms of latitude and longitude coordinates) of the individuals
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the home location of each individual from a DataFrame of trajectories
+        Computing the home location of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import home_location
@@ -729,7 +759,7 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _home_location_individual(traj, start_night=start_night, end_night=end_night)
+        return pd.DataFrame([_home_location_individual(traj, start_night=start_night, end_night=end_night)], columns=[constants.LATITUDE, constants.LONGITUDE])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
@@ -745,20 +775,15 @@ def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:
     :param traj: the trajectories of the individual
     :type traj: TrajDataFrame
 
-    :param str start_night: the starting hour for the night
-    :param str end_night: the ending hour for the night
+    :param str start_night: the starting time for the night (format HH:MM)
+    :param str end_night: the ending time for the night (format HH:MM)
     
-    :return: float
+    :return: the maximum distance traveled from home by the individual 
+    :type: float
     """    
     lats_lngs = traj.sort_values(by=constants.DATETIME)[[constants.LATITUDE, constants.LONGITUDE]].values
-    if constants.UID not in traj.columns:
-        # it is directly a tuple
-        home = home_location(traj, start_night=start_night, end_night=end_night, show_progress=False)
-        home_lat, home_lng = home
-    else:
-        home = home_location(traj, start_night=start_night, end_night=end_night, show_progress=False).iloc[0]
-        home_lat, home_lng = home[constants.LATITUDE], home[constants.LONGITUDE]
-    
+    home = home_location(traj, start_night=start_night, end_night=end_night, show_progress=False).iloc[0]
+    home_lat, home_lng = home[constants.LATITUDE], home[constants.LONGITUDE]
     lengths = np.array([getDistanceByHaversine((lat, lng), (home_lat, home_lng)) for i, (lat, lng) in enumerate(lats_lngs)])
     return lengths.max()
 
@@ -770,8 +795,8 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
     
-    :param str start_night: the starting hour for the night
-    :param str end_night: the ending hour for the night
+    :param str start_night: the starting time for the night (format HH:MM)
+    :param str end_night: the ending time for the night (format HH:MM)
     
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
@@ -780,7 +805,7 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
     :rtype: pandas DataFrame
 
     Examples:
-        Computing the maximum distance from home of each individual from a DataFrame of trajectories
+        Computing the maximum distance from home of each individual in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import max_distance_from_home
@@ -797,11 +822,13 @@ date_time
     .. seealso:: :func:`maximum_distance`, :func:`home_location`
 
     References:
-        .. [canzian2015trajectories] Luca Canzian and Mirco Musolesi. "Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis." In Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp '15), 1293--1304, 2015.
+        .. [canzian2015trajectories] Luca Canzian and Mirco Musolesi. "Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobilhttps://www.gazzetta.it/?refresh_ceity traces analysis." In Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp '15), 1293--1304, 2015.
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
-        return _max_distance_from_home_individual(traj, start_night=start_night, end_night=end_night)
+        return pd.DataFrame([_max_distance_from_home_individual(traj, 
+                                                                start_night=start_night, 
+                                                                end_night=end_night)], columns=[sys._getframe().f_code.co_name])
     
     if show_progress:
         df = traj.groupby(constants.UID).progress_apply(lambda x: _max_distance_from_home_individual(x, start_night=start_night, end_night=end_night))
@@ -812,7 +839,7 @@ date_time
 
 def number_of_visits(traj, show_progress=True):
     """
-    Compute the number of visits or points in an individual's trajectory
+    Compute the number of visits of an individual given their TrajDataFrame
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -824,7 +851,7 @@ def number_of_visits(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
+            Computing the number of visits per location in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import number_of_visits
@@ -851,11 +878,15 @@ def number_of_visits(traj, show_progress=True):
 
 def _location_frequency_individual(traj, normalize=True):
     """
-    Compute the visitation frequency of each location for a single individual, given their TrajDataFrame
+    Compute the visitation frequency of each location for a single individual given their TrajDataFrame
+    
     :param traj: the trajectories of the individual
     :type TrajDataFrame
+    
     :param normalize: if True compute the ratio of visits, otherwise the row count of visits to each location
-    :return: pandas DataFrame
+    
+    :return: the location frequency of each location of the individual 
+    :type: pandas DataFrame
     """
     freqs = traj.groupby([constants.LATITUDE,
                           constants.LONGITUDE]).count()[constants.DATETIME].sort_values(ascending=False)
@@ -866,7 +897,7 @@ def _location_frequency_individual(traj, normalize=True):
 
 def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True):
     """
-    Visitation frequency of each location
+    Visitation frequency of each location, for each individual
 
     :param traj: the trajectories of the individuals
     :type traj: TrajDataFrame
@@ -883,7 +914,7 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True)
     :rtype: pandas DataFrame or list
 
     Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
+            Computing the number of visits per location in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import location_frequency
@@ -935,11 +966,15 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True)
 
 def _individual_mobility_network_individual(traj, self_loops=False):
     """
-    Compute the individual mobility network of a single individual, given their TrajDataFrame
+    Compute the individual mobility network of a single individual given their TrajDataFrame
+    
     :param traj: the trajectories of the individual
-    :type TrajDataFrame
+    :type traj: TrajDataFrame
+    
     :param self_loops: if True also considers the self loops
-    :return: pandas DataFrame
+    
+    :return: the individual mobility network of the individual 
+    :rtype: pandas DataFrame
     """
     loc2loc2weight = defaultdict(lambda: defaultdict(lambda: 0))
     traj = traj.sort_values(by=constants.DATETIME)
@@ -967,20 +1002,21 @@ def _individual_mobility_network_individual(traj, self_loops=False):
 
 def individual_mobility_network(traj, self_loops=False, show_progress=True):
     """
-    Compute the individual mobility network of an individual.
+    Compute the individual mobility network of a set of individuals given their TrajDataFrame
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
+    
     :param boolean self_loops: if True adds self loops also
     
     :param show_progress: if True show a progress bar
     :type show_progress: boolean
     
-    :return: the graph describing the individual mobility network
-    :rtype: networkx Graph
+    :return: the individual mobility network of the individual
+    :rtype: pandas DataFrame
 
     Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
+            Computing the number of visits per location in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import individual_mobility_network
@@ -1022,7 +1058,7 @@ def _recency_rank_individual(traj):
 
 def recency_rank(traj, show_progress=True):
     """
-    Compute the recency rank of the locations of the individual
+    Compute the recency rank of the locations of a set of individuals
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
@@ -1034,7 +1070,7 @@ def recency_rank(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
+            Computing the number of visits per location in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import recency_rank
@@ -1067,10 +1103,13 @@ def recency_rank(traj, show_progress=True):
 
 def _frequency_rank_individual(traj):
     """
-    Compute the frequency rank of the locations of a single individual, given their TrajDataFrame
+    Compute the frequency rank of the locations of a single individual given their TrajDataFrame
+    
     :param traj: trajectories of the individual
     :type: TrajDataFrame
-    :return: TrajDataFrame
+    
+    :return: the frequency of each location visited by the individual
+    :type: pandas DataFrame
     """
     traj = traj.groupby([constants.LATITUDE, constants.LONGITUDE]).count().sort_values(by=constants.DATETIME, ascending=False).reset_index()
     traj['frequency_rank'] = range(1, len(traj) + 1)
@@ -1079,7 +1118,7 @@ def _frequency_rank_individual(traj):
 
 def frequency_rank(traj, show_progress=True):
     """
-    Compute the frequency rank of the locations of the individual
+    Compute the frequency rank of the locations of a set of individuals
 
     :param traj: the trajectories of the individuals
     :type traj: pandas DataFrame
@@ -1091,7 +1130,7 @@ def frequency_rank(traj, show_progress=True):
     :rtype: pandas DataFrame
 
     Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
+            Computing the number of visits per location in a TrajDataFrame
 
     >>> import skmob
     >>> from skmob.measures.individual import frequency_rank
