@@ -52,6 +52,41 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
           env=$(basename `echo $CONDA_PREFIX`)
           python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
           
+### without conda (python >= 3.6 required)
+
+
+1. Create an environment `skmob`
+
+        python3 -m venv skmob
+
+2. Activate
+    
+        source skmob/bin/activate
+
+3. Install skmob
+
+        cd scikit_mobility
+        python setup.py install
+
+
+4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
+
+	- Activate the virutalenv:
+	
+			source skmob/bin/activate
+	
+	- Install jupyter notebook:
+		
+			pip install jupyter 
+	
+	- Run jupyter notebook 			
+			
+			jupyter notebook
+			
+	- (Optional) install the kernel with a specific name
+			
+			ipython kernel install --user --name=skmob
+			
           
 ### Test the installation
 
