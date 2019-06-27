@@ -139,7 +139,7 @@ class EPR:
     def trajectories_(self):
         return self._trajectories_
 
-    def _weighted_random_selection(self):
+    def _weighted_random_selection(self, current_location):
         """
         Select a random location given their visitation frequency. Used by the return mechanism.
 
@@ -148,11 +148,17 @@ class EPR:
         """
         locations = np.fromiter(self._location2visits.keys(), dtype=int)
         weights = np.fromiter(self._location2visits.values(), dtype=float)
+
+        # remove the current location
+        currloc_idx = np.where(locations == current_location)[0][0]
+        locations = np.delete(locations, currloc_idx)
+        weights = np.delete(weights, currloc_idx)
+
         weights = weights / np.sum(weights)
         location = np.random.choice(locations, size=1, p=weights)
         return int(location[0])
 
-    def _preferential_return(self):
+    def _preferential_return(self, current_location):
         """
         Choose the location the agent returns to, according to the visitation frequency
         of the previously visited locations.
@@ -160,7 +166,7 @@ class EPR:
         :return: int
             the identifier of the next location
         """
-        next_location = self._weighted_random_selection()
+        next_location = self._weighted_random_selection(current_location)
         if self._log_file is not None:
             logging.info('RETURN to %s (%s, %s)' % (next_location, self.lats_lngs[next_location]))
             logging.info('\t frequency = %s' % self._location2visits[next_location])
@@ -225,13 +231,14 @@ class EPR:
             self._starting_loc = self._preferential_exploration(self._starting_loc)
             return self._starting_loc
 
+        agent_id, current_time, current_location = self._trajectories_[-1]  # the last visited location
+
         # choose a probability to return or explore
         p_new = random.uniform(0, 1)
 
-        if p_new <= self._rho * math.pow(n_visited_locations, -self._gamma) and n_visited_locations != \
-                self._od_matrix.shape[0]:  # choose to return or explore
+        if (p_new <= self._rho * math.pow(n_visited_locations, -self._gamma) and n_visited_locations != \
+                self._od_matrix.shape[0]) or n_visited_locations == 1:  # choose to return or explore
             # PREFERENTIAL EXPLORATION
-            agent_id, current_time, current_location = self._trajectories_[-1]  # the last visited location
             next_location = self._preferential_exploration(current_location)
             # TODO: remove the part below and exclude visited locations
             #  from the list of potential destinations in _preferential_exploration
@@ -241,7 +248,7 @@ class EPR:
 
         else:
             # PREFERENTIAL RETURN
-            next_location = self._preferential_return()
+            next_location = self._preferential_return(current_location)
             return next_location
 
     def _time_generator(self):
@@ -617,4 +624,4 @@ class Ditras(EPR):
             else:  # the agent is not at home
                 next_location = self._choose_location()
                 self._trajectories_.append((agent_id, row.datetime, next_location))
-        self._location2visits[next_location] += 1
+                self._location2visits[next_location] += 1

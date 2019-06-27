@@ -74,7 +74,7 @@ def load_geolife_trajectories(path_to_geolife_data_dir, user_ids=[],
         df = pd.concat(dfg, ignore_index=True)
         df['datetime'] = df[5] + ' ' + df[6]
         df.drop(columns=[5, 6], inplace=True)
-        df['uid'] = [str(uid) for i in range(len(df))]
+        df['uid'] = [str(uid) for _ in range(len(df))]
 
         tdf0 = TrajDataFrame(df, latitude=0, longitude=1)
 

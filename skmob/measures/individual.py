@@ -876,7 +876,8 @@ def number_of_visits(traj, show_progress=True):
     return pd.DataFrame(df).reset_index().rename(columns={0: sys._getframe().f_code.co_name})
 
 
-def _location_frequency_individual(traj, normalize=True):
+def _location_frequency_individual(traj, normalize=True,
+                                   location_columns=[constants.LATITUDE, constants.LONGITUDE]):
     """
     Compute the visitation frequency of each location for a single individual given their TrajDataFrame
     
@@ -888,14 +889,14 @@ def _location_frequency_individual(traj, normalize=True):
     :return: the location frequency of each location of the individual 
     :type: pandas DataFrame
     """
-    freqs = traj.groupby([constants.LATITUDE,
-                          constants.LONGITUDE]).count()[constants.DATETIME].sort_values(ascending=False)
+    freqs = traj.groupby(location_columns).count()[constants.DATETIME].sort_values(ascending=False)
     if normalize:
         freqs /= freqs.sum()
     return freqs
 
 
-def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True):
+def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
+                       location_columns=[constants.LATITUDE, constants.LONGITUDE]):
     """
     Visitation frequency of each location, for each individual
 
@@ -936,20 +937,22 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True)
     """
     # TrajDataFrame without 'uid' column
     if constants.UID not in traj.columns: 
-        df = pd.DataFrame(_location_frequency_individual(traj))
+        df = pd.DataFrame(_location_frequency_individual(traj, location_columns=location_columns))
         return df.reset_index()
     
     # TrajDataFrame with a single user
     n_users = len(traj[constants.UID].unique())
     if n_users == 1: # if there is only one user in the TrajDataFrame
-        df = pd.DataFrame(_location_frequency_individual(traj))
+        df = pd.DataFrame(_location_frequency_individual(traj, location_columns=location_columns))
         return df.reset_index()
     
     # TrajDataFrame with multiple users
     if show_progress:
-        df = pd.DataFrame(traj.groupby(constants.UID).progress_apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
+        df = pd.DataFrame(traj.groupby(constants.UID)
+                          .progress_apply(lambda x: _location_frequency_individual(x, normalize=normalize, location_columns=location_columns)))
     else:
-        df = pd.DataFrame(traj.groupby(constants.UID).apply(lambda x: _location_frequency_individual(x, normalize=normalize)))
+        df = pd.DataFrame(traj.groupby(constants.UID)
+                          .apply(lambda x: _location_frequency_individual(x, normalize=normalize, location_columns=location_columns)))
     
     df = df.rename(columns={constants.DATETIME: 'location_frequency'})
     
