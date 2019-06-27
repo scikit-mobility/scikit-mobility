@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+import os
+import fnmatch
 from ..core.trajectorydataframe import TrajDataFrame
 from ..core.flowdataframe import FlowDataFrame
 
@@ -28,3 +30,39 @@ def read(file):
     else:
         print('DataFrame type not recognised.')
         return None
+
+
+def load_geolife_trajectories(path_to_geolife_data_dir, user_ids=[]):
+    """
+    Load the Geolife trajectories in a skmob.TrajDataFrame
+
+    :param path_to_geolife_data_dir: str
+        local path of the directory 'Geolife Trajectories 1.3/'
+
+    :param user_ids: list
+        list of user IDs to load. If empty all users are loaded.
+
+    :return: TrajDataFrame
+        a TrajDataFrame containing all trajectories
+
+    """
+    tdf = pd.DataFrame()
+
+    path = path_to_geolife_data_dir + 'Data/'
+    if len(user_ids) == 0:
+        user_ids = os.listdir(path)
+
+    for uid in user_ids:
+        try:
+            all_files = fnmatch.filter(os.listdir(path + '%s/Trajectory/' % uid), "*.plt")
+        except NotADirectoryError:
+            continue
+        dfg = (pd.read_csv(path + '%s/Trajectory/' % uid + f,
+                           skiprows=6, header=None, usecols=[0, 1, 5, 6]) for f in all_files)
+        df = pd.concat(dfg, ignore_index=True)
+        df['datetime'] = df[5] + ' ' + df[6]
+        df.drop(columns=[5, 6], inplace=True)
+        df['uid'] = [str(uid) for i in range(len(df))]
+        tdf = tdf.append(TrajDataFrame(df, latitude=0, longitude=1))
+
+    return tdf

@@ -42,7 +42,7 @@ def get_columns(data):
 
 
 def to_dataframe(data, columns):
-    # Reoder colmuns to maintain the original order
+    # Reorder columns to maintain the original order
     df = pd.DataFrame(data, columns=columns)
 
     return df
