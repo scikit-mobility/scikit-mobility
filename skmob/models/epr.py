@@ -440,9 +440,9 @@ class DensityEPR(EPR):
         .. [pappalardo2016modelling] Pappalardo, L., Simini, F. Rinzivillo, S., "Human Mobility Modelling: exploration and preferential return meet the gravity model", Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).
     """
 
-    def __init__(self, name='Density EPR model'):
+    def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
 
-        super().__init__(self)
+        super().__init__()
         self._name = name
 
 
@@ -513,9 +513,9 @@ class SpatialEPR(EPR):
         .. [pappalardo2016modelling] Pappalardo, L., Simini, F. Rinzivillo, S., "Human Mobility Modelling: exploration and preferential return meet the gravity model", Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).
     """
 
-    def __init__(self, name='Spatial EPR model'):
+    def __init__(self, name='Spatial EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
 
-        super().__init__(self)
+        super().__init__()
         self._name = name
 
     def generate(self, start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1,
@@ -601,11 +601,13 @@ class Ditras(EPR):
     .. [pappalardo2018data] Pappalardo, L, Simini, F, Data-driven generation of spatio-temporal routines in human mobility, Data Mining and Knowledge Discovery, 32:3 (2018).
     """
 
-    def __init__(self, diary_generator, name='Ditras model'):
+    def __init__(self, diary_generator, name='Ditras model', rho=0.3, gamma=0.21):
 
-        super().__init__(self)
+        super().__init__()
         self._diary_generator = diary_generator
         self._name = name
+        self._rho = rho
+        self._gamma = gamma
 
     def _epr_generate_one_agent(self, agent_id, start_date, end_date):
 
