@@ -320,17 +320,103 @@ class TrajDataFrame(pd.DataFrame):
         return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True])
 
     # Plot methods
-    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1, tiles='cartodbpositron',
+    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, tiles='cartodbpositron',
                         zoom=12, hex_color=-1, weight=2, opacity=0.75):
-        return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, imin=imin, imax=imax,
+        """
+        :param tdf: TrajectoryDataFrame
+             TrajectoryDataFrame to be plotted.
+
+        :param map_f: folium.Map
+            `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
+
+        :param max_users: int
+            maximum number of users whose trajectories should be plotted.
+
+        :param max_points: int
+            maximum number of points per user to plot.
+            If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
+
+        :param tiles: str
+            folium's `tiles` parameter.
+
+        :param zoom: int
+            initial zoom.
+
+        :param hex_color: str or int
+            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory.
+
+        :param weight: float
+            thickness of the trajectory line.
+
+        :param opacity: float
+            opacity (alpha level) of the trajectory line.
+
+        :return: `folium.Map` object with the plotted trajectories.
+
+        """
+        return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
                                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
-                   popup=True):
+                   radius=12, popup=True):
+        """
+        :param stdf: TrajectoryDataFrame
+             Requires a TrajectoryDataFrame with stops or clusters, output of `preprocessing.detection.stops`
+             or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
+
+        :param map_f: folium.Map
+            `folium.Map` object where the stops will be plotted. If `None`, a new map will be created.
+
+        :param max_users: int
+            maximum number of users whose stops should be plotted.
+
+        :param tiles: str
+            folium's `tiles` parameter.
+
+        :param zoom: int
+            initial zoom.
+
+        :param hex_color: str or int
+            hex color of the stop markers. If `-1` a random color will be generated for each user.
+
+        :param opacity: float
+            opacity (alpha level) of the stop makers.
+
+        :param radius: float
+            size of the markers.
+
+        :param popup: bool
+            if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
+
+        :return: `folium.Map` object with the plotted stops.
+
+        """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
-                               hex_color=hex_color, opacity=opacity, popup=popup)
+                               hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
+        """
+        :param cstdf: TrajectoryDataFrame
+             Requires a TrajectoryDataFrame with clusters, output of `preprocessing.clustering.cluster`.
+             The column `constants.CLUSTER` must be present.
+
+        :param user: str or int
+            user ID whose diary should be plotted.
+
+        :param start_datetime: datetime.datetime
+            Only stops made after this date will be plotted.
+            If `None` the datetime of the oldest stop will be selected.
+
+        :param end_datetime: datetime.datetime
+            Only stops made before this date will be plotted.
+            If `None` the datetime of the newest stop will be selected.
+
+        :param ax: matplotlib.axes
+            axes where the diary will be plotted.
+
+        :return: `matplotlib.axes` of the plotted diary.
+
+        """
         return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
 
     def route(self, G=None, index_origin=0, index_destin=-1):

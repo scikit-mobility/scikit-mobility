@@ -359,17 +359,97 @@ class FlowDataFrame(pd.DataFrame):
         return FlowDataFrame
 
     # Plot methods
-    def plot_flows(self, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', flow_weight=5,
-                   flow_exp=0.5, num_od_popup=5, style_function=plot.flow_style_function, flow_popup=False,
-                   tile_popup=True, radius_origin_point=5, color_origin_point='#3186cc'):
+    def plot_flows(self, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', opacity=0.5,
+                   flow_weight=5, flow_exp=0.5, style_function=plot.flow_style_function,
+                   flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
+                   color_origin_point='#3186cc'):
+        """
+        :param fdf: FlowDataFrame
+            `FlowDataFrame` to visualize.
 
+        :param map_f: folium.Map
+            `folium.Map` object where the flows will be plotted. If `None`, a new map will be created.
+
+        :param min_flow: float
+            only flows larger than `min_flow` will be plotted.
+
+        :param tiles: str
+            folium's `tiles` parameter.
+
+        :param zoom: int
+            initial zoom.
+
+        :param flow_color: str
+            color of the flow edges
+
+        :param opacity: float
+            opacity (alpha level) of the flow edges.
+
+        :param flow_weight: float
+            weight factor used in the function to compute the thickness of the flow edges.
+
+        :param flow_exp: float
+            weight exponent used in the function to compute the thickness of the flow edges.
+
+        :param style_function: lambda function
+            GeoJson style function.
+
+        :param flow_popup: bool
+            if `True`, when clicking on a flow edge a popup window displaying information on the flow will appear.
+
+        :param num_od_popup: int
+            number of origin-destination pairs to show in the popup window of each origin location.
+
+        :param tile_popup: bool
+            if `True`, when clicking on a location marker a popup window displaying information on the flows
+            departing from that location will appear.
+
+        :param radius_origin_point: float
+            size of the location markers.
+
+        :param color_origin_point: str
+            color of the location markers.
+
+        :return: `folium.Map` object with the plotted flows.
+
+        """
         return plot.plot_flows(self, map_f=map_f, min_flow=min_flow,  tiles=tiles, zoom=zoom, flow_color=flow_color,
-                               flow_weight=flow_weight, flow_exp=flow_exp, num_od_popup=num_od_popup,
-                               style_function=style_function, flow_popup=flow_popup, tile_popup=tile_popup,
-                               radius_origin_point=radius_origin_point, color_origin_point=color_origin_point)
+                               opacity=opacity, flow_weight=flow_weight, flow_exp=flow_exp,
+                               style_function=style_function, flow_popup=flow_popup, num_od_popup=num_od_popup,
+                               tile_popup=tile_popup, radius_origin_point=radius_origin_point,
+                               color_origin_point=color_origin_point)
 
     def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+        """
+        :param gdf: GeoDataFrame
+            GeoDataFrame to visualize.
 
+        :param map_osm: folium.Map
+            `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
+
+        :param maxitems: int
+            maximum number of tiles to plot. If `-1`, all tiles will be plotted.
+
+        :param style_func_args: dict
+            dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons:
+            'weight', 'color', 'opacity', 'fillColor', 'fillOpacity'
+
+        :param popup_features: list
+            when clicking on a tile polygon, a popup window displaying the information in the
+            columns of `gdf` listed in `popup_features` will appear.
+
+        :param tiles: str
+            folium's `tiles` parameter.
+
+        :param zoom: int
+            initial zoom.
+
+        :param geom_col: str
+             name of the geometry column of `gdf`.
+
+        :return: `folium.Map` object with the plotted GeoDataFrame.
+
+        """
         return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
                              popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

@@ -49,8 +49,40 @@ def random_hex():
     return '#%02X%02X%02X' % (r(),r(),r())
 
 
-def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax=-1,
+def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000,
                     tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
+    """
+    :param tdf: TrajectoryDataFrame
+         TrajectoryDataFrame to be plotted.
+
+    :param map_f: folium.Map
+        `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
+
+    :param max_users: int
+        maximum number of users whose trajectories should be plotted.
+
+    :param max_points: int
+        maximum number of points per user to plot.
+        If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
+
+    :param tiles: str
+        folium's `tiles` parameter.
+
+    :param zoom: int
+        initial zoom.
+
+    :param hex_color: str or int
+        hex color of the trajectory line. If `-1` a random color will be generated for each trajectory.
+
+    :param weight: float
+        thickness of the trajectory line.
+
+    :param opacity: float
+        opacity (alpha level) of the trajectory line.
+
+    :return: `folium.Map` object with the plotted trajectories.
+
+    """
     # group by user and keep only the first `max_users`
     nu = 0
     for user, df in tdf.groupby(constants.UID):
@@ -58,7 +90,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax
             break
         nu += 1
 
-        traj = df[[constants.LONGITUDE, constants.LATITUDE]].values[imin:imax]
+        traj = df[[constants.LONGITUDE, constants.LATITUDE]]
 
         if max_points == None:
             di = 1
@@ -94,7 +126,39 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, imin=0, imax
 
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-1, opacity=0.3, popup=True):
+               hex_color=-1, opacity=0.3, radius=12, popup=True):
+    """
+    :param stdf: TrajectoryDataFrame
+         Requires a TrajectoryDataFrame with stops or clusters, output of `preprocessing.detection.stops`
+         or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
+
+    :param map_f: folium.Map
+        `folium.Map` object where the stops will be plotted. If `None`, a new map will be created.
+
+    :param max_users: int
+        maximum number of users whose stops should be plotted.
+
+    :param tiles: str
+        folium's `tiles` parameter.
+
+    :param zoom: int
+        initial zoom.
+
+    :param hex_color: str or int
+        hex color of the stop markers. If `-1` a random color will be generated for each user.
+
+    :param opacity: float
+        opacity (alpha level) of the stop makers.
+
+    :param radius: float
+        size of the markers.
+
+    :param popup: bool
+        if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
+
+    :return: `folium.Map` object with the plotted stops.
+
+    """
     if map_f == None:
         # initialise map
         lo_la = stdf[['lng', 'lat']].values
@@ -128,7 +192,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
                 cl = ''
 
             fpoly = folium.RegularPolygonMarker([la, lo],
-                                        radius=12,
+                                        radius=radius,
                                         color=color,
                                         fill_color=color,
                                         fill_opacity=opacity
@@ -146,7 +210,28 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
 
 
 def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
+    """
+    :param cstdf: TrajectoryDataFrame
+         Requires a TrajectoryDataFrame with clusters, output of `preprocessing.clustering.cluster`.
+         The column `constants.CLUSTER` must be present.
 
+    :param user: str or int
+        user ID whose diary should be plotted.
+
+    :param start_datetime: datetime.datetime
+        Only stops made after this date will be plotted.
+        If `None` the datetime of the oldest stop will be selected.
+
+    :param end_datetime: datetime.datetime
+        Only stops made before this date will be plotted.
+        If `None` the datetime of the newest stop will be selected.
+
+    :param ax: matplotlib.axes
+        axes where the diary will be plotted.
+
+    :return: `matplotlib.axes` of the plotted diary.
+
+    """
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 2))
 
@@ -180,15 +265,64 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
 
 
 
-flow_style_function = lambda color, weight, weight_factor, flow_exp: \
-    (lambda feature: dict(color=color, weight=weight_factor * weight ** flow_exp, opacity=0.5)) #, dashArray='5, 5'))
+flow_style_function = lambda weight, color, opacity, weight_factor, flow_exp: \
+    (lambda feature: dict(color=color, weight=weight_factor * weight ** flow_exp, opacity=opacity)) #, dashArray='5, 5'))
 
 
-def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', flow_weight=5,
-               num_od_popup=5, flow_exp=0.5,
-               style_function=flow_style_function, flow_popup=False, tile_popup=True, radius_origin_point=5,
+def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', opacity=0.5,
+               flow_weight=5, flow_exp=0.5, style_function=flow_style_function,
+               flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
                color_origin_point='#3186cc'):
+    """
+    :param fdf: FlowDataFrame
+        `FlowDataFrame` to visualize.
 
+    :param map_f: folium.Map
+        `folium.Map` object where the flows will be plotted. If `None`, a new map will be created.
+
+    :param min_flow: float
+        only flows larger than `min_flow` will be plotted.
+
+    :param tiles: str
+        folium's `tiles` parameter.
+
+    :param zoom: int
+        initial zoom.
+
+    :param flow_color: str
+        color of the flow edges
+
+    :param opacity: float
+        opacity (alpha level) of the flow edges.
+
+    :param flow_weight: float
+        weight factor used in the function to compute the thickness of the flow edges.
+
+    :param flow_exp: float
+        weight exponent used in the function to compute the thickness of the flow edges.
+
+    :param style_function: lambda function
+        GeoJson style function.
+
+    :param flow_popup: bool
+        if `True`, when clicking on a flow edge a popup window displaying information on the flow will appear.
+
+    :param num_od_popup: int
+        number of origin-destination pairs to show in the popup window of each origin location.
+
+    :param tile_popup: bool
+        if `True`, when clicking on a location marker a popup window displaying information on the flows
+        departing from that location will appear.
+
+    :param radius_origin_point: float
+        size of the location markers.
+
+    :param color_origin_point: str
+        color of the location markers.
+
+    :return: `folium.Map` object with the plotted flows.
+
+    """
     if map_f is None:
         # initialise map
         lon, lat = np.mean(np.array(list(fdf.tessellation.geometry.apply(utils.get_geom_centroid).values)), axis=0)
@@ -215,7 +349,8 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
 
             fgeojson = folium.GeoJson(gjc,
                                       name='geojson',
-                                      style_function = style_function(flow_color, T / mean_flows, flow_weight, flow_exp)
+                                      style_function = style_function(T / mean_flows, flow_color, opacity,
+                                                                      flow_weight, flow_exp)
                                       )
             if flow_popup:
                 popup = folium.Popup('flow from %s to %s: %s'%(O, D, int(T)), max_width=300)
@@ -256,6 +391,7 @@ geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: 
 
 
 def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
+
     weight, color, opacity, fillColor, fillOpacity = [
         style_func_args[k] if k in style_func_args else default_style_func_args[k]
         for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']]
@@ -349,7 +485,36 @@ def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
 
 def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[],
             tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+    """
+    :param gdf: GeoDataFrame
+        GeoDataFrame to visualize.
 
+    :param map_osm: folium.Map
+        `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
+
+    :param maxitems: int
+        maximum number of tiles to plot. If `-1`, all tiles will be plotted.
+
+    :param style_func_args: dict
+        dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons:
+        'weight', 'color', 'opacity', 'fillColor', 'fillOpacity'
+
+    :param popup_features: list
+        when clicking on a tile polygon, a popup window displaying the information in the
+        columns of `gdf` listed in `popup_features` will appear.
+
+    :param tiles: str
+        folium's `tiles` parameter.
+
+    :param zoom: int
+        initial zoom.
+
+    :param geom_col: str
+         name of the geometry column of `gdf`.
+
+    :return: `folium.Map` object with the plotted GeoDataFrame.
+
+    """
     if map_osm is None:
         # initialise map
         lon, lat = np.mean(np.array(list(gdf[geom_col].apply(utils.get_geom_centroid).values)), axis=0)
