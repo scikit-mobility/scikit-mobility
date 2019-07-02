@@ -225,19 +225,19 @@ class TrajDataFrame(pd.DataFrame):
     @property
     def lat(self):
         if constants.LATITUDE not in self:
-            raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'" % constants.LATITUDE)
+            raise AttributeError("The TrajDataFrame does not contain the column '%s.'" % constants.LATITUDE)
         return self[constants.LATITUDE]
 
     @property
     def lng(self):
         if constants.LONGITUDE not in self:
-            raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'"%constants.LONGITUDE)
+            raise AttributeError("The TrajDataFrame does not contain the column '%s.'"%constants.LONGITUDE)
         return self[constants.LONGITUDE]
 
     @property
     def datetime(self):
         if constants.DATETIME not in self:
-            raise AttributeError("The TrajectoryDataFrame does not contain the column '%s.'"%constants.DATETIME)
+            raise AttributeError("The TrajDataFrame does not contain the column '%s.'"%constants.DATETIME)
         return self[constants.DATETIME]
 
     @property
@@ -323,8 +323,8 @@ class TrajDataFrame(pd.DataFrame):
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, tiles='cartodbpositron',
                         zoom=12, hex_color=-1, weight=2, opacity=0.75):
         """
-        :param tdf: TrajectoryDataFrame
-             TrajectoryDataFrame to be plotted.
+        :param tdf: TrajDataFrame
+             TrajDataFrame to be plotted.
 
         :param map_f: folium.Map
             `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
@@ -360,8 +360,8 @@ class TrajDataFrame(pd.DataFrame):
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):
         """
-        :param stdf: TrajectoryDataFrame
-             Requires a TrajectoryDataFrame with stops or clusters, output of `preprocessing.detection.stops`
+        :param stdf: TrajDataFrame
+             Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
              or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
 
         :param map_f: folium.Map
@@ -396,8 +396,8 @@ class TrajDataFrame(pd.DataFrame):
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         """
-        :param cstdf: TrajectoryDataFrame
-             Requires a TrajectoryDataFrame with clusters, output of `preprocessing.clustering.cluster`.
+        :param cstdf: TrajDataFrame
+             Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
              The column `constants.CLUSTER` must be present.
 
         :param user: str or int

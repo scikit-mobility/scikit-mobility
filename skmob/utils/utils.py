@@ -86,14 +86,34 @@ def setattrpandas(df, name, value):
     return df
 
 
-def group_df_by_time(df, freq_str='1D', offset_value=0, offset_unit='hours', add_starting_location=False,
+def group_df_by_time(tdf, freq_str='1D', offset_value=0, offset_unit='hours', add_starting_location=False,
                      dtformat='%Y-%m-%d %H:%M:%S'):
     """
-    freq_str  :  `freq` parameter of `pd.date_range`. default: '1D'
-    offset_value  :
-    offset_unit  :
+    Split a `TrajDataFrame` into subtrajectories of fixed temporal length (`freq_str`).
+
+    :param tdf: TrajDataFrame
+        `TrajDataFrame` to split.
+
+    :param freq_str: str
+        `freq` parameter of `pd.date_range`. default: '1D' (one day).
+
+    :param offset_value: float
+        value of the offset time used to shift the start time of each subtrajectories.
+
+    :param offset_unit: str
+        time unit of the offset time used to shift the start time of each subtrajectories.
+
+    :param add_starting_location: bool
+        if `True`, the last point of the previous subtrajectory will be appended
+         at the beginning of the next subtrajectory.
+
+    :param dtformat: str
+        datetime format.
+
+    :return: list containing the subtrajectories
+
     """
-    df = df.sort_values([constants.DATETIME])
+    df = tdf.sort_values([constants.DATETIME])
 
     offset = pd.Timedelta(offset_value, offset_unit)  # datetime.timedelta(seconds=offset_secs)
     t_init = pd.to_datetime(df[constants.DATETIME].min().date())
@@ -226,6 +246,19 @@ def nearest(origin, tessellation, col):
 
 
 def get_geom_centroid(geom, return_lat_lng=False):
+    """
+    Compute the centroid of a Polygon or Multipolygon.
+
+    :param geom: shapely Polygon or Multipolygon
+        geometry, Polygon or Multipolygon, whose centroid will be computed.
+
+    :param return_lat_lng: bool
+        if `True`, the first coordinate in the returned list is the centroid's latitude, otherwise it is the longitude.
+
+    :return: list
+        coordinates of `geom`'s centroid.
+
+    """
     if type(geom) == shapely.geometry.multipolygon.MultiPolygon:
         m_n = [[np.mean(pol.exterior.xy, axis=1), len(pol.exterior.xy[0])] for pol in geom]
         lonO, latO = np.sum([[ln*n, la*n] for (ln,la),n in m_n], axis=0) / np.sum(m_n, axis=0)[1]

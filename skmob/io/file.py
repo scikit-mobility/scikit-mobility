@@ -8,6 +8,18 @@ from ..preprocessing import filtering, compression
 
 
 def write(skmob_df, file):
+    """
+    Write a TrajDataFrame to a json file.
+
+    :param skmob_df: TrajDataFrame
+        object that will be saved.
+
+    :param file: str
+        path and name of the `json` output file.
+
+    :return: None
+
+    """
     datetime_columns = [c for c in skmob_df.columns
                         if pd.core.dtypes.common.is_datetime64_any_dtype(skmob_df[c].dtype)]
 
@@ -19,6 +31,16 @@ def write(skmob_df, file):
 
 
 def read(file):
+    """
+    Read a TrajDataFrame from a json file.
+
+    :param file: str
+        path and name of the `json` file to read.
+
+    :return:
+        object loaded from file.
+
+    """
     with open(file, 'r') as f:
         df_type, json_df, parameters, datetime_columns = json.load(f)
 

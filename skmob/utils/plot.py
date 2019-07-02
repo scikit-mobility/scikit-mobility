@@ -52,8 +52,8 @@ def random_hex():
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000,
                     tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
     """
-    :param tdf: TrajectoryDataFrame
-         TrajectoryDataFrame to be plotted.
+    :param tdf: TrajDataFrame
+         TrajDataFrame to be plotted.
 
     :param map_f: folium.Map
         `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
@@ -128,8 +128,8 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000,
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
                hex_color=-1, opacity=0.3, radius=12, popup=True):
     """
-    :param stdf: TrajectoryDataFrame
-         Requires a TrajectoryDataFrame with stops or clusters, output of `preprocessing.detection.stops`
+    :param stdf: TrajDataFrame
+         Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
          or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
 
     :param map_f: folium.Map
@@ -211,8 +211,8 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
 
 def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
     """
-    :param cstdf: TrajectoryDataFrame
-         Requires a TrajectoryDataFrame with clusters, output of `preprocessing.clustering.cluster`.
+    :param cstdf: TrajDataFrame
+         Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
          The column `constants.CLUSTER` must be present.
 
     :param user: str or int
