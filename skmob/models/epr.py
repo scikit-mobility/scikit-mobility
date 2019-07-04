@@ -141,7 +141,7 @@ class EPR:
 
     def _weighted_random_selection(self, current_location):
         """
-        Select a random location given their visitation frequency. Used by the return mechanism.
+        Select a random location given the agent's visitation frequency. Used by the return mechanism.
 
         :return: int
             a random location
