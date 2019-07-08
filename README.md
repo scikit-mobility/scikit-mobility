@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/184337448.svg)](https://zenodo.org/badge/latestdoi/184337448)
+
 # scikit-mobility
 
 ### Human Mobility analysis in Python
