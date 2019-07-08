@@ -1,8 +1,8 @@
 [![DOI](https://zenodo.org/badge/184337448.svg)](https://zenodo.org/badge/latestdoi/184337448)
 
-# scikit-mobility
+# scikit-mobility - mobility analysis in Python
 
-### Human Mobility analysis in Python
+<img src="logo_skmob.png" width=300/>
 
 `scikit-mobility` is a library for human mobility analysis in Python. The library allows to: 
 
