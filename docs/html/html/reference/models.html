@@ -1,0 +1,966 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Models &mdash; scikit-mobility  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Input/Output" href="io.html" />
+    <link rel="prev" title="Evaluation measures" href="evaluation_measures.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> scikit-mobility
+          
+
+          
+            
+            <img src="../_static/logo_skmob.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prepocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.epr">EPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.gravity">Gravity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.markov_diary_generator">Markov Diary Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.radiation">Radiation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">scikit-mobility</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-skmob.models.epr">
+<span id="epr"></span><h2>EPR<a class="headerlink" href="#module-skmob.models.epr" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="skmob.models.epr.DensityEPR">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">DensityEPR</code><span class="sig-paren">(</span><em class="sig-param">name='Density EPR model'</em>, <em class="sig-param">rho=0.6</em>, <em class="sig-param">gamma=0.21</em>, <em class="sig-param">beta=0.8</em>, <em class="sig-param">tau=17</em>, <em class="sig-param">min_wait_time_minutes=20</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.DensityEPR" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The dEPR model of individual human mobility</p>
+<dl class="field-list simple">
+<dt class="field-odd">param name</dt>
+<dd class="field-odd"><p>str
+the name of the instantiation of the dEPR model (default: “Density EPR model”)</p>
+</dd>
+<dt class="field-even">param rho</dt>
+<dd class="field-even"><p>float
+in the formula :math:<a href="#id1"><span class="problematic" id="id2">`</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><p>previously visited by the agent, the parameter :math:<a href="#id3"><span class="problematic" id="id4">`</span></a></p>
+</dd>
+</dl>
+<p>ho` (<span class="math notranslate nohighlight">\(0 &lt; 
+ho \leq 1\)</span>) controls</p>
+<blockquote>
+<div><p>the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: :math:<a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+</div></blockquote>
+<p>ho = 0.6`, value estimated from empirical data)</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param gamma</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) controls
+the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: 0.21, value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">param beta</dt>
+<dd class="field-odd"><p>float
+the parameter <span class="math notranslate nohighlight">\(eta\)</span> of the waiting time distribution (default: <span class="math notranslate nohighlight">\(eta = 0.8\)</span>, value estimated from empirical data)</p>
+</dd>
+<dt class="field-even">param tau</dt>
+<dd class="field-even"><p>int
+the parameter :math:`   au` of the waiting time distribution (default: :math:`  au = 17`, expressed in hours, value estimated from empirical data)</p>
+</dd>
+<dt class="field-odd">param min_wait_time_minutes</dt>
+<dd class="field-odd"><p>int
+minimum waiting time in minutes</p>
+</dd>
+<dt class="field-even">ivar</dt>
+<dd class="field-even"><p>name: str
+the name of the instantiation of the model</p>
+</dd>
+<dt class="field-odd">ivar</dt>
+<dd class="field-odd"><p><a href="#id41"><span class="problematic" id="id42">trajectory_</span></a>: pandas DataFrame
+the trajectory generated by the model, describing the trajectory of the agents</p>
+</dd>
+<dt class="field-even">ivar</dt>
+<dd class="field-even"><p>spatial_tessellation: dict
+the spatial tessellation used during the simulation</p>
+</dd>
+<dt class="field-odd">ivar rho</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><p>previously visited by the agent, the parameter :math:<a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+</dd>
+</dl>
+<p>ho` (<span class="math notranslate nohighlight">\(0 &lt; 
+ho \leq 1\)</span>) controls</p>
+<blockquote>
+<div><p>the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: :math:<a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+</div></blockquote>
+<p>ho = 0.6`, value estimated from empirical data)</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">ivar gamma</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) controls
+the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: 0.21, value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">ivar beta</dt>
+<dd class="field-odd"><p>float
+the parameter <span class="math notranslate nohighlight">\(eta\)</span> of the waiting time distribution (default: <span class="math notranslate nohighlight">\(eta = 0.8\)</span>, value estimated from empirical data)</p>
+</dd>
+<dt class="field-even">ivar tau</dt>
+<dd class="field-even"><p>int
+the parameter :math:`   au` of the waiting time distribution (default: :math:`  au = 17`, expressed in hours, value estimated from empirical data)</p>
+</dd>
+<dt class="field-odd">ivar min_wait_time_minutes</dt>
+<dd class="field-odd"><p>int
+minimum waiting time in minutes</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EPR</span></code></p>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="song2010modelling"><span class="brackets">song2010modelling</span></dt>
+<dd><p>Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. “Modelling the scaling properties of human mobility.” Nature Physics 6 , no. 10 (2010): 818–823.</p>
+</dd>
+<dt class="label" id="pappalardo2015returners"><span class="brackets">pappalardo2015returners</span></dt>
+<dd><p>Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. “Returners and Explorers dichotomy in human mobility.”, Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).</p>
+</dd>
+<dt class="label" id="pappalardo2016modelling"><span class="brackets">pappalardo2016modelling</span></dt>
+<dd><p>Pappalardo, L., Simini, F. Rinzivillo, S., “Human Mobility Modelling: exploration and preferential return meet the gravity model”, Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="skmob.models.epr.Ditras">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">Ditras</code><span class="sig-paren">(</span><em class="sig-param">diary_generator</em>, <em class="sig-param">name='Ditras model'</em>, <em class="sig-param">rho=0.3</em>, <em class="sig-param">gamma=0.21</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.Ditras" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The DITRAS (DIary-based TRAjectory Simulator) model of individual human mobility</p>
+<dl class="field-list simple">
+<dt class="field-odd">param rho</dt>
+<dd class="field-odd"><p>float
+in the formula $</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>ho S^{-gamma}$, where $S$ is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the rho parameter (0 &lt; rho &lt;= 1) controls
+the agent’s tendency to explore a new location during the next move versus returning to a previously visited location.
+(default: 0.6 (value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">param gamma</dt>
+<dd class="field-odd"><p>float
+in the formula $</p>
+</dd>
+</dl>
+</dd>
+<dt>ho S^{-gamma}$, where $S$ is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the gamma parameter (gamma &gt;= 0) controls
+the agent’s tendency to explore a new location during the next move versus returning to a previously visited location.
+(default: 0.21, value estimated from empirical data by)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">ivar</dt>
+<dd class="field-odd"><p>name: str
+the name of the instantiation of the model (default: “Ditras model”)</p>
+</dd>
+<dt class="field-even">ivar</dt>
+<dd class="field-even"><p><a href="#id43"><span class="problematic" id="id44">trajectory_</span></a>: pandas DataFrame
+the trajectory generated by the model, describing the trajectory of the agents</p>
+</dd>
+<dt class="field-odd">ivar</dt>
+<dd class="field-odd"><p>spatial_tessellation: dict
+the spatial tessellation used during the simulation</p>
+</dd>
+<dt class="field-even">ivar rho</dt>
+<dd class="field-even"><p>float
+in the formula $</p>
+</dd>
+</dl>
+</dd>
+<dt>ho S^{-gamma}$, where $S$ is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the rho parameter (0 &lt; rho &lt;= 1) controls
+the agent’s tendency to explore a new location during the next move versus returning to a previously visited location.
+(default: 0.6 (value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">ivar gamma</dt>
+<dd class="field-odd"><p>float
+in the formula $</p>
+</dd>
+</dl>
+</dd>
+<dt>ho S^{-gamma}$, where $S$ is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the gamma parameter (gamma &gt;= 0) controls
+the agent’s tendency to explore a new location during the next move versus returning to a previously visited location.
+(default: 0.21, value estimated from empirical data by)</p>
+</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div><p>from skmob.models.epr import Ditras
+from skmob.models.markov_diary_generator import MarkovDiaryGenerator
+from skmob.preprocessing import filtering, compression, detection, clustering</p>
+<p># Preeprocess the GPS data that will be used to fit the diary generator
+tdf = skmob.TrajDataFrame.from_file(‘./data/geolife_sample.txt.gz’,</p>
+<blockquote>
+<div><p>latitude=’lat’, longitude=’lon’, user_id=’user’,
+datetime=’datetime’, sep=’,’)</p>
+</div></blockquote>
+<p>ctdf = compression.compress(tdf)
+stdf = detection.stops(ctdf)
+cstdf = clustering.cluster(stdf)</p>
+<p># Create the diary generator using 2 users
+mdg = MarkovDiaryGenerator()
+mdg.fit(cstdf, 2, lid=’cluster’)</p>
+<p># Instantiate the model
+start_time = pd.to_datetime(‘2019/01/01 08:00:00’)
+end_time = pd.to_datetime(‘2019/01/14 08:00:00’)
+ditras = Ditras(mdg)</p>
+<p>tessellation = gpd.GeoDataFrame.from_file(“data/NY_counties_2011.geojson”)</p>
+<p># Generate 3 users
+tdf = ditras.generate(start_time, end_time, tessellation, relevance_column=’population’,</p>
+<blockquote>
+<div><p>n_agents=3, od_matrix=None, verbose=True)</p>
+</div></blockquote>
+</div></blockquote>
+<p>References:</p>
+<dl class="citation">
+<dt class="label" id="pappalardo2018data"><span class="brackets">pappalardo2018data</span></dt>
+<dd><p>Pappalardo, L, Simini, F, Data-driven generation of spatio-temporal routines in human mobility, Data Mining and Knowledge Discovery, 32:3 (2018).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="skmob.models.epr.SpatialEPR">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">SpatialEPR</code><span class="sig-paren">(</span><em class="sig-param">name='Spatial EPR model'</em>, <em class="sig-param">rho=0.6</em>, <em class="sig-param">gamma=0.21</em>, <em class="sig-param">beta=0.8</em>, <em class="sig-param">tau=17</em>, <em class="sig-param">min_wait_time_minutes=20</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.SpatialEPR" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The sEPR model of individual human mobility</p>
+<dl class="field-list simple">
+<dt class="field-odd">param name</dt>
+<dd class="field-odd"><p>str
+the name of the instantiation of the sEPR model (default: “Spatial EPR model”)</p>
+</dd>
+<dt class="field-even">param rho</dt>
+<dd class="field-even"><p>float
+in the formula :math:<a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><p>previously visited by the agent, the parameter :math:<a href="#id19"><span class="problematic" id="id20">`</span></a></p>
+</dd>
+</dl>
+<p>ho` (<span class="math notranslate nohighlight">\(0 &lt; 
+ho \leq 1\)</span>) controls</p>
+<blockquote>
+<div><p>the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: :math:<a href="#id21"><span class="problematic" id="id22">`</span></a></p>
+</div></blockquote>
+<p>ho = 0.6`, value estimated from empirical data)</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param gamma</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id23"><span class="problematic" id="id24">`</span></a>Density</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) controls
+the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: 0.21, value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">param beta</dt>
+<dd class="field-odd"><p>float
+the parameter <span class="math notranslate nohighlight">\(eta\)</span> of the waiting time distribution (default: <span class="math notranslate nohighlight">\(eta = 0.8\)</span>, value estimated from empirical data)</p>
+</dd>
+<dt class="field-even">param tau</dt>
+<dd class="field-even"><p>int
+the parameter :math:`   au` of the waiting time distribution (default: :math:`  au = 17`, expressed in hours, value estimated from empirical data)</p>
+</dd>
+<dt class="field-odd">param min_wait_time_minutes</dt>
+<dd class="field-odd"><p>int
+minimum waiting time in minutes</p>
+</dd>
+<dt class="field-even">ivar</dt>
+<dd class="field-even"><p>name: str
+the name of the instantiation of the model</p>
+</dd>
+<dt class="field-odd">ivar</dt>
+<dd class="field-odd"><p><a href="#id45"><span class="problematic" id="id46">trajectory_</span></a>: pandas DataFrame
+the trajectory generated by the model, describing the trajectory of the agents</p>
+</dd>
+<dt class="field-even">ivar</dt>
+<dd class="field-even"><p>spatial_tessellation: dict
+the spatial tessellation used during the simulation</p>
+</dd>
+<dt class="field-odd">ivar rho</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id25"><span class="problematic" id="id26">`</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><p>previously visited by the agent, the parameter :math:<a href="#id27"><span class="problematic" id="id28">`</span></a></p>
+</dd>
+</dl>
+<p>ho` (<span class="math notranslate nohighlight">\(0 &lt; 
+ho \leq 1\)</span>) controls</p>
+<blockquote>
+<div><p>the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: :math:<a href="#id29"><span class="problematic" id="id30">`</span></a></p>
+</div></blockquote>
+<p>ho = 0.6`, value estimated from empirical data)</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">ivar gamma</dt>
+<dd class="field-odd"><p>float
+in the formula :math:<a href="#id31"><span class="problematic" id="id32">`</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>ho S^{-gamma}`, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations</dt><dd><blockquote>
+<div><p>previously visited by the agent, the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) controls
+the agent’s tendency to explore a new location during the next move versus
+returning to a previously visited location (default: 0.21, value estimated from empirical data)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">ivar beta</dt>
+<dd class="field-odd"><p>float
+the parameter <span class="math notranslate nohighlight">\(eta\)</span> of the waiting time distribution (default: <span class="math notranslate nohighlight">\(eta = 0.8\)</span>, value estimated from empirical data)</p>
+</dd>
+<dt class="field-even">ivar tau</dt>
+<dd class="field-even"><p>int
+the parameter :math:`   au` of the waiting time distribution (default: :math:`  au = 17`, expressed in hours, value estimated from empirical data)</p>
+</dd>
+<dt class="field-odd">ivar min_wait_time_minutes</dt>
+<dd class="field-odd"><p>int
+minimum waiting time in minutes</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EPR</span></code></p>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="id33"><span class="brackets">song2010modelling</span></dt>
+<dd><p>Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. “Modelling the scaling properties of human mobility.” Nature Physics 6 , no. 10 (2010): 818–823.</p>
+</dd>
+<dt class="label" id="id34"><span class="brackets">pappalardo2015returners</span></dt>
+<dd><p>Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. “Returners and Explorers dichotomy in human mobility.”, Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).</p>
+</dd>
+<dt class="label" id="id35"><span class="brackets">pappalardo2016modelling</span></dt>
+<dd><p>Pappalardo, L., Simini, F. Rinzivillo, S., “Human Mobility Modelling: exploration and preferential return meet the gravity model”, Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="skmob.models.epr.SpatialEPR.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">relevance_column=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.SpatialEPR.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the simulation of the agent at time “start_date” till time “end_date”.</p>
+<dl class="simple">
+<dt>:param start_date<span class="classifier">datetime</span></dt><dd><p>the starting date of the simulation</p>
+</dd>
+<dt>:param end_date<span class="classifier">datetime</span></dt><dd><p>the ending date of the simulation</p>
+</dd>
+<dt>:param spatial_tessellation<span class="classifier">dict</span></dt><dd><p>the spatial tessellation, a dictionary of location to info (lat, lng, relevance)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_agents</strong> – int
+the number of agents to generate</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>:param starting_location</dt><dd><p>the identifier of the starting location for the simulation (as specified in the spatial tessellation)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od_matrix</strong> (<em>numpy array</em><em> or </em><em>None</em>) – the od_matrix to use for deciding the movements. If None, it is computed “on the fly” during the simulation</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em> or </em><em>None</em>) – if int, random_state is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random (default: None)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.epr.compute_od_matrix">
+<code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">compute_od_matrix</code><span class="sig-paren">(</span><em class="sig-param">gravity_singly</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">tile_id_column='tile_ID'</em>, <em class="sig-param">relevance_column='relevance'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.compute_od_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a matrix where element {ij} is the probability p_{ij} of moving between
+locations in rows i and j in the GeoDataFrame spatial_tessellation given as input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gravity_singly</strong> – object
+instance of class collective.Gravity with argument gravity_type=’singly constrained’</p></li>
+<li><p><strong>spatial_tessellation</strong> – GeoDataFrame</p></li>
+<li><p><strong>tile_id_column</strong> – str or int
+column of the GeoDataFrame containing the tile_ID of the locations/tiles</p></li>
+<li><p><strong>relevance_column</strong> – str or int
+column of the GeoDataFrame containing the relevance of the locations/tiles</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>od_matrix: numpy array</dt><dd><p>2-dim numpy array with the trip probabilities for each origin-destination pair</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.epr.populate_od_matrix">
+<code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">populate_od_matrix</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">lats_lngs</em>, <em class="sig-param">relevances</em>, <em class="sig-param">gravity_singly</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.populate_od_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate the od matrix with the probability to move from the location in input to all other locations
+in the spatial tessellation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> – int
+the identifier of a location</p></li>
+<li><p><strong>lats_lngs</strong> – list or numpy array
+list of coordinates of the centroids of the tiles in a spatial tessellation</p></li>
+<li><p><strong>relevances</strong> – list or numpy array
+list of relevances of the tiles in a spatial tessellation</p></li>
+<li><p><strong>gravity_singly</strong> – object
+instance of class collective.Gravity with argument gravity_type=’singly constrained’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a numpy array of trip probabilities between the origin location and each destination</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-skmob.models.gravity">
+<span id="gravity"></span><h2>Gravity<a class="headerlink" href="#module-skmob.models.gravity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="skmob.models.gravity.Gravity">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">Gravity</code><span class="sig-paren">(</span><em class="sig-param">deterrence_func_type='power_law', deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type='singly constrained', name='Gravity model'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Gravity model of human migration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deterrence_func_type</strong> – str
+the type of deterrence function.
+available types: ‘power_law’ (default), ‘exponential’</p></li>
+<li><p><strong>deterrence_func_args</strong> – list
+arguments of the deterrence function.</p></li>
+<li><p><strong>origin_exp</strong> – float (1.0), exponent of origin’s relevance
+(only relevant to globally-constrained model).</p></li>
+<li><p><strong>destination_exp</strong> – float (1.0), exponent of destination’s relevance.</p></li>
+<li><p><strong>gravity_type</strong> – str
+gravity model type.
+available types: ‘singly constrained’, ‘globally constrained’.
+default: ‘singly constrained’</p></li>
+</ul>
+</dd>
+</dl>
+<p>The gravity model is a model of human migration derived from Newton’s law of gravity,
+and it is used to predict the degree of interaction between two places.
+The gravity model of migration is based upon the idea that as the importance of one
+or both of the location increases, there will also be an increase in movement between them.
+The farther apart the two locations are, however, the movement between them will be less (distance decay).</p>
+<dl class="footnote brackets">
+<dt class="label" id="id36"><span class="brackets">1</span></dt>
+<dd><p>Erlander, Sven, and Neil F. Stewart. “The gravity model in transportation analysis: theory and extensions”.</p>
+</dd>
+</dl>
+<p>Vol. 3. Vsp, 1990.</p>
+<dl class="method">
+<dt id="skmob.models.gravity.Gravity.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">flow_df</em>, <em class="sig-param">relevance_column='relevance'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the gravity model parameters to the flows in file <cite>filename</cite>.
+Can fit globally or singly constrained gravity models using a
+Generalized Linear Model (GLM) with a Poisson regression.</p>
+<dl>
+<dt>flow_df<span class="classifier">FlowDataFrame where the flows are stored and with info about the spatial tessellation.</span></dt><dd><p>In addition to the default columns, the spatial tessellation must contain the column
+“relevance”: float, number of opportunities at the location</p>
+<blockquote>
+<div><p>(e.g., population or total number of visits).</p>
+</div></blockquote>
+</dd>
+</dl>
+<p>X  :  list of independent variables (features) used in the GLM fit.</p>
+<p>y   :  list of dependent varibles (flows) used in the GLM fit.</p>
+<dl class="simple">
+<dt>poisson_results<span class="classifier">statsmodels.genmod.generalized_linear_model.GLMResultsWrapper</span></dt><dd><p>statsmodels object with information on the fit’s quality and predictions.</p>
+</dd>
+</dl>
+<dl class="footnote brackets">
+<dt class="label" id="id37"><span class="brackets">1</span></dt>
+<dd><p>Agresti, Alan.
+“Categorical data analysis.”
+Vol. 482. John Wiley &amp; Sons, 2003.</p>
+</dd>
+<dt class="label" id="id38"><span class="brackets">2</span></dt>
+<dd><p>Flowerdew, Robin, and Murray Aitkin.
+“A method of fitting the gravity model based on the Poisson distribution.”
+Journal of regional science 22.2 (1982): 191-202.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.gravity.ci">
+<code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">ci</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">number_locs</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.ci" title="Permalink to this definition">¶</a></dt>
+<dd><p>The multinomial fit is a poisson fit
+with <cite>number_locs</cite> more parameters needed to
+implement the normalization constraints:
+i.e. the poisson variables in each of the
+<cite>number_locs</cite> origin location must sum to one.</p>
+<p>This function selects the appropriate
+parameter relative to the normalization
+constant in each origin location.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.gravity.compute_distance_matrix">
+<code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">compute_distance_matrix</code><span class="sig-paren">(</span><em class="sig-param">spatial_tessellation</em>, <em class="sig-param">origins</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.compute_distance_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the matrix of distances between origin locations and all other locations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial_tessellation</strong> – GeoDataFrame tessellation</p></li>
+<li><p><strong>origins</strong> – list, indexes of the locations of origin</p></li>
+</ul>
+</dd>
+</dl>
+<p>:return
+distance_matrix: numpy array with distances between locations in <cite>origins</cite></p>
+<blockquote>
+<div><p>and all locations in <cite>spatial_tessellation</cite></p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.gravity.exponential_deterrence_func">
+<code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">exponential_deterrence_func</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">R</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.exponential_deterrence_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exponential deterrence function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.models.gravity.powerlaw_deterrence_func">
+<code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">powerlaw_deterrence_func</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">exponent</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.powerlaw_deterrence_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power law deterrence function</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-skmob.models.markov_diary_generator">
+<span id="markov-diary-generator"></span><h2>Markov Diary Generator<a class="headerlink" href="#module-skmob.models.markov_diary_generator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="skmob.models.markov_diary_generator.MarkovDiaryGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.markov_diary_generator.</code><code class="sig-name descname">MarkovDiaryGenerator</code><span class="sig-paren">(</span><em class="sig-param">name='Markov diary'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Markov model which describes the probability that an individual follows her routine and visits a typical location
+at the usual time, or she breaks the routine and visits another location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – str
+name of the object</p>
+</dd>
+<dt class="field-even">Ivar</dt>
+<dd class="field-even"><p><a href="#id47"><span class="problematic" id="id48">markov_chain_</span></a>: dict
+the trained markov chain</p>
+</dd>
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>time_slot_length</strong> – str
+length of the time slot (1h)</p>
+</dd>
+</dl>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="pappalardo2017data"><span class="brackets">pappalardo2017data</span></dt>
+<dd><p>Pappalardo, L., Simini, F. “Data-driven generation of spatio-temporal routines in human mobility.”, Data Mining and Knowledge Discovery, 32:3, 2017.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="skmob.models.markov_diary_generator.MarkovDiaryGenerator.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">n_individuals</em>, <em class="sig-param">lid='location'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a Markov chain diary based on the trajectories in input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p></li>
+<li><p><strong>n_individuals</strong> – int
+the number of individuals to consider</p></li>
+<li><p><strong>start_date</strong> – datetime
+the starting date</p></li>
+<li><p><strong>end_date</strong> – datetime
+the ending date</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skmob.models.markov_diary_generator.MarkovDiaryGenerator.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">diary_length</em>, <em class="sig-param">start_date</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the simulation of the mobility diary given the diary_length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diary_length</strong> – int
+the length of the diary in the time unit of the MD Markov chain</p></li>
+<li><p><strong>start_date</strong> – datetime
+the starting date</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the generated diarySeries</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-skmob.models.radiation">
+<span id="radiation"></span><h2>Radiation<a class="headerlink" href="#module-skmob.models.radiation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="skmob.models.radiation.Radiation">
+<em class="property">class </em><code class="sig-prename descclassname">skmob.models.radiation.</code><code class="sig-name descname">Radiation</code><span class="sig-paren">(</span><em class="sig-param">name='Radiation model'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.radiation.Radiation" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The radiation model for human migration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param name</dt>
+<dd class="field-odd"><p>str
+the name of the instantiation of the radiation model</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">ivar name</dt>
+<dd class="field-odd"><p>str
+the name of the instantiation of the model
+default: “Radiation model”</p>
+</dd>
+<dt class="field-even">ivar <a href="#id49"><span class="problematic" id="id50">edges_</span></a></dt>
+<dd class="field-even"><p>pandas DataFrame
+the generated edges (flows or probabilities)</p>
+</dd>
+</dl>
+<p>The radiation model describes the flows of people between different locations.
+In particular, the fundamental equation of the radiation model gives the average
+flux between two counties:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">T_</span><span class="p">{</span><span class="n">ij</span><span class="p">}</span><span class="o">&gt;</span> <span class="o">=</span> 
+</pre></div>
+</div>
+</div></blockquote>
+<p>rac{m_i n_j}{(m_i + s_{ij})(m_i + n_j + s_{ij})}</p>
+<blockquote>
+<div><p>where where :math:T_{ij} is the total number of commuters from county :math:i, :math:m_i and :math:n_j
+are the population in county :math:i and :math:j respectively, and :math:s_{ij} is the total population
+in the circle centered at :math:i and touching :math:j excluding the source and the destination population.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id39"><span class="brackets">1</span></dt>
+<dd><p>Simini, Filippo, Gonzalez, Marta C., Maritan, Amos and Barabasi, Albert-Laszlo.</p>
+</dd>
+</dl>
+<p>“A universal model for mobility and migration patterns.”
+Nature 484 , no. 7392 (2012): 96–100.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id40"><span class="brackets">2</span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility">https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility</a></p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locations_info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/city_fluxes_US.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;population&#39;</span><span class="p">:</span> <span class="s1">&#39;relevance&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locations_info</span> <span class="o">=</span> <span class="n">locations_info</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">locations_info</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radiation</span> <span class="o">=</span> <span class="n">Radiation</span><span class="p">(</span><span class="s2">&quot;my first radiation&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radiation</span><span class="o">.</span><span class="n">start_simulation</span><span class="p">(</span><span class="n">locations_info</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;radiation_OD_trips_cities.csv&#39;</span><span class="p">,</span> <span class="n">filter_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="go">Processing location 385 of 385...</span>
+<span class="go">Done.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radiation</span><span class="o">.</span><span class="n">flows_</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">origin  destination flows_average</span>
+<span class="go">0       304         67327.0</span>
+<span class="go">1       374         34105.0</span>
+<span class="go">2       230         16413.0</span>
+<span class="go">3       213         15943.0</span>
+<span class="go">4       49          3560.0</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="method">
+<dt id="skmob.models.radiation.Radiation.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">spatial_tessellation</em>, <em class="sig-param">tile_id_column='tile_ID'</em>, <em class="sig-param">tot_outflows_column='tot_outflow'</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">out_format='flows_average'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.radiation.Radiation.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the simulation of the Radiation model.</p>
+<dl class="simple">
+<dt>:param spatial_tessellation<span class="classifier">GeoDataFrame</span></dt><dd><p>a pandas DataFrame containing the information about the spatial tessellation
+to use. It must contain the following columns:
+- “id”: str, name or identifier of the location
+- “lat”: float, l_edges_atitude of the location’s centroid
+- “lon”: float, longitude of the location’s centroid
+- “relevance”: float, number of opportunities at the location (e.g., population or total number of visits).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out_format</strong> – {“flows_sample”, “flows_average”, “probs”}
+the type of edges to be generated. Three possible values:
+- “flows_sample” : the number of migrations generation by a single execution of the model
+-    “flows_average” : the average number of migrations between two locations
+- “probs” : the probability of movement between two locations
+default : “flows_average”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="io.html" class="btn btn-neutral float-right" title="Input/Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="evaluation_measures.html" class="btn btn-neutral float-left" title="Evaluation measures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, skmob devs
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

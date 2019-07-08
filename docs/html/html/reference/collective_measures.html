@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Collective measures &mdash; scikit-mobility  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Individual measures" href="individual_measures.html" />
+    <link rel="prev" title="Measures" href="measures.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> scikit-mobility
+          
+
+          
+            
+            <img src="../_static/logo_skmob.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prepocessing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="measures.html">Measures</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Collective measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html">Individual measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html">Evaluation measures</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">scikit-mobility</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="measures.html">Measures</a> &raquo;</li>
+        
+      <li>Collective measures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/collective_measures.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p>{{ header }}</p>
+<div class="section" id="collective-measures">
+<h1>Collective measures<a class="headerlink" href="#collective-measures" title="Permalink to this headline">¶</a></h1>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.measures.collective.uncorrelated_location_entropy" title="skmob.measures.collective.uncorrelated_location_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncorrelated_location_entropy</span></code></a>(traj[, …])</p></td>
+<td><p>number of distinct locations visited by the The temporal-uncorrelated location entropy <span class="math notranslate nohighlight">\(LE_{unc}(j)\)</span> of a location <span class="math notranslate nohighlight">\(j\)</span> is the historical probability that an individual <span class="math notranslate nohighlight">\(u\)</span> visited location <span class="math notranslate nohighlight">\(j\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.measures.collective.mean_square_displacement" title="skmob.measures.collective.mean_square_displacement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_square_displacement</span></code></a>(traj[, days, …])</p></td>
+<td><p>Compute the mean square displacement across the individuals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.measures.collective.visits_per_location" title="skmob.measures.collective.visits_per_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visits_per_location</span></code></a>(trajs)</p></td>
+<td><p>Compute the number of visits in each location</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.measures.collective.homes_per_location" title="skmob.measures.collective.homes_per_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">homes_per_location</span></code></a>(traj[, start_night, …])</p></td>
+<td><p>Compute the number of homes in each location.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.measures.collective.visits_per_time_unit" title="skmob.measures.collective.visits_per_time_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visits_per_time_unit</span></code></a>(traj[, time_unit])</p></td>
+<td><p>Compute the number of visits per time unit made in the mobility dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.measures.collective.origin_destination_matrix" title="skmob.measures.collective.origin_destination_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">origin_destination_matrix</span></code></a>(traj[, …])</p></td>
+<td><p>Compute an origin-destination matrix from the trajectories of the individuals.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-skmob.measures.collective"></span><dl class="function">
+<dt id="skmob.measures.collective.uncorrelated_location_entropy">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">uncorrelated_location_entropy</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">normalize=False</em>, <em class="sig-param">show_progress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.uncorrelated_location_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of distinct locations visited by the
+The temporal-uncorrelated location entropy <span class="math notranslate nohighlight">\(LE_{unc}(j)\)</span> of a location <span class="math notranslate nohighlight">\(j\)</span> is the historical probability
+that an individual <span class="math notranslate nohighlight">\(u\)</span> visited location <span class="math notranslate nohighlight">\(j\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p></li>
+<li><p><strong>normalize</strong> (<em>boolean</em>) – if True normalize the entropy by dividing by log2(N), where N is the number of
+distinct users that visited a location</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – if True show a progress bar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the temporal-uncorrelated location entropies of the individuals</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas Series</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the temporal-uncorrelated location entropy of each individual from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">uncorrelated_location_entropy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../data/brightkite_data.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>  <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;check-in time&#39;</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uncorrelated_location_entropy</span><span class="p">(</span><span class="n">tdf</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">lat        lng</span>
+<span class="go">42.333550  10.919689    0.000000</span>
+<span class="go">42.342177  10.898593    0.638517</span>
+<span class="go">42.351689  10.920185    0.506808</span>
+<span class="go">42.353302  10.909137    0.597521</span>
+<span class="go">42.357550  10.922648    0.476653</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">random_entropy()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">real_entropy()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">uncorrelated_entropy()</span></code></p>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="cho2011frienship"><span class="brackets">cho2011frienship</span></dt>
+<dd><p>Eunjoon Cho, Seth A. Myers, and Jure Leskovec. “Friendship and mobility: user movement in location-based social networks.” In Proceedings of the 17th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD ‘11). 1082-1090, 2011.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.measures.collective.mean_square_displacement">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">mean_square_displacement</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">days=0</em>, <em class="sig-param">hours=1</em>, <em class="sig-param">minutes=0</em>, <em class="sig-param">show_progress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.mean_square_displacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the mean square displacement across the individuals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p></li>
+<li><p><strong>days</strong> (<em>int</em>) – the days since the starting time</p></li>
+<li><p><strong>hours</strong> (<em>int</em>) – the hours since the days since the starting time</p></li>
+<li><p><strong>minutes</strong> (<em>int</em>) – the minutes sine the hours since the days since the starting time</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – if True show a progress bar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return float</dt>
+<dd class="field-even"><p>the mean square displacement</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the mean square displacement from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">mean_square_displacement</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">read_trajectories</span><span class="p">(</span><span class="s1">&#39;data/gps_test_dataset.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean_square_displacement</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">5.033659854643163</span>
+</pre></div>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="brockmann2006scaling"><span class="brackets">brockmann2006scaling</span></dt>
+<dd><p>Brockmann, D., Hufnagel, L. and Geisel, T.. “The scaling laws of human travel.” Nature 439 (2006): 462.</p>
+</dd>
+<dt class="label" id="song2010modelling"><span class="brackets">song2010modelling</span></dt>
+<dd><p>Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. “Modelling the scaling properties of human mobility.” Nature Physics 6 , no. 10 (2010): 818–823.</p>
+</dd>
+<dt class="label" id="gonzalez2008understanding"><span class="brackets">gonzalez2008understanding</span></dt>
+<dd><p>Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. “Understanding individual human mobility patterns.” Nature 453, no. 7196 (2008): 779–782.</p>
+</dd>
+<dt class="label" id="shin2008levy"><span class="brackets">shin2008levy</span></dt>
+<dd><ol class="upperalpha simple" start="18">
+<li><p>Shin, S. Hong, K. Lee, S. Chong, “On the levy-walk nature of human mobility: Do humans walk like monkeys?”, in: Proc. IEEE INFOCOM, 2008, pp. 924–932.</p></li>
+</ol>
+</dd>
+<dt class="label" id="maruyana2003truncated"><span class="brackets">maruyana2003truncated</span></dt>
+<dd><ol class="upperalpha simple" start="25">
+<li><p>Maruyama, J. Murakami, “Truncated levy walk of a nanocluster bound weakly to an atomically flat surface: Crossover from superdiffusion to normal diffusion”, Physical Review B 67 (8) (2003) 085406</p></li>
+</ol>
+</dd>
+<dt class="label" id="vazquez1999diffusion"><span class="brackets">vazquez1999diffusion</span></dt>
+<dd><ol class="upperalpha simple">
+<li><p>Vazquez, O. Sotolongo-Costa, F. Brouers, “Diffusion regimes in levy flights with  trapping”,  Physica  A:  Statistical  Mechanics  and  its  Applications  264  (3) (1999) 424–431.</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.measures.collective.visits_per_location">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">visits_per_location</code><span class="sig-paren">(</span><em class="sig-param">trajs</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.visits_per_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the number of visits in each location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of visits per location</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas Series</p>
+</dd>
+</dl>
+<p>locations_population</p>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the number of visits per location from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">visits_per_location</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">read_trajectories</span><span class="p">(</span><span class="s1">&#39;data/gps_test_dataset.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">visits_per_location</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">                    n_visits</span>
+<span class="go">lat       lng</span>
+<span class="go">43.717999 10.902612      5338</span>
+<span class="go">42.785016 11.110376      4717</span>
+<span class="go">42.934046 10.783248      4354</span>
+<span class="go">43.847140 11.142547      4201</span>
+<span class="go">42.930131 10.764460      4169</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.measures.collective.homes_per_location" title="skmob.measures.collective.homes_per_location"><code class="xref py py-func docutils literal notranslate"><span class="pre">homes_per_location()</span></code></a></p>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="pappalardo2018data"><span class="brackets">pappalardo2018data</span></dt>
+<dd><p>Pappalardo, Luca and Simini, Filippo. “Data-driven generation of spatio-temporal routines in human mobility..” Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.measures.collective.homes_per_location">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">homes_per_location</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">start_night='22:00'</em>, <em class="sig-param">end_night='07:00'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.homes_per_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the number of homes in each location. A “home” location is the location that an individual visits the most.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame"><em>TrajDataFrame</em></a>) – the trajectories of the individuals</p></li>
+<li><p><strong>start_night</strong> (<em>str</em>) – the starting hour for the night</p></li>
+<li><p><strong>end_night</strong> (<em>str</em>) – the ending hour for the night</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of homes per location</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas Series</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the number of visits per location from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">homes_per_location</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.individual</span> <span class="k">import</span> <span class="n">radius_of_gyration</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">datadata</span><span class="p">,</span>  <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;check-in time&#39;</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">homes_per_location</span><span class="p">(</span><span class="n">tdf</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.measures.collective.homes_per_location" title="skmob.measures.collective.homes_per_location"><code class="xref py py-func docutils literal notranslate"><span class="pre">homes_per_location()</span></code></a>, <code class="xref py py-func docutils literal notranslate"><span class="pre">home_location()</span></code></p>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span></dt>
+<dd><p>Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, “Human Mobility Modelling: exploration and preferential return meet the gravity model.” Procedia Computer Science, Volume 83, 2016, Pages 934-939 <a class="reference external" href="http://dx.doi.org/10.1016/j.procs.2016.04.188">http://dx.doi.org/10.1016/j.procs.2016.04.188</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.measures.collective.visits_per_time_unit">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">visits_per_time_unit</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">time_unit='1h'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.visits_per_time_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the number of visits per time unit made in the mobility dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p></li>
+<li><p><strong>time_unit</strong> (<em>str</em>) – the time unit to use for grouping the time slots (default: ‘1h’, it creates slots of 1 hour; range: for full specification of available time units, see <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases">http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of visits per time unit</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas Series</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the number of visits per location from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">visits_per_time_unit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">read_trajectories</span><span class="p">(</span><span class="s1">&#39;data_test/gps_test_dataset.csvdata&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">visits_per_time_unit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">datetime</span>
+<span class="go">2011-05-01 00:00:00    974</span>
+<span class="go">2011-05-01 01:00:00    519</span>
+<span class="go">2011-05-01 02:00:00    374</span>
+<span class="go">2011-05-01 03:00:00    301</span>
+<span class="go">2011-05-01 04:00:00    492</span>
+<span class="go">Freq: H, Name: uid, dtype: int64</span>
+</pre></div>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets">1</span></dt>
+<dd><p>Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, “Human Mobility Modelling: exploration and preferential return meet the gravity model.” Procedia Computer Science, Volume 83, 2016, Pages 934-939 <a class="reference external" href="http://dx.doi.org/10.1016/j.procs.2016.04.188">http://dx.doi.org/10.1016/j.procs.2016.04.188</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skmob.measures.collective.origin_destination_matrix">
+<code class="sig-prename descclassname">skmob.measures.collective.</code><code class="sig-name descname">origin_destination_matrix</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">self_loops=False</em>, <em class="sig-param">show_progress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.measures.collective.origin_destination_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute an origin-destination matrix from the trajectories of the individuals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>pandas DataFrame</em>) – the trajectories of the individuals</p></li>
+<li><p><strong>directed</strong> (<em>boolean</em>) – if True returns a directed network, otherwise an undirected network</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – if True show a progress bar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the graph describing the origin destination matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>networkx Graph</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Examples:</dt><dd><p>Computing the number of visits per location from a DataFrame of trajectories</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.measures.collective</span> <span class="k">import</span> <span class="n">origin_destination_matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">read_trajectories</span><span class="p">(</span><span class="s1">&#39;data_test/gps_test_dataset.csvdata&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">origin_destination_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+<span class="go">Name:</span>
+<span class="go">Type: Graph</span>
+<span class="go">Number of nodes: 20318</span>
+<span class="go">Number of edges: 640107</span>
+<span class="go">Average degree:  63.0089</span>
+</pre></div>
+</div>
+<dl>
+<dt>References:</dt><dd><dl class="citation">
+<dt class="label" id="calabrese2011estimating"><span class="brackets">calabrese2011estimating</span></dt>
+<dd><p>Calabrese, Francesco, Lorenzo, Giusy Di, Liu, Liang and Ratti, Carlo. “Estimating Origin-Destination Flows Using Mobile Phone Location Data.” IEEE Pervasive Computing 10 , no. 4 (2011): 36-44.</p>
+</dd>
+<dt class="label" id="bonnel2015passive"><span class="brackets">bonnel2015passive</span></dt>
+<dd><p>Patrick Bonnel, Etienne Hombourger, Ana-Maria Olteanu-Raimond, Zbigniew Smoreda. “Passive Mobile Phone Dataset to Construct Origin-destination Matrix: Potentials and Limitations.” Transportation Research Procedia 11 (2015): 381-398.</p>
+</dd>
+<dt class="label" id="ortuzar2011modeling"><span class="brackets">ortuzar2011modeling</span></dt>
+<dd><ol class="upperalpha simple" start="10">
+<li><p>de Dios Ortuzar,  L. Willumsen,  “Modeling Transport”, John Wiley and Sons Ltd, New York, 2011.</p></li>
+</ol>
+</dd>
+<dt class="label" id="iqbal2014development"><span class="brackets">iqbal2014development</span></dt>
+<dd><ol class="upperalpha simple" start="13">
+<li><ol class="upperalpha simple" start="19">
+<li><p>Iqbal, C. F. Choudhury, P. Wang, M. C. Gonzalez, “Development of origin-destination matrices using mobile phone call data”, Transportation Research Part C: Emerging Technologies 40 (2014) 63–74.</p></li>
+</ol>
+</li>
+</ol>
+</dd>
+<dt class="label" id="white2002extracting"><span class="brackets">white2002extracting</span></dt>
+<dd><ol class="upperalpha simple" start="10">
+<li><p>White, I. Wells, “Extracting origin destination information from mobile phone data”, in: Road Transport Information and Control, 2002. Eleventh International Conference on (Conf. Publ. No. 486), 2002, pp. 30–34.</p></li>
+</ol>
+</dd>
+<dt class="label" id="caceres2007deriving"><span class="brackets">caceres2007deriving</span></dt>
+<dd><ol class="upperalpha simple" start="14">
+<li><p>Caceres, J. Wideberg, F. G. Benitez, “Deriving origin destination data from a mobile phone network”, Intelligent Transport Systems, IET 1 (1) (2007) 15–26.</p></li>
+</ol>
+</dd>
+<dt class="label" id="jiang2013review"><span class="brackets">jiang2013review</span></dt>
+<dd><ol class="upperalpha simple" start="19">
+<li><p>Jiang, G. A. Fiore, Y. Yang, J. Ferreira Jr, E. Frazzoli, M. C. Gonzalez, “A review  of  urban  computing  for  mobile  phone  traces:  current  methods,  challenges and opportunities”, in:  Proceedings of the 2nd ACM SIGKDD International Workshop on Urban Computing, ACM, 2013, p. 2.</p></li>
+</ol>
+</dd>
+<dt class="label" id="lenormand2014cross"><span class="brackets">lenormand2014cross</span></dt>
+<dd><ol class="upperalpha simple" start="13">
+<li><p>Lenormand, M. Picornell, O. G. Cantu-Ros, A. Tugores, T. Louail, R. Herranz, M. Barthelemy, E. Frıas-Martınez, J. J. Ramasco, “Cross-Checking Different Sources of Mobility Information”, PLoS ONE 9 (8) (2014) e105184.</p></li>
+</ol>
+</dd>
+<dt class="label" id="alexander2015origin"><span class="brackets">alexander2015origin</span></dt>
+<dd><ol class="upperalpha simple" start="12">
+<li><p>Alexander, S. Jiang, M. Murga, M. C. Gonzalez, “Origin-destination trips by purpose and time of day inferred from mobile phone data”, Transportation Research Part C: Emerging Technologies 58, Part B (2015) 240–250</p></li>
+</ol>
+</dd>
+<dt class="label" id="toole2015path"><span class="brackets">toole2015path</span></dt>
+<dd><ol class="upperalpha simple" start="10">
+<li><ol class="upperalpha simple" start="12">
+<li><p>Toole, S. Colak, B. Sturt, L. P. Alexander, A. Evsukoff, M. C. Gonzalez, “The  path  most  traveled:  Travel  demand  estimation  using  big  data  resources”, Transportation Research Part C: Emerging Technologies 58, Part B (2015) 162–177.</p></li>
+</ol>
+</li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="individual_measures.html" class="btn btn-neutral float-right" title="Individual measures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="measures.html" class="btn btn-neutral float-left" title="Measures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, skmob devs
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>
