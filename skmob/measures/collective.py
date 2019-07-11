@@ -10,6 +10,38 @@ from tqdm import tqdm
 tqdm.pandas()
 from skmob.utils.gislib import getDistanceByHaversine
 
+def _random_location_entropy_individual(traj):
+    n_distinct_users = len(traj.groupby(constants.UID))
+    entropy = np.log2(n_distinct_users)
+    return entropy
+
+def random_location_entropy(traj, show_progress=True):
+    """
+    The random location entropy captures the degree of predictability of a location if each user visits it with equal probability.
+
+    :param traj: the trajectories of the individuals
+    :type traj: pandas DataFrame
+    
+    :param show_progress: if True show a progress bar
+    :type show_progress: boolean
+    
+    :return: the random location entropies of the individuals
+    :rtype: pandas Series
+
+    .. seealso:: :func:`random_entropy`, :func:`real_entropy`, :func:`uncorrelated_entropy`
+    """
+    # if 'uid' column in not present in the TrajDataFrame
+    if constants.UID not in traj.columns:
+        all_locations = traj[[constants.LATITUDE, constants.LONGITUDE]].drop_duplicates([constants.LATITUDE, constants.LONGITUDE])
+        all_locations['random_location_entropy'] = 0.0
+        return all_locations
+    
+    if show_progress:
+        df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).progress_apply(lambda x: _random_location_entropy_individual(x)))
+    else:
+        df = pd.DataFrame(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).apply(lambda x: _random_location_entropy_individual(x)))
+    column_name = sys._getframe().f_code.co_name
+    return df.reset_index().rename(columns={0: column_name})
 
 def _uncorrelated_location_entropy_individual(traj, normalize=True):
     n = len(traj)
@@ -25,7 +57,7 @@ def _uncorrelated_location_entropy_individual(traj, normalize=True):
 
 
 def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
-    """number of distinct locations visited by the
+    """
     The temporal-uncorrelated location entropy :math:`LE_{unc}(j)` of a location :math:`j` is the historical probability
     that an individual :math:`u` visited location :math:`j`.
 
@@ -75,7 +107,6 @@ def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
     if normalize:
         column_name = 'norm_%s' % sys._getframe().f_code.co_name
     return df.reset_index().rename(columns={0: column_name})
-
 
 def _square_displacement(traj, delta_t):
     r0 = traj.iloc[0]
