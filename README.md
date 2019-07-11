@@ -19,6 +19,11 @@
 - assess the privacy risk associated with a mobility dataset
 
 
+## Documentation
+
+<https://scikit-mobility.github.io/scikit-mobility/html/index.html>
+
+
 ## Install
 
 First, clone the repository - this creates a new directory `./scikit_mobility`. 
