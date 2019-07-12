@@ -68,6 +68,9 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         maximum number of points per user to plot.
         If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
 
+    :param style_function: lambda function
+        function specifying the style (weight, color, opacity) of the GeoJson object.
+
     :param tiles: str
         folium's `tiles` parameter.
 

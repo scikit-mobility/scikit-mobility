@@ -320,8 +320,8 @@ class TrajDataFrame(pd.DataFrame):
         return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True])
 
     # Plot methods
-    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, tiles='cartodbpositron',
-                        zoom=12, hex_color=-1, weight=2, opacity=0.75):
+    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
+                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
         """
         :param tdf: TrajDataFrame
              TrajDataFrame to be plotted.
@@ -335,6 +335,9 @@ class TrajDataFrame(pd.DataFrame):
         :param max_points: int
             maximum number of points per user to plot.
             If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
+
+        :param style_function: lambda function
+            function specifying the style (weight, color, opacity) of the GeoJson object.
 
         :param tiles: str
             folium's `tiles` parameter.
@@ -355,7 +358,8 @@ class TrajDataFrame(pd.DataFrame):
 
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
-                                    tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity)
+                                    style_function=style_function, tiles=tiles, zoom=zoom,
+                                    hex_color=hex_color, weight=weight, opacity=opacity)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):
