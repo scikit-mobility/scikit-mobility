@@ -49,7 +49,10 @@ def random_hex():
     return '#%02X%02X%02X' % (r(),r(),r())
 
 
-def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000,
+traj_style_function = lambda weight, color, opacity: \
+    (lambda feature: dict(color=color, weight=weight, opacity=opacity))
+
+def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
     """
     :param tdf: TrajDataFrame
@@ -103,24 +106,18 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000,
             center = list(np.median(traj, axis=0)[::-1])
             map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles)
 
-        line = LineString(traj.tolist())
+        line = LineString(traj.values.tolist())
 
         if hex_color == -1:
             color = get_color(hex_color)
         else:
             color = hex_color
-        ss = {
-            "type": "Feature",
-            "geometry": line,
-            "properties": {"style":
-                {
-                    "color": color,
-                    "weight": weight,
-                    "opacity": opacity
-                }
-            }
-        }
-        folium.GeoJson(ss).add_to(map_f)
+
+        tgeojson = folium.GeoJson(line,
+                                  name='tgeojson',
+                                  style_function=style_function(weight, color, opacity)
+                                  )
+        tgeojson.add_to(map_f)
 
     return map_f
 
