@@ -44,7 +44,7 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 3. Install skmob
 
         cd scikit_mobility
-        python setup.py
+        python setup.py install
 
     If the installation of a required library fails, reinstall it with `conda install`.      
 
