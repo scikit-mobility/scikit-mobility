@@ -6,13 +6,13 @@ import inspect
 def compress(tdf, spatial_radius_km=0.2):
     """
     Reduce the number of points in a trajectory.
-    All points within a radius of `spatial_radius` km from a given initial point are compressed into
+    All points within a radius of `spatial_radius_km` km from a given initial point are compressed into
     a single point that has the median coordinates of all points and the time of the initial point.
 
     :param tdf: TrajDataFrame
         the input trajectory
 
-    :param spatial_radius: float (default 0.2)
+    :param spatial_radius_km: float (default 0.2)
         minimum distance (in km) between points of the compressed trajectory
 
     :return: TrajDataFrame
