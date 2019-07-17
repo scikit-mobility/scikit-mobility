@@ -24,6 +24,11 @@
 <https://scikit-mobility.github.io/scikit-mobility/html/index.html>
 
 
+## Paper
+
+if you use scikit-mobility please cite the following paper: https://arxiv.org/abs/1907.07062
+
+
 ## Install
 
 First, clone the repository - this creates a new directory `./scikit_mobility`. 
