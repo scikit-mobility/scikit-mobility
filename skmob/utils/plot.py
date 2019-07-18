@@ -282,9 +282,6 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
         if start_datetime <= t0 <= end_datetime:
             ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
 
-    # Backout times
-    # TO DO
-
     plt.xlim(start_datetime, end_datetime)
     # plt.legend(loc='lower right', frameon=False)
     # plt.legend(ncol=15 ,bbox_to_anchor=(1., -0.2), frameon=0)
