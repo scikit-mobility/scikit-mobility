@@ -53,7 +53,7 @@ traj_style_function = lambda weight, color, opacity: \
     (lambda feature: dict(color=color, weight=weight, opacity=opacity))
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
-                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
+                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
     """
     :param tdf: TrajDataFrame
          TrajDataFrame to be plotted.
@@ -86,30 +86,44 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :param opacity: float
         opacity (alpha level) of the trajectory line.
 
+    :param start_end_markers: bool
+        add markers on the start and end points of the trajectory.
+
     :return: `folium.Map` object with the plotted trajectories.
 
     """
     # group by user and keep only the first `max_users`
     nu = 0
-    for user, df in tdf.groupby(constants.UID):
+
+
+    try:
+        # column 'uid' is present in the TrajDataFrame
+        groups = tdf.groupby(constants.UID)
+    except KeyError:
+        # column 'uid' is not present
+        groups = [[None, tdf]]
+
+    for user, df in groups:
+
         if nu >= max_users:
             break
         nu += 1
 
         traj = df[[constants.LONGITUDE, constants.LATITUDE]]
 
-        if max_points == None:
+        if max_points is None:
             di = 1
         else:
             di = max(1, len(traj) // max_points)
         traj = traj[::di]
 
-        if nu == 1 and map_f == None:
+        if nu == 1 and map_f is None:
             # initialise map
             center = list(np.median(traj, axis=0)[::-1])
             map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles)
 
-        line = LineString(traj.values.tolist())
+        trajlist = traj.values.tolist()
+        line = LineString(trajlist)
 
         if hex_color == -1:
             color = get_color(hex_color)
@@ -121,6 +135,10 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
                                   style_function=style_function(weight, color, opacity)
                                   )
         tgeojson.add_to(map_f)
+
+        if start_end_markers:
+            folium.Marker(trajlist[0][::-1], popup='<i>Start</i>', icon=folium.Icon(color='green')).add_to(map_f)
+            folium.Marker(trajlist[-1][::-1], popup='<i>End</i>', icon=folium.Icon(color='red')).add_to(map_f)
 
     return map_f
 
@@ -159,7 +177,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     :return: `folium.Map` object with the plotted stops.
 
     """
-    if map_f == None:
+    if map_f is None:
         # initialise map
         lo_la = stdf[['lng', 'lat']].values
         center = list(np.median(lo_la, axis=0)[::-1])
@@ -167,7 +185,15 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
 
     # group by user and keep only the first `max_users`
     nu = 0
-    for user, df in stdf.groupby(constants.UID):
+
+    try:
+        # column 'uid' is present in the TrajDataFrame
+        groups = stdf.groupby(constants.UID)
+    except KeyError:
+        # column 'uid' is not present
+        groups = [[None, stdf]]
+
+    for user, df in groups:
         if nu >= max_users:
             break
         nu += 1
@@ -183,7 +209,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
             lo = row[constants.LONGITUDE]
             t0 = row[constants.DATETIME]
             t1 = row[constants.LEAVING_DATETIME]
-            u = row[constants.UID]
+            u = user
             try:
                 ncluster = row[constants.CLUSTER]
                 cl = '<BR>Cluster: {}'.format(ncluster)
@@ -235,7 +261,10 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 2))
 
-    df = cstdf[cstdf[constants.UID] == user]
+    if user is None:
+        df = cstdf
+    else:
+        df = cstdf[cstdf[constants.UID] == user]
 
     # TODO: add warning if days between start_datetime and end_datetime do not overlap with cstdf
     if start_datetime is None:

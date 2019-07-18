@@ -317,11 +317,14 @@ class TrajDataFrame(pd.DataFrame):
 
     # Sorting
     def sort_by_uid_and_datetime(self):
-        return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True])
+        if constants.UID in self.columns:
+            return self.sort_values(by=[constants.UID, constants.DATETIME], ascending=[True, True])
+        else:
+            return self.sort_values(by=[constants.DATETIME], ascending=[True])
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
-                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75):
+                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
         """
         :param tdf: TrajDataFrame
              TrajDataFrame to be plotted.
@@ -354,12 +357,15 @@ class TrajDataFrame(pd.DataFrame):
         :param opacity: float
             opacity (alpha level) of the trajectory line.
 
+        :param start_end_markers: bool
+            add markers on the start and end points of the trajectory.
+
         :return: `folium.Map` object with the plotted trajectories.
 
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
-                                    style_function=style_function, tiles=tiles, zoom=zoom,
-                                    hex_color=hex_color, weight=weight, opacity=opacity)
+                                    style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
+                                    weight=weight, opacity=opacity, start_end_markers=start_end_markers)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):

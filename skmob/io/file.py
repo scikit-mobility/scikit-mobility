@@ -46,8 +46,8 @@ def read(file):
         df_type, json_df, parameters, datetime_columns = json.load(f)
 
     if 'TrajDataFrame' in df_type:
-        tdf = TrajDataFrame(pd.read_json(json_df, orient='split', date_unit='s', convert_dates=datetime_columns),
-                            parameters=parameters)
+        tdf = TrajDataFrame(pd.read_json(json_df, orient='split', date_unit='s',
+                                         convert_dates=datetime_columns), parameters=parameters)
         return tdf
     elif 'FlowDataFrame' in df_type:
         return None
