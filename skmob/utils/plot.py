@@ -137,8 +137,24 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         tgeojson.add_to(map_f)
 
         if start_end_markers:
-            folium.Marker(trajlist[0][::-1], popup='<i>Start</i>', icon=folium.Icon(color='green')).add_to(map_f)
-            folium.Marker(trajlist[-1][::-1], popup='<i>End</i>', icon=folium.Icon(color='red')).add_to(map_f)
+
+            dtime, la, lo = df.loc[df['datetime'].idxmin()]\
+                [[constants.DATETIME, constants.LATITUDE, constants.LONGITUDE]].values
+            dtime = pd.datetime.strftime(dtime, '%Y/%m/%d %H:%M')
+            mker = folium.Marker(trajlist[0][::-1], icon=folium.Icon(color='green'))
+            popup = folium.Popup('<i>Start</i><BR>{}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a>'.\
+                          format(dtime, la, lo, np.round(la, 4), np.round(lo, 4)), max_width=300)
+            mker = mker.add_child(popup)
+            mker.add_to(map_f)
+
+            dtime, la, lo = df.loc[df['datetime'].idxmax()]\
+                [[constants.DATETIME, constants.LATITUDE, constants.LONGITUDE]].values
+            dtime = pd.datetime.strftime(dtime, '%Y/%m/%d %H:%M')
+            mker = folium.Marker(trajlist[-1][::-1], icon=folium.Icon(color='red'))
+            popup = folium.Popup('<i>End</i><BR>{}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a>'.\
+                          format(dtime, la, lo, np.round(la, 4), np.round(lo, 4)), max_width=300)
+            mker = mker.add_child(popup)
+            mker.add_to(map_f)
 
     return map_f
 
@@ -295,7 +311,7 @@ flow_style_function = lambda weight, color, opacity, weight_factor, flow_exp: \
     (lambda feature: dict(color=color, weight=weight_factor * weight ** flow_exp, opacity=opacity)) #, dashArray='5, 5'))
 
 
-def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', opacity=0.5,
+def plot_flows(fdf, map_f=None, min_flow=0, tiles='cartodbpositron', zoom=6, flow_color='red', opacity=0.5,
                flow_weight=5, flow_exp=0.5, style_function=flow_style_function,
                flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
                color_origin_point='#3186cc'):
@@ -409,7 +425,6 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_c
     return map_f
 
 
-
 default_style_func_args = {'weight': 1, 'color': 'random', 'opacity': 0.5, 'fillColor': 'red', 'fillOpacity': 0.25}
 
 geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: \
@@ -418,9 +433,17 @@ geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: 
 
 def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
 
-    weight, color, opacity, fillColor, fillOpacity = [
-        style_func_args[k] if k in style_func_args else default_style_func_args[k]
-        for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']]
+    styles = []
+    for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']:
+        if k in style_func_args:
+            if callable(style_func_args[k]):
+                styles += [style_func_args[k](g)]
+            else:
+                styles += [style_func_args[k]]
+        else:
+            styles += [default_style_func_args[k]]
+    weight, color, opacity, fillColor, fillOpacity = styles
+
 
     if type(gway) == shapely.geometry.multipolygon.MultiPolygon:
 
@@ -510,7 +533,7 @@ def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
 
 
 def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[],
-            tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+            tiles='cartodbpositron', zoom=6, geom_col='geometry'):
     """
     :param gdf: GeoDataFrame
         GeoDataFrame to visualize.
