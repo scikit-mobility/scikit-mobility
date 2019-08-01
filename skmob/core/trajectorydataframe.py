@@ -138,8 +138,8 @@ class TrajDataFrame(pd.DataFrame):
         flow = self.mapping(tessellation, remove_na=remove_na)
 
         # Step 3: groupby tile_id and sum to obtain the flow
-        flow.loc[:, 'destination'] = flow[constants.TILE_ID].shift(-1)
-        flow = flow.groupby([constants.TILE_ID, 'destination']).size().reset_index(name=constants.FLOW)
+        flow.loc[:, constants.DESTINATION] = flow[constants.TILE_ID].shift(-1)
+        flow = flow.groupby([constants.TILE_ID, constants.DESTINATION]).size().reset_index(name=constants.FLOW)
         flow.rename(columns={constants.TILE_ID: constants.ORIGIN}, inplace=True)
 
         if not self_loops:
