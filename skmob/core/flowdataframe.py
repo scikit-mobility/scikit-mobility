@@ -364,9 +364,6 @@ class FlowDataFrame(pd.DataFrame):
                    flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
                    color_origin_point='#3186cc'):
         """
-        :param fdf: FlowDataFrame
-            `FlowDataFrame` to visualize.
-
         :param map_f: folium.Map
             `folium.Map` object where the flows will be plotted. If `None`, a new map will be created.
 
@@ -422,9 +419,6 @@ class FlowDataFrame(pd.DataFrame):
     def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
         """
-        :param gdf: GeoDataFrame
-            GeoDataFrame to visualize.
-
         :param map_osm: folium.Map
             `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
 

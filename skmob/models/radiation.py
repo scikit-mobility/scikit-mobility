@@ -2,11 +2,12 @@ import numpy as np
 from tqdm import tqdm
 import operator
 import pandas as pd
-from ..utils import constants, utils
+from ..utils import gislib, constants, utils
 from ..core.flowdataframe import FlowDataFrame
 
-from geopy.distance import distance
-distfunc = (lambda p0, p1: distance(p0, p1).km)
+# from geopy.distance import distance
+# distfunc = (lambda p0, p1: distance(p0, p1).km)
+distfunc = gislib.getDistance
 
 
 class Radiation:

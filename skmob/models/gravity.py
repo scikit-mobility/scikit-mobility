@@ -6,11 +6,12 @@ import numpy as np
 import statsmodels as sm
 from statsmodels.genmod.generalized_linear_model import GLM
 from tqdm import tqdm
-from ..utils import constants, utils
+from ..utils import gislib, constants, utils
 from ..core.flowdataframe import FlowDataFrame
 
-from geopy.distance import distance
-distfunc = (lambda p0, p1: distance(p0, p1).km)
+# from geopy.distance import distance
+# distfunc = (lambda p0, p1: distance(p0, p1).km)
+distfunc = gislib.getDistance
 
 
 def ci(i, number_locs):
@@ -102,7 +103,11 @@ class Gravity:
 
     References
     ----------
-    .. [1] Erlander, Sven, and Neil F. Stewart. "The gravity model in transportation analysis: theory and extensions".
+    .. [1] Zipf, George Kingsley. "The P 1 P 2/D hypothesis: on the intercity movement of persons."
+    American sociological review 11.6 (1946): 677-686.
+    .. [2] Wilson, Alan Geoffrey. "A family of spatial interaction models, and associated developments."
+    Environment and Planning A 3.1 (1971): 1-32.
+    .. [3] Erlander, Sven, and Neil F. Stewart. "The gravity model in transportation analysis: theory and extensions".
     Vol. 3. Vsp, 1990.
 
     """
@@ -204,7 +209,8 @@ class Gravity:
                                        (n_locs, n_locs))
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
             else:
-                return trip_probs_matrix
+                # return trip_probs_matrix
+                return self._from_matrix_to_flowdf(trip_probs_matrix, origins, spatial_tessellation)
 
         else:  # singly constrained gravity model
             trip_probs_matrix = np.transpose(trip_probs_matrix / np.sum(trip_probs_matrix, axis=0))
@@ -214,7 +220,8 @@ class Gravity:
                 od_matrix = np.array([np.random.multinomial(tot_outflows[i], trip_probs_matrix[i]) for i in origins])
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
             else:
-                return trip_probs_matrix
+                # return trip_probs_matrix
+                return self._from_matrix_to_flowdf(trip_probs_matrix, origins, spatial_tessellation)
 
     def _from_matrix_to_flowdf(self, flow_matrix, origins, spatial_tessellation):
         index2tileid = dict([(i, tileid) for i, tileid in enumerate(spatial_tessellation[self._tile_id_column].values)])
@@ -285,7 +292,7 @@ class Gravity:
 
         X  :  list of independent variables (features) used in the GLM fit.
 
-        y   :  list of dependent varibles (flows) used in the GLM fit.
+        y   :  list of dependent variables (flows) used in the GLM fit.
 
         poisson_results  :  statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
             statsmodels object with information on the fit's quality and predictions.
