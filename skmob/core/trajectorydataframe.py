@@ -326,9 +326,6 @@ class TrajDataFrame(pd.DataFrame):
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
                         tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
         """
-        :param tdf: TrajDataFrame
-             TrajDataFrame to be plotted.
-
         :param map_f: folium.Map
             `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
 
@@ -370,9 +367,8 @@ class TrajDataFrame(pd.DataFrame):
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):
         """
-        :param stdf: TrajDataFrame
-             Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
-             or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
+        Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
+        or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
 
         :param map_f: folium.Map
             `folium.Map` object where the stops will be plotted. If `None`, a new map will be created.
@@ -406,9 +402,8 @@ class TrajDataFrame(pd.DataFrame):
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         """
-        :param cstdf: TrajDataFrame
-             Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
-             The column `constants.CLUSTER` must be present.
+        Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
+        The column `constants.CLUSTER` must be present.
 
         :param user: str or int
             user ID whose diary should be plotted.
@@ -431,6 +426,21 @@ class TrajDataFrame(pd.DataFrame):
 
     def route(self, G=None, index_origin=0, index_destin=-1):
         return routing.route(self, G=G, index_origin=index_origin, index_destin=index_destin)
+
+    def timezone_conversion(self, from_timezone, to_timezone):
+        """
+        :param from_timezone: str
+            current timezone (e.g. 'GMT')
+
+        :param to_timezone: str
+            new timezone (e.g. 'Asia/Shanghai')
+        """
+        self.rename(columns={'datetime': 'original_datetime'}, inplace=True)
+        self['datetime'] = self['original_datetime']. \
+            dt.tz_localize(from_timezone). \
+            dt.tz_convert(to_timezone). \
+            dt.tz_localize(None)
+        self.drop(columns=['original_datetime'], inplace=True)
 
 
 def nparray_to_trajdataframe(trajectory_array, columns, parameters={}):
