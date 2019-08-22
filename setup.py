@@ -2,7 +2,7 @@ from setuptools import setup
 
 long_description = open('README.md').read()
 
-DEPENDENCIES = ['numpy', 'pandas', 'geopandas', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
+DEPENDENCIES = ['numpy', 'pandas==0.24', 'geopandas', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
                 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely', 'geopy', 'fiona']
 
 TEST_DEPENDENCIES = [
@@ -11,12 +11,11 @@ TEST_DEPENDENCIES = [
     'python-Levenshtein',
 ]
 
-python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
 
 setup(
     name='scikit-mobility',
     version='0.0.1dev',
-    packages=['skmob', 'skmob.core', 'skmob.utils', 'skmob.io', 'skmob.measures', 'skmob.models', 'skmob.preprocessing', 'skmob.privacy', 'skmob.tessellation' ],
+    packages=['skmob'] ,
     license='MIT',
     python_requires='>=3.6',
     description='A toolbox for analyzing and processing mobility data.',
