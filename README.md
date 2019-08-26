@@ -21,7 +21,7 @@
 
 ## Documentation
 
-<https://scikit-mobility.github.io/scikit-mobility/html/index.html>
+https://scikit-mobility.github.io/scikit-mobility/
 
 
 ## Paper
