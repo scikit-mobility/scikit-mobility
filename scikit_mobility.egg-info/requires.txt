@@ -1,0 +1,15 @@
+numpy
+pandas==0.24
+geopandas
+scipy
+powerlaw
+tqdm
+osmnx
+scikit-learn
+statsmodels
+folium
+matplotlib
+geojson
+shapely
+geopy
+fiona

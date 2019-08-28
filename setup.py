@@ -15,7 +15,7 @@ TEST_DEPENDENCIES = [
 setup(
     name='scikit-mobility',
     version='1.0',
-    packages=['skmob', 'skmob.core', 'skmob.utils', 'skmob.io', 'skmob.measures', 'skmob.models', 'skmob.preprocessing', 'skmob.privacy', 'skmob.tessellation' ]
+    packages=['skmob', 'skmob.core', 'skmob.utils', 'skmob.io', 'skmob.measures', 'skmob.models', 'skmob.preprocessing', 'skmob.privacy', 'skmob.tessellation' ],
     #TODO: fix it with find_packages(include=["skmob", "skmob.*"]),
     license='MIT',
     python_requires='>=3.6',
