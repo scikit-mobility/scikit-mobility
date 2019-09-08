@@ -24,9 +24,26 @@
 https://scikit-mobility.github.io/scikit-mobility/
 
 
-## Paper
+## Citing
 
 if you use scikit-mobility please cite the following paper: https://arxiv.org/abs/1907.07062
+
+```
+@ARTICLE{pappalardo2019scikit,
+       author = {{Pappalardo}, Luca and {Barlacchi}, Gianni and {Simini}, Filippo and
+         {Pellungrini}, Roberto},
+        title = "{scikit-mobility: An open-source Python library for human mobility analysis and simulation}",
+      journal = {arXiv e-prints},
+     keywords = {Physics - Physics and Society},
+         year = "2019",
+        month = "Jul",
+          eid = {arXiv:1907.07062},
+        pages = {arXiv:1907.07062},
+archivePrefix = {arXiv},
+       eprint = {1907.07062}   
+}
+
+```
 
 
 ## Install
