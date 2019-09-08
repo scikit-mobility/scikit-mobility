@@ -57,8 +57,8 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
     else:
         ctdf = _cluster_trajectory(stops_df, cluster_radius_km=cluster_radius_km, min_samples=min_samples).reset_index(drop=True)
 
-    ctdf.parameters = tdf.parameters
-    ctdf.set_parameter(constants.CLUSTERING_PARAMS, arguments)
+    # ctdf.parameters = tdf.parameters
+    # ctdf.set_parameter(constants.CLUSTERING_PARAMS, arguments)
     return ctdf
 
 
@@ -91,7 +91,7 @@ def group_by_label(X, labels):
 
 def _cluster_array(lat_lng_dtime_other, cluster_radius_km, min_samples, verbose=False):
 
-    X = np.array([[point[1], point[0]] for point in lat_lng_dtime_other])
+    X = np.array([[point[0], point[1]] for point in lat_lng_dtime_other])
 
     # Compute DBSCAN
     eps_rad = cluster_radius_km / kms_per_radian
