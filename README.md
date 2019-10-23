@@ -29,20 +29,14 @@ https://scikit-mobility.github.io/scikit-mobility/
 if you use scikit-mobility please cite the following paper: https://arxiv.org/abs/1907.07062
 
 ```
-@ARTICLE{pappalardo2019scikit,
-       author = {{Pappalardo}, Luca and {Barlacchi}, Gianni and {Simini}, Filippo and
-         {Pellungrini}, Roberto},
-        title = "{scikit-mobility: An open-source Python library for human mobility analysis and simulation}",
-      journal = {arXiv e-prints},
-     keywords = {Physics - Physics and Society},
-         year = "2019",
-        month = "Jul",
-          eid = {arXiv:1907.07062},
-        pages = {arXiv:1907.07062},
-archivePrefix = {arXiv},
-       eprint = {1907.07062}   
+@misc{pappalardo2019scikitmobility,
+    title={scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data},
+    author={Luca Pappalardo and Filippo Simini and Gianni Barlacchi and Roberto Pellungrini},
+    year={2019},
+    eprint={1907.07062},
+    archivePrefix={arXiv},
+    primaryClass={physics.soc-ph}
 }
-
 ```
 
 
