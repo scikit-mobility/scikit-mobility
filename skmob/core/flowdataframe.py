@@ -416,10 +416,10 @@ class FlowDataFrame(pd.DataFrame):
                                tile_popup=tile_popup, radius_origin_point=radius_origin_point,
                                color_origin_point=color_origin_point)
 
-    def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
+    def plot_tessellation(self, map_f=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
         """
-        :param map_osm: folium.Map
+        :param map_f: folium.Map
             `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
 
         :param maxitems: int
@@ -445,5 +445,5 @@ class FlowDataFrame(pd.DataFrame):
         :return: `folium.Map` object with the plotted GeoDataFrame.
 
         """
-        return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
+        return plot.plot_gdf(self.tessellation, map_f=map_f, maxitems=maxitems, style_func_args=style_func_args,
                              popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

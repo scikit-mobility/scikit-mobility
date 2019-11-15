@@ -49,11 +49,13 @@ def random_hex():
     return '#%02X%02X%02X' % (r(),r(),r())
 
 
-traj_style_function = lambda weight, color, opacity: \
-    (lambda feature: dict(color=color, weight=weight, opacity=opacity))
+traj_style_function = lambda weight, color, opacity, dashArray: \
+    (lambda feature: dict(color=color, weight=weight, opacity=opacity, dashArray=dashArray))
+
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
-                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
+                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, dashArray='0, 0',
+                    start_end_markers=True):
     """
     :param tdf: TrajDataFrame
          TrajDataFrame to be plotted.
@@ -86,6 +88,10 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :param opacity: float
         opacity (alpha level) of the trajectory line.
 
+    :param dashArray: str
+        style of the trajectory line: '0, 0' for a solid trajectory line, '5, 5' for a dashed line
+        (where dashArray='size of segment, size of spacing').
+
     :param start_end_markers: bool
         add markers on the start and end points of the trajectory.
 
@@ -94,7 +100,6 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     """
     # group by user and keep only the first `max_users`
     nu = 0
-
 
     try:
         # column 'uid' is present in the TrajDataFrame
@@ -132,7 +137,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
 
         tgeojson = folium.GeoJson(line,
                                   name='tgeojson',
-                                  style_function=style_function(weight, color, opacity)
+                                  style_function=style_function(weight, color, opacity, dashArray)
                                   )
         tgeojson.add_to(map_f)
 
@@ -160,7 +165,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
 
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-1, opacity=0.3, radius=12, popup=True):
+               hex_color=-1, opacity=0.3, radius=12, number_of_sides=4, popup=True):
     """
     :param stdf: TrajDataFrame
          Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
@@ -186,6 +191,9 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
 
     :param radius: float
         size of the markers.
+
+    :param number_of_sides: int
+        number of sides of the markers.
 
     :param popup: bool
         if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
@@ -224,7 +232,14 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
             la = row[constants.LATITUDE]
             lo = row[constants.LONGITUDE]
             t0 = row[constants.DATETIME]
-            t1 = row[constants.LEAVING_DATETIME]
+            try:
+                t1 = row[constants.LEAVING_DATETIME]
+                _number_of_sides = number_of_sides
+                marker_radius = radius
+            except KeyError:
+                t1 = t0
+                _number_of_sides = number_of_sides
+                marker_radius = radius // 2
             u = user
             try:
                 ncluster = row[constants.CLUSTER]
@@ -234,10 +249,11 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
                 cl = ''
 
             fpoly = folium.RegularPolygonMarker([la, lo],
-                                        radius=radius,
+                                        radius=marker_radius,
                                         color=color,
                                         fill_color=color,
-                                        fill_opacity=opacity
+                                        fill_opacity=opacity,
+                                        number_of_sides=_number_of_sides
                                         )
             if popup:
                 popup = folium.Popup('User: {}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a><BR>Arr: {}<BR>Dep: {}{}' \
@@ -251,13 +267,13 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     return map_f
 
 
-def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
+def plot_diary(cstdf, uid, start_datetime=None, end_datetime=None, ax=None):
     """
     :param cstdf: TrajDataFrame
          Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
          The column `constants.CLUSTER` must be present.
 
-    :param user: str or int
+    :param uid: str or int
         user ID whose diary should be plotted.
 
     :param start_datetime: datetime.datetime
@@ -277,16 +293,23 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 2))
 
-    if user is None:
+    if uid is None:
         df = cstdf
     else:
-        df = cstdf[cstdf[constants.UID] == user]
+        df = cstdf[cstdf[constants.UID] == uid]
+
+    if len(df) == 0:
+        raise KeyError("""User id 'uid' is not in the input TrajDataFrame 'cstdf'.""")
 
     # TODO: add warning if days between start_datetime and end_datetime do not overlap with cstdf
     if start_datetime is None:
         start_datetime = df[constants.DATETIME].min()
+    elif type(start_datetime) is str:
+        start_datetime = pd.to_datetime(start_datetime)
     if end_datetime is None:
         end_datetime = df[constants.LEAVING_DATETIME].max()
+    elif type(end_datetime) is str:
+        end_datetime = pd.to_datetime(end_datetime)
 
     for idx, row in df.iterrows():
 
@@ -301,7 +324,7 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None):
     plt.xlim(start_datetime, end_datetime)
     # plt.legend(loc='lower right', frameon=False)
     # plt.legend(ncol=15 ,bbox_to_anchor=(1., -0.2), frameon=0)
-    ax.set_title('user %s' % user)
+    ax.set_title('user %s' % uid)
 
     return ax
 
@@ -431,7 +454,7 @@ geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: 
     (lambda feature: dict(weight=weight, color=color, opacity=opacity, fillColor=fillColor, fillOpacity=fillOpacity))
 
 
-def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
+def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
 
     styles = []
     for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']:
@@ -527,18 +550,18 @@ def add_to_map(gway, g, map_osm, style_func_args, popup_features=[]):
     if len(popup) > 0:
         gj.add_child(folium.Popup(popup, max_width=300))
 
-    gj.add_to(map_osm)
+    gj.add_to(map_f)
 
-    return map_osm
+    return map_f
 
 
-def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[],
+def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[],
             tiles='cartodbpositron', zoom=6, geom_col='geometry'):
     """
     :param gdf: GeoDataFrame
         GeoDataFrame to visualize.
 
-    :param map_osm: folium.Map
+    :param map_f: folium.Map
         `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
 
     :param maxitems: int
@@ -564,10 +587,10 @@ def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=
     :return: `folium.Map` object with the plotted GeoDataFrame.
 
     """
-    if map_osm is None:
+    if map_f is None:
         # initialise map
         lon, lat = np.mean(np.array(list(gdf[geom_col].apply(utils.get_geom_centroid).values)), axis=0)
-        map_osm = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom)
+        map_f = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom)
 
     count = 0
     for k in gdf.index:
@@ -575,11 +598,11 @@ def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=
 
         if type(g[geom_col]) == gpd.geoseries.GeoSeries:
             for i in range(len(g[geom_col])):
-                map_osm = add_to_map(g[geom_col].iloc[i], g.iloc[i], map_osm,
+                map_f = add_to_map(g[geom_col].iloc[i], g.iloc[i], map_f,
                                      popup_features=popup_features,
                                      style_func_args=style_func_args)
         else:
-            map_osm = add_to_map(g[geom_col], g, map_osm,
+            map_f = add_to_map(g[geom_col], g, map_f,
                                  popup_features=popup_features,
                                  style_func_args=style_func_args)
 
@@ -587,4 +610,4 @@ def plot_gdf(gdf, map_osm=None, maxitems=-1, style_func_args={}, popup_features=
         if count == maxitems:
             break
 
-    return map_osm
+    return map_f

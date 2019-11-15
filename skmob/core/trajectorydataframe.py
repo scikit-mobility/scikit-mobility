@@ -324,7 +324,8 @@ class TrajDataFrame(pd.DataFrame):
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
-                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
+                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, dashArray='0, 0',
+                        start_end_markers=True):
         """
         :param map_f: folium.Map
             `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
@@ -354,6 +355,10 @@ class TrajDataFrame(pd.DataFrame):
         :param opacity: float
             opacity (alpha level) of the trajectory line.
 
+        :param dashArray: str
+            style of the trajectory line: '0, 0' for a solid trajectory line, '5, 5' for a dashed line
+            (where dashArray='size of segment, size of spacing').
+
         :param start_end_markers: bool
             add markers on the start and end points of the trajectory.
 
@@ -362,10 +367,11 @@ class TrajDataFrame(pd.DataFrame):
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
                                     style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
-                                    weight=weight, opacity=opacity, start_end_markers=start_end_markers)
+                                    weight=weight, opacity=opacity, dashArray=dashArray,
+                                    start_end_markers=start_end_markers)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
-                   radius=12, popup=True):
+                   radius=12, number_of_sides=4, popup=True):
         """
         Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
         or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
@@ -391,6 +397,9 @@ class TrajDataFrame(pd.DataFrame):
         :param radius: float
             size of the markers.
 
+        :param number_of_sides: int
+            number of sides of the markers.
+
         :param popup: bool
             if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
 
@@ -398,14 +407,15 @@ class TrajDataFrame(pd.DataFrame):
 
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
-                               hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
+                               hex_color=hex_color, opacity=opacity, radius=radius, number_of_sides=number_of_sides,
+                               popup=popup)
 
-    def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
+    def plot_diary(self, uid, start_datetime=None, end_datetime=None, ax=None):
         """
         Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
         The column `constants.CLUSTER` must be present.
 
-        :param user: str or int
+        :param uid: str or int
             user ID whose diary should be plotted.
 
         :param start_datetime: datetime.datetime
@@ -422,7 +432,7 @@ class TrajDataFrame(pd.DataFrame):
         :return: `matplotlib.axes` of the plotted diary.
 
         """
-        return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
+        return plot.plot_diary(self, uid, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
 
     def route(self, G=None, index_origin=0, index_destin=-1):
         return routing.route(self, G=G, index_origin=index_origin, index_destin=index_destin)
