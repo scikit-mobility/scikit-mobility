@@ -448,16 +448,30 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='cartodbpositron', zoom=6, flo
     return map_f
 
 
-default_style_func_args = {'weight': 1, 'color': 'random', 'opacity': 0.5, 'fillColor': 'red', 'fillOpacity': 0.25}
+default_style_func_args = {'weight': 1, 'color': 'random', 'opacity': 0.5,
+                           'fillColor': 'random', 'fillOpacity': 0.25, 'radius': 5}
 
 geojson_style_function = lambda weight, color, opacity, fillColor, fillOpacity: \
-    (lambda feature: dict(weight=weight, color=color, opacity=opacity, fillColor=fillColor, fillOpacity=fillOpacity))
+    (lambda feature: dict(weight=weight, color=color, opacity=opacity, fillColor=fillColor,
+                          fillOpacity=fillOpacity))
+
+
+def manage_colors(color, fillColor):
+    if color == 'random':
+        if fillColor == 'random':
+            color = random_hex()
+            fillColor = color
+        else:
+            color = random_hex()
+    elif fillColor == 'random':
+        fillColor = random_hex()
+    return color, fillColor
 
 
 def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
 
     styles = []
-    for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity']:
+    for k in ['weight', 'color', 'opacity', 'fillColor', 'fillOpacity', 'radius']:
         if k in style_func_args:
             if callable(style_func_args[k]):
                 styles += [style_func_args[k](g)]
@@ -465,17 +479,14 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
                 styles += [style_func_args[k]]
         else:
             styles += [default_style_func_args[k]]
-    weight, color, opacity, fillColor, fillOpacity = styles
+    weight, color, opacity, fillColor, fillOpacity, radius = styles
 
+    color, fillColor = manage_colors(color, fillColor)
 
     if type(gway) == shapely.geometry.multipolygon.MultiPolygon:
 
         # Multipolygon
         for gg in gway:
-            if color == 'random':
-                color = random_hex()
-                fillColor = color
-
             vertices = list(zip(*gg.exterior.xy))
             gj = folium.GeoJson({"type": "Polygon", "coordinates": [vertices]},
                                 style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
@@ -484,10 +495,6 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
     elif type(gway) == shapely.geometry.polygon.Polygon:
 
         # Polygon
-        if color == 'random':
-            color = random_hex()
-            fillColor = color
-
         vertices = list(zip(*gway.exterior.xy))
         gj = folium.GeoJson({"type": "Polygon", "coordinates": [vertices]},
                             style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
@@ -497,10 +504,6 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
 
         # MultiLine
         for gg in gway:
-            if color == 'random':
-                color = random_hex()
-                fillColor = color
-
             vertices = list(zip(*gg.xy))
             gj = folium.GeoJson({"type": "LineString", "coordinates": vertices},
                                 style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
@@ -509,9 +512,6 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
     elif type(gway) == shapely.geometry.linestring.LineString:
 
         # LineString
-        if color == 'random':
-            color = random_hex()
-            fillColor = color
         vertices = list(zip(*gway.xy))
         gj = folium.GeoJson({"type": "LineString", "coordinates": vertices},
                             style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
@@ -520,15 +520,11 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
     else:
 
         # Point
-        if color == 'random':
-            color = random_hex()
-            fillColor = color
-
         point = list(zip(*gway.xy))[0]
         #         gj = folium.CircleMarker(
         gj = folium.Circle(
             location=point[::-1],
-            radius=5,
+            radius=radius,
             color=color,  # '#3186cc',
             fill=True,
             fill_color=fillColor
@@ -569,7 +565,7 @@ def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[]
 
     :param style_func_args: dict
         dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons:
-        'weight', 'color', 'opacity', 'fillColor', 'fillOpacity'
+        'weight', 'color', 'opacity', 'fillColor', 'fillOpacity', 'radius'
 
     :param popup_features: list
         when clicking on a tile polygon, a popup window displaying the information in the

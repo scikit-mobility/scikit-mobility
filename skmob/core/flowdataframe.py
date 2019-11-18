@@ -427,7 +427,7 @@ class FlowDataFrame(pd.DataFrame):
 
         :param style_func_args: dict
             dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons:
-            'weight', 'color', 'opacity', 'fillColor', 'fillOpacity'
+            'weight', 'color', 'opacity', 'fillColor', 'fillOpacity', 'radius'
 
         :param popup_features: list
             when clicking on a tile polygon, a popup window displaying the information in the

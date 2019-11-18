@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import geopandas as gpd
+import shapely
 import pytest
 from ...core.trajectorydataframe import TrajDataFrame
 from .. import plot
@@ -47,6 +49,17 @@ traj[tid] = [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0]
 tdf_test = TrajDataFrame(traj)
 
 all_users = [1, 2, 3]
+
+
+points = [shapely.geometry.Point(ll) for ll in [[39.97, 116.32], [39.90, 116.51]]]
+
+lines = [shapely.geometry.LineString(ll) for ll in [[[116.32, 39.97], [116.51, 39.90]],
+                                                     [[116.22, 39.87], [116.41, 39.80]]]]
+
+polygons = [shapely.geometry.Polygon(ll) for ll in [[[116.32, 39.97], [116.51, 39.90], [116.51, 39.97]],
+                                                   [[116.22, 39.87], [116.41, 39.80], [116.22, 39.80]]]]
+
+
 
 # plot_trajectory
 
@@ -110,3 +123,14 @@ def test_plot_diary(tdf, user, start_datetime):
     ax = cstdf.plot_diary(uid=user, start_datetime=start_datetime)
 
     assert type(ax) is matplotlib.axes._subplots.Subplot
+
+
+# plot_gdf
+
+@pytest.mark.parametrize('geom', [points, lines, polygons])
+def test_plot_gdf_points(geom):
+    gdf = gpd.GeoDataFrame(geom, columns=['geometry'])
+    map_f = plot.plot_gdf(gdf)
+    assert type(map_f) is folium.folium.Map
+
+
