@@ -51,11 +51,11 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 
 1. Create an environment `skmob` and install pip
 
-        conda create -n skmob pip
+        conda create -n skmob pip python=3.7
 
 2. Activate
     
-        conda activate skmob
+        source activate skmob
 
 3. Install skmob
 
@@ -74,6 +74,12 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
     
           env=$(basename `echo $CONDA_PREFIX`)
           python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
+
+:exclamation: You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
+
+```
+conda install -n skmob pyproj urllib3 chardet markupsafe
+```
           
 ### without conda (python >= 3.6 required)
 
