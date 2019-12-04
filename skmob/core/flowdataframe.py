@@ -120,7 +120,7 @@ class FlowDataFrame(pd.DataFrame):
         if len(tmp) == 0:
             return 0
         else:
-            return tmp[constants.FLOW].item()
+            return tmp[constants.FLOW].iloc[0]
 
     def settings_from(self, flowdataframe):
         """
@@ -135,15 +135,15 @@ class FlowDataFrame(pd.DataFrame):
         if tile_id not in self._tessellation[constants.TILE_ID].values:
             raise ValueError("%s \"%s\" is not in the tessellation." % (constants.TILE_ID, tile_id))
 
-        return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.item()
+        return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.iloc[0]
 
     def to_matrix(self):
 
         m = np.zeros((len(self._tessellation), len(self._tessellation)))
 
         def _to_matrix(df, matrix, tessellation):
-            o = tessellation.index[tessellation['tile_ID'] == df['origin']].item()
-            d = tessellation.index[tessellation['tile_ID'] == df['destination']].item()
+            o = tessellation.index[tessellation['tile_ID'] == df['origin']].iloc[0]
+            d = tessellation.index[tessellation['tile_ID'] == df['destination']].iloc[0]
 
             matrix[o][d] = df['flow']
 
