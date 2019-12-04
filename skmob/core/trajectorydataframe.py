@@ -164,6 +164,9 @@ class TrajDataFrame(pd.DataFrame):
 
         gdf = self.to_geodataframe()
 
+        if constants.TILE_ID not in tessellation.columns:
+            tessellation[constants.TILE_ID] = tessellation.index
+
         if all(isinstance(x, Polygon) for x in tessellation.geometry):
 
             if remove_na:

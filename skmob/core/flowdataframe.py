@@ -113,7 +113,8 @@ class FlowDataFrame(pd.DataFrame):
 
         if (origin_id not in self._tessellation[constants.TILE_ID].values) or \
                 (destination_id not in self._tessellation[constants.TILE_ID].values):
-            raise ValueError("Both origin_id and destination_id must be present in the tessellation.")
+            raise ValueError("Both %s and %s must be present in the tessellation."
+                             % (constants.ORIGIN, constants.DESTINATION))
 
         tmp = self[(self[constants.ORIGIN] == origin_id) & (self[constants.DESTINATION] == destination_id)]
         if len(tmp) == 0:
@@ -132,7 +133,7 @@ class FlowDataFrame(pd.DataFrame):
 
     def get_geometry(self, tile_id):
         if tile_id not in self._tessellation[constants.TILE_ID].values:
-            raise ValueError("tile_id \"%s\" is not in the tessellation." % tile_id)
+            raise ValueError("%s \"%s\" is not in the tessellation." % (constants.TILE_ID, tile_id))
 
         return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.item()
 
