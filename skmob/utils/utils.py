@@ -170,7 +170,10 @@ def date_time_precision(dt, precision):
 
 
 def bbox_from_points(points, crs=None):
-    coords = points.total_bounds
+    try:
+        coords = points.total_bounds
+    except AttributeError:
+        coords = points
 
     base = shapely.geometry.box(coords[0], coords[1], coords[2], coords[3], ccw=True)
     base = gpd.GeoDataFrame(geometry=[base], crs=constants.DEFAULT_CRS)

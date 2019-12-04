@@ -486,11 +486,10 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
     if type(gway) == shapely.geometry.multipolygon.MultiPolygon:
 
         # Multipolygon
-        for gg in gway:
-            vertices = list(zip(*gg.exterior.xy))
-            gj = folium.GeoJson({"type": "Polygon", "coordinates": [vertices]},
-                                style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
-                                                                      fillColor=fillColor, fillOpacity=fillOpacity))
+        vertices = [list(zip(*p.exterior.xy)) for p in gway]
+        gj = folium.GeoJson({"type": "MultiPolygon", "coordinates": [vertices]},
+                            style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                  fillColor=fillColor, fillOpacity=fillOpacity))
 
     elif type(gway) == shapely.geometry.polygon.Polygon:
 
@@ -503,11 +502,10 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
     elif type(gway) == shapely.geometry.multilinestring.MultiLineString:
 
         # MultiLine
-        for gg in gway:
-            vertices = list(zip(*gg.xy))
-            gj = folium.GeoJson({"type": "LineString", "coordinates": vertices},
-                                style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
-                                                                      fillColor=fillColor, fillOpacity=fillOpacity))
+        vertices = [list(zip(*l.xy)) for l in gway]
+        gj = folium.GeoJson({"type": "MultiLineString", "coordinates": vertices},
+                            style_function=geojson_style_function(weight=weight, color=color, opacity=opacity,
+                                                                  fillColor=fillColor, fillOpacity=fillOpacity))
 
     elif type(gway) == shapely.geometry.linestring.LineString:
 
