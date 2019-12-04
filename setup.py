@@ -1,3 +1,7 @@
+from setuptools import setup
+import sys
+if sys.version_info >= (3,8):
+    sys.exit('Sorry, Python > 3.7 is not supported')
 from setuptools import setup, find_packages
 
 long_description = open('README.md').read()
