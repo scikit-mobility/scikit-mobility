@@ -27,7 +27,7 @@ def _radius_of_gyration_individual(traj):
 
 def radius_of_gyration(traj, show_progress=True):
     """
-    Compute the radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
+    Compute the radii of gyration (in km) of a set of individuals in a TrajDataFrame.
     The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by
     :math:`u`.
 
