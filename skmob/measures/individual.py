@@ -11,13 +11,17 @@ from ..utils import constants
 
 def _radius_of_gyration_individual(traj):
     """
-    Compute the radius of gyration of an individual given their TrajDataFrame
+    Compute the radius of gyration of a single individual given their TrajDataFrame
 
-    :param traj: the trajectory of the individual
-    :type traj: TrajDataFrame
-
-    :return: the radius of gyration of the individual
-    :rtype: float
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual
+    
+    Returns
+    -------
+    float
+        the radius of gyration of the individual
     """
     lats_lngs = traj[[constants.LATITUDE, constants.LONGITUDE]].values
     center_of_mass = np.mean(lats_lngs, axis=0)
@@ -37,11 +41,12 @@ def radius_of_gyration(traj, show_progress=True):
         the trajectories of the individuals.
     
     show_progress : boolean
-        if True show a progress bar.
+        if True show a progress bar. The default is True.
     
     Returns
     -------
-    pandas DataFrame : the radius of gyration of each individual.
+    pandas DataFrame
+        the radius of gyration of each individual.
     
     Examples
     --------
@@ -78,17 +83,20 @@ def radius_of_gyration(traj, show_progress=True):
 
 
 def _k_radius_of_gyration_individual(traj, k=2):
-    """
-    Compute the k-radius of gyration of a single individual given their TrajDataFrame
+    """Compute the k-radius of gyration of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :param k: the number of most frequent locations to consider (default=2, range=[2, +inf])
-    :type k: int
-
-    :return: the k-radius of gyration of the individual 
-    :rtype: float
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    k : int
+        the number of most frequent locations to consider. The default is 2. The possible range of values is math:`[2, +inf]`.
+    
+    Returns
+    -------
+    float
+        the k-radius of gyration of the individual. 
     """
     traj['visits'] = traj.groupby([constants.LATITUDE, constants.LONGITUDE]).transform('count')[constants.DATETIME]
     top_k_locations = traj.drop_duplicates(subset=[constants.LATITUDE, constants.LONGITUDE]).sort_values(by=['visits', constants.DATETIME],
@@ -104,27 +112,32 @@ def _k_radius_of_gyration_individual(traj, k=2):
 
 
 def k_radius_of_gyration(traj, k=2, show_progress=True):
-    """
-    Compute the k-radius of gyration (in kilometers) of a set of individuals 
-    The k-radius of gyration :math:`r_g^{(k)}(u)` indicates the characteristic distance travelled by an individual
-    between their $k$ most frequent locations.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param int k: the number of most frequent locations to consider (default=2, range=[2, +inf])
+    """k-radius of gyration.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
-    
-    :return: the k-radii of gyration of the individuals
-    :rtype: pandas DataFrame
+    Compute the k-radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
+    The k-radius of gyration :math:`r_g^{(k)}(u)` of an individual :math:`u` indicates the characteristic distance travelled by that individual as induced by their k most frequent locations.
 
-    Examples:
-        Computing the k-radius of gyration of each individual in a TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    k : int
+        the number of most frequent locations to consider. The default is 2. The possible range of values is :math:`[2, +inf]`.
+    
+    show_progress : boolean
+        if True show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the k-radii of gyration of the individuals
+
+    Examples
+    --------
     >>> import skmob
     >>> from skmob import TrajDataFrame
-    >>> from skmob.measures.individual import radius_of_gyration
+    >>> from skmob.measures.individual import k_radius_of_gyration
     >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
     >>> k_radius_of_gyration(tdf).head()
        uid  k_radius_of_gyration
@@ -134,11 +147,13 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
     3    4              6.034151
     4    5             20.678760
 
-    .. seealso:: :func:`radius_of_gyration`
+    See Also
+    --------
+    radius_of_gyration
 
-    References:
-        .. [pappalardo2015returners] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. "Returners and Explorers dichotomy in human mobility.", Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).
-        .. [barbosa2016returners] Barbosa H.S., de Lima Neto F.B., Evsukoff A., Menezes R. "Returners and Explorers Dichotomy in Web Browsing Behavior - A Human Mobility Approach.". Complex Networks VII. Studies in Computational Intelligence, vol 644. (2016).
+    References
+    ----------
+    .. [pappalardo2015returners] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, doi: 10.1038/ncomms9166
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -153,13 +168,17 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
 
 def _random_entropy_individual(traj):
     """
-    Compute the random entropy of a single individual given their TrajDataFrame
-
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :return: the random entropy of the individual 
-    :rtype: float
+    Compute the random entropy of a single individual given their TrajDataFrame.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual
+    
+    Returns
+    -------
+    float
+        the random entropy of the individual 
     """
     n_distinct_locs = len(traj.groupby([constants.LATITUDE, constants.LONGITUDE]))
     entropy = np.log2(n_distinct_locs)
@@ -167,22 +186,26 @@ def _random_entropy_individual(traj):
 
 
 def random_entropy(traj, show_progress=True):
-    """
-    Compute the random entropy of a set of individuals 
-    The random entropy :math:`E_{rand}(u)` (in base 2) of an individual :math:`u` captures the degree of predictability of :math:`u`'s whereabouts if each location is visited with equal probability.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Random entropy.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the random entropy of a set of individuals in a TrajDataFrame.
+    The random entropy of an individual :math:`u` is defined as: :math:`E_{rand}(u) = log_2(N_u)`, where :math:`N_u` is the number of distinct locations visited by :math:`u`, capturing the degree of predictability of the user’s whereabouts if each location is visited with equal probability. 
+
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
     
-    :return: the random entropies of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the random entropy of each individual in a TrajDataFrame
-
+    show_progress : boolean
+        if True show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the random entropies of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import random_entropy
     >>> from skmob import TrajDataFrame
@@ -195,11 +218,14 @@ def random_entropy(traj, show_progress=True):
     3    4        6.228819
     4    5        6.727920
 
-    .. seealso:: :func:`uncorrelated_entropy`, :func:`real_entropy`
+    See Also
+    --------
+    uncorrelated_entropy, real_entropy
 
-    References:
-        .. [eagle2009eigenbehaviors] Eagle, Nathan and Pentland, Alex Sandy. "Eigenbehaviors: identifying structure in routine." Behavioral Ecology and Sociobiology 63 , no. 7 (2009): 1057--1066.
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
+    References
+    ----------
+    .. [eagle2009eigenbehaviors] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066.
+    .. [song2010limits] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021.
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -214,15 +240,20 @@ def random_entropy(traj, show_progress=True):
 
 def _uncorrelated_entropy_individual(traj, normalize=False):
     """
-    Compute the uncorrelated entropy of a single individual given their TrajDataFrame
+    Compute the uncorrelated entropy of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    normalize : boolean
+        if True, normalize the entropy in the range :math:`[0, 1]` by dividing by :math:`log_2(N_u)`, where :math:`N` is the number of distinct locations visited by individual :math:`u`. The default is False.
 
-    :param normalize: if True normalize the entropies in the range [0, 1]
-
-    :return: the temporal-uncorrelated entropy of the individual
-    :rtype: float
+    Returns
+    -------
+    float
+        the temporal-uncorrelated entropy of the individual
     """
     n = len(traj)
     probs = [1.0 * len(group) / n for group in traj.groupby(by=[constants.LATITUDE, constants.LONGITUDE]).groups.values()]
@@ -237,23 +268,28 @@ def _uncorrelated_entropy_individual(traj, normalize=False):
 
 
 def uncorrelated_entropy(traj, normalize=False, show_progress=True):
-    """
-    Compute the temporal-uncorrelated entropy of a set of individuals given a TrajDataFrame. The temporal-uncorrelated entropy :math:`E_{unc}(u)` (in base 2) of an individual :math:`u` is the historical probability that a location :math:`j` was visited by :math:`u` and characterizes the heterogeneity of :math:`u`'s visitation patterns.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param boolean normalize: if True normalize the entropy in the range [0, 1] by dividing by log2(N), where N is the number of distinct locations visited by the individual
-
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
-
-    :return: the temporal-uncorrelated entropies of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the temporal uncorrelated entropy of each individual in a TrajDataFrame
-        
+    """Uncorrelated entropy.
+    
+    Compute the temporal-uncorrelated entropy of a set of individuals given a TrajDataFrame. The temporal-uncorrelated entropy of an individual :math:`u` is defined as :math:`E_{unc}(u) = - \sum_{j=1}^{N_u} p_u(j) log_2 p_u(j)`, where :math:`N_u` is the number of distinct locations visited by :math:`u` and :math:`p_u(j)` is the historical probability that a location :math:`j` was visited by :math:`u`. The temporal-uncorralted entropy characterizes the heterogeneity of :math:`u`'s visitation patterns.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    normalize : boolean
+        if True, normalize the entropy in the range :math:`[0, 1]` by dividing by :math:`log_2(N_u)`, where :math:`N` is the number of distinct locations visited by individual :math:`u`. The default is False.
+    
+    show_progress : boolean
+        if True show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the temporal-uncorrelated entropies of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import uncorrelated_entropy
     >>> from skmob import TrajDataFrame
@@ -266,12 +302,15 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     3    4              5.112809
     4    5              5.696118
 
-    .. seealso:: :func:`random_entropy`, :func:`real_entropy`
+    See Also
+    --------
+    random_entropy, real_entropy
 
-    References:
-        .. [eagle2009eigenbehaviors] Eagle, Nathan and Pentland, Alex Sandy. "Eigenbehaviors: identifying structure in routine." Behavioral Ecology and Sociobiology 63 , no. 7 (2009): 1057--1066.
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
-        .. [pappalardo2016analytical] Pappalardo, Luca, et al. "An analytical framework to nowcast well-being using mobile phone data." International Journal of Data Science and Analytics 2, no. 75 (2016)
+    References
+    ----------
+    .. [eagle2009eigenbehaviors] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066.
+    .. [song2010limits] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021.
+    .. [pappalardo2016analytical] Pappalardo, L., Vanhoof, M., Gabrielli, L., Smoreda, Z., Pedreschi, D. & Giannotti, F. (2016) An analytical framework to nowcast well-being using mobile phone data. International Journal of Data Science and Analytics 2(75), 75-92.
     """
     column_name = sys._getframe().f_code.co_name
     if normalize:
