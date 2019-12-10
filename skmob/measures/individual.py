@@ -26,22 +26,25 @@ def _radius_of_gyration_individual(traj):
 
 
 def radius_of_gyration(traj, show_progress=True):
-    """
-    Compute the radii of gyration (in km) of a set of individuals in a TrajDataFrame.
-    The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by
-    :math:`u`.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Radius of gyration.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
+    The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by :math:`u`.
 
-    :return: the radius of gyration of each individual
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the radius of gyration of each individual from a DataFrame of trajectories
+    Parameters
+    ----------
+    traj: TrajDataFrame
+        the trajectories of the individuals
+    
+    show_progress: boolean
+        if True show a progress bar
+    
+    Returns
+    -------
+    pandas DataFrame: the radius of gyration of each individual
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import radius_of_gyration
@@ -54,13 +57,14 @@ def radius_of_gyration(traj, show_progress=True):
     3    4           14.706123
     4    5           23.990570
 
-    References:
-        .. [gonzalez2008understanding] Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. "Understanding individual human mobility patterns." Nature 453, no. 7196 (2008): 779--782.
-        .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D., Giannotti, F. "Understanding the patterns of car travel." European Physics Journal Special Topics 215, no. 61 (2013).
-        .. [zhao2008empirical] M. Zhao, L. Mason, W. Wang, "Empirical study on human mobility for mobile wireless networks", in:  Military Communications Conference, 2008. MILCOM 2008. IEEE, IEEE, 2008, pp. 1–7.
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
+    References
+    ----------
+    .. [gonzalez2008understanding] González, M. C., Hidalgo, C. A. & Barabási, A. L. (2008) Understanding individual human mobility patterns. Nature, 453, 779–782.
+    .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D. & Giannotti, F. (2013) Understanding the patterns of car travel. European Physics Journal Special Topics 215(1), 61-73.
 
-    .. seealso:: :func:`k_radius_of_gyration`
+    See Also
+    --------
+    k_radius_of_gyration
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
