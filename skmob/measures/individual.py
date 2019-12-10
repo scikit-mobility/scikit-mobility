@@ -36,7 +36,7 @@ def radius_of_gyration(traj, show_progress=True):
     The radius of gyration of an individual :math:`u` is defined as [GHB2008]_ [PRQPG2013]_: 
     
     .. math:: 
-        r_g(u) = \sqrt{ \\frac{1}{n_u} \sum_{i=1}^{n_u} (r_i(u) - r_{cm}(u))^2}
+        r_g(u) = \sqrt{ \\frac{1}{n_u} \sum_{i=1}^{n_u} dist(r_i(u) - r_{cm}(u))^2}
     
     where :math:`r_i(u)` represents the :math:`n_u` positions recorded for :math:`u`, and :math:`r_{cm}(u)` is the center of mass of :math:`u`'s trajectory. In mobility analysis, the radius of gyration indicates the characteristic distance travelled by :math:`u`.
 
@@ -69,8 +69,8 @@ def radius_of_gyration(traj, show_progress=True):
 
     References
     ----------
-    .. [GHB2008] González, M. C., Hidalgo, C. A. & Barabási, A. L. (2008) Understanding individual human mobility patterns. Nature, 453, 779–782.
-    .. [PRQPG2013] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D. & Giannotti, F. (2013) Understanding the patterns of car travel. European Physics Journal Special Topics 215(1), 61-73.
+    .. [GHB2008] González, M. C., Hidalgo, C. A. & Barabási, A. L. (2008) Understanding individual human mobility patterns. Nature, 453, 779–782, https://www.nature.com/articles/nature06958.
+    .. [PRQPG2013] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D. & Giannotti, F. (2013) Understanding the patterns of car travel. European Physics Journal Special Topics 215(1), 61-73, https://link.springer.com/article/10.1140%2Fepjst%2Fe2013-01715-5
 
     See Also
     --------
@@ -163,7 +163,7 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
 
     References
     ----------
-    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, doi: 10.1038/ncomms9166
+    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -239,8 +239,8 @@ def random_entropy(traj, show_progress=True):
 
     References
     ----------
-    .. [EP2009] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066.
-    .. [SQBB2010] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021.
+    .. [EP2009] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066, https://link.springer.com/article/10.1007/s00265-009-0830-6
+    .. [SQBB2010] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021, https://science.sciencemag.org/content/327/5968/1018
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -328,7 +328,7 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
 
     References
     ----------
-    .. [PVGSPG2016] Pappalardo, L., Vanhoof, M., Gabrielli, L., Smoreda, Z., Pedreschi, D. & Giannotti, F. (2016) An analytical framework to nowcast well-being using mobile phone data. International Journal of Data Science and Analytics 2(75), 75-92.
+    .. [PVGSPG2016] Pappalardo, L., Vanhoof, M., Gabrielli, L., Smoreda, Z., Pedreschi, D. & Giannotti, F. (2016) An analytical framework to nowcast well-being using mobile phone data. International Journal of Data Science and Analytics 2(75), 75-92, https://link.springer.com/article/10.1007/s41060-016-0013-2
     """
     column_name = sys._getframe().f_code.co_name
     if normalize:
@@ -468,7 +468,11 @@ def jump_lengths(traj, show_progress=True, merge=False):
     """Jump lengths.
     
     Compute the jump lengths (in kilometers) of a set of individuals in a TrajDataFrame.
-    A jump length (or trip distance) is defined as the geographic distance between two consecutive points visited by an individual [BHG2006]_ [GHB2008]_ [PRQPG2013]_.
+    A jump length (or trip distance) :math:`\Delta r`made by an individual :math:`u` is defined as the geographic distance between two consecutive points visited by :math:`u`: 
+    
+    .. math:: \Delta r = dist(r_i, r_{i + 1})
+    
+    where :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a latitude, longitude pair, in the time-ordered trajectory of an individual, and :math:`dist` is the geographic distance between the two points [BHG2006]_ [GHB2008]_ [PRQPG2013]_.
 
     Parameters
     ----------
@@ -483,8 +487,8 @@ def jump_lengths(traj, show_progress=True, merge=False):
     
     Returns
     -------
-    pandas DataFrame
-        the jump lengths for each individual (a NaN indicate that an individual visited just one location); or a list with all jumps together if `merge` is True.
+    pandas DataFrame or list
+        the jump lengths for each individual, where :math:`NaN` indicates that an individual visited just one location and hence distance is not defined; or a list with all jumps together if `merge` is True.
 
     Examples
     --------
@@ -509,7 +513,7 @@ def jump_lengths(traj, show_progress=True, merge=False):
 
     References
     ----------
-    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465.    
+    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465, https://www.nature.com/articles/nature04292    
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -543,7 +547,7 @@ def _maximum_distance_individual(traj):
     Returns
     -------
     float
-        the maximum traveled distance for the individual (a NaN indicate that an individual visited just one location)
+        the maximum traveled distance for the individual. Note that :math:`NaN` indicates that an individual visited just one location and hence distance is not defined.
     """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
@@ -553,12 +557,16 @@ def _maximum_distance_individual(traj):
 def maximum_distance(traj, show_progress=True):
     """Maximum distance.
     
-    Compute the maximum distance (in kilometers) traveled by a set of individuals in a TrajDataFrame [WTDED2015]_ [LBH2012]_.
+    Compute the maximum distance (in kilometers) traveled by a set of individuals in a TrajDataFrame. The maximum distance :math:`d_{max}` travelled by an individual :math:`u` is defined as: 
+    
+    .. math:: d_{max} = \max\limits_{1 \leq i \lt j \lt n_u} dist(r_i, r_j)
+    
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in :math:`u`'s time-ordered trajectory, and :math:`dist` is the geographic distance between the two points [WTDED2015]_ [LBH2012]_.
 
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals
+        the trajectories of the individuals.
     
     show_progress : boolean, optional
         if True, show a progress bar. The default is True.
@@ -566,7 +574,7 @@ def maximum_distance(traj, show_progress=True):
     Returns
     -------
     pandas DataFrame
-        the maximum traveled distance for each individual (a NaN indicate that an individual visited just one location).
+        the maximum traveled distance for each individual. Note that :math:`NaN` indicates that an individual visited just one location and so the maximum distance is not defined.
 
     Examples
     --------
@@ -603,13 +611,17 @@ def maximum_distance(traj, show_progress=True):
 
 def _distance_straight_line_individual(traj):
     """
-    Compute the distance straight line traveled by the individual given their TrajDataFrame
+    Compute the distance straight line travelled by the individual given their TrajDataFrame.
     
-    param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual
     
-    :return: the straight line distance traveled by the individual (a NaN indicate that the individual visited just one location)
-    :rtype: float
+    Returns
+    -------
+    float
+        the straight line distance traveled by the individual. Note the :math:`NaN` indicates that the individual visited just one location and hence distance is not defined.
     """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
@@ -619,12 +631,16 @@ def _distance_straight_line_individual(traj):
 def distance_straight_line(traj, show_progress=True):
     """Distance straight line.
     
-    Compute the distance (in kilometers) traveled straight line by a set of individuals in a TrajDataFrame. The distance straight line is computed as the sum of the distances traveled by an individual [WTDED2015]_.
+    Compute the distance (in kilometers) travelled straight line by a set of individuals in a TrajDataFrame. The distance straight line :math:`d_{SL}` travelled by an individual :math:`u` is computed as the sum of the distances travelled :math:`u`: 
+    
+    .. math:: d_{SL} = \sum_{j=2}^{n_u} dist(r_{j-1}, r_j)
+    
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_{j-1}` and :math:`r_j` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in :math:`u`'s time-ordered trajectory, and :math:`dist` is the geographic distance between the two points [WTDED2015]_.
     
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals
+        the trajectories of the individuals.
     
     show_progress : boolean, optional 
         if True, show a progress bar. The default is True.
@@ -632,7 +648,7 @@ def distance_straight_line(traj, show_progress=True):
     Returns
     -------
     pandas DataFrame
-        the straight line distance traveled by the individuals (a NaN indicate that an individual visited just one location).
+        the straight line distance traveled by the individuals. Note that :math:`NaN` indicates that an individual visited just one location and hence distance is not defined.
 
     Examples
     --------
@@ -670,12 +686,12 @@ def _waiting_times_individual(traj):
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individual
+        the trajectories of the individual.
     
     Returns
     -------
     list
-        the waiting times of the individual
+        the waiting times of the individual.
     """
     if len(traj) == 1:
         return []
@@ -687,12 +703,16 @@ def _waiting_times_individual(traj):
 def waiting_times(traj, show_progress=True, merge=False):
     """Waiting times.
     
-    Compute the waiting times (in seconds) between the movements of each individual in a TrajDataFrame. A waiting time (or inter-time) is defined as the time between the visit of two consecutive points of an individual [SKWB2010]_ [PF2018]_.
+    Compute the waiting times (in seconds) between the movements of each individual in a TrajDataFrame. A waiting time (or inter-time) by an individual :math:`u` is defined as the time between two consecutive points in :math:`u`'s trajectory:
+    
+    .. math:: \Delta t = |t(r_i) - t(r_{i + 1})|
+    
+    where :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in the time-ordered trajectory of :math:`u`, and :math:`t(r)` indicates the time when :math:`u` visits point :math:`r` [SKWB2010]_ [PF2018]_.
     
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals
+        the trajectories of the individuals.
     
     show_progress : boolean, optional
         if True, show a progress bar. The default is True.
@@ -702,8 +722,8 @@ def waiting_times(traj, show_progress=True, merge=False):
     
     Returns
     -------
-    pandas DataFrame
-        the list of waiting times for each individual(a NaN indicate that an individual visited just one location); or a list with all waiting times together if `merge` is True.
+    pandas DataFrame or list
+        the list of waiting times for each individual, where :math:`NaN` indicates that an individual visited just one location and hence waiting time is not defined; or a list with all waiting times together if `merge` is True.
     
     Examples
     --------
@@ -724,8 +744,8 @@ def waiting_times(traj, show_progress=True, merge=False):
     
     References
     ----------
-    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823.
-    .. [PF2018] Pappalardo, L. & Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, doi:10.1007/s10618-017-0548-4
+    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
+    .. [PF2018] Pappalardo, L. & Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, https://link.springer.com/article/10.1007/s10618-017-0548-4
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
