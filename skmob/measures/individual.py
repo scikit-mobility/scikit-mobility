@@ -33,15 +33,15 @@ def radius_of_gyration(traj, show_progress=True):
 
     Parameters
     ----------
-    traj: TrajDataFrame
-        the trajectories of the individuals
+    traj : TrajDataFrame
+        the trajectories of the individuals.
     
-    show_progress: boolean
-        if True show a progress bar
+    show_progress : boolean
+        if True show a progress bar.
     
     Returns
     -------
-    pandas DataFrame: the radius of gyration of each individual
+    pandas DataFrame : the radius of gyration of each individual.
     
     Examples
     --------
