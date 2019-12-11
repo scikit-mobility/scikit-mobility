@@ -373,71 +373,72 @@ class EPR:
 
 
 class DensityEPR(EPR):
-    """
-    The dEPR model of individual human mobility
+    """Density-EPR model.
+    
+    The d-EPR model of individual human mobility consists of the following mechanisms [PSRPGB2015]_ [PSR2016]_: 
+    
+    **Waiting time choice**. The waiting time :math:`\Delta t` between two movements of the agent is chosen randomly from the distribution :math:`P(\Delta t) \sim \Delta t^{−1 −\\beta} \exp(−\Delta t/ \\tau)`. Parameters :math:`\\beta` and :math:`\\tau` correspond to arguments `beta` and `tau` of the constructor, respectively. 
+    
+    **Action selection**. With probability :math:`P_{new}=\\rho S^{-\\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the agent visits a new location (Exploration phase), otherwise it returns to a previously visited location (Return phase). Parameters :math:`\\rho` and :math:`\\gamma` correspond to arguments `rho` and `gamma` of the constructor, respectively.
+    
+    **Exploration phase**. If the agent that is currently in location :math:`i` explores a new location, then the new location :math:`j \\neq i` is selected according to the gravity model with probability :math:`p_{ij} = \\frac{1}{N} \\frac{n_i n_j}{r_{ij}^2}`, where :math:`n_{i (j)}` is the location's relevance, that is, the probability of a population to visit location :math:`i(j)`, :math:`r_{ij}` is the geographic distance between :math:`i` and :math:`j`, and :math:`N = \sum_{i, j \\neq i} p_{ij}` is a normalization constant. The number of distinct locations visited, :math:`S`, is increased by 1.
+    
+    **Return phase**. If the individual returns to a previously visited location, such a location :math:`i` is chosen with probability proportional to the number of time the agent visited :math:`i`, i.e., :math:`\Pi_i = f_i`, where :math:`f_i` is the visitation frequency of location :math:`i`.
+    
+    Parameters
+    ----------
+    name : str, optional
+        the name of the instantiation of the d-EPR model. The default value is "Density EPR model".
 
-    :param name: str
-        the name of the instantiation of the dEPR model (default: "Density EPR model")
+    rho : float, optional
+        in the formula :math:`\\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the parameter :math:`\\rho \in (0, 1]` controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\\rho = 0.6` [SKWB2010]_.
 
-    :param rho: float
-        in the formula :math:`\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\rho` (:math:`0 < \rho \leq 1`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: :math:`\rho = 0.6`, value estimated from empirical data)
+    gamma : float, optional
+        in the formula :math:`\\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the parameter :math:`\gamma` (:math:`\gamma \geq 0`) controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\gamma=0.21` [SKWB2010]_.
 
-    :param gamma: float
-        in the formula :math:`\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\gamma` (:math:`\gamma \geq 0`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: 0.21, value estimated from empirical data)
+    beta : float, optional
+        the parameter :math:`\beta` of the waiting time distribution. The default value is :math:`\beta=0.8` [SKWB2010]_.
 
-    :param beta: float
-        the parameter :math:`\beta` of the waiting time distribution (default: :math:`\beta = 0.8`, value estimated from empirical data)
+    tau : int, optional
+        the parameter :math:`\\tau` of the waiting time distribution. The default value is :math:`\\tau = 17`, expressed in hours [SKWB2010]_.
 
-    :param tau: int
-        the parameter :math:`\tau` of the waiting time distribution (default: :math:`\tau = 17`, expressed in hours, value estimated from empirical data)
+    min_wait_time_minutes : int
+        minimum waiting time in minutes.
+    
+    Attributes
+    ----------
+    name : str
+        the name of the instantiation of the model.
 
-    :param min_wait_time_minutes: int
-        minimum waiting time in minutes
+    rho : float
+        the input parameter :math:`\\rho`.
 
-    :ivar: name: str
-        the name of the instantiation of the model
+    gamma : float
+        the input parameters :math:`\gamma`.
+        
+    beta : float
+        the input parameter :math:`\beta` 
 
-    :ivar: trajectory_: pandas DataFrame
-        the trajectory generated by the model, describing the trajectory of the agents
+    tau : int
+        the input parameter :math:`\tau` 
 
-    :ivar: spatial_tessellation: dict
-        the spatial tessellation used during the simulation
+    min_wait_time_minutes : int
+        the input parameters `min_wait_time_minutes`
+    
+    Methods
+    -------
+    generate(start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1, starting_locations=None, od_matrix=None, relevance_column=constants.RELEVANCE, random_state=None, log_file=None, verbose=False)
+        start the generation of the synthetic trajectories.
 
-    :ivar rho: float
-        in the formula :math:`\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\rho` (:math:`0 < \rho \leq 1`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: :math:`\rho = 0.6`, value estimated from empirical data)
+    See Also
+    --------
+    EPR, SpatialEPR, Ditras
 
-    :ivar gamma: float
-        in the formula :math:`\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\gamma` (:math:`\gamma \geq 0`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: 0.21, value estimated from empirical data)
-
-    :ivar beta: float
-        the parameter :math:`\beta` of the waiting time distribution (default: :math:`\beta = 0.8`, value estimated from empirical data)
-
-    :ivar tau: int
-        the parameter :math:`\tau` of the waiting time distribution (default: :math:`\tau = 17`, expressed in hours, value estimated from empirical data)
-
-    :ivar min_wait_time_minutes: int
-        minimum waiting time in minutes
-
-
-
-    .. seealso:: :class:`EPR`
-
-    References:
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
-        .. [pappalardo2015returners] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. "Returners and Explorers dichotomy in human mobility.", Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).
-        .. [pappalardo2016modelling] Pappalardo, L., Simini, F. Rinzivillo, S., "Human Mobility Modelling: exploration and preferential return meet the gravity model", Procedia Computer Science 83, doi: 10.1016/j.procs.2016.04.188 (2016).
+    References
+    ----------
+    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
+    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
+    .. [PSR2016] Pappalardo, L., Simini, F. Rinzivillo, S. (2016) Human Mobility Modelling: exploration and preferential return meet the gravity model. Procedia Computer Science 83, https://www.sciencedirect.com/science/article/pii/S1877050916302216
     """
 
     def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
