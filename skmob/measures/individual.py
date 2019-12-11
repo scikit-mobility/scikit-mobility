@@ -56,16 +56,19 @@ def radius_of_gyration(traj, show_progress=True):
     Examples
     --------
     >>> import skmob
-    >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file('mydata.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> radius_of_gyration(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> rg_df = radius_of_gyration(tdf)
+    >>> print(rg_df.head())
        uid  radius_of_gyration
-    0    1           20.815129
-    1    2           15.689436
-    2    3           14.918760
-    3    4           14.706123
-    4    5           23.990570
+    0    0         1564.436792
+    1    1         2467.773523
+    2    2         1439.649774
+    3    3         1752.604191
+    4    4         5380.503250    
 
     References
     ----------
@@ -146,16 +149,19 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
     Examples
     --------
     >>> import skmob
-    >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import k_radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> k_radius_of_gyration(tdf).head()
-       uid  k_radius_of_gyration
-    0    1              1.798615
-    1    2              2.449305
-    2    3              1.223604
-    3    4              6.034151
-    4    5             20.678760
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> krg_df = k_radius_of_gyration(tdf)
+    >>> print(krg_df.head())
+       uid  3k_radius_of_gyration
+    0    0               7.730516
+    1    1               3.620671
+    2    2               6.366549
+    3    3              10.543072
+    4    4            3910.808802
 
     See Also
     --------
@@ -223,15 +229,18 @@ def random_entropy(traj, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import random_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> random_entropy(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> re_df = random_entropy(tdf)
+    >>> print(re_df.head())
        uid  random_entropy
-    0    1        6.658211
-    1    2        6.942515
-    2    3        6.491853
-    3    4        6.228819
-    4    5        6.727920
+    0    0        9.082149
+    1    1        6.599913
+    2    2        8.845490
+    3    3        9.262095
+    4    4        7.754888
 
     See Also
     --------
@@ -312,15 +321,18 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import uncorrelated_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> uncorrelated_entropy(tdf, normalize=False).head()
-       uid  uncorrelated_entropy
-    0    1              5.492801
-    1    2              5.764952
-    2    3              4.628958
-    3    4              5.112809
-    4    5              5.696118
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> ue_df = uncorrelated_entropy(tdf, normalize=True)
+    >>> print(ue_df.head())
+       uid  norm_uncorrelated_entropy
+    0    0                   0.819430
+    1    1                   0.552972
+    2    2                   0.764304
+    3    3                   0.794553
+    4    4                   0.756421
 
     See Also
     --------
@@ -414,19 +426,26 @@ def real_entropy(traj, show_progress=True):
     pandas DataFrame
         the real entropy of the individuals
     
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`. Note that the computation of this measure is, by construction, slow.
+    
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import real_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> real_entropy(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> re_df = real_entropy(tdf[tdf.uid < 50]) # computed on a subset of individuals
+    >>> print(re_df.head())
        uid  real_entropy
-    0    1      4.416683
-    1    2      4.643135
-    2    3      3.759747
-    3    4      4.255130
-    4    5      4.601280
+    0    0      4.906479
+    1    1      2.207224
+    2    2      4.467225
+    3    3      4.782442
+    4    4      3.585371
 
     See Also
     --------
@@ -490,21 +509,28 @@ def jump_lengths(traj, show_progress=True, merge=False):
     pandas DataFrame or list
         the jump lengths for each individual, where :math:`NaN` indicates that an individual visited just one location and hence distance is not defined; or a list with all jumps together if `merge` is True.
 
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`. 
+
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import jump_lengths
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> jump_lengths(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> jl_df = jump_lengths(tdf)
+    >>> print(jl_df.head())
        uid                                       jump_lengths
-    0    1  [0.0, 2.235208041718699, 0.996946934364258, 68...
-    1    2  [0.0, 0.0, 5.649741880693563, 1.41265548245858...
-    2    3  [2.2311820297176572, 2.824995904497732, 4.9916...
-    3    4  [48.52874706948018, 1.4124821185158252, 0.9972...
-    4    5  [0.0, 1.0004402836501967, 2.825374437917952, 1...
+    0    0  [19.640467328877936, 0.0, 0.0, 1.7434311010381...
+    1    1  [6.505330424378251, 46.75436600375988, 53.9284...
+    2    2  [0.0, 0.0, 0.0, 0.0, 3.6410097195943507, 0.0, ...
+    3    3  [3861.2706300798827, 4.061631313492122, 5.9163...
+    4    4  [15511.92758595804, 0.0, 15511.92758595804, 1....
     >>> jl_list = jump_lengths(tdf, merge=True)
-    >>> print(jl_list[:10])
+    >>> print(jl_list[:10]) # print the first ten elements in the list
     [19.640467328877936, 0.0, 0.0, 1.743431101038163, 1553.5011134765616, 0.0, 30.14517724008101, 0.0, 2.563647571198179, 1.9309489380903868]
     
     See Also
@@ -580,15 +606,18 @@ def maximum_distance(traj, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import maximum_distance
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> maximum_distance(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> md_df = maximum_distance(tdf)
+    >>> print(md_df.head())
        uid  maximum_distance
-    0    1         84.923674
-    1    2         73.190512
-    2    3         92.713548
-    3    4         79.425210
-    4    5         73.036719
+    0    0      11294.436420
+    1    1      12804.895064
+    2    2      11286.745660
+    3    3      12803.259219
+    4    4      15511.927586
 
     See Also
     --------
@@ -650,19 +679,26 @@ def distance_straight_line(traj, show_progress=True):
     pandas DataFrame
         the straight line distance traveled by the individuals. Note that :math:`NaN` indicates that an individual visited just one location and hence distance is not defined.
 
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
+
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import distance_straight_line
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> distance_straight_line(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> dsl_df = distance_straight_line(tdf)
+    >>> print(dsl_df.head())
        uid  distance_straight_line
-    0    1             7917.805713
-    1    2             5330.312205
-    2    3             6481.041936
-    3    4             3370.984587
-    4    5             7300.563980
+    0    0           374530.954882
+    1    1           774346.816009
+    2    2            88710.682464
+    3    3           470986.771764
+    4    4           214623.524252
 
     See Also
     --------
@@ -725,19 +761,26 @@ def waiting_times(traj, show_progress=True, merge=False):
     pandas DataFrame or list
         the list of waiting times for each individual, where :math:`NaN` indicates that an individual visited just one location and hence waiting time is not defined; or a list with all waiting times together if `merge` is True.
     
+    Warning
+    -------
+    The input TrajDataFrame must by sorted in ascending order by `datetime`.
+    
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import waiting_times
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> waiting_times(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> wt_df = waiting_times(tdf)
+    >>> print(wt_df.head())
        uid                                      waiting_times
-    0    1  [2005.0, 2203.0, 1293.0, 823.0, 2636.0, 893.0,...
-    1    2  [1421.0, 1948.0, 1508.0, 815.0, 8954.0, 1248.0...
-    2    3  [5014.0, 838.0, 1425.0, 1250.0, 993.0, 1596.0,...
-    3    4  [5623.0, 617.0, 721.0, 1954.0, 956.0, 1479.0, ...
-    4    5  [1461.0, 13354.0, 1258.0, 7966.0, 768.0, 615.0...sys._getframe().f_code.co_name
+    0    0  [2358.0, 136.0, 303.0, 1836.0, 14869.0, 517.0,...
+    1    1  [43460.0, 34353.0, 8347.0, 40694.0, 281.0, 16....
+    2    2  [293.0, 308.0, 228.0, 402.0, 16086.0, 665.0, 9...
+    3    3  [10200079.0, 30864.0, 54415.0, 2135.0, 63.0, 1...
+    4    4  [82845.0, 56.0, 415156.0, 1372.0, 23.0, 42679....
     >>> wl_list = waiting_times(tdf, merge=True)
     >>> print(wl_list[:10])
     [2358.0, 136.0, 303.0, 1836.0, 14869.0, 517.0, 8995.0, 41306.0, 949.0, 11782.0]
@@ -807,15 +850,18 @@ def number_of_locations(traj, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import number_of_locations
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file(datadata,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> number_of_locations(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> nl_df = number_of_locations(tdf)
+    >>> print(nl_df.head())
        uid  number_of_locations
-    0    1                  101
-    1    2                  123
-    2    3                   90
-    3    4                   75
-    4    5                  106
+    0    0                  542
+    1    1                   97
+    2    2                  460
+    3    3                  614
+    4    4                  216
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -890,14 +936,18 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     --------
     >>> import skmob
     >>> from skmob.measures.individual import home_location
-    >>> tdf = skmob.read_trajectories('data_test/gps_test_dataset.csvdata', user_id='user', longitude='lon')
-    >>> home_location(tdf).head()
-       uid        lat        lng
-    0    1  46.126505  11.867149
-    1    2  46.442010  10.998368
-    2    3  45.818599  11.130413
-    3    4  45.873280  11.093846
-    4    5  46.215770  11.067935
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> hl_df = home_location(tdf)
+    >>> print(hl_df.head())
+       uid        lat         lng
+    0    0  39.891077 -105.068532
+    1    1  37.630490 -122.411084
+    2    2  39.739154 -104.984703
+    3    3  37.748170 -122.459192
+    4    4  60.180171   24.949728
 
     See Also
     --------
@@ -926,7 +976,7 @@ def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals.
+        the trajectory of the individual.
     
     start_night : str, optional
         the starting time of the night (format HH:MM). The default is '22:00'.
@@ -979,15 +1029,18 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
     --------
     >>> import skmob
     >>> from skmob.measures.individual import max_distance_from_home
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> max_distance_from_home(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> dh_max = max_distance_from_home(tdf)
+    >>> print(df_max.head())
        uid  max_distance_from_home
-    0    1               46.409510
-    1    2               68.499333
-    2    3               56.806038
-    3    4               78.949592
-    4    5               69.393777
+    0    0            11286.942949
+    1    1            12800.547682
+    2    2            11282.748348
+    3    3            12799.754644
+    4    4            15512.788707
 
     See Also
     --------
@@ -1032,15 +1085,18 @@ def number_of_visits(traj, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import number_of_visits
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> number_of_visits(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> num_v_df = number_of_visits(tdf)
+    >>> print(num_v_df.head())
        uid  number_of_visits
-    0    1               340
-    1    2               316
-    2    3               355
-    3    4               375
-    4    5               245
+    0    0              2099
+    1    1              1210
+    2    2              2100
+    3    3              1807
+    4    4               779
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1061,7 +1117,7 @@ def _location_frequency_individual(traj, normalize=True,
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individual.
+        the trajectory of the individual.
     
     normalize : boolean, optional
         if True, compute the ratio of visits, otherwise the row count of visits to each location. The default is True.
@@ -1117,16 +1173,29 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
     --------
     >>> import skmob
     >>> from skmob.measures.individual import location_frequency
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv', user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> location_frequency(tdf).head()
-       uid        lat        lng  datetime
-    0    1  46.180259  11.040689  0.255882
-    1    1  46.180027  11.053637  0.055882
-    2    1  46.337311  10.799639  0.044118
-    3    1  46.307321  10.980472  0.032353
-    4    1  46.144740  11.013478  0.026471
-
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> lf_df = location_frequency(tdf, normalize=False).reset_index()
+    >>> print(lf_df.head())
+       uid        lat         lng  location_frequency
+    0    0  39.762146 -104.982480                 214
+    1    0  39.891077 -105.068532                 137
+    2    0  39.739154 -104.984703                 126
+    3    0  39.891586 -105.068463                  72
+    4    0  39.827022 -105.143191                  53
+    >>> lf_df = location_frequency(tdf, normalize=True).reset_index() # frequencies ad probabilities
+    >>> print(lf_df.head())
+           uid        lat         lng  location_frequency
+    0    0  39.762146 -104.982480            0.101953
+    1    0  39.891077 -105.068532            0.065269
+    2    0  39.739154 -104.984703            0.060029
+    3    0  39.891586 -105.068463            0.034302
+    4    0  39.827022 -105.143191            0.025250
+    >>> ranks = location_frequency(tdf, as_ranks=True) # as rank list
+    >>> print(ranks[:10])
+    [0.26774954912290716, 0.12699129836809203, 0.07090642778490935, 0.04627646190564675, 0.03657120208870922, 0.029353331229094993, 0.025050267239164755, 0.020284764933447663, 0.018437443393907686, 0.01656729815097415]
     See Also
     --------
     visits_per_location
@@ -1170,7 +1239,7 @@ def _individual_mobility_network_individual(traj, self_loops=False):
     Parameters
     -----------
     traj : TrajDataFrame
-        the trajectories of the individuals.
+        the trajectory of the individual.
     
     self_loops : boolean, optional
         if True adds self loops also. The default is False.
@@ -1230,13 +1299,20 @@ def individual_mobility_network(traj, self_loops=False, show_progress=True):
     pandas DataFrame
         the individual mobility network of each individual.
 
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
+
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import individual_mobility_network
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> individual_mobility_network(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> imn_df = individual_mobility_network(tdf)
+    >>> print(imn_df.head())
        uid  lat_origin  lng_origin   lat_dest    lng_dest n_trips
     0    0   37.774929 -122.419415  37.600747 -122.382376       1
     1    0   37.600747 -122.382376  37.615223 -122.389979       1
@@ -1268,7 +1344,7 @@ def _recency_rank_individual(traj):
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individual.
+        the trajectory of the individual.
     
     Returns
     -------
@@ -1300,20 +1376,27 @@ def recency_rank(traj, show_progress=True):
     pandas DataFrame
         the recency rank for each location of the individuals.
     
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
+    
     Examples
     --------
     >>> import skmob
     >>> from skmob.measures.individual import recency_rank
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> recency_rank(tdf).head()
-                  lat        lng  recency_rank
-    uid
-    324 18  43.776687  11.235343             1
-        17  43.792211  11.245647             2
-        16  43.824934  11.282771             3
-        15  43.797951  11.240277             4
-        14  43.530801  10.319265             5
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> rr_df = recency_rank(tdf)
+    >>> print(rr_df.head())
+                 lat         lng  recency_rank
+    uid                                       
+    0   0  39.891383 -105.070814             1
+        1  39.891077 -105.068532             2
+        2  39.750469 -104.999073             3
+        3  39.752713 -104.996337             4
+        4  39.752508 -104.996637             5
 
     See Also
     --------
@@ -1341,7 +1424,7 @@ def _frequency_rank_individual(traj):
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individual.
+        the trajectory of the individual.
     
     Returns
     -------
@@ -1375,16 +1458,19 @@ def frequency_rank(traj, show_progress=True):
     --------
     >>> import skmob
     >>> from skmob.measures.individual import frequency_rank
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file(data, user_id='user', dadataheck-in time', latitude='latitude', longitude='longitude')
-    >>> frequency_rank(tdf).head()
-                lat        lng  frequency_rank
-    uid
-    324 0  42.970399  10.695334               1
-        1  43.404161  10.873485               2
-        2  43.530801  10.319265               3
-        3  43.776687  11.235343               4
-        4  43.797951  11.240277               5
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> fr_df = frequency_rank(tdf)
+    >>> print(fr_df.head())
+                 lat         lng  frequency_rank
+    uid                                         
+    0   0  39.762146 -104.982480               1
+        1  39.891077 -105.068532               2
+        2  39.739154 -104.984703               3
+        3  39.891586 -105.068463               4
+        4  39.827022 -105.143191               5
 
     See Also
     --------
