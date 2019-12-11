@@ -835,7 +835,7 @@ def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals.
+        the trajectory of the individual.
     
     start_night : str, optional
         the starting time of the night (format HH:MM). The default is '22:00'.
@@ -860,7 +860,12 @@ def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
 def home_location(traj, start_night='22:00', end_night='07:00', show_progress=True):
     """Home location.
     
-    Compute the home location of a set of individuals in a TrajDataFrame. The home location is defined as the location an individual visits the most during nighttime [CBTDHVSB2012]_ [PSO2012]_.
+    Compute the home location of a set of individuals in a TrajDataFrame. The home location :math:`h(u)` of an individual :math:`u` is defined as the location :math:`u` visits the most during nighttime [CBTDHVSB2012]_ [PSO2012]_: 
+    
+    .. math:: 
+        h(u) = \\arg\max_{i} |\{r_i | t(r_i) \in [t_{startnight}, t_{endnight}] \}|
+    
+    where :math:`r_i` is a location visited by :math:`u`, :math:`t(r_i)` is the time when :math:`u` visited :math:`r_i`, and :math:`t_{startnight}` and :math:`t_{endnight}` indicates the times when nighttime starts and ends, respectively.
 
     Parameters
     ----------
@@ -879,7 +884,7 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     Returns
     -------
     pandas DataFrame
-        the home location (in terms of latitude and longitude coordinates) of the individuals.
+        the home location, as a :math:`(latitude, longitude)` pair, of the individuals.
     
     Examples
     --------
@@ -900,7 +905,7 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     
     References
     ----------
-    .. [CBTDHVSB2012] Csáji, B. C., Browet, A., Traag, V. A., Delvenne, J.-C., Huens, E., Van Dooren, P., Smoreda, Z. & Blondel, V. D. (2012) Exploring the Mobility of Mobile Phone Users. Physica A: Statistical Mechanics and its Applications 392(6), 1459-1473.
+    .. [CBTDHVSB2012] Csáji, B. C., Browet, A., Traag, V. A., Delvenne, J.-C., Huens, E., Van Dooren, P., Smoreda, Z. & Blondel, V. D. (2012) Exploring the Mobility of Mobile Phone Users. Physica A: Statistical Mechanics and its Applications 392(6), 1459-1473, https://www.sciencedirect.com/science/article/pii/S0378437112010059
     .. [PSO2012] Phithakkitnukoon, S., Smoreda, Z. & Olivier, P. (2012) Socio-geography of human mobility: A study using longitudinal mobile phone data. PLOS ONE 7(6): e39253. https://doi.org/10.1371/journal.pone.0039253
     """
     # if 'uid' column in not present in the TrajDataFrame
@@ -944,7 +949,12 @@ def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:
 def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_progress=True):
     """Maximum distance from home.
     
-    Compute the maximum distance (in kilometers) traveled from their home location by a set of individuals in a TrajDataFrame [CM2015]_.
+    Compute the maximum distance (in kilometers) traveled from their home location by a set of individuals in a TrajDataFrame. The maximum distance from home :math:`dh_{max}(u)` of an individual :math:`u` is defined as [CM2015]_:
+    
+    .. math:: 
+        dh_{max}(u) = \max\limits_{1 \leq i \lt j \lt n_u} dist(r_i, h(u))
+    
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_i` is a location visited by :math:`u` described as a :math:`(latitude, longitude)` pair, :math:`h(u)` is the home location of :math:`u`, and :math:`dist` is the geographic distance between two points.
     
     Parameters
     ----------
@@ -985,7 +995,7 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
 
     References
     ----------
-    .. [CM2015] Canzian, L. & Musolesi, M. (2015) Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis. Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 1293--1304.
+    .. [CM2015] Canzian, L. & Musolesi, M. (2015) Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis. Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 1293-1304, https://dl.acm.org/citation.cfm?id=2805845
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1003,12 +1013,12 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
 def number_of_visits(traj, show_progress=True):
     """Number of visits.
     
-    Compute the number of visits of a set a individuals in a TrajDataFrame.
+    Compute the number of visits (i.e., data points) for each individual in a TrajDataFrame.
 
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectories of the individuals
+        the trajectories of the individuals.
     
     show_progress : boolean, optional
         if True, show a progress bar. The default is True.
@@ -1054,7 +1064,7 @@ def _location_frequency_individual(traj, normalize=True,
         the trajectories of the individual.
     
     normalize : boolean, optional
-        if True compute the ratio of visits, otherwise the row count of visits to each location. The default is True.
+        if True, compute the ratio of visits, otherwise the row count of visits to each location. The default is True.
     
     location_columns : list, optional
         the name of the column(s) indicating the location. The default is [constants.LATITUDE, constants.LONGITUDE].
@@ -1062,7 +1072,7 @@ def _location_frequency_individual(traj, normalize=True,
     Returns
     -------
     pandas DataFrame
-        the location frequency of each location of the individual 
+        the location frequency of each location of the individual. 
     """
     freqs = traj.groupby(location_columns).count()[constants.DATETIME].sort_values(ascending=False)
     if normalize:
@@ -1074,7 +1084,12 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
                        location_columns=[constants.LATITUDE, constants.LONGITUDE]):
     """Location frequency.
     
-    Compute the visitation frequency of each location, for a set of individuals in a TrajDataFrame [SKWB2010]_ [PF2018]_.
+    Compute the visitation frequency of each location, for a set of individuals in a TrajDataFrame. Given an individual :math:`u`, the visitation frequency of a location :math:`r_i` is the number of visits to that location by :math:`u`. The visitation frequency :math:`f(r_i)` of location :math:`r_i` is also defined in the literaure as the probability of visiting location :math:`r_i` by :math:`u` [SKWB2010]_ [PF2018]_:
+    
+    .. math::
+        f(r_i) = \\frac{n(r_i)}{n_u}
+        
+    where :math:`n(r_i)` is the number of visits to location :math:`r_i` by :math:`u`, and :math:`n_u` is the total number of data points in :math:`u`'s trajectory.
 
     Parameters
     ----------
@@ -1082,7 +1097,7 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
         the trajectories of the individuals.
     
     normalize : boolean, optional
-        if True, the frequencies are normalized (i.e., divided by the individual's total number of visits). The default is True.
+        if True, the number of visits to a location by an individual is computed as probability, i.e., divided by the individual's total number of visits. The default is True.
     
     as_ranks : boolean, optional
         if True, return a list where element :math:`i` indicates the average visitation frequency of the :math:`i`-th most frequent location. The default is False.
@@ -1192,7 +1207,12 @@ def _individual_mobility_network_individual(traj, self_loops=False):
 def individual_mobility_network(traj, self_loops=False, show_progress=True):
     """Individual Mobility Network.
     
-    Compute the individual mobility network of a set of individuals in a TrajDataFrame [RGNPPG2014]_ [BL2012]_ [SQBB2010]_.
+    Compute the individual mobility network of a set of individuals in a TrajDataFrame. An Individual Mobility Network (aka IMN) of an individual :math:`u` is a directed graph :math:`G_u=(V,E)`, where :math:`V` is the set of nodes and :math:`E` is the set of edges. Nodes indicate locations visisted by :math:`u`, and edges indicate trips between two locations by :math:`u`. On the edges the following function is defined:
+    
+    .. math::
+        \omega: E \\rightarrow \mathbb{N} 
+        
+    which returns the weight of an edge, i.e., the number of travels performed by :math:`u` on that edge [RGNPPG2014]_ [BL2012]_ [SQBB2010]_.
     
     Parameters
     ----------
@@ -1226,7 +1246,7 @@ def individual_mobility_network(traj, self_loops=False, show_progress=True):
 
     References
     ----------
-    .. [RGNPPG2014] Rinzivillo, S., Gabrielli, L., Nanni, M., Pappalardo, L., Pedreschi, D. & Giannotti, F. (2012) The purpose of motion: Learning activities from Individual Mobility Networks. Proceedings of the 2014 IEEE International Conference on Data Science and Advanced Analytics, 312-318.
+    .. [RGNPPG2014] Rinzivillo, S., Gabrielli, L., Nanni, M., Pappalardo, L., Pedreschi, D. & Giannotti, F. (2012) The purpose of motion: Learning activities from Individual Mobility Networks. Proceedings of the 2014 IEEE International Conference on Data Science and Advanced Analytics, 312-318, https://ieeexplore.ieee.org/document/7058090
     .. [BL2012] Bagrow, J. P. & Lin, Y.-R. (2012) Mesoscopic Structure and Social Aspects of Human Mobility. PLOS ONE 7(5): e37676. https://doi.org/10.1371/journal.pone.0037676
     """
     # if 'uid' column in not present in the TrajDataFrame
@@ -1253,7 +1273,7 @@ def _recency_rank_individual(traj):
     Returns
     -------
     pandas DataFrame
-        the recency rank for each location of the individuals.
+        the recency rank for each location of the individual.
     """
     traj = traj.sort_values(constants.DATETIME, ascending=False).drop_duplicates(subset=[constants.LATITUDE,
                                                                                          constants.LONGITUDE],
@@ -1265,8 +1285,8 @@ def _recency_rank_individual(traj):
 def recency_rank(traj, show_progress=True):
     """Recency rank.
     
-    Compute the recency rank of the locations of a set of individuals in a TrajDataFrame [BDEM2015]_.
-
+    Compute the recency rank of the locations of a set of individuals in a TrajDataFrame. The recency rank :math:`K_s(r_i)` of a location :math:`r_i` of an individual :math:`u` is :math:`K_s(r_i) = 1` if location :math:`r_i` is the last visited location, it is :math:`K_s(r_i) = 2` if :math:`r_i` is the second-last visited location, and so on [BDEM2015]_. 
+    
     Parameters
     ----------
     traj : TrajDataFrame
@@ -1278,7 +1298,7 @@ def recency_rank(traj, show_progress=True):
     Returns
     -------
     pandas DataFrame
-        the recency rank for each location of the individual.
+        the recency rank for each location of the individuals.
     
     Examples
     --------
@@ -1301,7 +1321,7 @@ def recency_rank(traj, show_progress=True):
 
     References
     ----------
-    .. [BDEM2015] Barbosa, H., de Lima-Neto, F. B., Evsukoff, A., Menezes, R. (2015) The effect of recency to human mobility, EPJ Data Science 4(21), doi:10.1140/epjds/s13688-015-0059-8
+    .. [BDEM2015] Barbosa, H., de Lima-Neto, F. B., Evsukoff, A., Menezes, R. (2015) The effect of recency to human mobility, EPJ Data Science 4(21), https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-015-0059-8
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1336,7 +1356,7 @@ def _frequency_rank_individual(traj):
 def frequency_rank(traj, show_progress=True):
     """Frequency rank.
     
-    Compute the frequency rank of the locations of a set of individuals in a TrajDataFrame [BDEM2015]_.
+    Compute the frequency rank of the locations of a set of individuals in a TrajDataFrame. The frequency rank :math:`K_f(r_i)` of a location :math:`r_i` of an individual :math:`u` is :math:`K_f(r_i) = 1` if location :math:`r_i` is the most visited location, it is :math:`K_f(r_i) = 2` if :math:`r_i` is the second-most visited location, and so on [BDEM2015]_.
 
     Parameters
     ----------
