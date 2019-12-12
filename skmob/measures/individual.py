@@ -163,13 +163,13 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
     3    3              10.543072
     4    4            3910.808802
 
-    See Also
-    --------
-    radius_of_gyration
-
     References
     ----------
     .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
+    
+    See Also
+    --------
+    radius_of_gyration
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -242,14 +242,14 @@ def random_entropy(traj, show_progress=True):
     3    3        9.262095
     4    4        7.754888
 
-    See Also
-    --------
-    uncorrelated_entropy, real_entropy
-
     References
     ----------
     .. [EP2009] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066, https://link.springer.com/article/10.1007/s00265-009-0830-6
     .. [SQBB2010] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021, https://science.sciencemag.org/content/327/5968/1018
+    
+    See Also
+    --------
+    uncorrelated_entropy, real_entropy
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -334,13 +334,13 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     3    3                   0.794553
     4    4                   0.756421
 
-    See Also
-    --------
-    random_entropy, real_entropy
-
     References
     ----------
     .. [PVGSPG2016] Pappalardo, L., Vanhoof, M., Gabrielli, L., Smoreda, Z., Pedreschi, D. & Giannotti, F. (2016) An analytical framework to nowcast well-being using mobile phone data. International Journal of Data Science and Analytics 2(75), 75-92, https://link.springer.com/article/10.1007/s41060-016-0013-2
+    
+    See Also
+    --------
+    random_entropy, real_entropy
     """
     column_name = sys._getframe().f_code.co_name
     if normalize:
@@ -533,13 +533,13 @@ def jump_lengths(traj, show_progress=True, merge=False):
     >>> print(jl_list[:10]) # print the first ten elements in the list
     [19.640467328877936, 0.0, 0.0, 1.743431101038163, 1553.5011134765616, 0.0, 30.14517724008101, 0.0, 2.563647571198179, 1.9309489380903868]
     
+    References
+    ----------
+    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465, https://www.nature.com/articles/nature04292
+    
     See Also
     --------
     maximum_distance, distance_straight_line
-
-    References
-    ----------
-    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465, https://www.nature.com/articles/nature04292    
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -619,14 +619,14 @@ def maximum_distance(traj, show_progress=True):
     3    3      12803.259219
     4    4      15511.927586
 
-    See Also
-    --------
-    jump_lengths, distance_straight_line
-
     References
     ----------
     .. [WTDED2015] Williams, N. E., Thomas, T. A., Dunbar, M., Eagle, N. & Dobra, A. (2015) Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data. PLOS ONE 10(7): e0133630. https://doi.org/10.1371/journal.pone.0133630
     .. [LBH2012] Lu, X., Bengtsson, L. & Holme, P. (2012) Predictability of population displacement after the 2010 haiti earthquake. Proceedings of the National Academy of Sciences 109 (29) 11576-11581; https://doi.org/10.1073/pnas.1203882109
+    
+    See Also
+    --------
+    jump_lengths, distance_straight_line
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -948,15 +948,15 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
     2    2  39.739154 -104.984703
     3    3  37.748170 -122.459192
     4    4  60.180171   24.949728
-
-    See Also
-    --------
-    max_distance_from_home
     
     References
     ----------
     .. [CBTDHVSB2012] Csáji, B. C., Browet, A., Traag, V. A., Delvenne, J.-C., Huens, E., Van Dooren, P., Smoreda, Z. & Blondel, V. D. (2012) Exploring the Mobility of Mobile Phone Users. Physica A: Statistical Mechanics and its Applications 392(6), 1459-1473, https://www.sciencedirect.com/science/article/pii/S0378437112010059
     .. [PSO2012] Phithakkitnukoon, S., Smoreda, Z. & Olivier, P. (2012) Socio-geography of human mobility: A study using longitudinal mobile phone data. PLOS ONE 7(6): e39253. https://doi.org/10.1371/journal.pone.0039253
+    
+    See Also
+    --------
+    max_distance_from_home
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1042,13 +1042,13 @@ def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_pr
     3    3            12799.754644
     4    4            15512.788707
 
-    See Also
-    --------
-    maximum_distance, home_location
-
     References
     ----------
     .. [CM2015] Canzian, L. & Musolesi, M. (2015) Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis. Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 1293-1304, https://dl.acm.org/citation.cfm?id=2805845
+    
+    See Also
+    --------
+    maximum_distance, home_location
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1196,6 +1196,7 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
     >>> ranks = location_frequency(tdf, as_ranks=True) # as rank list
     >>> print(ranks[:10])
     [0.26774954912290716, 0.12699129836809203, 0.07090642778490935, 0.04627646190564675, 0.03657120208870922, 0.029353331229094993, 0.025050267239164755, 0.020284764933447663, 0.018437443393907686, 0.01656729815097415]
+    
     See Also
     --------
     visits_per_location
@@ -1398,13 +1399,13 @@ def recency_rank(traj, show_progress=True):
         3  39.752713 -104.996337             4
         4  39.752508 -104.996637             5
 
-    See Also
-    --------
-    frequency_rank
-
     References
     ----------
     .. [BDEM2015] Barbosa, H., de Lima-Neto, F. B., Evsukoff, A., Menezes, R. (2015) The effect of recency to human mobility, EPJ Data Science 4(21), https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-015-0059-8
+    
+    See Also
+    --------
+    frequency_rank
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
