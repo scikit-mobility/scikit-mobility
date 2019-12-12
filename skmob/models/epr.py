@@ -270,29 +270,30 @@ class EPR:
                  relevance_column=constants.RELEVANCE,
                  random_state=None, log_file=None, verbose=False):
         """
-        Start the simulation of the agent at time "start_date" till time "end_date".
+        Start the simulation of a set of agents at time `start_date` till time `end_date`.
+        
+        Parameters
+        ----------
+        start_date : datetime
+            the starting date of the simulation, in "YYY/mm/dd HH:MM:SS" format.
 
-        :param start_date : datetime
-            the starting date of the simulation
+        end_date : datetime
+            the ending date of the simulation, in "YYY/mm/dd HH:MM:SS" format.
 
-        :param end_date : datetime
-            the ending date of the simulation
+        spatial_tessellation : geopandas GeoDataFrame
+            the spatial tessellation, i.e., a division of the territory in locations. 
 
-        :param spatial_tessellation : dict
-            the spatial tessellation, a dictionary of location to info (lat, lng, relevance)
+        n_agents : int, optional
+            the number of agents to generate. The default is 1.
 
-        :param n_agents: int
-            the number of agents to generate
-
-        :param starting_location
-            the identifier of the starting location for the simulation (as specified in the spatial tessellation)
-        :type starting_location: int or None
-
-        :param od_matrix: the od_matrix to use for deciding the movements. If None, it is computed "on the fly" during the simulation
-        :type od_matrix: numpy array or None
-
-        :param random_state: if int, random_state is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random (default: None)
-        :type random_state: int or None
+        starting_locations : list or None, optional
+            a list of integers, each identifying the location from which to start the simulation of each agent. Note that, if `starting_locations` is not None, its length must be equal to the value of `n_agents`, i.e., you must specify one starting location per agent. The default is None.
+        
+        od_matrix : numpy array or None, optional
+            the origin destination matrix to use for deciding the movements of the agent. If `None`, it is computed "on the fly" during the simulation. The default is None.
+        
+        random_state : int or None
+            if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.
         """
         if starting_locations is not None and len(starting_locations) < n_agents:
             raise IndexError("The number of starting locations is smaller than the number of agents.")
@@ -391,19 +392,19 @@ class DensityEPR(EPR):
         the name of the instantiation of the d-EPR model. The default value is "Density EPR model".
 
     rho : float, optional
-        in the formula :math:`\\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the parameter :math:`\\rho \in (0, 1]` controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\\rho = 0.6` [SKWB2010]_.
+        it corresponds to the parameter :math:`\\rho \in (0, 1]` in the Action selection mechanism :math:`P_{new} = \\rho S^{-\gamma}` and controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\\rho = 0.6` [SKWB2010]_.
 
     gamma : float, optional
-        in the formula :math:`\\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the parameter :math:`\gamma` (:math:`\gamma \geq 0`) controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\gamma=0.21` [SKWB2010]_.
+        it corresponds to the parameter :math:`\gamma` (:math:`\gamma \geq 0`) in the Action selection mechanism :math:`P_{new} = \\rho S^{-\gamma}` and controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\gamma=0.21` [SKWB2010]_.
 
     beta : float, optional
-        the parameter :math:`\beta` of the waiting time distribution. The default value is :math:`\beta=0.8` [SKWB2010]_.
+        it corresponds to the parameter :math:`\\beta` of the waiting time distribution in the Waiting time choice mechanism. The default value is :math:`\\beta=0.8` [SKWB2010]_.
 
     tau : int, optional
-        the parameter :math:`\\tau` of the waiting time distribution. The default value is :math:`\\tau = 17`, expressed in hours [SKWB2010]_.
+        it corresponds to the parameter :math:`\\tau` of the waiting time distribution in the Waiting time choice mechanism. The default value is :math:`\\tau = 17`, expressed in hours [SKWB2010]_.
 
     min_wait_time_minutes : int
-        minimum waiting time in minutes.
+        minimum waiting time between two movements, in minutes.
     
     Attributes
     ----------
@@ -417,10 +418,10 @@ class DensityEPR(EPR):
         the input parameters :math:`\gamma`.
         
     beta : float
-        the input parameter :math:`\beta` 
+        the input parameter :math:`\\beta` 
 
     tau : int
-        the input parameter :math:`\tau` 
+        the input parameter :math:`\\tau` 
 
     min_wait_time_minutes : int
         the input parameters `min_wait_time_minutes`
@@ -430,15 +431,39 @@ class DensityEPR(EPR):
     generate(start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1, starting_locations=None, od_matrix=None, relevance_column=constants.RELEVANCE, random_state=None, log_file=None, verbose=False)
         start the generation of the synthetic trajectories.
 
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> import geopandas as gpd
+    >>> from skmob.models.epr import DensityEPR
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> tessellation = gpd.read_file(url)
+    >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
+    >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
+    >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
+    >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
+    >>> depr = DensityEPR()
+    >>> tdf = depr.generate(start_time, end_time, tessellation, relevance_column='population', n_agents=100, verbose=True)
+    >>> print(tdf.head())
+       uid                   datetime        lat        lng
+    0    1 2019-01-01 08:00:00.000000  42.780819 -76.823724
+    1    1 2019-01-01 09:45:58.388540  42.728060 -77.775510
+    2    1 2019-01-01 10:16:09.406408  42.780819 -76.823724
+    3    1 2019-01-01 17:13:39.999037  42.852827 -77.299810
+    4    1 2019-01-01 19:24:27.353379  42.728060 -77.775510
+    >>> print(tdf.parameters)
+    {'model': {'class': <function DensityEPR.__init__ at 0x7f548a49cf28>, 'generate': {'start_date': Timestamp('2019-01-01 08:00:00'), 'end_date': Timestamp('2019-01-14 08:00:00'), 'gravity_singly': {}, 'n_agents': 100, 'relevance_column': 'population', 'random_state': None, 'verbose': True}}}
+    
+    References
+    ----------
+    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
+    .. [PSR2016] Pappalardo, L., Simini, F. Rinzivillo, S. (2016) Human Mobility Modelling: exploration and preferential return meet the gravity model. Procedia Computer Science 83, https://www.sciencedirect.com/science/article/pii/S1877050916302216
+    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
+    
     See Also
     --------
     EPR, SpatialEPR, Ditras
-
-    References
-    ----------
-    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
-    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
-    .. [PSR2016] Pappalardo, L., Simini, F. Rinzivillo, S. (2016) Human Mobility Modelling: exploration and preferential return meet the gravity model. Procedia Computer Science 83, https://www.sciencedirect.com/science/article/pii/S1877050916302216
     """
 
     def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
@@ -448,33 +473,38 @@ class DensityEPR(EPR):
 
 
 class SpatialEPR(EPR):
-    """
-    The sEPR model of individual human mobility
+    """Spatial-EPR model.
+    
+    The s-EPR model of individual human mobility consists of the following mechanisms [PSRPGB2015]_ [PSR2016]_ [SKWB2010]_:
+    
+    **Waiting time choice**. The waiting time :math:`\Delta t` between two movements of the agent is chosen randomly from the distribution :math:`P(\Delta t) \sim \Delta t^{−1 −\\beta} \exp(−\Delta t/ \\tau)`. Parameters :math:`\\beta` and :math:`\\tau` correspond to arguments `beta` and `tau` of the constructor, respectively. 
+    
+    **Action selection**. With probability :math:`P_{new}=\\rho S^{-\\gamma}`, where :math:`S` is the number of distinct locations previously visited by the agent, the agent visits a new location (Exploration phase), otherwise it returns to a previously visited location (Return phase). Parameters :math:`\\rho` and :math:`\\gamma` correspond to arguments `rho` and `gamma` of the constructor, respectively.
+    
+    **Exploration phase**. If the agent that is currently in location :math:`i` explores a new location, then the new location :math:`j \\neq i` is selected according to the distance from the current location :math:`p_{ij} = \\frac{1}{N} \\frac{1}{r_{ij}^2}`, where :math:`r_{ij}` is the geographic distance between :math:`i` and :math:`j`, and :math:`N = \sum_{i, j \\neq i} p_{ij}` is a normalization constant. The number of distinct locations visited, :math:`S`, is increased by 1.
+    
+    **Return phase**. If the individual returns to a previously visited location, such a location :math:`i` is chosen with probability proportional to the number of time the agent visited :math:`i`, i.e., :math:`\Pi_i = f_i`, where :math:`f_i` is the visitation frequency of location :math:`i`.
+    
+    name : str, optional
+        the name of the instantiation of the s-EPR model. The default value is "Spatial EPR model".
 
-    :param name: str
-        the name of the instantiation of the sEPR model (default: "Spatial EPR model")
+    rho : float, optional
+        it corresponds to the parameter :math:`\\rho \in (0, 1]` in the Action selection mechanism :math:`P_{new} = \\rho S^{-\gamma}` and controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\\rho = 0.6` [SKWB2010]_.
 
-    :param rho: float
-        in the formula :math:`\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\rho` (:math:`0 < \rho \leq 1`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: :math:`\rho = 0.6`, value estimated from empirical data)
+    gamma : float, optional
+        it corresponds to the parameter :math:`\gamma` (:math:`\gamma \geq 0`) in the Action selection mechanism :math:`P_{new} = \\rho S^{-\gamma}` and controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\gamma=0.21` [SKWB2010]_.
 
-    :param gamma: float
-        in the formula :math:`Density\rho S^{-\gamma}`, where :math:`S` is the number of distinct locations
-        previously visited by the agent, the parameter :math:`\gamma` (:math:`\gamma \geq 0`) controls
-        the agent's tendency to explore a new location during the next move versus
-        returning to a previously visited location (default: 0.21, value estimated from empirical data)
+    beta : float
+        the input parameter :math:`\\beta` 
 
-    :param beta: float
-        the parameter :math:`\beta` of the waiting time distribution (default: :math:`\beta = 0.8`, value estimated from empirical data)
+    tau : int
+        the input parameter :math:`\\tau` 
 
-    :param tau: int
-        the parameter :math:`\tau` of the waiting time distribution (default: :math:`\tau = 17`, expressed in hours, value estimated from empirical data)
-
-    :param min_wait_time_minutes: int
-        minimum waiting time in minutes
-
+    min_wait_time_minutes : int
+        the input parameters `min_wait_time_minutes`
+    
+    Arguments
+    ---------
     :ivar: name: str
         the name of the instantiation of the model
 
