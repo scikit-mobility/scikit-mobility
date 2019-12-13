@@ -11,17 +11,17 @@ from ..utils import constants
 
 def _radius_of_gyration_individual(traj):
     """
-    Compute the radius of gyration of a single individual given their TrajDataFrame
+    Compute the radius of gyration of a single individual given their TrajDataFrame.
 
     Parameters
     ----------
     traj : TrajDataFrame
-        the trajectory of the individual
+        the trajectory of the individual.
     
     Returns
     -------
     float
-        the radius of gyration of the individual
+        the radius of gyration of the individual.
     """
     lats_lngs = traj[[constants.LATITUDE, constants.LONGITUDE]].values
     center_of_mass = np.mean(lats_lngs, axis=0)
