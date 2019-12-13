@@ -11,24 +11,66 @@ tqdm.pandas()
 from skmob.utils.gislib import getDistanceByHaversine
 
 def _random_location_entropy_individual(traj):
+    """
+    Compute the random location entropy of a single individual given their TrajDataFrame.
+
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
+    
+    Returns
+    -------
+    float
+        the random location entropy of the individual.
+    """
     n_distinct_users = len(traj.groupby(constants.UID))
     entropy = np.log2(n_distinct_users)
     return entropy
 
 def random_location_entropy(traj, show_progress=True):
-    """
-    The random location entropy captures the degree of predictability of a location if each user visits it with equal probability.
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Random location entropy.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the random location entropy of the locations in a TrajDataFrame. The random location entropy of a location :math:`j` captures the degree of predictability of :math:`j` if each individual visits it with equal probability, and it is defined as:
     
-    :return: the random location entropies of the individuals
-    :rtype: pandas Series
-
-    .. seealso:: :func:`random_entropy`, :func:`real_entropy`, :func:`uncorrelated_entropy`
+    .. math::
+        LE_{rand}(j) = log_2(N_j)
+        
+    where :math:`N_j` is the number of distinct individuals that visited location :math:`j`.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the random location entropy of the locations.
+        
+    Example
+    -------
+    >>> import skmob
+    >>> from skmob.measures.collective import random_location_entropy
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> rle_df = random_location_entropy(tdf, show_progress=True).sort_values(by='random_location_entropy', ascending=False)
+    >>> print(rle_df.head())
+                 lat         lng  random_location_entropy
+    10286  39.739154 -104.984703                 6.129283
+    49      0.000000    0.000000                 5.643856
+    5991   37.774929 -122.419415                 5.523562
+    12504  39.878664 -104.682105                 5.491853
+    5377   37.615223 -122.389979                 5.247928   
+    
+    See Also
+    --------
+    uncorrelated_location_entropy
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -57,41 +99,57 @@ def _uncorrelated_location_entropy_individual(traj, normalize=True):
 
 
 def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
-    """
-    The temporal-uncorrelated location entropy :math:`LE_{unc}(j)` of a location :math:`j` is the historical probability
-    that an individual :math:`u` visited location :math:`j`.
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Temporal-uncorrelated entropy.
     
-    :param boolean normalize: if True normalize the entropy by dividing by log2(N), where N is the number of
-        distinct users that visited a location
+    Compute the temporal-uncorrelated location entropy of the locations in a TrajDataFrame. The temporal-uncorrelated location entropy :math:`LE_{unc}(j)` of a location :math:`j` is the historical probability that :math:`j` is visited by an individual :math:`u`. Formally, it is defined as [CML2011]_:
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    .. math::
+        LE_{unc}(j) = -\sum_{i=j}^{N_j} p_jlog_2(p_j)
+        
+    where :math:`N_j` is the number of distinct individuals that visited :math:`j` and :math:`p_j` is the historical probability that a visit to location :math:`j` is by individual :math:`u`. 
     
-    :return: the temporal-uncorrelated location entropies of the individuals
-    :rtype: pandas Series
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    normalize : boolean, optional
+        if True, normalize the location entropy by dividing by :math:`log2(N_j)`, where :math:`N_j` is the number of
+        distinct individuals that visited location :math:`j`. The default is False.
+    
+    show_progress : boolean
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the temporal-uncorrelated location entropies of the locations.
 
-    Examples:
-        Computing the temporal-uncorrelated location entropy of each individual from a DataFrame of trajectories
-
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.collective import uncorrelated_location_entropy
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> uncorrelated_location_entropy(tdf, normalize=True).head()
-    lat        lng
-    42.333550  10.919689    0.000000
-    42.342177  10.898593    0.638517
-    42.351689  10.920185    0.506808
-    42.353302  10.909137    0.597521
-    42.357550  10.922648    0.476653
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> ule_df = uncorrelated_location_entropy(tdf, show_progress=True).sort_values(by='uncorrelated_location_entropy', ascending=False)
+    >>> print(ule_df.head())
+                 lat         lng  uncorrelated_location_entropy
+    12504  39.878664 -104.682105                       3.415713
+    5377   37.615223 -122.389979                       3.176950
+    10286  39.739154 -104.984703                       3.118656
+    12435  39.861656 -104.673177                       2.918413
+    12361  39.848233 -104.675031                       2.899175
     dtype: float64
-
-    .. seealso:: :func:`random_entropy`, :func:`real_entropy`, :func:`uncorrelated_entropy`
-
-    References:
-        .. [cho2011frienship] Eunjoon Cho, Seth A. Myers, and Jure Leskovec. "Friendship and mobility: user movement in location-based social networks." In Proceedings of the 17th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD '11). 1082-1090, 2011.
+    
+    References
+    ----------
+    .. [CML2011] Cho, E., Myers, S. A. & Leskovec, J. (2011) Friendship and mobility: user movement in location-based social networks. In Proceedings of the 17th ACM SIGKDD international conference on Knowledge discovery and data mining, 1082-1090, https://dl.acm.org/citation.cfm?id=2020579
+        
+    See Also
+    --------
+    random_location_entropy
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -109,6 +167,22 @@ def uncorrelated_location_entropy(traj, normalize=False, show_progress=True):
     return df.reset_index().rename(columns={0: column_name})
 
 def _square_displacement(traj, delta_t):
+    """
+    Compute the square displacement after time `delta_t` of a single individual given their TrajDataFrame.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
+        
+    delta_t : datetime.timedelta
+        the time from the reference position
+        
+    Returns
+    -------
+    float
+        the square displacement of the individual.
+    """
     r0 = traj.iloc[0]
     t = r0[constants.DATETIME] + delta_t
     rt = traj[traj[constants.DATETIME] <= t].iloc[-1]
@@ -117,39 +191,56 @@ def _square_displacement(traj, delta_t):
 
 
 def mean_square_displacement(traj, days=0, hours=1, minutes=0, show_progress=True):
-    """
-    Compute the mean square displacement across the individuals.
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Mean Square Displacement.
     
-    :param int days: the days since the starting time
+    Compute the mean square displacement across the individuals in a TrajDataFrame. The mean squared displacement is a measure of the deviation of the position of an object with respect to a reference position over time [BHG2006]_ [SKWB2010]_. It is defined as:
     
-    :param int hours: the hours since the days since the starting time
+    .. math::
+        MSD = \\langle |r(t) - r(0)| \\rangle = \\frac{1}{N} \sum_{i = 1}^N |r^{(i)}(t) - r^{(i)}(0)|^2
+
+    where :math:`N` is the number of individuals to be averaged, vector :math:`x^{(i)}(0)` is the reference position of the :math:`i`-th individual, and vector :math:`x^{(i)}(t)` is the position of the :math:`i`-th individual at time :math:`t` [FS2002]_.
     
-    :param int minutes: the minutes sine the hours since the days since the starting time
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    days : int, optional
+        the days since the starting time. The default is 0.
+    
+    hours : int, optional
+        the hours since the days since the starting time. The default is 1.
+    
+    minutes : int, optional
+        the minutes since the hours since the days since the starting time. The default is 0.
 
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True. 
+    
+    Returns
+    -------
+    float
+        the mean square displacement.
 
-    :return float: the mean square displacement
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
 
-    Examples:
-        Computing the mean square displacement from a DataFrame of trajectories
-
+    Examples
+    --------
     >>> import skmob
-    >>> from skmob.measures.collective import mean_square_displacement
-    >>> df = skmob.read_trajectories('data/gps_test_dataset.csv', sep=',', user_id='user', longitude='lon')
-    >>> mean_square_displacement(df, hours=1).head()
-    5.033659854643163
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user').sort_values(by='datetime')
+    >>> msd = mean_square_displacement(tdf, days=0, hours=1, minutes=0)
+    >>> print(msd)
+    534672.3361996822
 
-    References:
-        .. [brockmann2006scaling] Brockmann, D., Hufnagel, L. and Geisel, T.. "The scaling laws of human travel." Nature 439 (2006): 462.
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
-        .. [gonzalez2008understanding] Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. "Understanding individual human mobility patterns." Nature 453, no. 7196 (2008): 779--782.
-        .. [shin2008levy] R. Shin, S. Hong, K. Lee, S. Chong, "On the levy-walk nature of human mobility: Do humans walk like monkeys?", in: Proc. IEEE INFOCOM, 2008, pp. 924–932.
-        .. [maruyana2003truncated] Y. Maruyama, J. Murakami, "Truncated levy walk of a nanocluster bound weakly to an atomically flat surface: Crossover from superdiffusion to normal diffusion", Physical Review B 67 (8) (2003) 085406
-        .. [vazquez1999diffusion] A. Vazquez, O. Sotolongo-Costa, F. Brouers, "Diffusion regimes in levy flights with  trapping",  Physica  A:  Statistical  Mechanics  and  its  Applications  264  (3) (1999) 424–431.
+    References
+    ----------
+    .. [FS2002] Frenkel, D. & Smit, B. (2002) Understanding molecular simulation: From algorithms to applications. Academic Press, 196 (2nd Ed.), https://www.sciencedirect.com/book/9780122673511/understanding-molecular-simulation.
+    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465, https://www.nature.com/articles/nature04292
+    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
     """
     delta_t = timedelta(days=days, hours=hours, minutes=minutes)
     
@@ -163,70 +254,94 @@ def mean_square_displacement(traj, days=0, hours=1, minutes=0, show_progress=Tru
         return traj.groupby(constants.UID).apply(lambda x: _square_displacement(x, delta_t)).mean()
 
 
-def visits_per_location(trajs):
-    """
-    Compute the number of visits in each location
+def visits_per_location(traj):
+    """Visits per location.
+    
+    Compute the number of visits to each location in a TrajDataFrame [PF2018]_.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the number of visits per location.
 
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    Examples
+    --------
+    >>> import skmob
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user').sort_values(by='datetime')
+    >>> vl_df = visits_per_location(df)
+    >>> print(vl_df.head())
+             lat         lng  n_visits
+    0  39.739154 -104.984703      3392
+    1  37.580304 -122.343679      2248
+    2  39.099275  -76.848306      1715
+    3  39.762146 -104.982480      1442
+    4  40.014986 -105.270546      1310
 
-    :return: the number of visits per location
-    :rtype: pandas Series
-
+    References
+    ----------
+    .. [PF2018] Pappalardo, L. & Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, https://link.springer.com/article/10.1007/s10618-017-0548-4
+        
     See also
     --------
-    locations_population
-
-    Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
-
-    >>> import skmob
-    >>> from skmob.measures.collective import visits_per_location
-    >>> df = skmob.read_trajectories('data/gps_test_dataset.csv', sep=',', user_id='user', longitude='lon')
-    >>> visits_per_location(df).head()
-                        n_visits
-    lat       lng
-    43.717999 10.902612      5338
-    42.785016 11.110376      4717
-    42.934046 10.783248      4354
-    43.847140 11.142547      4201
-    42.930131 10.764460      4169
-
-    .. seealso:: :func:`homes_per_location`
-
-    References:
-        .. [pappalardo2018data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
+    homes_per_location
     """
-    return trajs.groupby([constants.LATITUDE,
+    return traj.groupby([constants.LATITUDE,
                           constants.LONGITUDE]).count().sort_values(by=constants.DATETIME,
                                                                     ascending=False)[[constants.DATETIME]].reset_index().rename({constants.DATETIME: 'n_visits'}, axis=1)
 
 
 def homes_per_location(traj, start_night='22:00', end_night='07:00'):
-    """
-    Compute the number of homes in each location. A "home" location is the location that an individual visits the most.
+    """Homes per location.
+    
+    Compute the number of home locations in each location. The number of home locations in a location :math:`j` is computed as [PRS2016]_:
+    
+    .. math:: 
+        N_{homes}(j) = |\{h_u | h_u = j, u \in U \}|
 
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-    :param str start_night: the starting hour for the night
-    :param str end_night: the ending hour for the night
+    where :math:`h_u` indicates the home location of an individual :math:`u` and :math:`U` is the set of individuals.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    start_night : str, optional
+        the starting time of the night (format HH:MM). The default is '22:00'.
+        
+    end_night : str, optional
+        the ending time for the night (format HH:MM). The default is '07:00'.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the number of homes per location.
 
-    :return: the number of homes per location
-    :rtype: pandas Series
-
-    Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
-
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.collective import homes_per_location
-    >>> from skmob.measures.individual import radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file(datadata,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> homes_per_location(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user').sort_values(by='datetime')
+    >>> hl_df = homes_per_location(tdf).sort_values(by='n_homes', ascending=False)
+    >>> print(hl_df.head())
+             lat         lng  n_homes
+    0  39.739154 -104.984703       15
+    1  37.584103 -122.366083        6
+    2  40.014986 -105.270546        5
+    3  37.580304 -122.343679        5
+    4  37.774929 -122.419415        4
 
-    .. seealso:: :func:`homes_per_location`, :func:`home_location`
-
-    References:
-        .. [1] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939 http://dx.doi.org/10.1016/j.procs.2016.04.188.
+    References
+    ----------
+    .. [PRS2016] Pappalardo, L., Rinzivillo, S. & Simini, F. (2016) Human Mobility Modelling: exploration and preferential return meet the gravity model. Procedia Computer Science 83, 934-939, http://dx.doi.org/10.1016/j.procs.2016.04.188
     """
     # if column 'uid' is not present in the TrajDataFrame
     uid_flag = False
@@ -245,77 +360,90 @@ def homes_per_location(traj, start_night='22:00', end_night='07:00'):
 
 
 def visits_per_time_unit(traj, time_unit='1h'):
-    """
-    Compute the number of visits per time unit made in the mobility dataset.
+    """Visits per time unit.
+    
+    Compute the number of data points per time unit in the TrajDataFrame [PRS2016]_.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    time_unit : str, optional
+        the time unit to use for grouping the time slots. The default '1h', which creates slots of 1 hour. For full specification of available time units, see http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
+    
+    Returns
+    -------
+    pandas Series
+        the number of visits per time unit.
 
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
-    :param str time_unit: the time unit to use for grouping the time slots (default: '1h', it creates slots of 1 hour; range: for full specification of available time units, see http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
-
-    :return: the number of visits per time unit
-    :rtype: pandas Series
-
-    Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
-
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.collective import visits_per_time_unit
-    >>> df = skmob.read_trajectories('data_test/gps_test_dataset.csvdata', user_id='user', longitude='lon')
-    >>> visits_per_time_unit(df).head()
-    datetime
-    2011-05-01 00:00:00    974
-    2011-05-01 01:00:00    519
-    2011-05-01 02:00:00    374
-    2011-05-01 03:00:00    301
-    2011-05-01 04:00:00    492
-    Freq: H, Name: uid, dtype: int64
-
-    References:
-        .. [1] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo, "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939 http://dx.doi.org/10.1016/j.procs.2016.04.188.
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user').sort_values(by='datetime')
+    >>> vtu_df = visits_per_time_unit(df)
+    >>> print(vtu_df.head())
+                               n_visits
+    datetime                           
+    2008-03-22 05:00:00+00:00         2
+    2008-03-22 06:00:00+00:00         2
+    2008-03-22 07:00:00+00:00         0
+    2008-03-22 08:00:00+00:00         0
+    2008-03-22 09:00:00+00:00         0
     """
     return pd.DataFrame(traj.set_index(pd.DatetimeIndex(traj[constants.DATETIME])).groupby(pd.Grouper(freq=time_unit)).count()[constants.DATETIME]).rename(columns={constants.DATETIME: 'n_visits'})
 
 
 def origin_destination_matrix(traj, self_loops=False, show_progress=True):
-    """
-    Compute an origin-destination matrix from the trajectories of the individuals.
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
-    :param boolean directed: if True returns a directed network, otherwise an undirected network
+    """Origin-destination matrix.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute an origin-destination matrix from the trajectories of the individuals [CDLR2011]_.
     
-    :return: the graph describing the origin destination matrix
-    :rtype: networkx Graph
-
-    Examples:
-            Computing the number of visits per location from a DataFrame of trajectories
-
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    self_loops : boolean, optional
+        if True, include sel loops. The default is False.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the dataframe describing the origin destination matrix.
+    
+    Warning
+    -------
+    Note that the TrajDataFrame must sorted in ascending order by `datetime`.
+    
+    .. deprecated:: 1.0.1
+          `origin_destination_matrix` will be removed in scikit-mobility 1.0.1, use `TrajDataFrame.to_flowdataframe`.
+    
+    Examples
+    --------
     >>> import skmob
-    >>> import networkx as nx
     >>> from skmob.measures.collective import origin_destination_matrix
-    >>> df = skmob.read_trajectories('data_test/gps_test_dataset.csvdata', user_id='user', longitude='lon')
-    >>> G = origin_destination_matrix(df)
-    >>> print(nx.info(G))
-    Name:
-    Type: Graph
-    Number of nodes: 20318
-    Number of edges: 640107
-    Average degree:  63.0089
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user').sort_values(by='datetime')
+    >>> od_df = origin_destination_matrix(tdf)
+    >>> print(of_df.head())
+       lat_origin  lng_origin   lat_dest    lng_dest  n_trips
+    0   37.774929 -122.419415  37.600747 -122.382376        2
+    1   37.774929 -122.419415  37.630490 -122.411084        8
+    2   37.774929 -122.419415  37.584103 -122.366083       50
+    3   37.774929 -122.419415  37.613825 -122.486919        2
+    4   37.774929 -122.419415  37.654656 -122.407750        3
 
-    References:
-        .. [calabrese2011estimating] Calabrese, Francesco, Lorenzo, Giusy Di, Liu, Liang and Ratti, Carlo. "Estimating Origin-Destination Flows Using Mobile Phone Location Data." IEEE Pervasive Computing 10 , no. 4 (2011): 36-44.
-        .. [bonnel2015passive] Patrick Bonnel, Etienne Hombourger, Ana-Maria Olteanu-Raimond, Zbigniew Smoreda. "Passive Mobile Phone Dataset to Construct Origin-destination Matrix: Potentials and Limitations." Transportation Research Procedia 11 (2015): 381-398.
-        .. [ortuzar2011modeling] J. de Dios Ortuzar,  L. Willumsen,  "Modeling Transport", John Wiley and Sons Ltd, New York, 2011.
-        .. [iqbal2014development] M. S. Iqbal, C. F. Choudhury, P. Wang, M. C. Gonzalez, "Development of origin-destination matrices using mobile phone call data", Transportation Research Part C: Emerging Technologies 40 (2014) 63–74.
-        .. [white2002extracting] J. White, I. Wells, "Extracting origin destination information from mobile phone data", in: Road Transport Information and Control, 2002. Eleventh International Conference on (Conf. Publ. No. 486), 2002, pp. 30–34.
-        .. [caceres2007deriving] N. Caceres, J. Wideberg, F. G. Benitez, "Deriving origin destination data from a mobile phone network", Intelligent Transport Systems, IET 1 (1) (2007) 15–26.
-        .. [jiang2013review]  S. Jiang, G. A. Fiore, Y. Yang, J. Ferreira Jr, E. Frazzoli, M. C. Gonzalez, "A review  of  urban  computing  for  mobile  phone  traces:  current  methods,  challenges and opportunities", in:  Proceedings of the 2nd ACM SIGKDD International Workshop on Urban Computing, ACM, 2013, p. 2.
-        .. [lenormand2014cross] M. Lenormand, M. Picornell, O. G. Cantu-Ros, A. Tugores, T. Louail, R. Herranz, M. Barthelemy, E. Frıas-Martınez, J. J. Ramasco, "Cross-Checking Different Sources of Mobility Information", PLoS ONE 9 (8) (2014) e105184.
-        .. [alexander2015origin] L. Alexander, S. Jiang, M. Murga, M. C. Gonzalez, "Origin-destination trips by purpose and time of day inferred from mobile phone data", Transportation Research Part C: Emerging Technologies 58, Part B (2015) 240–250
-        .. [toole2015path] J. L. Toole, S. Colak, B. Sturt, L. P. Alexander, A. Evsukoff, M. C. Gonzalez, "The  path  most  traveled:  Travel  demand  estimation  using  big  data  resources", Transportation Research Part C: Emerging Technologies 58, Part B (2015) 162–177.
+    References
+    ----------
+    .. [CDLR2011] Calabrese, F., Di Lorenzo, G., Liu, L. & Ratti, C. (2011) Estimating Origin-Destination Flows Using Mobile Phone Location Data. IEEE Pervasive Computing 10(4), 36-44, https://ieeexplore.ieee.org/document/5871578
     """
     loc2loc2weight = defaultdict(lambda: defaultdict(lambda: 0))
 
