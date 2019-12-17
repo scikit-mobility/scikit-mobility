@@ -30,11 +30,11 @@ def compute_od_matrix(gravity_singly, spatial_tessellation, tile_id_column=const
 
     Parameters
     ----------
-
-    :param gravity_singly: object
+    gravity_singly : object
         instance of class collective.Gravity with argument gravity_type='singly constrained'
 
-    :param spatial_tessellation: GeoDataFrame
+    spatial_tessellation : GeoDataFrame
+        the spatial tessellation
 
     :param tile_id_column: str or int
         column of the GeoDataFrame containing the tile_ID of the locations/tiles
@@ -435,13 +435,13 @@ class DensityEPR(EPR):
         the input parameters :math:`\gamma`.
         
     beta : float
-        the input parameter :math:`\\beta` 
+        the input parameter :math:`\\beta`. 
 
     tau : int
-        the input parameter :math:`\\tau` 
+        the input parameter :math:`\\tau`.
 
     min_wait_time_minutes : int
-        the input parameters `min_wait_time_minutes`
+        the input parameters `min_wait_time_minutes`.
 
     Examples
     --------
@@ -577,13 +577,13 @@ class SpatialEPR(EPR):
         the input parameters :math:`\gamma`.
         
     beta : float
-        the input parameter :math:`\\beta` 
+        the input parameter :math:`\\beta`. 
 
     tau : int
-        the input parameter :math:`\\tau` 
+        the input parameter :math:`\\tau`. 
 
     min_wait_time_minutes : int
-        the input parameters `min_wait_time_minutes`
+        the input parameters `min_wait_time_minutes`.
     
     Examples
     --------
