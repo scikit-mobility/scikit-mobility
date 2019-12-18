@@ -572,6 +572,9 @@ class SpatialEPR(EPR):
     
     **Return phase**. If the individual returns to a previously visited location, such a location :math:`i` is chosen with probability proportional to the number of time the agent visited :math:`i`, i.e., :math:`\Pi_i = f_i`, where :math:`f_i` is the visitation frequency of location :math:`i`.
     
+    .. image:: https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fnphys1760/MediaObjects/41567_2010_Article_BFnphys1760_Fig2_HTML.jpg?as=webp
+    Starting at time :math:`t` from the configuration shown in the left panel, indicating that the user visited previously :math:`S=4` locations with frequency :math:`f_i` that is proportional to the size of circles drawn at each location, at time :math:`t + \Delta t` (with :math:`Delta t` drawn from the :math:`P(\Delta t)` fat-tailed distribution) the user can either visit a new location at distance :math:`\Delta r` from his/her present location, or return to a previously visited location with probability :math:`P_{ret}=\\rho S^{-\\gamma}`, where the next location will be chosen with probability :math:`\Pi_i=f_i` (preferential return; lower panel). Figure from [SKWB2010]_.
+    
     Parameters
     ----------
     name : str, optional
@@ -583,11 +586,11 @@ class SpatialEPR(EPR):
     gamma : float, optional
         it corresponds to the parameter :math:`\gamma` (:math:`\gamma \geq 0`) in the Action selection mechanism :math:`P_{new} = \\rho S^{-\gamma}` and controls the agent's tendency to explore a new location during the next move versus returning to a previously visited location. The default value is :math:`\gamma=0.21` [SKWB2010]_.
 
-    beta : float
-        the input parameter :math:`\\beta` 
+    beta : float, optional
+        it corresponds to the parameter :math:`\\beta` of the waiting time distribution in the Waiting time choice mechanism. The default value is :math:`\\beta=0.8` [SKWB2010]_.
 
-    tau : int
-        the input parameter :math:`\\tau` 
+    tau : int, optional
+        it corresponds to the parameter :math:`\\tau` of the waiting time distribution in the Waiting time choice mechanism. The default value is :math:`\\tau = 17`, expressed in hours [SKWB2010]_.
 
     min_wait_time_minutes : int
         the input parameters `min_wait_time_minutes`
