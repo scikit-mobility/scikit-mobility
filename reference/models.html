@@ -586,6 +586,83 @@ the starting date</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.utils</span> <span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">constants</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models</span> <span class="kn">import</span> <span class="n">Gravity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">  tile_ID  population                                           geometry</span>
+<span class="go">0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....</span>
+<span class="go">1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...</span>
+<span class="go">2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...</span>
+<span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
+<span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span> <span class="n">tessellation</span><span class="o">=</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">tile_id</span><span class="o">=</span><span class="s1">&#39;tile_ID&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">fdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">     flow origin destination</span>
+<span class="go">0  121606  36001       36001</span>
+<span class="go">1       5  36001       36005</span>
+<span class="go">2      29  36001       36007</span>
+<span class="go">3      11  36001       36017</span>
+<span class="go">4      30  36001       36019</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># compute the total outflows from each location of the tessellation (excluding self loops)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tot_outflows</span> <span class="o">=</span> <span class="n">fdf</span><span class="p">[</span><span class="n">fdf</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fdf</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;flow&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span><span class="p">[</span><span class="n">skmob</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">TOT_OUTFLOW</span><span class="p">]</span> <span class="o">=</span> <span class="n">tot_outflows</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">  tile_id  population                                           geometry      0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....</span>
+<span class="go">1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...</span>
+<span class="go">2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...</span>
+<span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
+<span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
+<span class="go">   tot_outflow</span>
+<span class="go">0        29981</span>
+<span class="go">1         5319</span>
+<span class="go">2       295916</span>
+<span class="go">3         8665</span>
+<span class="go">4         8871</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># instantiate a singly constrained Gravity model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gravity_singly</span> <span class="o">=</span> <span class="n">Gravity</span><span class="p">(</span><span class="n">gravity_type</span><span class="o">=</span><span class="s1">&#39;singly constrained&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gravity_singly</span><span class="p">)</span>
+<span class="go">Gravity(name=&quot;Gravity model&quot;, deterrence_func_type=&quot;power_law&quot;, deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type=&quot;singly constrained&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">synth_fdf</span> <span class="o">=</span> <span class="n">gravity_singly</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">tessellation</span><span class="p">,</span>
+<span class="go">                                   tile_id_column=&#39;tile_ID&#39;,</span>
+<span class="go">                                   tot_outflows_column=&#39;tot_outflow&#39;,</span>
+<span class="go">                                   relevance_column= &#39;population&#39;,</span>
+<span class="go">                                   out_format=&#39;flows&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">synth_fdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">  origin destination  flow</span>
+<span class="go">0  36019       36101   101</span>
+<span class="go">1  36019       36107    66</span>
+<span class="go">2  36019       36059  1041</span>
+<span class="go">3  36019       36011   151</span>
+<span class="go">4  36019       36123    33</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># fit the parameters of the Gravity model from real fluxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gravity_singly_fitted</span> <span class="o">=</span> <span class="n">Gravity</span><span class="p">(</span><span class="n">gravity_type</span><span class="o">=</span><span class="s1">&#39;singly constrained&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gravity_singly_fitted</span><span class="p">)</span>
+<span class="go">Gravity(name=&quot;Gravity model&quot;, deterrence_func_type=&quot;power_law&quot;, deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type=&quot;singly constrained&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gravity_singly_fitted</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">fdf</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span><span class="s1">&#39;population&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gravity_singly_fitted</span><span class="p">)</span>
+<span class="go">Gravity(name=&quot;Gravity model&quot;, deterrence_func_type=&quot;power_law&quot;, deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type=&quot;singly constrained&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">synth_fdf_fitted</span> <span class="o">=</span> <span class="n">gravity_singly_fitted</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">tile_id_column</span><span class="o">=</span><span class="s1">&#39;tile_ID&#39;</span><span class="p">,</span> <span class="n">tot_outflows_column</span><span class="o">=</span><span class="s1">&#39;tot_outflow&#39;</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span> <span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s1">&#39;flows&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">synth_fdf_fitted</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">  origin destination  flow</span>
+<span class="go">0  36019       36101   102</span>
+<span class="go">1  36019       36107    66</span>
+<span class="go">2  36019       36059  1044</span>
+<span class="go">3  36019       36011   152</span>
+<span class="go">4  36019       36123    33</span>
+</pre></div>
+</div>
 <p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="z1946"><span class="brackets"><a class="fn-backref" href="#id16">Z1946</a></span></dt>
