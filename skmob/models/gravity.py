@@ -47,14 +47,19 @@ def powerlaw_deterrence_func(x, exponent):
 
 def compute_distance_matrix(spatial_tessellation, origins):
     """
-    Compute the matrix of distances between origin locations and all other locations
+    Compute the matrix of distances between origin locations and all other locations.
 
-    :param spatial_tessellation: GeoDataFrame tessellation
-
-    :param origins: list, indexes of the locations of origin
-
-    :return
-    distance_matrix: numpy array with distances between locations in `origins`
+    Parameters
+    ----------
+    spatial_tessellation : GeoDataFrame
+        the spatial tessellation.
+    
+    origins : list
+        indexes of the locations of origin.
+    
+    Returns
+    -------
+    distance_matrix : numpy array with distances between locations in `origins`
         and all locations in `spatial_tessellation`
     """
     coordinates = spatial_tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
@@ -73,43 +78,43 @@ def compute_distance_matrix(spatial_tessellation, origins):
 
 
 class Gravity:
-    """
-    The Gravity model of human migration.
+    """Gravity model.
+    
+    The Gravity model of human migration. In its original formulation, the probability :math:`T_{ij}` of moving from a location :math:`i` to location :math:`j` is defined as [Z1946]_:
+    
+    .. math::
+        T_{ij} \propto \\frac{P_i P_j}{r_{ij}} 
 
-    :param deterrence_func_type:  str
-        the type of deterrence function.
-        available types: 'power_law' (default), 'exponential'
+    where :math:`P_i` and :math:`P_j` are the population of location :math:`i` and :math:`j` and :math:`r_{ij}` is the distance between :math:`i` and :math:`j`.
 
-    :param deterrence_func_args:  list
-        arguments of the deterrence function.
+    Parameters
+    ----------
+    deterrence_func_type : str, optional
+        the deterrence function to use. The possible deterrence function are "power_law" and "exponential". The default is "power_law".
 
-    :param origin_exp:  float (1.0), exponent of origin's relevance
-        (only relevant to globally-constrained model).
+    deterrence_func_args : list, optional
+        the arguments of the deterrence function. The default is [-2.0].
 
-    :param destination_exp:  float (1.0), exponent of destination's relevance.
+    origin_exp : float, optional 
+        the exponent of the origin's relevance (only relevant to globally-constrained model). The default is `1.0`.
 
-    :param gravity_type:  str
-        gravity model type.
-        available types: 'singly constrained', 'globally constrained'.
-        default: 'singly constrained'
+    destination_exp : float, optional 
+        the explonent of the destination's relevance. The default is 1.0.
 
-    Notes
-    -----
-    The gravity model is a model of human migration derived from Newton's law of gravity,
-    and it is used to predict the degree of interaction between two places.
-    The gravity model of migration is based upon the idea that as the importance of one
-    or both of the location increases, there will also be an increase in movement between them.
-    The farther apart the two locations are, however, the movement between them will be less (distance decay).
+    gravity_type : str, optional
+        the type of gravity model. Possible values are "singly constrained" and "globally constrained". The default is "singly constrained".
+        
+    name : str, optional
+        the name of the instantiation of the Gravity model. The default is "Gravity model".
 
     References
     ----------
-    .. [1] Zipf, George Kingsley. "The P 1 P 2/D hypothesis: on the intercity movement of persons."
-    American sociological review 11.6 (1946): 677-686.
-    .. [2] Wilson, Alan Geoffrey. "A family of spatial interaction models, and associated developments."
-    Environment and Planning A 3.1 (1971): 1-32.
-    .. [3] Erlander, Sven, and Neil F. Stewart. "The gravity model in transportation analysis: theory and extensions".
-    Vol. 3. Vsp, 1990.
-
+    .. [Z1946] Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents
+    .. [W1971] Wilson, A. G. (1971) A family of spatial interaction models, and associated developments. Environment and Planning A 3(1), 1-32, https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm
+    
+    See Also
+    --------
+    Radiation
     """
 
     def __init__(self, deterrence_func_type='power_law', deterrence_func_args=[-2.0],
@@ -176,6 +181,31 @@ class Gravity:
 
     def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
                  tot_outflows_column=constants.TOT_OUTFLOW, relevance_column=constants.RELEVANCE, out_format='flows'):
+        """
+        Start the simulation of the Gravity model.
+        
+        Parameters
+        ----------
+        spatial_tessellation : GeoDataFrame
+            the spatial tessellation on which to run the simulation.
+            
+        tile_id_column : str, optional
+            the column in `spatial_tessellation` of the location identifier. The default is `constants.TILE_ID`.
+            
+        tot_outflows_column : str, optional
+            the column in `spatial_tessellation` with the outflow of the location. The default is `constants.TOT_OUTFLOW`.
+            
+        relevance_column : str, optional
+            the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
+            
+        out_format : str, optional
+            the format of the generated flows. Possible values are "flows" and "probabilities". The default is "flows".
+            
+        Returns
+        -------
+        FlowDataFrame
+            the flows generated by the Gravity model.
+        """
         n_locs = len(spatial_tessellation)
         relevances = spatial_tessellation[relevance_column].fillna(0).values
         self._tile_id_column = tile_id_column
@@ -276,37 +306,19 @@ class Gravity:
 
     def fit(self, flow_df, relevance_column=constants.RELEVANCE):
         """
-        Fit the gravity model parameters to the flows in file `filename`.
-        Can fit globally or singly constrained gravity models using a
-        Generalized Linear Model (GLM) with a Poisson regression.
+        Fit the parameters of the Gravity model to the flows provided in input, using a Generalized Linear Model (GLM) with a Poisson regression [FM1982]_.
 
         Parameters
         ----------
-        flow_df  :  FlowDataFrame where the flows are stored and with info about the spatial tessellation.
-            In addition to the default columns, the spatial tessellation must contain the column
-            "relevance": float, number of opportunities at the location
-                (e.g., population or total number of visits).
-
-        Returns
-        -------
-
-        X  :  list of independent variables (features) used in the GLM fit.
-
-        y   :  list of dependent variables (flows) used in the GLM fit.
-
-        poisson_results  :  statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
-            statsmodels object with information on the fit's quality and predictions.
+        flow_df  :  FlowDataFrame 
+            the real flows on the spatial tessellation. 
+            
+        relevance_column : str, optional
+            the column in the spatial tessellation with the relevance of the location. The default is constants.RELEVANCE.
 
         References
         ----------
-
-        .. [1] Agresti, Alan.
-            "Categorical data analysis."
-            Vol. 482. John Wiley & Sons, 2003.
-
-        .. [2] Flowerdew, Robin, and Murray Aitkin.
-            "A method of fitting the gravity model based on the Poisson distribution."
-            Journal of regional science 22.2 (1982): 191-202.
+        .. [FM1982] Flowerdew, R. & Murray, A. (1982) A method of fitting the gravity model based on the Poisson distribution. Journal of regional science 22(2), 191-202, https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x
 
         """
         self.lats_lngs = flow_df.tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
