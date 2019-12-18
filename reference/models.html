@@ -256,7 +256,7 @@
 <dt class="label" id="psr2016"><span class="brackets">PSR2016</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id8">2</a>)</span></dt>
 <dd><p>Pappalardo, L., Simini, F. Rinzivillo, S. (2016) Human Mobility Modelling: exploration and preferential return meet the gravity model. Procedia Computer Science 83, <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1877050916302216">https://www.sciencedirect.com/science/article/pii/S1877050916302216</a></p>
 </dd>
-<dt class="label" id="skwb2010"><span class="brackets">SKWB2010</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id4">2</a>,<a href="#id5">3</a>,<a href="#id6">4</a>,<a href="#id9">5</a>,<a href="#id10">6</a>,<a href="#id11">7</a>,<a href="#id13">8</a>,<a href="#id14">9</a>)</span></dt>
+<dt class="label" id="skwb2010"><span class="brackets">SKWB2010</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id4">2</a>,<a href="#id5">3</a>,<a href="#id6">4</a>,<a href="#id9">5</a>,<a href="#id10">6</a>,<a href="#id11">7</a>,<a href="#id12">8</a>,<a href="#id13">9</a>,<a href="#id14">10</a>,<a href="#id16">11</a>,<a href="#id17">12</a>)</span></dt>
 <dd><p>Song, C., Koren, T., Wang, P. &amp; Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, <a class="reference external" href="https://www.nature.com/articles/nphys1760">https://www.nature.com/articles/nphys1760</a></p>
 </dd>
 </dl>
@@ -304,14 +304,16 @@
 <p><strong>Action selection</strong>. With probability <span class="math notranslate nohighlight">\(P_{new}=\rho S^{-\gamma}\)</span>, where <span class="math notranslate nohighlight">\(S\)</span> is the number of distinct locations previously visited by the agent, the agent visits a new location (Exploration phase), otherwise it returns to a previously visited location (Return phase). Parameters <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> correspond to arguments <cite>rho</cite> and <cite>gamma</cite> of the constructor, respectively.</p>
 <p><strong>Exploration phase</strong>. If the agent that is currently in location <span class="math notranslate nohighlight">\(i\)</span> explores a new location, then the new location <span class="math notranslate nohighlight">\(j \neq i\)</span> is selected according to the distance from the current location <span class="math notranslate nohighlight">\(p_{ij} = \frac{1}{r_{ij}^2}\)</span>, where <span class="math notranslate nohighlight">\(r_{ij}\)</span> is the geographic distance between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>. The number of distinct locations visited, <span class="math notranslate nohighlight">\(S\)</span>, is increased by 1.</p>
 <p><strong>Return phase</strong>. If the individual returns to a previously visited location, such a location <span class="math notranslate nohighlight">\(i\)</span> is chosen with probability proportional to the number of time the agent visited <span class="math notranslate nohighlight">\(i\)</span>, i.e., <span class="math notranslate nohighlight">\(\Pi_i = f_i\)</span>, where <span class="math notranslate nohighlight">\(f_i\)</span> is the visitation frequency of location <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<img alt="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fnphys1760/MediaObjects/41567_2010_Article_BFnphys1760_Fig2_HTML.jpg?as=webp" src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fnphys1760/MediaObjects/41567_2010_Article_BFnphys1760_Fig2_HTML.jpg?as=webp" />
+<p>Starting at time <span class="math notranslate nohighlight">\(t\)</span> from the configuration shown in the left panel, indicating that the user visited previously <span class="math notranslate nohighlight">\(S=4\)</span> locations with frequency <span class="math notranslate nohighlight">\(f_i\)</span> that is proportional to the size of circles drawn at each location, at time <span class="math notranslate nohighlight">\(t + \Delta t\)</span> (with <span class="math notranslate nohighlight">\(Delta t\)</span> drawn from the <span class="math notranslate nohighlight">\(P(\Delta t)\)</span> fat-tailed distribution) the user can either visit a new location at distance <span class="math notranslate nohighlight">\(\Delta r\)</span> from his/her present location, or return to a previously visited location with probability <span class="math notranslate nohighlight">\(P_{ret}=\rho S^{-\gamma}\)</span>, where the next location will be chosen with probability <span class="math notranslate nohighlight">\(\Pi_i=f_i\)</span> (preferential return; lower panel). Figure from <a class="reference internal" href="#skwb2010" id="id10"><span>[SKWB2010]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str, optional</em>) – the name of the instantiation of the s-EPR model. The default value is “Spatial EPR model”.</p></li>
-<li><p><strong>rho</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\rho \in (0, 1]\)</span> in the Action selection mechanism <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\rho = 0.6\)</span> <a class="reference internal" href="#skwb2010" id="id10"><span>[SKWB2010]</span></a>.</p></li>
-<li><p><strong>gamma</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) in the Action selection mechanism <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\gamma=0.21\)</span> <a class="reference internal" href="#skwb2010" id="id11"><span>[SKWB2010]</span></a>.</p></li>
-<li><p><strong>beta</strong> (<em>float</em>) – the input parameter <span class="math notranslate nohighlight">\(\beta\)</span></p></li>
-<li><p><strong>tau</strong> (<em>int</em>) – the input parameter <span class="math notranslate nohighlight">\(\tau\)</span></p></li>
+<li><p><strong>rho</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\rho \in (0, 1]\)</span> in the Action selection mechanism <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\rho = 0.6\)</span> <a class="reference internal" href="#skwb2010" id="id11"><span>[SKWB2010]</span></a>.</p></li>
+<li><p><strong>gamma</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) in the Action selection mechanism <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\gamma=0.21\)</span> <a class="reference internal" href="#skwb2010" id="id12"><span>[SKWB2010]</span></a>.</p></li>
+<li><p><strong>beta</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\beta\)</span> of the waiting time distribution in the Waiting time choice mechanism. The default value is <span class="math notranslate nohighlight">\(\beta=0.8\)</span> <a class="reference internal" href="#skwb2010" id="id13"><span>[SKWB2010]</span></a>.</p></li>
+<li><p><strong>tau</strong> (<em>int, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\tau\)</span> of the waiting time distribution in the Waiting time choice mechanism. The default value is <span class="math notranslate nohighlight">\(\tau = 17\)</span>, expressed in hours <a class="reference internal" href="#skwb2010" id="id14"><span>[SKWB2010]</span></a>.</p></li>
 <li><p><strong>min_wait_time_minutes</strong> (<em>int</em>) – the input parameters <cite>min_wait_time_minutes</cite></p></li>
 </ul>
 </dd>
@@ -386,7 +388,7 @@
 <dt id="skmob.models.epr.Ditras">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.models.epr.</code><code class="sig-name descname">Ditras</code><span class="sig-paren">(</span><em class="sig-param">diary_generator</em>, <em class="sig-param">name='Ditras model'</em>, <em class="sig-param">rho=0.3</em>, <em class="sig-param">gamma=0.21</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.Ditras" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ditras modelling framework.</p>
-<p>The DITRAS (DIary-based TRAjectory Simulator) modelling framework to simulate the spatio-temporal patterns of human mobility <a class="reference internal" href="#ps2018" id="id12"><span>[PS2018]</span></a>. DITRAS consists of two phases:</p>
+<p>The DITRAS (DIary-based TRAjectory Simulator) modelling framework to simulate the spatio-temporal patterns of human mobility <a class="reference internal" href="#ps2018" id="id15"><span>[PS2018]</span></a>. DITRAS consists of two phases:</p>
 <p><strong>Mobility Diary Generation</strong>. In the first phase, DITRAS generates a <em>mobility diary</em> which captures the temporal patterns of human mobility.</p>
 <p><strong>Trajectory Generation</strong>. In the second phase, DITRAS transforms the mobility diary into a mobility trajectory which captures the spatial patterns of human movements.</p>
 <img alt="https://raw.githubusercontent.com/jonpappalord/DITRAS/master/DITRAS_schema.png" src="https://raw.githubusercontent.com/jonpappalord/DITRAS/master/DITRAS_schema.png" />
@@ -396,13 +398,13 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>diary_generator</strong> (<em>MarkovDiaryGenerator</em>) – the diary generator to use for generating the diary.</p></li>
 <li><p><strong>name</strong> (<em>str, optional</em>) – the name of the instantiation of the Ditras model. The default value is “Ditras”.</p></li>
-<li><p><strong>rho</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\rho \in (0, 1]\)</span> in the Action selection mechanism  of the DensityEPR model <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\rho = 0.6\)</span> <a class="reference internal" href="#skwb2010" id="id13"><span>[SKWB2010]</span></a>.</p></li>
-<li><p><strong>gamma</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) in the Action selection mechanism of the DensityEPR model <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\gamma=0.21\)</span> <a class="reference internal" href="#skwb2010" id="id14"><span>[SKWB2010]</span></a>.</p></li>
+<li><p><strong>rho</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\rho \in (0, 1]\)</span> in the Action selection mechanism  of the DensityEPR model <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\rho = 0.6\)</span> <a class="reference internal" href="#skwb2010" id="id16"><span>[SKWB2010]</span></a>.</p></li>
+<li><p><strong>gamma</strong> (<em>float, optional</em>) – it corresponds to the parameter <span class="math notranslate nohighlight">\(\gamma\)</span> (<span class="math notranslate nohighlight">\(\gamma \geq 0\)</span>) in the Action selection mechanism of the DensityEPR model <span class="math notranslate nohighlight">\(P_{new} = \rho S^{-\gamma}\)</span> and controls the agent’s tendency to explore a new location during the next move versus returning to a previously visited location. The default value is <span class="math notranslate nohighlight">\(\gamma=0.21\)</span> <a class="reference internal" href="#skwb2010" id="id17"><span>[SKWB2010]</span></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Variables</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>diary_generator</strong> (<a class="reference internal" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator" title="skmob.models.markov_diary_generator.MarkovDiaryGenerator"><em>MarkovDiaryGenerator</em></a>) – the diary generator to use for generating the diary <a class="reference internal" href="#ps2018" id="id15"><span>[PS2018]</span></a>.</p></li>
+<li><p><strong>diary_generator</strong> (<a class="reference internal" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator" title="skmob.models.markov_diary_generator.MarkovDiaryGenerator"><em>MarkovDiaryGenerator</em></a>) – the diary generator to use for generating the diary <a class="reference internal" href="#ps2018" id="id18"><span>[PS2018]</span></a>.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – the name of the instantiation of the model.</p></li>
 <li><p><strong>rho</strong> (<em>float</em>) – the input parameter <span class="math notranslate nohighlight">\(\rho\)</span>.</p></li>
 <li><p><strong>gamma</strong> (<em>float</em>) – the input parameters <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
@@ -451,7 +453,7 @@
 </div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="ps2018"><span class="brackets">PS2018</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id15">2</a>)</span></dt>
+<dt class="label" id="ps2018"><span class="brackets">PS2018</span><span class="fn-backref">(<a href="#id15">1</a>,<a href="#id18">2</a>)</span></dt>
 <dd><p>Pappalardo, L. &amp; Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, <a class="reference external" href="https://link.springer.com/article/10.1007/s10618-017-0548-4">https://link.springer.com/article/10.1007/s10618-017-0548-4</a></p>
 </dd>
 </dl>
@@ -504,7 +506,7 @@ at the usual time, or she breaks the routine and visits another location.</p>
 name of the object</p>
 </dd>
 <dt class="field-even">Ivar</dt>
-<dd class="field-even"><p><a href="#id20"><span class="problematic" id="id21">markov_chain_</span></a>: dict
+<dd class="field-even"><p><a href="#id24"><span class="problematic" id="id25">markov_chain_</span></a>: dict
 the trained markov chain</p>
 </dd>
 <dt class="field-odd">Variables</dt>
@@ -570,10 +572,22 @@ the starting date</p></li>
 <dt id="skmob.models.gravity.Gravity">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">Gravity</code><span class="sig-paren">(</span><em class="sig-param">deterrence_func_type='power_law', deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type='singly constrained', name='Gravity model'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gravity model.</p>
-<p>The Gravity model of human migration. In its original formulation, the probability <span class="math notranslate nohighlight">\(T_{ij}\)</span> of moving from a location <span class="math notranslate nohighlight">\(i\)</span> to location <span class="math notranslate nohighlight">\(j\)</span> is defined as <a class="reference internal" href="#z1946" id="id16"><span>[Z1946]</span></a>:</p>
+<p>The Gravity model of human migration. In its original formulation, the probability <span class="math notranslate nohighlight">\(T_{ij}\)</span> of moving from a location <span class="math notranslate nohighlight">\(i\)</span> to location <span class="math notranslate nohighlight">\(j\)</span> is defined as <a class="reference internal" href="#z1946" id="id19"><span>[Z1946]</span></a>:</p>
 <div class="math notranslate nohighlight">
 \[T_{ij} \propto \frac{P_i P_j}{r_{ij}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(P_i\)</span> and <span class="math notranslate nohighlight">\(P_j\)</span> are the population of location <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> and <span class="math notranslate nohighlight">\(r_{ij}\)</span> is the distance between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(P_i\)</span> and <span class="math notranslate nohighlight">\(P_j\)</span> are the population of location <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> and <span class="math notranslate nohighlight">\(r_{ij}\)</span> is the distance between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>. The basic assumptions of this model are that the number of trips leaving location <span class="math notranslate nohighlight">\(i\)</span> is proportional to its population <span class="math notranslate nohighlight">\(P_i\)</span>, the attractivity of location <span class="math notranslate nohighlight">\(j\)</span> is also proportional to <span class="math notranslate nohighlight">\(P_j\)</span>, and finally, that there is a cost effect in terms of distance traveled. These ideas can be generalized assuming a relation of the type <a class="reference internal" href="#bbgjllmrst2018" id="id20"><span>[BBGJLLMRST2018]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[T_{ij} = K m_i m_j f(r_{ij})\]</div>
+<p>where <span class="math notranslate nohighlight">\(K\)</span> is a constant, the masses <span class="math notranslate nohighlight">\(m_i\)</span> and <span class="math notranslate nohighlight">\(m_j\)</span> relate to the number of trips leaving location <span class="math notranslate nohighlight">\(i\)</span> or the ones attracted by location <span class="math notranslate nohighlight">\(j\)</span>, and <span class="math notranslate nohighlight">\(f(r_{ij})\)</span>, called <em>deterrence function</em>, is a decreasing function of distance. The deterrence function <span class="math notranslate nohighlight">\(f(r_{ij})\)</span> is commonly modeled with a powerlaw or an exponential form.</p>
+<p><strong>Constrained gravity models</strong>. Some of the limitations of the gravity model can be resolved via constrained versions. For example, one may hold the number of people originating from a location <span class="math notranslate nohighlight">\(i\)</span> to be a known quantity <span class="math notranslate nohighlight">\(O_i\)</span>, and the gravity model is then used to estimate the destination, constituting a so-called <em>singly constrained</em> gravity model of the form:</p>
+<div class="math notranslate nohighlight">
+\[T_{ij} = K_i O_i m_j f(r_{ij}) = O_i \frac{m_i f(r_{ij})}{\sum_k m_k f(r_{ik})}.\]</div>
+<p>In this formulation, the proportionality constants <span class="math notranslate nohighlight">\(K_i\)</span> depend on the location of the origin and its distance to the other places considered. We can fix also the total number of travelers arriving at a destination <span class="math notranslate nohighlight">\(j\)</span> as <span class="math notranslate nohighlight">\(D_j = \sum_i T_{ij}\)</span>, leading to a <em>doubly-constrained</em> gravity model. For each origin-destination pair, the flow is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[T_{ij} = K_i O_i L_j D_j f(r_{ij})\]</div>
+<p>where there are now two flavors of proportionality constants</p>
+<div class="math notranslate nohighlight">
+\[K_i = \frac{1}{\sum_j L_j D_j f(r_{ij})}, L_j = \frac{1}{\sum_i K_i O_i f(r_{ij})}.\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -583,6 +597,16 @@ the starting date</p></li>
 <li><p><strong>destination_exp</strong> (<em>float, optional</em>) – the explonent of the destination’s relevance. The default is 1.0.</p></li>
 <li><p><strong>gravity_type</strong> (<em>str, optional</em>) – the type of gravity model. Possible values are “singly constrained” and “globally constrained”. The default is “singly constrained”.</p></li>
 <li><p><strong>name</strong> (<em>str, optional</em>) – the name of the instantiation of the Gravity model. The default is “Gravity model”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>deterrence_func_type</strong> (<em>str</em>) – the deterrence function to use. The possible deterrence function are “power_law” and “exponential”.</p></li>
+<li><p><strong>deterrence_func_args</strong> (<em>list</em>) – the arguments of the deterrence function.</p></li>
+<li><p><strong>origin_exp</strong> (<em>float</em>) – the exponent of the origin’s relevance (only relevant to globally-constrained model).</p></li>
+<li><p><strong>destination_exp</strong> (<em>float</em>) – the explonent of the destination’s relevance.</p></li>
+<li><p><strong>gravity_type</strong> (<em>str</em>) – the type of gravity model. Possible values are “singly constrained” and “globally constrained”.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – the name of the instantiation of the Gravity model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -605,7 +629,10 @@ the starting date</p></li>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span> <span class="n">tessellation</span><span class="o">=</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">tile_id</span><span class="o">=</span><span class="s1">&#39;tile_ID&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
+<span class="go">                                        tessellation=tessellation,</span>
+<span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
+<span class="go">                                        sep=&quot;,&quot;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">fdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">     flow origin destination</span>
 <span class="go">0  121606  36001       36001</span>
@@ -653,7 +680,11 @@ the starting date</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gravity_singly_fitted</span><span class="p">)</span>
 <span class="go">Gravity(name=&quot;Gravity model&quot;, deterrence_func_type=&quot;power_law&quot;, deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type=&quot;singly constrained&quot;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">synth_fdf_fitted</span> <span class="o">=</span> <span class="n">gravity_singly_fitted</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">tile_id_column</span><span class="o">=</span><span class="s1">&#39;tile_ID&#39;</span><span class="p">,</span> <span class="n">tot_outflows_column</span><span class="o">=</span><span class="s1">&#39;tot_outflow&#39;</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span> <span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s1">&#39;flows&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">synth_fdf_fitted</span> <span class="o">=</span> <span class="n">gravity_singly_fitted</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">tessellation</span><span class="p">,</span>
+<span class="go">                                                        tile_id_column=&#39;tile_ID&#39;,</span>
+<span class="go">                                                        tot_outflows_column=&#39;tot_outflow&#39;,</span>
+<span class="go">                                                        relevance_column= &#39;population&#39;,</span>
+<span class="go">                                                        out_format=&#39;flows&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">synth_fdf_fitted</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  origin destination  flow</span>
 <span class="go">0  36019       36101   102</span>
@@ -665,11 +696,14 @@ the starting date</p></li>
 </div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="z1946"><span class="brackets"><a class="fn-backref" href="#id16">Z1946</a></span></dt>
+<dt class="label" id="z1946"><span class="brackets"><a class="fn-backref" href="#id19">Z1946</a></span></dt>
 <dd><p>Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, <a class="reference external" href="https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents">https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents</a></p>
 </dd>
 <dt class="label" id="w1971"><span class="brackets">W1971</span></dt>
 <dd><p>Wilson, A. G. (1971) A family of spatial interaction models, and associated developments. Environment and Planning A 3(1), 1-32, <a class="reference external" href="https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm">https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm</a></p>
+</dd>
+<dt class="label" id="bbgjllmrst2018"><span class="brackets"><a class="fn-backref" href="#id20">BBGJLLMRST2018</a></span></dt>
+<dd><p>Barbosa, H., Barthelemy, M., Ghoshal, G., James, C. R., Lenormand, M., Louail, T., Menezes, R., Ramasco, J. J. , Simini, F. &amp; Tomasini, M. (2018) Human mobility: Models and applications. Physics Reports 734, 1-74, <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S037015731830022X">https://www.sciencedirect.com/science/article/abs/pii/S037015731830022X</a></p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -679,7 +713,7 @@ the starting date</p></li>
 <dl class="method">
 <dt id="skmob.models.gravity.Gravity.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">flow_df</em>, <em class="sig-param">relevance_column='relevance'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit the parameters of the Gravity model to the flows provided in input, using a Generalized Linear Model (GLM) with a Poisson regression <a class="reference internal" href="#fm1982" id="id17"><span>[FM1982]</span></a>.</p>
+<dd><p>Fit the parameters of the Gravity model to the flows provided in input, using a Generalized Linear Model (GLM) with a Poisson regression <a class="reference internal" href="#fm1982" id="id21"><span>[FM1982]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -690,7 +724,7 @@ the starting date</p></li>
 </dl>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="fm1982"><span class="brackets"><a class="fn-backref" href="#id17">FM1982</a></span></dt>
+<dt class="label" id="fm1982"><span class="brackets"><a class="fn-backref" href="#id21">FM1982</a></span></dt>
 <dd><p>Flowerdew, R. &amp; Murray, A. (1982) A method of fitting the gravity model based on the Poisson distribution. Journal of regional science 22(2), 191-202, <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x">https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x</a></p>
 </dd>
 </dl>
@@ -741,7 +775,7 @@ the name of the instantiation of the radiation model</p>
 the name of the instantiation of the model
 default: “Radiation model”</p>
 </dd>
-<dt class="field-even">ivar <a href="#id22"><span class="problematic" id="id23">edges_</span></a></dt>
+<dt class="field-even">ivar <a href="#id26"><span class="problematic" id="id27">edges_</span></a></dt>
 <dd class="field-even"><p>pandas DataFrame
 the generated edges (flows or probabilities)</p>
 </dd>
@@ -760,14 +794,14 @@ flux between two counties:
 are the population in county :math:i and :math:j respectively, and :math:s_{ij} is the total population
 in the circle centered at :math:i and touching :math:j excluding the source and the destination population.</p>
 <dl class="footnote brackets">
-<dt class="label" id="id18"><span class="brackets">1</span></dt>
+<dt class="label" id="id22"><span class="brackets">1</span></dt>
 <dd><p>Simini, Filippo, Gonzalez, Marta C., Maritan, Amos and Barabasi, Albert-Laszlo.</p>
 </dd>
 </dl>
 <p>“A universal model for mobility and migration patterns.”
 Nature 484 , no. 7392 (2012): 96–100.</p>
 <dl class="footnote brackets">
-<dt class="label" id="id19"><span class="brackets">2</span></dt>
+<dt class="label" id="id23"><span class="brackets">2</span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility">https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility</a></p>
 </dd>
 </dl>
