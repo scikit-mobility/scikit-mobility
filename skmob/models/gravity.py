@@ -85,7 +85,27 @@ class Gravity:
     .. math::
         T_{ij} \propto \\frac{P_i P_j}{r_{ij}} 
 
-    where :math:`P_i` and :math:`P_j` are the population of location :math:`i` and :math:`j` and :math:`r_{ij}` is the distance between :math:`i` and :math:`j`.
+    where :math:`P_i` and :math:`P_j` are the population of location :math:`i` and :math:`j` and :math:`r_{ij}` is the distance between :math:`i` and :math:`j`. The basic assumptions of this model are that the number of trips leaving location :math:`i` is proportional to its population :math:`P_i`, the attractivity of location :math:`j` is also proportional to :math:`P_j`, and finally, that there is a cost effect in terms of distance traveled. These ideas can be generalized assuming a relation of the type [BBGJLLMRST2018]_:
+    
+    .. math::
+        T_{ij} = K m_i m_j f(r_{ij})
+        
+    where :math:`K` is a constant, the masses :math:`m_i` and :math:`m_j` relate to the number of trips leaving location :math:`i` or the ones attracted by location :math:`j`, and :math:`f(r_{ij})`, called *deterrence function*, is a decreasing function of distance. The deterrence function :math:`f(r_{ij})` is commonly modeled with a powerlaw or an exponential form.
+
+    **Constrained gravity models**. Some of the limitations of the gravity model can be resolved via constrained versions. For example, one may hold the number of people originating from a location :math:`i` to be a known quantity :math:`O_i`, and the gravity model is then used to estimate the destination, constituting a so-called *singly constrained* gravity model of the form:
+
+    .. math::
+        T_{ij} = K_i O_i m_j f(r_{ij}) = O_i \\frac{m_i f(r_{ij})}{\sum_k m_k f(r_{ik})}.
+        
+    In this formulation, the proportionality constants :math:`K_i` depend on the location of the origin and its distance to the other places considered. We can fix also the total number of travelers arriving at a destination :math:`j` as :math:`D_j = \sum_i T_{ij}`, leading to a *doubly-constrained* gravity model. For each origin-destination pair, the flow is calculated as:
+    
+    .. math::
+        T_{ij} = K_i O_i L_j D_j f(r_{ij})
+        
+    where there are now two flavors of proportionality constants
+    
+    .. math::
+        K_i = \\frac{1}{\sum_j L_j D_j f(r_{ij})}, L_j = \\frac{1}{\sum_i K_i O_i f(r_{ij})}.
 
     Parameters
     ----------
@@ -106,7 +126,27 @@ class Gravity:
         
     name : str, optional
         the name of the instantiation of the Gravity model. The default is "Gravity model".
+    
+    Attributes
+    ----------
+    deterrence_func_type : str
+        the deterrence function to use. The possible deterrence function are "power_law" and "exponential". 
 
+    deterrence_func_args : list
+        the arguments of the deterrence function. 
+
+    origin_exp : float
+        the exponent of the origin's relevance (only relevant to globally-constrained model). 
+
+    destination_exp : float
+        the explonent of the destination's relevance.
+
+    gravity_type : str
+        the type of gravity model. Possible values are "singly constrained" and "globally constrained". 
+        
+    name : str
+        the name of the instantiation of the Gravity model. 
+    
     Examples
     --------
     >>> import skmob
@@ -196,6 +236,7 @@ class Gravity:
     ----------
     .. [Z1946] Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents
     .. [W1971] Wilson, A. G. (1971) A family of spatial interaction models, and associated developments. Environment and Planning A 3(1), 1-32, https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm
+    .. [BBGJLLMRST2018] Barbosa, H., Barthelemy, M., Ghoshal, G., James, C. R., Lenormand, M., Louail, T., Menezes, R., Ramasco, J. J. , Simini, F. & Tomasini, M. (2018) Human mobility: Models and applications. Physics Reports 734, 1-74, https://www.sciencedirect.com/science/article/abs/pii/S037015731830022X
     
     See Also
     --------
