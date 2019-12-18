@@ -25,6 +25,7 @@
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
         <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/copybutton.js"></script>
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -183,7 +184,7 @@
 <td><p>The Markov model which describes the probability that an individual follows her routine and visits a typical location at the usual time, or she breaks the routine and visits another location.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.models.gravity.Gravity" title="skmob.models.gravity.Gravity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gravity.Gravity</span></code></a>([deterrence_func_type, …])</p></td>
-<td><p>The Gravity model of human migration.</p></td>
+<td><p>Gravity model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.models.radiation.Radiation" title="skmob.models.radiation.Radiation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiation.Radiation</span></code></a>([name])</p></td>
 <td><p>The radiation model for human migration.</p></td>
@@ -319,9 +320,9 @@
 <li><p><strong>name</strong> (<em>str</em>) – the name of the instantiation of the model.</p></li>
 <li><p><strong>rho</strong> (<em>float</em>) – the input parameter <span class="math notranslate nohighlight">\(\rho\)</span>.</p></li>
 <li><p><strong>gamma</strong> (<em>float</em>) – the input parameters <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
-<li><p><strong>beta</strong> (<em>float</em>) – the input parameter <span class="math notranslate nohighlight">\(\beta\)</span></p></li>
-<li><p><strong>tau</strong> (<em>int</em>) – the input parameter <span class="math notranslate nohighlight">\(\tau\)</span></p></li>
-<li><p><strong>min_wait_time_minutes</strong> (<em>int</em>) – the input parameters <cite>min_wait_time_minutes</cite></p></li>
+<li><p><strong>beta</strong> (<em>float</em>) – the input parameter <span class="math notranslate nohighlight">\(\beta\)</span>.</p></li>
+<li><p><strong>tau</strong> (<em>int</em>) – the input parameter <span class="math notranslate nohighlight">\(\tau\)</span>.</p></li>
+<li><p><strong>min_wait_time_minutes</strong> (<em>int</em>) – the input parameters <cite>min_wait_time_minutes</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -503,7 +504,7 @@ at the usual time, or she breaks the routine and visits another location.</p>
 name of the object</p>
 </dd>
 <dt class="field-even">Ivar</dt>
-<dd class="field-even"><p><a href="#id21"><span class="problematic" id="id22">markov_chain_</span></a>: dict
+<dd class="field-even"><p><a href="#id20"><span class="problematic" id="id21">markov_chain_</span></a>: dict
 the trained markov chain</p>
 </dd>
 <dt class="field-odd">Variables</dt>
@@ -568,76 +569,75 @@ the starting date</p></li>
 <dl class="class">
 <dt id="skmob.models.gravity.Gravity">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.models.gravity.</code><code class="sig-name descname">Gravity</code><span class="sig-paren">(</span><em class="sig-param">deterrence_func_type='power_law', deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type='singly constrained', name='Gravity model'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Gravity model of human migration.</p>
+<dd><p>Gravity model.</p>
+<p>The Gravity model of human migration. In its original formulation, the probability <span class="math notranslate nohighlight">\(T_{ij}\)</span> of moving from a location <span class="math notranslate nohighlight">\(i\)</span> to location <span class="math notranslate nohighlight">\(j\)</span> is defined as <a class="reference internal" href="#z1946" id="id16"><span>[Z1946]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[T_{ij} \propto \frac{P_i P_j}{r_{ij}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_i\)</span> and <span class="math notranslate nohighlight">\(P_j\)</span> are the population of location <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> and <span class="math notranslate nohighlight">\(r_{ij}\)</span> is the distance between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deterrence_func_type</strong> – str
-the type of deterrence function.
-available types: ‘power_law’ (default), ‘exponential’</p></li>
-<li><p><strong>deterrence_func_args</strong> – list
-arguments of the deterrence function.</p></li>
-<li><p><strong>origin_exp</strong> – float (1.0), exponent of origin’s relevance
-(only relevant to globally-constrained model).</p></li>
-<li><p><strong>destination_exp</strong> – float (1.0), exponent of destination’s relevance.</p></li>
-<li><p><strong>gravity_type</strong> – str
-gravity model type.
-available types: ‘singly constrained’, ‘globally constrained’.
-default: ‘singly constrained’</p></li>
+<li><p><strong>deterrence_func_type</strong> (<em>str, optional</em>) – the deterrence function to use. The possible deterrence function are “power_law” and “exponential”. The default is “power_law”.</p></li>
+<li><p><strong>deterrence_func_args</strong> (<em>list, optional</em>) – the arguments of the deterrence function. The default is [-2.0].</p></li>
+<li><p><strong>origin_exp</strong> (<em>float, optional</em>) – the exponent of the origin’s relevance (only relevant to globally-constrained model). The default is <cite>1.0</cite>.</p></li>
+<li><p><strong>destination_exp</strong> (<em>float, optional</em>) – the explonent of the destination’s relevance. The default is 1.0.</p></li>
+<li><p><strong>gravity_type</strong> (<em>str, optional</em>) – the type of gravity model. Possible values are “singly constrained” and “globally constrained”. The default is “singly constrained”.</p></li>
+<li><p><strong>name</strong> (<em>str, optional</em>) – the name of the instantiation of the Gravity model. The default is “Gravity model”.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The gravity model is a model of human migration derived from Newton’s law of gravity,
-and it is used to predict the degree of interaction between two places.
-The gravity model of migration is based upon the idea that as the importance of one
-or both of the location increases, there will also be an increase in movement between them.
-The farther apart the two locations are, however, the movement between them will be less (distance decay).</p>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id16"><span class="brackets">1</span></dt>
-<dd><p>Zipf, George Kingsley. “The P 1 P 2/D hypothesis: on the intercity movement of persons.”</p>
+<dl class="citation">
+<dt class="label" id="z1946"><span class="brackets"><a class="fn-backref" href="#id16">Z1946</a></span></dt>
+<dd><p>Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, <a class="reference external" href="https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents">https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents</a></p>
+</dd>
+<dt class="label" id="w1971"><span class="brackets">W1971</span></dt>
+<dd><p>Wilson, A. G. (1971) A family of spatial interaction models, and associated developments. Environment and Planning A 3(1), 1-32, <a class="reference external" href="https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm">https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm</a></p>
 </dd>
 </dl>
-<p>American sociological review 11.6 (1946): 677-686.
-.. [2] Wilson, Alan Geoffrey. “A family of spatial interaction models, and associated developments.”
-Environment and Planning A 3.1 (1971): 1-32.
-.. [3] Erlander, Sven, and Neil F. Stewart. “The gravity model in transportation analysis: theory and extensions”.
-Vol. 3. Vsp, 1990.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">Radiation</span></code></p>
+</div>
 <dl class="method">
 <dt id="skmob.models.gravity.Gravity.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">flow_df</em>, <em class="sig-param">relevance_column='relevance'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit the gravity model parameters to the flows in file <cite>filename</cite>.
-Can fit globally or singly constrained gravity models using a
-Generalized Linear Model (GLM) with a Poisson regression.</p>
-<dl class="field-list">
+<dd><p>Fit the parameters of the Gravity model to the flows provided in input, using a Generalized Linear Model (GLM) with a Poisson regression <a class="reference internal" href="#fm1982" id="id17"><span>[FM1982]</span></a>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>flow_df</strong> (<em>FlowDataFrame where the flows are stored and with info about the spatial tessellation.</em>) – In addition to the default columns, the spatial tessellation must contain the column
-“relevance”: float, number of opportunities at the location</p>
-<blockquote>
-<div><p>(e.g., population or total number of visits).</p>
-</div></blockquote>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>X</strong> (<em>list of independent variables (features) used in the GLM fit.</em>)</p></li>
-<li><p><strong>y</strong> (<em>list of dependent variables (flows) used in the GLM fit.</em>)</p></li>
-<li><p><strong>poisson_results</strong> (<em>statsmodels.genmod.generalized_linear_model.GLMResultsWrapper</em>) – statsmodels object with information on the fit’s quality and predictions.</p></li>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flow_df</strong> (<em>FlowDataFrame</em>) – the real flows on the spatial tessellation.</p></li>
+<li><p><strong>relevance_column</strong> (<em>str, optional</em>) – the column in the spatial tessellation with the relevance of the location. The default is constants.RELEVANCE.</p></li>
 </ul>
-</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id17"><span class="brackets">1</span></dt>
-<dd><p>Agresti, Alan.
-“Categorical data analysis.”
-Vol. 482. John Wiley &amp; Sons, 2003.</p>
+<dl class="citation">
+<dt class="label" id="fm1982"><span class="brackets"><a class="fn-backref" href="#id17">FM1982</a></span></dt>
+<dd><p>Flowerdew, R. &amp; Murray, A. (1982) A method of fitting the gravity model based on the Poisson distribution. Journal of regional science 22(2), 191-202, <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x">https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x</a></p>
 </dd>
-<dt class="label" id="id18"><span class="brackets">2</span></dt>
-<dd><p>Flowerdew, Robin, and Murray Aitkin.
-“A method of fitting the gravity model based on the Poisson distribution.”
-Journal of regional science 22.2 (1982): 191-202.</p>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skmob.models.gravity.Gravity.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">spatial_tessellation</em>, <em class="sig-param">tile_id_column='tile_ID'</em>, <em class="sig-param">tot_outflows_column='tot_outflow'</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">out_format='flows'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the simulation of the Gravity model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial_tessellation</strong> (<em>GeoDataFrame</em>) – the spatial tessellation on which to run the simulation.</p></li>
+<li><p><strong>tile_id_column</strong> (<em>str, optional</em>) – the column in <cite>spatial_tessellation</cite> of the location identifier. The default is <cite>constants.TILE_ID</cite>.</p></li>
+<li><p><strong>tot_outflows_column</strong> (<em>str, optional</em>) – the column in <cite>spatial_tessellation</cite> with the outflow of the location. The default is <cite>constants.TOT_OUTFLOW</cite>.</p></li>
+<li><p><strong>relevance_column</strong> (<em>str, optional</em>) – the column in <cite>spatial_tessellation</cite> with the relevance of the location. The default is <cite>constants.RELEVANCE</cite>.</p></li>
+<li><p><strong>out_format</strong> (<em>str, optional</em>) – the format of the generated flows. Possible values are “flows” and “probabilities”. The default is “flows”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the flows generated by the Gravity model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.flowdataframe.FlowDataFrame" title="skmob.core.flowdataframe.FlowDataFrame">FlowDataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -664,7 +664,7 @@ the name of the instantiation of the radiation model</p>
 the name of the instantiation of the model
 default: “Radiation model”</p>
 </dd>
-<dt class="field-even">ivar <a href="#id23"><span class="problematic" id="id24">edges_</span></a></dt>
+<dt class="field-even">ivar <a href="#id22"><span class="problematic" id="id23">edges_</span></a></dt>
 <dd class="field-even"><p>pandas DataFrame
 the generated edges (flows or probabilities)</p>
 </dd>
@@ -683,14 +683,14 @@ flux between two counties:
 are the population in county :math:i and :math:j respectively, and :math:s_{ij} is the total population
 in the circle centered at :math:i and touching :math:j excluding the source and the destination population.</p>
 <dl class="footnote brackets">
-<dt class="label" id="id19"><span class="brackets">1</span></dt>
+<dt class="label" id="id18"><span class="brackets">1</span></dt>
 <dd><p>Simini, Filippo, Gonzalez, Marta C., Maritan, Amos and Barabasi, Albert-Laszlo.</p>
 </dd>
 </dl>
 <p>“A universal model for mobility and migration patterns.”
 Nature 484 , no. 7392 (2012): 96–100.</p>
 <dl class="footnote brackets">
-<dt class="label" id="id20"><span class="brackets">2</span></dt>
+<dt class="label" id="id19"><span class="brackets">2</span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility">https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility</a></p>
 </dd>
 </dl>
