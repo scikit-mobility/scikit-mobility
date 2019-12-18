@@ -107,6 +107,91 @@ class Gravity:
     name : str, optional
         the name of the instantiation of the Gravity model. The default is "Gravity model".
 
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.utils import utils, constants
+    >>> import pandas as pd
+    >>> import geopandas as gpd
+    >>> import numpy as np
+    >>> from skmob.models import Gravity
+    >>> # load a spatial tessellation
+    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+    >>> print(tessellation.head())
+      tile_ID  population                                           geometry
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
+    >>> # load real flows into a FlowDataFrame
+    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+    >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv", 
+                                            tessellation=tessellation, 
+                                            tile_id='tile_ID', 
+                                            sep=",")
+    >>> print(fdf.head())
+         flow origin destination
+    0  121606  36001       36001
+    1       5  36001       36005
+    2      29  36001       36007
+    3      11  36001       36017
+    4      30  36001       36019    
+    >>> # compute the total outflows from each location of the tessellation (excluding self loops)
+    >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
+    >>> tessellation[skmob.constants.TOT_OUTFLOW] = tot_outflows
+    >>> print(tessellation.head())
+      tile_id  population                                           geometry  \
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....   
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...   
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...   
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....   
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...   
+       tot_outflow  
+    0        29981  
+    1         5319  
+    2       295916  
+    3         8665  
+    4         8871 
+    >>> # instantiate a singly constrained Gravity model
+    >>> gravity_singly = Gravity(gravity_type='singly constrained')
+    >>> print(gravity_singly)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+    >>> np.random.seed(0)
+    >>> synth_fdf = gravity_singly.generate(tessellation, 
+                                       tile_id_column='tile_ID', 
+                                       tot_outflows_column='tot_outflow', 
+                                       relevance_column= 'population',
+                                       out_format='flows')
+    >>> print(synth_fdf.head())
+      origin destination  flow
+    0  36019       36101   101
+    1  36019       36107    66
+    2  36019       36059  1041
+    3  36019       36011   151
+    4  36019       36123    33
+    >>> # fit the parameters of the Gravity model from real fluxes
+    >>> gravity_singly_fitted = Gravity(gravity_type='singly constrained')
+    >>> print(gravity_singly_fitted)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+    >>> gravity_singly_fitted.fit(fdf, relevance_column='population')
+    >>> print(gravity_singly_fitted)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type="singly constrained") 
+    >>> np.random.seed(0)
+    >>> synth_fdf_fitted = gravity_singly_fitted.generate(tessellation, 
+                                                            tile_id_column='tile_ID', 
+                                                            tot_outflows_column='tot_outflow', 
+                                                            relevance_column= 'population', 
+                                                            out_format='flows')
+    >>> print(synth_fdf_fitted.head())
+      origin destination  flow
+    0  36019       36101   102
+    1  36019       36107    66
+    2  36019       36059  1044
+    3  36019       36011   152
+    4  36019       36123    33
+    
     References
     ----------
     .. [Z1946] Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents
