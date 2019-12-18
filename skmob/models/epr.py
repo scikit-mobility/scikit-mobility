@@ -25,26 +25,27 @@ user_id = constants.UID
 def compute_od_matrix(gravity_singly, spatial_tessellation, tile_id_column=constants.TILE_ID,
                       relevance_column=constants.RELEVANCE):
     """
-    Compute a matrix where element {ij} is the probability p_{ij} of moving between
-    locations in rows i and j in the GeoDataFrame spatial_tessellation given as input.
+    Compute a matrix :math:`M` where element :math:`M_{ij}` is the probability p_{ij} of moving between
+    locations :math:`i` and location :math:`j`, where each location refers to a row in `spatial_tessellation`.
 
     Parameters
     ----------
     gravity_singly : object
-        instance of class collective.Gravity with argument gravity_type='singly constrained'
+        instance of class `collective.Gravity` with argument `gravity_type='singly constrained'`.
 
     spatial_tessellation : GeoDataFrame
-        the spatial tessellation
+        the spatial tessellation describing the division of the territory in locations.
 
-    :param tile_id_column: str or int
-        column of the GeoDataFrame containing the tile_ID of the locations/tiles
+    tile_id_column : str or int, optional
+        column of in `spatial_tessellation` containing the identifier of the location/tile. The default value is constants.TILE_ID.
 
-    :param relevance_column: str or int
-        column of the GeoDataFrame containing the relevance of the locations/tiles
+    relevance_column : str or int, optional
+        column in `spatial_tessellation` containing the relevance of the location/tile.
 
-    :return:
-    od_matrix: numpy array
-        2-dim numpy array with the trip probabilities for each origin-destination pair
+    Returns
+    -------
+    od_matrix : numpy array
+        two-dimensional numpy array with the trip probabilities for each origin-destination pair.
     """
     od_matrix = gravity_singly.generate(spatial_tessellation,
                                         tile_id_column=tile_id_column,
@@ -56,23 +57,25 @@ def compute_od_matrix(gravity_singly, spatial_tessellation, tile_id_column=const
 
 def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
     """
-    Populate the od matrix with the probability to move from the location in input to all other locations
-    in the spatial tessellation
+    Populate the origin-destination matrix with the probability to move from the location in input to all other locations in the spatial tessellation.
+    
+    Parameters
+    ----------
+    location : int
+        the identifier of a location.
 
-    :param location: int
-        the identifier of a location
+    lats_lngs : list or numpy array
+        list of coordinates of the centroids of the tiles in a spatial tessellation.
 
-    :param lats_lngs: list or numpy array
-        list of coordinates of the centroids of the tiles in a spatial tessellation
+    relevances : list or numpy array
+        list of relevances of the tiles in a spatial tessellation.
 
-    :param relevances: list or numpy array
-        list of relevances of the tiles in a spatial tessellation
-
-    :param gravity_singly: object
-        instance of class collective.Gravity with argument gravity_type='singly constrained'
-
-    :return:
-        a numpy array of trip probabilities between the origin location and each destination
+    gravity_singly : object
+        instance of class `collective.Gravity` with argument `gravity_type='singly constrained'`.
+    
+    Returns
+    -------
+        a numpy array of trip probabilities between the origin location and each destination.
     """
     ll_origin = lats_lngs[location]
     distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs])
@@ -142,9 +145,16 @@ class EPR:
     def _weighted_random_selection(self, current_location):
         """
         Select a random location given the agent's visitation frequency. Used by the return mechanism.
-
-        :return: int
-            a random location
+        
+        Parameters
+        ----------
+        current_location : int
+            identifier of a location.
+            
+        Returns
+        -------
+        int
+            a location randomly chosen according to its relevance.
         """
         locations = np.fromiter(self._location2visits.keys(), dtype=int)
         weights = np.fromiter(self._location2visits.values(), dtype=float)
@@ -162,9 +172,16 @@ class EPR:
         """
         Choose the location the agent returns to, according to the visitation frequency
         of the previously visited locations.
-
-        :return: int
-            the identifier of the next location
+        
+        Parameters
+        ----------
+        current_location : int
+            the current location where the agent is.
+            
+        Returns
+        -------
+        int
+            the identifier of the next location the agent moves to.
         """
         next_location = self._weighted_random_selection(current_location)
         if self._log_file is not None:
@@ -175,13 +192,17 @@ class EPR:
     def _preferential_exploration(self, current_location):
         """
         Choose the new location the agent explores, according to the probabilities
-        in the od matrix.
-
-        :param current_location : int
-            the identifier of the current location of the individual
-
-        :return: int
-            the identifier of the new location to explore
+        in the origin-destination matrix.
+        
+        Parameters
+        ----------
+        current_location : int
+            the identifier of the current location of the individual.
+        
+        Returns
+        -------
+        int
+            the identifier of the new location the agent has to explore.
         """
 
         if self._is_sparse:
@@ -208,9 +229,11 @@ class EPR:
     def _get_trajdataframe(self, parameters):
         """
         Transform the trajectories list into a pandas DataFrame.
-
-        :return: a pandas DataFrame describing the trajectories
-        :rtype pandas DataFrame
+        
+        Returns
+        -------
+        pandas DataFrame
+            the trajectories of the agent.
         """
         df = pd.DataFrame(self._trajectories_, columns=[user_id, date_time, 'location'])
         df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self.lats_lngs[s][0],
@@ -221,9 +244,11 @@ class EPR:
     def _choose_location(self):
         """
         Choose the next location to visit given the agent's current location.
-
-        :return: int
-            the identifier of the next location to visit
+        
+        Returns
+        -------
+        int
+            the identifier of the next location the agent has to visit.
         """
         n_visited_locations = len(self._location2visits)  # number of already visited locations
 
@@ -258,9 +283,11 @@ class EPR:
     def _choose_waiting_time(self):
         """
         Choose the time (in hours) the agent has to wait before the next movement.
-
-        :return: float
-            the time to wait before the next movement.
+        
+        Returns
+        -------
+        float
+            the time the agent has to wait before the next movement.
         """
         time_to_wait = self._time_generator()
         return time_to_wait
