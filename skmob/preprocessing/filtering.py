@@ -4,32 +4,42 @@ import numpy as np
 import inspect
 
 def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=6, ratio_max=0.25):
-    """
-    Filter out trajectory points that are considered noise or outliers.
+    """Trajectory filtering.
+    
+    For each individual in a TrajDataFrame, filter out the trajectory points that are considered noise or outliers [Z2015]_.
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the trajectories of the individuals.
 
-    :param tdf: TrajDataFrame
-        the raw trajectory
+    max_speed : float, optional
+        delete a trajectory point if the speed (in km/h) from the previous point is higher than `max_speed_kmh`. The default is `500.0`.
 
-    :param max_speed: float (default 500.0)
-        delete trajectory point if the speed from the previous point is higher than `max_speed`
+    include_loops: boolean, optional
+        If `True`, trajectory points belonging to short and fast "loops" are removed. Specifically, points are removed if within the next `max_loop` points the individual has come back to a distance (`ratio_max` * the maximum distance reached), AND the average speed (in km/h) is higher than `speed`. The default is `False`.
+    
+    speed : float, optional 
+        the default is 5km/h (walking speed).
 
-    :param include_loops: bool (default False)
-        optional: this filter is very slow. Use only if raw data is really noisy.
-        If `True`, trajectory points belonging to short and fast "loops" are removed.
-        Remove points if within the next `max_loop` points the user has come back to a distance
-        (`ratio_max` * the maximum distance reached), AND the average speed is higher than `speed` km/h.
+    max_loop : int, optional
+        the default is `6`.
 
-    :param speed: float (default 5 km/h, walking speed)
-
-    :param max_loop: int (default 6)
-
-    :param ratio_max: float (default 0.25)
-
-    :return: TrajDataFrame
+    ratio_max : float, optional
+        the default is `0.25`.
+    
+    Returns
+    -------
+    TrajDataFrame
         the TrajDataFrame without the trajectory points that have been filtered out.
-
-    References:
-        .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
+    
+    Warnings
+    --------
+    if `include_loops` is `True`, the filter is very slow. Use only if raw data is really noisy.
+    
+    References
+    ----------
+    .. [Z2015] Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), https://dl.acm.org/citation.cfm?id=2743025
     """
     # Sort
     tdf = tdf.sort_by_uid_and_datetime()
