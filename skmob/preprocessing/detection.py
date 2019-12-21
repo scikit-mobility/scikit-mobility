@@ -38,6 +38,37 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     TrajDataFrame
         a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations.
 
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import detection
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> print(stdf.head())
+             lat         lng            datetime  uid    leaving_datetime
+    0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
+    1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
+    2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
+    3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
+    4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
+    >>> print(stdf.parameters)
+    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
+    >>> print('Points of the original trajectory:\\t%s'%len(tdf))
+    >>> print('Points of stops:\\t\\t\\t%s'%len(stdf))
+    Points of the original trajectory:	217653
+    Points of stops:			391
+    
     References
     ----------
     .. [RT2004] Ramaswamy, H. & Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf
