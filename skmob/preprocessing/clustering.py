@@ -29,6 +29,36 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
     TrajDataFrame
         a TrajDataFrame with the additional column 'cluster' containing the cluster labels. The stops that belong to the same cluster have the same label. The labels are integers corresponding to the ranks of clusters according to the frequency of visitation (the most visited cluster has label 0, the second most visited has label 1, etc.).
     
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import detection, clustering
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> # detect the stops first
+    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> # cluster the stops
+    >>> cstdf = clustering.cluster(stdf, cluster_radius_km=0.1, min_samples=1)
+    >>> print(cstdf.head())
+             lat         lng            datetime  uid    leaving_datetime  cluster
+    0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53        0
+    1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27        1
+    2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30        0
+    3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29       42
+    4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35       41    
+    >>> print(cstdf.parameters)
+    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}, 'cluster': {'function': 'cluster', 'cluster_radius_km': 0.1, 'min_samples': 1}}
+
     References
     ----------
     .. [DBSCAN] DBSCAN implementation, scikit-learn, https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html
