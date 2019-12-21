@@ -548,6 +548,9 @@ class TrajDataFrame(pd.DataFrame):
         3  39.984211  116.319389 2008-10-23 05:53:16    1
         4  39.984217  116.319422 2008-10-23 05:53:21    1
         >>> m = tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
+        >>> m
+        
+        .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_trajectory_example.png
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
                                     style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
@@ -556,7 +559,7 @@ class TrajDataFrame(pd.DataFrame):
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):
         """
-        Plot the stops in the TrajDataFrame. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
+        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
         
         Parameters
         ----------
@@ -589,31 +592,102 @@ class TrajDataFrame(pd.DataFrame):
         folium.Map
             a `folium.Map` object with the plotted stops.
         
+        Examples
+        --------
+        >>> import skmob
+        >>> from skmob.preprocessing import detection
+        >>> import pandas as pd
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> print(stdf.head())
+                 lat         lng            datetime  uid    leaving_datetime
+        0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
+        1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
+        2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
+        3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
+        4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35 
+        >>> map_f = tdf.plot_trajectory(max_points=1000, hex_color=-1, start_end_markers=False)
+        >>> stdf.plot_stops(map_f=map_f, hex_color=-1)
+        
+        .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
                                hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
         """
-        Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
-        The column `constants.CLUSTER` must be present.
+        Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`. The column `constants.CLUSTER` must be present.
 
-        :param user: str or int
-            user ID whose diary should be plotted.
+        Parameters
+        ----------
+        user : str or int
+            user identifier whose diary should be plotted.
 
-        :param start_datetime: datetime.datetime
-            Only stops made after this date will be plotted.
-            If `None` the datetime of the oldest stop will be selected.
+        start_datetime : datetime.datetime, optional
+            only stops made after this date will be plotted. If `None` the datetime of the oldest stop will be selected. The default is `None`.
 
-        :param end_datetime: datetime.datetime
-            Only stops made before this date will be plotted.
-            If `None` the datetime of the newest stop will be selected.
+        end_datetime : datetime.datetime, optional
+            only stops made before this date will be plotted. If `None` the datetime of the newest stop will be selected. The default is `None`.
 
-        :param ax: matplotlib.axes
-            axes where the diary will be plotted.
-
-        :return: `matplotlib.axes` of the plotted diary.
-
+        ax : matplotlib.axes, optional
+            axes where the diary will be plotted. If `None` a new ax is created. The default is `None`.
+        
+        Returns
+        -------
+        matplotlib.axes
+            the `matplotlib.axes` object of the plotted diary.
+        
+        Examples
+        --------
+        >>> import skmob
+        >>> from skmob.preprocessing import detection, clustering
+        >>> import pandas as pd
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> # detect stops
+        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> print(stdf.head())
+                 lat         lng            datetime  uid    leaving_datetime
+        0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
+        1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
+        2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
+        3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
+        4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35 
+        >>> # cluster stops
+        >>> cstdf = clustering.cluster(stdf, cluster_radius_km=0.1, min_samples=1)
+        >>> print(cstdf.head())
+                 lat         lng            datetime  uid    leaving_datetime  cluster
+        0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53        0
+        1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27        1
+        2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30        0
+        3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29       42
+        4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35       41
+        >>> # plot the diary of one individual
+        >>> user = 1
+        >>> start_datetime = pd.to_datetime('2008-10-23 030000')
+        >>> end_datetime = pd.to_datetime('2008-10-30 030000')
+        >>> ax = cstdf.plot_diary(user, start_datetime=start_datetime, end_datetime=end_datetime)
+        
+        .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_diary_example.png
         """
         return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
 
