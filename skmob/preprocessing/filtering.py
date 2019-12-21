@@ -13,7 +13,7 @@ def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=
     tdf : TrajDataFrame
         the trajectories of the individuals.
 
-    max_speed : float, optional
+    max_speed_kmh : float, optional
         delete a trajectory point if the speed (in km/h) from the previous point is higher than `max_speed_kmh`. The default is `500.0`.
 
     include_loops: boolean, optional
@@ -36,6 +36,30 @@ def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=
     Warnings
     --------
     if `include_loops` is `True`, the filter is very slow. Use only if raw data is really noisy.
+    
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import filtering
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> # filter out all points with a speed (in km/h) from the previous point higher than 500 km/h
+    >>> ftdf = filtering.filter(tdf, max_speed_kmh=500.)
+    >>> print(ftdf.parameters)
+    {'filter': {'function': 'filter', 'max_speed_kmh': 500.0, 'include_loops': False, 'speed_kmh': 5.0, 'max_loop': 6, 'ratio_max': 0.25}}
+    >>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
+    >>> print(n_deleted_points)
+    54
     
     References
     ----------
