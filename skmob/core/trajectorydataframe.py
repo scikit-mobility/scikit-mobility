@@ -20,7 +20,70 @@ class TrajSeries(pd.Series):
 
 
 class TrajDataFrame(pd.DataFrame):
-
+    """TrajDataFrame.
+    
+    A TrajDataFrame object is a pandas.DataFrame that has three columns latitude, longitude and datetime. TrajDataFrame accepts the following keyword arguments:
+    
+    Parameters
+    ----------
+    data : list or dict or pandas DataFrame
+        the data that must be embedded into a TrajDataFrame.
+        
+    latitude : int or str, optional
+        the position or the name of the column in `data` containing the latitude. The default is `constants.LATITUDE`.
+        
+    longitude : int or str, optional
+        the position or the name of the column in `data` containing the longitude. The default is `constants.LONGITUDE`.
+        
+    datetime : int or str, optional
+        the position or the name of the column in `data` containing the datetime. The default is `constants.DATETIME`.
+        
+    user_id : int or str, optional
+        the position or the name of the column in `data`containing the user identifier. The default is `constants.UID`.
+        
+    trajectory_id : int or str, optional
+        the position or the name of the column in `data` containing the trajectory identifier. The default is `constants.TID`.
+        
+    timestamp : boolean, optional
+        it True, the datetime is a timestamp. The default is `False`.
+        
+    crs : dict, optional
+        the coordinate reference system of the geographic points. The default is `{"init": "epsg:4326"}`.
+        
+    parameters : dict, optional
+        parameters to add to the TrajDataFrame. The default is `{}` (no parameters).
+        
+    Examples
+    --------
+    >>> import skmob
+    >>> # create a TrajDataFrame from a list
+    >>> data_list = [[1, 39.984094, 116.319236, '2008-10-23 13:53:05'], [1, 39.984198, 116.319322, '2008-10-23 13:53:06'], [1, 39.984224, 116.319402, '2008-10-23 13:53:11'], [1, 39.984211, 116.319389, '2008-10-23 13:53:16']]
+    >>> tdf = skmob.TrajDataFrame(data_list, latitude=1, longitude=2, datetime=3)
+    >>> print(tdf.head())
+       0        lat         lng            datetime
+    0  1  39.984094  116.319236 2008-10-23 13:53:05
+    1  1  39.984198  116.319322 2008-10-23 13:53:06
+    2  1  39.984224  116.319402 2008-10-23 13:53:11
+    3  1  39.984211  116.319389 2008-10-23 13:53:16
+    >>> print(type(tdf))
+    <class 'skmob.core.trajectorydataframe.TrajDataFrame'>
+    >>> 
+    >>> # create a TrajDataFrame from a pandas DataFrame
+    >>> import pandas as pd
+    >>> # create a DataFrame from the previous list 
+    >>> data_df = pd.DataFrame(data_list, columns=['user', 'latitude', 'lng', 'hour'])
+    >>> print(type(data_df))
+    <class 'pandas.core.frame.DataFrame'>
+    >>> tdf = skmob.TrajDataFrame(data_df, latitude='latitude', datetime='hour', user_id='user')
+    >>> print(type(tdf))
+    <class 'skmob.core.trajectorydataframe.TrajDataFrame'>
+    >>> print(tdf.head())
+       uid        lat         lng            datetime
+    0    1  39.984094  116.319236 2008-10-23 13:53:05
+    1    1  39.984198  116.319322 2008-10-23 13:53:06
+    2    1  39.984224  116.319402 2008-10-23 13:53:11
+    3    1  39.984211  116.319389 2008-10-23 13:53:16
+    """
     _metadata = ['_parameters', '_crs'] # All the metadata that should be accessible must be also in the metadata method
 
     def __init__(self, data, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
@@ -124,11 +187,56 @@ class TrajDataFrame(pd.DataFrame):
 
     def to_flowdataframe(self, tessellation, remove_na=False, self_loops=True):
         """
-
-        :param tessellation:
-        :param remove_na:
-        :param self_loop: if True, it counts self movements (default True)
-        :return:
+        Aggregate a TrajDataFrame into a FlowDataFrame.
+        
+        Parameters
+        ----------
+        tessellation : GeoDataFrame
+            the spatial tessellation to use to aggregate the points. 
+            
+        remove_na : boolean 
+            if True, remove the points that do not have a corresponding tile in the spatial tessellation. The default is `False`.
+            
+        self_loop : boolean
+            if True, it counts movements that start and end in the same tile. The default is `True`.
+        
+        Returns
+        -------
+        FlowDataFrame
+            the FlowDataFrame obtained as an aggregation of the TrajDataFrame
+        
+        Examples
+        --------
+        >>> import skmob
+        >>> from skmob.tessellation import tilers
+        >>> import pandas as pd
+        >>> from skmob.preprocessing import filtering
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> # build a tessellation over the city
+        >>> tessellation = tilers.tiler.get("squared", base_shape="Beijing, China", meters=15000)
+        >>> # remove_na enable removing points that are not contained in the tessellation
+        >>> fdf = tdf.to_flowdataframe(tessellation=tessellation, self_loops=True, remove_na=True)
+        >>> print(fdf.head())
+          origin destination  flow
+        0     49          49   788
+        1     49          62     1
+        2     50          50  4974
+        3     50          63     1
+        4     61          61   207
+        
+        See Also
+        --------
+        FlowDataFrame
         """
 
         # Step 1: order the dataframe by user_id, traj_id, datetime
@@ -156,10 +264,48 @@ class TrajDataFrame(pd.DataFrame):
 
     def mapping(self, tessellation, remove_na=False):
         """
-        Method to assign to each point of the TrajDataFrame a corresponding tile_id of a given tessellation.
-        :param tessellation: GeoDataFrame containing a tessellation (geometry of points or polygons).
-        :param remove_na: (default False) it removes points that do not have a corresponding tile_id
-        :return: TrajDataFrame with an additional column containing the tile_ids.
+        Assign each point of the TrajDataFrame to the corresponding tile of a spatial tessellation.
+        
+        Parameters
+        ----------
+        tessellation : GeoDataFrame
+            the spatial tessellation containing a geometry column with points or polygons.
+            
+        remove_na : boolean, optional
+            if `True`, remove points that do not have a corresponding tile in the spatial tessellation. The default is `False`.
+        
+        Returns
+        -------
+        TrajDataFrame
+            a TrajDataFrame with an additional column `tile_ID` indicating the tile identifiers.
+        
+        Examples
+        --------
+        >>> import skmob
+        >>> from skmob.tessellation import tilers
+        >>> import pandas as pd
+        >>> from skmob.preprocessing import filtering
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> # build a tessellation over the city
+        >>> tessellation = tilers.tiler.get("squared", base_shape="Beijing, China", meters=15000)
+        >>> mtdf = tdf.mapping(tessellation)
+        >>> print(mtdf.head())
+                 lat         lng            datetime  uid tile_ID
+        0  39.984094  116.319236 2008-10-23 05:53:05    1      63
+        1  39.984198  116.319322 2008-10-23 05:53:06    1      63
+        2  39.984224  116.319402 2008-10-23 05:53:11    1      63
+        3  39.984211  116.319389 2008-10-23 05:53:16    1      63
+        4  39.984217  116.319422 2008-10-23 05:53:21    1      63        
         """
 
         gdf = self.to_geodataframe()
@@ -201,8 +347,30 @@ class TrajDataFrame(pd.DataFrame):
 
     def settings_from(self, trajdataframe):
         """
-        Method to copy attributes from another TrajDataFrame.
-        :param trajdataframe: TrajDataFrame from which copy the attributes.
+        Copy the attributes from another TrajDataFrame.
+        
+        Parameters
+        ----------
+        trajdataframe : TrajDataFrame 
+            the TrajDataFrame from which to copy the attributes.
+            
+        Examples
+        --------
+        >>> import skmob
+        >>> import pandas as pd
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf1 = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> tdf1 = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf1.parameters)
+        {}
+        >>> tdf2.parameters['hasProperty'] = True
+        >>> print(tdf2.parameters)
+        {'hasProperty': True}
+        >>> tdf1.settings_from(tdf2)
+        >>> print(tdf1.parameters)
+        {'hasProperty': True}
         """
         for k in trajdataframe.metadata:
             value = getattr(trajdataframe, k)
@@ -212,7 +380,6 @@ class TrajDataFrame(pd.DataFrame):
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
                   user_id=constants.UID, trajectory_id=constants.TID,
                   usecols=None, header='infer', timestamp=False, crs={"init": "epsg:4326"}, sep=",", parameters=None):
-
         df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols)
 
         if parameters is None:
@@ -326,39 +493,61 @@ class TrajDataFrame(pd.DataFrame):
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
                         tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
         """
-        :param map_f: folium.Map
-            `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
+        Plot the trajectories on a Folium map.
+        
+        Parameters
+        ----------
+        map_f : folium.Map, optional
+            a `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created. The default is `None`.
 
-        :param max_users: int
-            maximum number of users whose trajectories should be plotted.
+        max_users : int, optional
+            maximum number of users whose trajectories should be plotted. The default is `10`.
 
-        :param max_points: int
-            maximum number of points per user to plot.
-            If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
+        max_points : int, optional
+            maximum number of points per individual to plot. The default is `1000`. If necessary, an individual's trajectory will be down-sampled to have at most `max_points` points.
 
-        :param style_function: lambda function
-            function specifying the style (weight, color, opacity) of the GeoJson object.
+        style_function : lambda function, optional
+            function specifying the style (weight, color, opacity) of the GeoJson object. The default is `plot.traj_style_function`.
 
-        :param tiles: str
-            folium's `tiles` parameter.
+        tiles : str, optional
+            folium's `tiles` parameter. The default is 'cartodbpositron'.
 
-        :param zoom: int
-            initial zoom.
+        zoom : int, optional
+            the initial zoom on the map. The default is `12`.
 
-        :param hex_color: str or int
-            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory.
+        hex_color : str or int, optional
+            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory. The default is `-1`.
 
-        :param weight: float
-            thickness of the trajectory line.
+        weight : float, optional
+            thickness of the trajectory line. The default is `2`.
 
-        :param opacity: float
-            opacity (alpha level) of the trajectory line.
+        opacity : float, optional
+            opacity (alpha level) of the trajectory line. The default is `0.75`.
 
-        :param start_end_markers: bool
-            add markers on the start and end points of the trajectory.
-
-        :return: `folium.Map` object with the plotted trajectories.
-
+        start_end_markers: boolean, optional
+            if `True`, add markers on the start and end points of the trajectory. The default is `True`.
+        
+        Returns
+        -------
+        folium.Map
+            a `folium.Map` object with the plotted trajectories.
+        
+        Examples
+        --------
+        >>> import skmob
+        >>> import pandas as pd
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> m = tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
                                     style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
@@ -367,35 +556,39 @@ class TrajDataFrame(pd.DataFrame):
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
                    radius=12, popup=True):
         """
-        Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
-        or `preprocessing.clustering.cluster`. The column `constants.LEAVING_DATETIME` must be present.
+        Plot the stops in the TrajDataFrame. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
+        
+        Parameters
+        ----------
+        map_f : folium.Map
+            a `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created. The default is `None`.
+            
+        max_users : int, optional
+            maximum number of users whose trajectories should be plotted. The default is `10`.
+            
+        tiles : str, optional
+            folium's `tiles` parameter. The default is 'cartodbpositron'.
 
-        :param map_f: folium.Map
-            `folium.Map` object where the stops will be plotted. If `None`, a new map will be created.
+        zoom : int, optional
+            the initial zoom on the map. The default is `12`.
 
-        :param max_users: int
-            maximum number of users whose stops should be plotted.
+        hex_color : str or int, optional
+            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory. The default is `-1`.
 
-        :param tiles: str
-            folium's `tiles` parameter.
+        opacity : float, optional
+            opacity (alpha level) of the trajectory line. The default is `0.75`.
 
-        :param zoom: int
-            initial zoom.
+        radius : float, optional
+            size of the markers. The defeault is `12`.
 
-        :param hex_color: str or int
-            hex color of the stop markers. If `-1` a random color will be generated for each user.
-
-        :param opacity: float
-            opacity (alpha level) of the stop makers.
-
-        :param radius: float
-            size of the markers.
-
-        :param popup: bool
-            if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
-
-        :return: `folium.Map` object with the plotted stops.
-
+        popup : boolean, optional
+            if `True`, when clicking on a marker a popup window displaying information on the stop will appear. The default is `True`.
+        
+        Returns
+        -------
+        folium.Map
+            a `folium.Map` object with the plotted stops.
+        
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
                                hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
@@ -429,11 +622,39 @@ class TrajDataFrame(pd.DataFrame):
 
     def timezone_conversion(self, from_timezone, to_timezone):
         """
-        :param from_timezone: str
-            current timezone (e.g. 'GMT')
+        Convert the timezone of the datetime in the TrajDataFrame.
+        
+        Parameters
+        ----------
+        from_timezone : str
+            the current timezone of the TrajDataFrame (e.g., 'GMT').
 
-        :param to_timezone: str
-            new timezone (e.g. 'Asia/Shanghai')
+        to_timezone : str
+            the new timezone of the TrajDataFrame (e.g., 'Asia/Shanghai').
+            
+        Examples
+        --------
+        >>> import skmob
+        >>> import pandas as pd
+        >>> # read the trajectory data (GeoLife, Beijing, China)
+        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> df = pd.read_csv(url, sep=',', compression='gzip')
+        >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+        >>> print(tdf.head())
+                 lat         lng            datetime  uid
+        0  39.984094  116.319236 2008-10-23 05:53:05    1
+        1  39.984198  116.319322 2008-10-23 05:53:06    1
+        2  39.984224  116.319402 2008-10-23 05:53:11    1
+        3  39.984211  116.319389 2008-10-23 05:53:16    1
+        4  39.984217  116.319422 2008-10-23 05:53:21    1
+        >>> tdf.timezone_conversion('GMT', 'Asia/Shanghai')
+        >>> print(tdf.head())
+                 lat         lng  uid            datetime
+        0  39.984094  116.319236    1 2008-10-23 13:53:05
+        1  39.984198  116.319322    1 2008-10-23 13:53:06
+        2  39.984224  116.319402    1 2008-10-23 13:53:11
+        3  39.984211  116.319389    1 2008-10-23 13:53:16
+        4  39.984217  116.319422    1 2008-10-23 13:53:21
         """
         self.rename(columns={'datetime': 'original_datetime'}, inplace=True)
         self['datetime'] = self['original_datetime']. \
