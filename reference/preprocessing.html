@@ -166,54 +166,53 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.filtering.filter" title="skmob.preprocessing.filtering.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filtering.filter</span></code></a>(tdf[, max_speed_kmh, …])</p></td>
-<td><p>Filter out trajectory points that are considered noise or outliers.</p></td>
+<td><p>Trajectory filtering.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.compression.compress" title="skmob.preprocessing.compression.compress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compression.compress</span></code></a>(tdf[, spatial_radius_km])</p></td>
-<td><p>Reduce the number of points in a trajectory.</p></td>
+<td><p>Trajectory compression.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.detection.stops" title="skmob.preprocessing.detection.stops"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detection.stops</span></code></a>(tdf[, stop_radius_factor, …])</p></td>
-<td><p>Detect a stop when the user spends at least <cite>minutes_for_a_stop</cite> minutes within a distance (<cite>stop_radius_factor</cite> * <cite>spatial_radius</cite>) km from a given trajectory point.</p></td>
+<td><p>Stops detection.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, …])</p></td>
-<td><p>Cluster stops corresponding to visits to the same location at different times, based on spatial proximity.</p></td>
+<td><p>Clustering of locations.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.routing.route" title="skmob.preprocessing.routing.route"><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing.route</span></code></a>(tdf[, G, index_origin, …])</p></td>
-<td><p>Example</p></td>
+<td><p>Routing.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
 <dt id="skmob.preprocessing.filtering.filter">
 <code class="sig-prename descclassname">skmob.preprocessing.filtering.</code><code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">max_speed_kmh=500.0</em>, <em class="sig-param">include_loops=False</em>, <em class="sig-param">speed_kmh=5.0</em>, <em class="sig-param">max_loop=6</em>, <em class="sig-param">ratio_max=0.25</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.filtering.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter out trajectory points that are considered noise or outliers.</p>
+<dd><p>Trajectory filtering.</p>
+<p>For each individual in a TrajDataFrame, filter out the trajectory points that are considered noise or outliers <a class="reference internal" href="#id6" id="id1"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf</strong> – TrajDataFrame
-the raw trajectory</p></li>
-<li><p><strong>max_speed</strong> – float (default 500.0)
-delete trajectory point if the speed from the previous point is higher than <cite>max_speed</cite></p></li>
-<li><p><strong>include_loops</strong> – bool (default False)
-optional: this filter is very slow. Use only if raw data is really noisy.
-If <cite>True</cite>, trajectory points belonging to short and fast “loops” are removed.
-Remove points if within the next <cite>max_loop</cite> points the user has come back to a distance
-(<cite>ratio_max</cite> * the maximum distance reached), AND the average speed is higher than <cite>speed</cite> km/h.</p></li>
-<li><p><strong>speed</strong> – float (default 5 km/h, walking speed)</p></li>
-<li><p><strong>max_loop</strong> – int (default 6)</p></li>
-<li><p><strong>ratio_max</strong> – float (default 0.25)</p></li>
+<li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the trajectories of the individuals.</p></li>
+<li><p><strong>max_speed</strong> (<em>float, optional</em>) – delete a trajectory point if the speed (in km/h) from the previous point is higher than <cite>max_speed_kmh</cite>. The default is <cite>500.0</cite>.</p></li>
+<li><p><strong>include_loops</strong> (<em>boolean, optional</em>) – If <cite>True</cite>, trajectory points belonging to short and fast “loops” are removed. Specifically, points are removed if within the next <cite>max_loop</cite> points the individual has come back to a distance (<cite>ratio_max</cite> * the maximum distance reached), AND the average speed (in km/h) is higher than <cite>speed</cite>. The default is <cite>False</cite>.</p></li>
+<li><p><strong>speed</strong> (<em>float, optional</em>) – the default is 5km/h (walking speed).</p></li>
+<li><p><strong>max_loop</strong> (<em>int, optional</em>) – the default is <cite>6</cite>.</p></li>
+<li><p><strong>ratio_max</strong> (<em>float, optional</em>) – the default is <cite>0.25</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>TrajDataFrame
-the TrajDataFrame without the trajectory points that have been filtered out.</p>
+<dd class="field-even"><p>the TrajDataFrame without the trajectory points that have been filtered out.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
 </dd>
 </dl>
-<dl>
-<dt>References:</dt><dd><dl class="citation">
-<dt class="label" id="zheng2015trajectory"><span class="brackets">zheng2015trajectory</span></dt>
-<dd><p>Zheng, Yu. “Trajectory data mining: an overview.” ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.</p>
-</dd>
-</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>if <cite>include_loops</cite> is <cite>True</cite>, the filter is very slow. Use only if raw data is really noisy.</p>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="z2015"><span class="brackets">Z2015</span></dt>
+<dd><p>Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2743025">https://dl.acm.org/citation.cfm?id=2743025</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -221,29 +220,26 @@ the TrajDataFrame without the trajectory points that have been filtered out.</p>
 <dl class="function">
 <dt id="skmob.preprocessing.compression.compress">
 <code class="sig-prename descclassname">skmob.preprocessing.compression.</code><code class="sig-name descname">compress</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">spatial_radius_km=0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.compression.compress" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reduce the number of points in a trajectory.
-All points within a radius of <cite>spatial_radius_km</cite> km from a given initial point are compressed into
-a single point that has the median coordinates of all points and the time of the initial point.</p>
+<dd><p>Trajectory compression.</p>
+<p>Reduce the number of points in a trajectory for each individual in a TrajDataFrame. All points within a radius of <cite>spatial_radius_km</cite> kilometers from a given initial point are compressed into a single point that has the median coordinates of all points and the time of the initial point <a class="reference internal" href="#id6" id="id2"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf</strong> – TrajDataFrame
-the input trajectory</p></li>
-<li><p><strong>spatial_radius_km</strong> – float (default 0.2)
-minimum distance (in km) between points of the compressed trajectory</p></li>
+<li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input trajectories of the individuals.</p></li>
+<li><p><strong>spatial_radius_km</strong> (<em>float, optional</em>) – the minimum distance (in km) between points of the compressed trajectory. The default is <cite>0.2</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>TrajDataFrame
-the compressed TrajDataFrame</p>
+<dd class="field-even"><p>the compressed TrajDataFrame.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
 </dd>
 </dl>
-<dl>
-<dt>References:</dt><dd><dl class="citation">
-<dt class="label" id="id1"><span class="brackets">zheng2015trajectory</span></dt>
-<dd><p>Zheng, Yu. “Trajectory data mining: an overview.” ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.</p>
-</dd>
-</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="id3"><span class="brackets">Z2015</span></dt>
+<dd><p>Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2743025">https://dl.acm.org/citation.cfm?id=2743025</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,46 +247,35 @@ the compressed TrajDataFrame</p>
 <dl class="function">
 <dt id="skmob.preprocessing.detection.stops">
 <code class="sig-prename descclassname">skmob.preprocessing.detection.</code><code class="sig-name descname">stops</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">stop_radius_factor=0.5</em>, <em class="sig-param">minutes_for_a_stop=20.0</em>, <em class="sig-param">spatial_radius_km=0.2</em>, <em class="sig-param">leaving_time=True</em>, <em class="sig-param">no_data_for_minutes=1000000000000.0</em>, <em class="sig-param">min_speed_kmh=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stops" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect a stop when the user spends at least <cite>minutes_for_a_stop</cite> minutes
-within a distance (<cite>stop_radius_factor</cite> * <cite>spatial_radius</cite>) km
-from a given trajectory point.
-The stop’s coordinates are the median latitude and longitude values of the points found
-within the specified distance.</p>
+<dd><p>Stops detection.</p>
+<p>Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least <cite>minutes_for_a_stop</cite> minutes within a distance <cite>stop_radius_factor * spatial_radius</cite> km from a given trajectory point. The stop’s coordinates are the median latitude and longitude values of the points found within the specified distance <a class="reference internal" href="#id9" id="id4"><span>[RT2004]</span></a> <a class="reference internal" href="#id6" id="id5"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf</strong> – TrajDataFrame
-the input trajectory</p></li>
-<li><p><strong>stop_radius_factor</strong> – float (default 0.5)
-radius of the ball enclosing all trajectory points within the stop location</p></li>
-<li><p><strong>minutes_for_a_stop</strong> – float (default 20.0)
-minimum stop duration (in minutes)</p></li>
-<li><p><strong>spatial_radius_km</strong> – float (default None)
-if <cite>None</cite> use the spatial_radius specified in the TrajDataFrame properties
-(assigned by a <cite>preprocessing.compression</cite> function)</p></li>
-<li><p><strong>leaving_time</strong> – bool (default True)
-if <cite>True</cite> a new column ‘leaving_datetime’ is added with the departure time from the stop location</p></li>
-<li><p><strong>no_data_for_minutes</strong> – float (default 1e12)
-if the number of minutes between two consecutive points is larger than <cite>no_data_for_minutes</cite>,
-then this is interpreted as missing data and does not count as a stop</p></li>
-<li><p><strong>min_speed_kmh</strong> – float
-if not None, remove the points at the end of a stop if their speed is larger than <cite>min_speed_kmh</cite> km/h</p></li>
+<li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input trajectories of the individuals.</p></li>
+<li><p><strong>stop_radius_factor</strong> (<em>float, optional</em>) – the radius of the ball enclosing all trajectory points within the stop location. The default is <cite>0.5</cite>.</p></li>
+<li><p><strong>minutes_for_a_stop</strong> (<em>float, optional</em>) – the minimum stop duration, in minutes. The default is <cite>20.0</cite>.</p></li>
+<li><p><strong>spatial_radius_km</strong> (<em>float or None, optional</em>) – if <cite>None</cite>, use the spatial_radius specified in the TrajDataFrame properties (assigned by a <cite>preprocessing.compression</cite> function). The default is <cite>0.2</cite>.</p></li>
+<li><p><strong>leaving_time</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, a new column ‘leaving_datetime’ is added with the departure time from the stop location. The default is <cite>True</cite>.</p></li>
+<li><p><strong>no_data_for_minutes</strong> (<em>float, optional</em>) – if the number of minutes between two consecutive points is larger than <cite>no_data_for_minutes</cite>,
+then this is interpreted as missing data and does not count as a stop. The default is <cite>1e12</cite>.</p></li>
+<li><p><strong>min_speed_kmh</strong> (<em>float or None, optional</em>) – if not <cite>None</cite>, remove the points at the end of a stop if their speed is larger than <cite>min_speed_kmh</cite> km/h. The default is <cite>None</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>TrajDataFrame
-a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations</p>
+<dd class="field-even"><p>a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
 </dd>
 </dl>
-<dl>
-<dt>References:</dt><dd><dl class="citation">
-<dt class="label" id="hariharan2004project"><span class="brackets">hariharan2004project</span></dt>
-<dd><p>Hariharan, Ramaswamy, and Kentaro Toyama. “Project Lachesis: parsing and modeling location histories.” In International Conference on Geographic Information Science, pp. 106-124. Springer, Berlin, Heidelberg, 2004.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rt2004"><span class="brackets">RT2004</span></dt>
+<dd><p>Ramaswamy, H. &amp; Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, <a class="reference external" href="http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf">http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf</a></p>
 </dd>
-<dt class="label" id="id2"><span class="brackets">zheng2015trajectory</span></dt>
-<dd><p>Zheng, Yu. “Trajectory data mining: an overview.” ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.</p>
-</dd>
-</dl>
+<dt class="label" id="id6"><span class="brackets">Z2015</span></dt>
+<dd><p>Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2743025">https://dl.acm.org/citation.cfm?id=2743025</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -298,33 +283,30 @@ a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations
 <dl class="function">
 <dt id="skmob.preprocessing.clustering.cluster">
 <code class="sig-prename descclassname">skmob.preprocessing.clustering.</code><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">cluster_radius_km=0.1</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster stops corresponding to visits to the same location at different times, based on spatial proximity.
-The clustering algorithm used is DBSCAN (by sklearn).</p>
+<dd><p>Clustering of locations.</p>
+<p>Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity <a class="reference internal" href="#id9" id="id7"><span>[RT2004]</span></a>. The clustering algorithm used is DBSCAN (by sklearn <a class="reference internal" href="#dbscan" id="id8"><span>[DBSCAN]</span></a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf</strong> – TrajDataFrame
-the input TrajDataFrame that should contain the stops, i.e. the output of a <cite>preprocessing.detection</cite> function</p></li>
-<li><p><strong>cluster_radius_km</strong> – float (default 0.1)
-the parameter <cite>eps</cite> of the function sklearn.cluster.DBSCAN in kilometers</p></li>
-<li><p><strong>min_samples</strong> – int (default 1)
-the parameter <cite>min_samples</cite> of the function sklearn.cluster.DBSCAN (minimum size of a cluster)</p></li>
+<li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input TrajDataFrame that should contain the stops, i.e., the output of a <cite>preprocessing.detection</cite> function.</p></li>
+<li><p><strong>cluster_radius_km</strong> (<em>float, optional</em>) – the parameter <cite>eps</cite> of the function sklearn.cluster.DBSCAN, in kilometers. The default is <cite>0.1</cite>.</p></li>
+<li><p><strong>min_samples</strong> (<em>int, optional</em>) – the parameter <cite>min_samples</cite> of the function sklearn.cluster.DBSCAN indicating the minimum number of stops to form a cluster. The default is <cite>1</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>TrajDataFrame
-a TrajDataFrame with the additional column ‘cluster’ containing the cluster labels.
-Stops belonging to the same cluster have the same label.
-Labels are integers corresponding to the ranks of clusters according to the frequency of visitation
-(the most visited cluster has label 0, the second most visited has label 1, …)</p>
+<dd class="field-even"><p>a TrajDataFrame with the additional column ‘cluster’ containing the cluster labels. The stops that belong to the same cluster have the same label. The labels are integers corresponding to the ranks of clusters according to the frequency of visitation (the most visited cluster has label 0, the second most visited has label 1, etc.).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
 </dd>
 </dl>
-<dl>
-<dt>References:</dt><dd><dl class="citation">
-<dt class="label" id="id3"><span class="brackets">hariharan2004project</span></dt>
-<dd><p>Hariharan, Ramaswamy, and Kentaro Toyama. “Project Lachesis: parsing and modeling location histories.” In International Conference on Geographic Information Science, pp. 106-124. Springer, Berlin, Heidelberg, 2004.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="dbscan"><span class="brackets"><a class="fn-backref" href="#id8">DBSCAN</a></span></dt>
+<dd><p>DBSCAN implementation, scikit-learn, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html">https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html</a></p>
 </dd>
-</dl>
+<dt class="label" id="id9"><span class="brackets">RT2004</span></dt>
+<dd><p>Ramaswamy, H. &amp; Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, <a class="reference external" href="http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf">http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -332,7 +314,14 @@ Labels are integers corresponding to the ranks of clusters according to the freq
 <dl class="function">
 <dt id="skmob.preprocessing.routing.route">
 <code class="sig-prename descclassname">skmob.preprocessing.routing.</code><code class="sig-name descname">route</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">G=None</em>, <em class="sig-param">index_origin=0</em>, <em class="sig-param">index_destin=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.routing.route" title="Permalink to this definition">¶</a></dt>
-<dd><p>Example</p>
+<dd><p>Routing.</p>
+<p>Create a route on Google Maps between two locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the TrajDataFrame with the locations</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
 <p>G, shortest_route = route(tdf)</p>
 <p>m = ox.plot_route_folium(G, shortest_route, route_color=’green’)</p>
 <p>origin_coords = tuple(tdf1.iloc[0][[‘lat’, ‘lng’]].values)
