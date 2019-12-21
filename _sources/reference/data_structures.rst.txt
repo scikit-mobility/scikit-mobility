@@ -2,7 +2,7 @@
 Data Structures
 ===================
 
-scikit-mobility provides two different data structures, both extending the Pandas dataframe. TrajDataframe is designed to deal with trajectories, i.e., data in form of GPS points, while FlowDataFrame allows to manage fluxes between places.
+scikit-mobility provides two different data structures, both extending the Pandas dataframe: TrajDataframe is designed to deal with trajectories, i.e., data in form of GPS points; FlowDataFrame allows to manage fluxes between places.
 
 TrajDataframe
 ~~~~~~~~~~~~~~~~~~~
