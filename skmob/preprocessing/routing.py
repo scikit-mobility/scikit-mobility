@@ -6,8 +6,17 @@ from ..utils import constants
 
 
 def route(tdf, G=None, index_origin=0, index_destin=-1):
-    """
-    Example
+    """Routing.
+    
+    Create a route on Google Maps between two locations.
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the TrajDataFrame with the locations
+    
+    Examples
+    --------
 
     G, shortest_route = route(tdf)
 
