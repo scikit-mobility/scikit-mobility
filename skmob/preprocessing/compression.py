@@ -4,23 +4,26 @@ import numpy as np
 import inspect
 
 def compress(tdf, spatial_radius_km=0.2):
-    """
-    Reduce the number of points in a trajectory.
-    All points within a radius of `spatial_radius_km` km from a given initial point are compressed into
-    a single point that has the median coordinates of all points and the time of the initial point.
+    """Trajectory compression.
+    
+    Reduce the number of points in a trajectory for each individual in a TrajDataFrame. All points within a radius of `spatial_radius_km` kilometers from a given initial point are compressed into a single point that has the median coordinates of all points and the time of the initial point [Z2015]_.
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the input trajectories of the individuals.
 
-    :param tdf: TrajDataFrame
-        the input trajectory
+    spatial_radius_km : float, optional
+        the minimum distance (in km) between points of the compressed trajectory. The default is `0.2`.
+    
+    Returns
+    -------
+    TrajDataFrame
+        the compressed TrajDataFrame.
 
-    :param spatial_radius_km: float (default 0.2)
-        minimum distance (in km) between points of the compressed trajectory
-
-    :return: TrajDataFrame
-        the compressed TrajDataFrame
-
-
-    References:
-        .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
+    References
+    ----------
+    .. [Z2015] Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), https://dl.acm.org/citation.cfm?id=2743025
     """
     # Sort
     tdf = tdf.sort_by_uid_and_datetime()
