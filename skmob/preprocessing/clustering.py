@@ -9,27 +9,30 @@ kms_per_radian = 6371.0088   # Caution: this is only true at the Equator!
 
 
 def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
-    """
-    Cluster stops corresponding to visits to the same location at different times, based on spatial proximity.
-    The clustering algorithm used is DBSCAN (by sklearn).
+    """Clustering of locations.
+    
+    Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity [RT2004]_. The clustering algorithm used is DBSCAN (by sklearn [DBSCAN]_).
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the input TrajDataFrame that should contain the stops, i.e., the output of a `preprocessing.detection` function.
 
-    :param tdf: TrajDataFrame
-        the input TrajDataFrame that should contain the stops, i.e. the output of a `preprocessing.detection` function
-
-    :param cluster_radius_km: float (default 0.1)
-        the parameter `eps` of the function sklearn.cluster.DBSCAN in kilometers
-
-    :param min_samples: int (default 1)
-        the parameter `min_samples` of the function sklearn.cluster.DBSCAN (minimum size of a cluster)
-
-    :return: TrajDataFrame
-        a TrajDataFrame with the additional column 'cluster' containing the cluster labels.
-        Stops belonging to the same cluster have the same label.
-        Labels are integers corresponding to the ranks of clusters according to the frequency of visitation
-        (the most visited cluster has label 0, the second most visited has label 1, ...)
-
-    References:
-        .. [hariharan2004project] Hariharan, Ramaswamy, and Kentaro Toyama. "Project Lachesis: parsing and modeling location histories." In International Conference on Geographic Information Science, pp. 106-124. Springer, Berlin, Heidelberg, 2004.
+    cluster_radius_km : float, optional
+        the parameter `eps` of the function sklearn.cluster.DBSCAN, in kilometers. The default is `0.1`.
+        
+    min_samples : int, optional
+        the parameter `min_samples` of the function sklearn.cluster.DBSCAN indicating the minimum number of stops to form a cluster. The default is `1`.
+    
+    Returns
+    -------
+    TrajDataFrame
+        a TrajDataFrame with the additional column 'cluster' containing the cluster labels. The stops that belong to the same cluster have the same label. The labels are integers corresponding to the ranks of clusters according to the frequency of visitation (the most visited cluster has label 0, the second most visited has label 1, etc.).
+    
+    References
+    ----------
+    .. [DBSCAN] DBSCAN implementation, scikit-learn, https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html
+    .. [RT2004] Ramaswamy, H. & Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf
     """
     # Sort
     tdf = tdf.sort_by_uid_and_datetime()
