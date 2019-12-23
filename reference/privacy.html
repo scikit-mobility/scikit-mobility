@@ -165,38 +165,49 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Attack</span></code></a>(knowledge_length)</p></td>
-<td><p>Abstract class for a generic attack.</p></td>
+<td><p>Privacy Attack</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationAttack" title="skmob.privacy.attacks.LocationAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationAttack</span></code></a>(knowledge_length)</p></td>
-<td><p>In a location attack the adversary knows the coordinates of the locations visited by an individual and matches them against trajectories.</p></td>
+<td><p>Location Attack</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationTimeAttack" title="skmob.privacy.attacks.LocationTimeAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationTimeAttack</span></code></a>(knowledge_length[, …])</p></td>
-<td><p>In a location time attack the adversary knows the coordinates of locations visited by an individual and the time in which they were visited and matches them against trajectories.</p></td>
+<td><p>Location Time Attack</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationFrequencyAttack" title="skmob.privacy.attacks.LocationFrequencyAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationFrequencyAttack</span></code></a>(knowledge_length[, …])</p></td>
-<td><p>In a location frequency attack the adversary knows the coordinates of the unique locations visited by an individual and the frequency with which he visited them, and matches them against frequency vectors.</p></td>
+<td><p>Location Frequency Attack</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationProbabilityAttack" title="skmob.privacy.attacks.LocationProbabilityAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationProbabilityAttack</span></code></a>(knowledge_length)</p></td>
-<td><p>In a location probability attack the adversary knows the coordinates of the unique locations visited by an individual and the probability with which he visited them, and matches them against probability vectors.</p></td>
+<td><p>Location Probability Attack</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationProportionAttack" title="skmob.privacy.attacks.LocationProportionAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationProportionAttack</span></code></a>(knowledge_length[, …])</p></td>
-<td><p>In a location proportion attack the adversary knows the coordinates of the unique locations visited by an individual and the relative proportions between their frequencies of visit, and matches them against frequency vectors.</p></td>
+<td><p>Location Proportion Attack</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.HomeWorkAttack" title="skmob.privacy.attacks.HomeWorkAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HomeWorkAttack</span></code></a>([knowledge_length])</p></td>
-<td><p>In a home and work attack the adversary knows the coordinates of the two locations most frequently visited by an individual, and matches them against frequency vectors.</p></td>
+<td><p>Home And Work Attack</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-skmob.privacy.attacks"></span><dl class="class">
 <dt id="skmob.privacy.attacks.Attack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">Attack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.Attack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract class for a generic attack. Defines a series of functions common to all attacks.
+<dd><p>Privacy Attack</p>
+<p>Abstract class for a generic attack. Defines a series of functions common to all attacks.
 Provides basic functions to compute risk for all users in a trajectory dataframe.
 Requires the implementation of both a matching function and an assessment function, which are attack dependant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate.</p>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="tistpell"><span class="brackets">TISTPELL</span></dt>
+<dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 </dl>
 <dl class="method">
@@ -210,21 +221,19 @@ a portion of users to perform the assessment on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,40 +243,46 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.HomeWorkAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">HomeWorkAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.HomeWorkAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a home and work attack the adversary knows the coordinates of
+<dd><p>Home And Work Attack</p>
+<p>In a home and work attack the adversary knows the coordinates of
 the two locations most frequently visited by an individual, and matches them against frequency vectors.
 A frequency vector is an aggregation on trajectory data showing the unique
 locations visited by an individual and the frequency with which he visited those locations.
 This attack does not require the generation of combinations to build the possible instances of background knowledge.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>knowledge_length</strong> – int
-this parameter is not used for this attack and can be omitted.</p>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.HomeWorkAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.HomeWorkAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assess privacy risk for a whole dataframe of trajectories.
-Internally performs the conversion to frequency vectors.</p>
+<dd><p>Assess privacy risk for a whole dataframe of trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,15 +292,23 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location attack the adversary knows the coordinates of the locations visited by an individual and matches them
+<dd><p>Location Attack</p>
+<p>In a location attack the adversary knows the coordinates of the locations visited by an individual and matches them
 against trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of
-locations known to the adversary.</p>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
@@ -293,21 +316,19 @@ locations known to the adversary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -317,45 +338,51 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationFrequencyAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationFrequencyAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationFrequencyAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location frequency attack the adversary knows the coordinates of the unique locations visited by an individual
+<dd><p>Location Frequency Attack</p>
+<p>In a location frequency attack the adversary knows the coordinates of the unique locations visited by an individual
 and the frequency with which he visited them, and matches them against frequency vectors. A frequency vector,
 is an aggregation on trajectory data showing the unique locations visited by an individual and the frequency
-with which he visited those locations.
-It is possible to specify a tolerance level for the matching of the frequency.</p>
+with which he visited those locations. It is possible to specify a tolerance level for the matching of the frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
-locations and their frequency known to the adversary.</p></li>
-<li><p><strong>tolerance</strong> – float, default 0
-the tolarance with which to match the frequency. It can assume values between 0 and 1.</p></li>
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the frequency.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationFrequencyAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationFrequencyAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assess privacy risk for a whole dataframe of trajectories.
-Internally performs the conversion to frequency vectors.</p>
+<dd><p>Assess privacy risk for a whole dataframe of trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -365,7 +392,8 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationProbabilityAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationProbabilityAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProbabilityAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location probability attack the adversary knows the coordinates of
+<dd><p>Location Probability Attack</p>
+<p>In a location probability attack the adversary knows the coordinates of
 the unique locations visited by an individual and the probability with which he visited them,
 and matches them against probability vectors.
 A probability vector, is an aggregation on trajectory data showing the unique locations visited by an individual
@@ -374,37 +402,43 @@ It is possible to specify a tolerance level for the matching of the probability.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
-locations and their probability known to the adversary.</p></li>
-<li><p><strong>tolerance</strong> – float, default 0
-the tolarance with which to match the frequency. It can assume values between 0 and 1.</p></li>
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the probability. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the probability.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationProbabilityAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProbabilityAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assess privacy risk for a whole dataframe of trajectories.
-Internally performs the conversion to probability vectors.</p>
+<dd><p>Assess privacy risk for a whole dataframe of trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -414,7 +448,8 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationProportionAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationProportionAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProportionAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location proportion attack the adversary knows the coordinates of the unique locations visited
+<dd><p>Location Proportion Attack</p>
+<p>In a location proportion attack the adversary knows the coordinates of the unique locations visited
 by an individual and the relative proportions between their frequencies of visit,
 and matches them against frequency vectors.
 A frequency vector is an aggregation on trajectory data showing the unique locations visited by an individual
@@ -423,37 +458,43 @@ It is possible to specify a tolerance level for the matching of the proportion.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
-locations and their proportion of frequencies known to the adversary.</p></li>
-<li><p><strong>tolerance</strong> – float, default 0
-the tolarance with which to match the frequency. It can assume values between 0 and 1.</p></li>
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the frequency.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationProportionAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProportionAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assess privacy risk for a whole dataframe of trajectories.
-Internally performs the conversion to frequency vectors.</p>
+<dd><p>Assess privacy risk for a whole dataframe of trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,15 +504,23 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationSequenceAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationSequenceAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationSequenceAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location sequence attack the adversary knows the coordinates of locations visited by an individual and
+<dd><p>Location Sequence Attack
+In a location sequence attack the adversary knows the coordinates of locations visited by an individual and
 the order in which they were visited and matches them against trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of
-locations known to the adversary.</p>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationSequenceAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationSequenceAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
@@ -479,21 +528,19 @@ locations known to the adversary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -503,21 +550,31 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.LocationTimeAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationTimeAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">time_precision='Hour'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationTimeAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a location time attack the adversary knows the coordinates of locations visited by an individual and the time
+<dd><p>Location Time Attack</p>
+<p>In a location time attack the adversary knows the coordinates of locations visited by an individual and the time
 in which they were visited and matches them against trajectories. The precision at which to consider the temporal
 information can also be specified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of
-locations with timestamps known to the adversary.</p></li>
-<li><p><strong>time_precision</strong> – string, default ‘Hour’
-the precision at which to consider the timestamps for the visits.
-The possible precisions are: Year, Month, Day, Hour, Minute, Second.</p></li>
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>time_precision</strong> (<em>string, optional</em>) – the precision at which to consider the timestamps for the visits.
+The possible precisions are: Year, Month, Day, Hour, Minute, Second. The default is <cite>Hour</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>time_precision</strong> (<em>string</em>) – the precision at which to consider the timestamps for the visits.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.LocationTimeAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationTimeAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
@@ -525,21 +582,19 @@ The possible precisions are: Year, Month, Day, Hour, Minute, Second.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -549,39 +604,44 @@ a DataFrame in the form (user_id, risk)</p>
 <dl class="class">
 <dt id="skmob.privacy.attacks.UniqueLocationAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">UniqueLocationAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.UniqueLocationAttack" title="Permalink to this definition">¶</a></dt>
-<dd><p>In a unique location attack the adversary knows the coordinates of unique locations visited by an individual,
+<dd><p>Unique Location Attack</p>
+<p>In a unique location attack the adversary knows the coordinates of unique locations visited by an individual,
 and matches them against frequency vectors. A frequency vector, is an aggregation on trajectory
 data showing the unique locations visited by an individual and the frequency with which he visited those locations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>knowledge_length</strong> – int
-the length of the background knowledge that we want to simulate. For this attack, it is the number of unique
-locations known to the adversary.</p>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
+specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+combinations of points of length k will be evaluated.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#skmob.privacy.attacks.Attack" title="skmob.privacy.attacks.Attack"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attack</span></code></a></p>
+</div>
 <dl class="method">
 <dt id="skmob.privacy.attacks.UniqueLocationAttack.assess_risk">
 <code class="sig-name descname">assess_risk</code><span class="sig-paren">(</span><em class="sig-param">traj</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">force_instances=False</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.UniqueLocationAttack.assess_risk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assess privacy risk for a whole dataframe of trajectories.
-Internally performs the conversion to frequency vectors.</p>
+<dd><p>Assess privacy risk for a whole dataframe of trajectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>traj</strong> – TrajectoryDataFrame
-the dataframe on which to assess privacy risk</p></li>
-<li><p><strong>targets</strong> – TrajectoryDataFrame or list, default None
-the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-in which case risk is computed on all users in traj</p></li>
-<li><p><strong>force_instances</strong> – boolean, default False
-if True, returns all possible instances of background knowledge
-with their respective probability of reidentification</p></li>
-<li><p><strong>show_progress</strong> – boolean, default False
-if True, shows the progress of the computation</p></li>
+<li><p><strong>traj</strong> (<em>TrajectoryDataFrame</em>) – the dataframe on which to assess privacy risk.</p></li>
+<li><p><strong>targets</strong> (<em>TrajectoryDataFrame or list, optional</em>) – the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+in which case risk is computed on all users in traj. The defaul is <cite>None</cite>.</p></li>
+<li><p><strong>force_instances</strong> (<em>boolean, optional</em>) – if True, returns all possible instances of background knowledge
+with their respective probability of reidentification. The defaul is <cite>False</cite>.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, shows the progress of the computation. The defaul is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas DataFrame
-a DataFrame in the form (user_id, risk)</p>
+<dd class="field-even"><p>a DataFrame with the privacy risk for each user, in the form (user_id, risk).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
