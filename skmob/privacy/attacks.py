@@ -8,13 +8,27 @@ from ..utils.utils import frequency_vector, probability_vector, date_time_precis
 
 
 class Attack(object):
-    """
+
+    """Privacy Attack
+
     Abstract class for a generic attack. Defines a series of functions common to all attacks.
     Provides basic functions to compute risk for all users in a trajectory dataframe.
     Requires the implementation of both a matching function and an assessment function, which are attack dependant.
 
-    :param knowledge_length: int
+    Parameters
+    ----------
+    knowledge_length : int
+        the length of the background knowledge that we want to simulate. The length of the background knowledge
+        specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+        combinations of points of length k will be evaluated.
+    Attributes
+    ----------
+    knowledge_length : int
         the length of the background knowledge that we want to simulate.
+
+    References
+    ----------
+    [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
     """
     __metaclass__ = ABCMeta
 
@@ -37,22 +51,26 @@ class Attack(object):
         If it is not required to compute the risk for the entire data, the targets parameter can be used to select
         a portion of users to perform the calculation on.
 
-        :param traj: TrajectoryDataFrame
+        Parameters
+        ----------
+        traj: TrajectoryDataFrame
             the dataframe against which to calculate risk.
 
-        :param targets: TrajectoryDataFrame or list, default None
+        targets : TrajectoryDataFrame or list, optional
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-            in which case risk is computed on all users in traj
+            in which case risk is computed on all users in traj. The default is `None`.
 
-        :param force_instances: boolean, default False
+        force_instances : boolean, optional
             if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification
+            with their respective probability of reidentification. The default is `False`.
 
-        :param: show_progress: boolean, default False
-            if True, shows the progress of the computation
+        show_progress : boolean, optional
+            if True, shows the progress of the computation. The default is `False`.
 
-        :return: Pandas DataFrame
-            a DataFrame in the form (user_id, risk)
+        Returns
+        -------
+        DataFrame
+            a DataFrame with the privacy risk for each user, in the form (user_id, risk)
         """
         if targets is None:
             targets = traj
@@ -77,10 +95,14 @@ class Attack(object):
         """
         Return a generator to all the possible background knowledge of length k for a single user_id.
 
-        :param single_traj: TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual
+        Parameters
+        ----------
+        single_traj : TrajectoryDataFrame
+            the dataframe of the trajectory of a single individual.
 
-        :return: generator
+        Yields
+        ------
+        generator
             a generator to all the possible instances of length k. Instances are tuples with the values of the actual
             records in the combination.
         """
@@ -94,17 +116,21 @@ class Attack(object):
         """
         Computes the risk of reidentification of an individual with respect to the entire population in the data.
 
-        :param single_traj: TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual
+        Parameters
+        ----------
+        single_traj : TrajectoryDataFrame
+            the dataframe of the trajectory of a single individual.
 
-        :param traj: TrajectoryDataFrame
-            the dataframe with the complete data
+        traj : TrajectoryDataFrame
+            the dataframe with the complete data.
 
-        :param force_instances: boolean, default False
+        force_instances : boolean, optional
             if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification
+            with their respective probability of reidentification. The default is `False`.
 
-        :return: float
+        Returns
+        -------
+        float
             the risk for the individual, expressed as a float between 0 and 1
         """
         instances = self._generate_instances(single_traj)
@@ -147,22 +173,26 @@ class Attack(object):
         If it is not required to compute the risk for the entire data, the targets parameter can be used to select
         a portion of users to perform the assessment on.
 
-        :param traj: TrajectoryDataFrame
-            the dataframe on which to assess privacy risk
+        Parameters
+        ----------
+        traj : TrajectoryDataFrame
+            the dataframe on which to assess privacy risk.
 
-        :param targets: TrajectoryDataFrame or list, default None
+        targets : TrajectoryDataFrame or list, optional
             the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-            in which case risk is computed on all users in traj
+            in which case risk is computed on all users in traj. The defaul is `None`.
 
-        :param force_instances: boolean, default False
+        force_instances : boolean, optional
             if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification
+            with their respective probability of reidentification. The defaul is `False`.
 
-        :param show_progress: boolean, default False
-            if True, shows the progress of the computation
+        show_progress : boolean, optional
+            if True, shows the progress of the computation. The defaul is `False`.
 
-        :return: Pandas DataFrame
-            a DataFrame in the form (user_id, risk)
+        Returns
+        -------
+        DataFrame
+            a DataFrame with the privacy risk for each user, in the form (user_id, risk).
         """
         pass
 
@@ -173,24 +203,31 @@ class Attack(object):
         trajectory. The internal logic of an attack is represented by this function, therefore, it must be implemented
         depending in the kind of the attack.
 
-        :param single_traj: TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual
+        Parameters
+        ----------
+        single_traj : TrajectoryDataFrame
+            the dataframe of the trajectory of a single individual.
 
-        :param instance: tuple
-            an instance of background knowledge
+        instance : tuple
+            an instance of background knowledge.
 
-        :return: int
+        Returns
+        -------
+        int
             1 if the instance matches the trajectory, 0 otherwise.
         """
         pass
 
 
 class LocationAttack(Attack):
-    """
+    """Location Attack
+
     In a location attack the adversary knows the coordinates of the locations visited by an individual and matches them
     against trajectories.
 
-    :param knowledge_length: int
+    Parameters
+    ----------
+    knowledge_length : int
         the length of the background knowledge that we want to simulate. For this attack, it is the number of
         locations known to the adversary.
     """
