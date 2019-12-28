@@ -125,3 +125,102 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 >>> import skmob
 >>>
 ```
+
+## Examples
+### Create a `TrajDataFrame`
+
+Create a `TrajDataFrame` from a list:
+
+	>>> import skmob
+	>>> # create a TrajDataFrame from a list
+	>>> data_list = [[1, 39.984094, 116.319236, '2008-10-23 13:53:05'], [1, 39.984198, 116.319322, '2008-10-23 13:53:06'], [1, 39.984224, 116.319402, '2008-10-23 13:53:11'], [1, 39.984211, 116.319389, '2008-10-23 13:53:16']]
+	>>> tdf = skmob.TrajDataFrame(data_list, latitude=1, longitude=2, datetime=3)
+	>>> print(tdf.head())
+	   0        lat         lng            datetime
+	0  1  39.984094  116.319236 2008-10-23 13:53:05
+	1  1  39.984198  116.319322 2008-10-23 13:53:06
+	2  1  39.984224  116.319402 2008-10-23 13:53:11
+	3  1  39.984211  116.319389 2008-10-23 13:53:16
+	>>> print(type(tdf))
+	<class 'skmob.core.trajectorydataframe.TrajDataFrame'>
+	
+Create a `TrajDataFrame` from a [pandas](https://pandas.pydata.org/) `DataFrame`:
+
+	>>> import pandas as pd
+	>>> # create a DataFrame from the previous list
+	>>> data_df = pd.DataFrame(data_list, columns=['user', 'latitude', 'lng', 'hour'])
+	>>> print(type(data_df))
+	<class 'pandas.core.frame.DataFrame'>
+	>>> # now create a TrajDataFrame from the pandas DataFrame
+	>>> tdf = skmob.TrajDataFrame(data_df, latitude='latitude', datetime='hour', user_id='user')
+	>>> print(type(tdf))
+	<class 'skmob.core.trajectorydataframe.TrajDataFrame'>
+	>>> print(tdf.head())
+	   uid        lat         lng            datetime
+	0    1  39.984094  116.319236 2008-10-23 13:53:05
+	1    1  39.984198  116.319322 2008-10-23 13:53:06
+	2    1  39.984224  116.319402 2008-10-23 13:53:11
+	3    1  39.984211  116.319389 2008-10-23 13:53:16
+
+Create a `TrajDataFrame` from a file:
+
+	>>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz
+	>>> # read the trajectory data (GeoLife, Beijing, China)
+	>>> tdf = skmob.TrajDataFrame.from_file('geolife_sample.txt.gz', latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+	>>> print(tdf.head())
+		 lat         lng            datetime  uid
+	0  39.984094  116.319236 2008-10-23 05:53:05    1
+	1  39.984198  116.319322 2008-10-23 05:53:06    1
+	2  39.984224  116.319402 2008-10-23 05:53:11    1
+	3  39.984211  116.319389 2008-10-23 05:53:16    1
+	4  39.984217  116.319422 2008-10-23 05:53:21    1
+	
+Plot the trajectory:
+
+	>>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
+	
+![Plot Trajectory](examples/plot_trajectory_example.png)
+
+### Create a `FlowDataFrame`: 
+Create a spatial tessellation (a geopandas GeoDataFrame) from a file:
+	
+	>>> import skmob
+	>>> import geopandas as gpd
+	>>> # load a spatial tessellation
+	>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+	>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+	>>> print(tessellation.head())
+	  tile_ID  population                                           geometry
+	0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+	1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+	2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+	3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+	4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
+	
+Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
+	
+	>>> # load real flows into a FlowDataFrame
+	>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+	>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+                                        tessellation=tessellation,
+                                        tile_id='tile_ID',
+                                        sep=",")
+	>>> print(fdf.head())
+	     flow origin destination
+	0  121606  36001       36001
+	1       5  36001       36005
+	2      29  36001       36007
+	3      11  36001       36017
+	4      30  36001       36019
+
+Plot the flows:
+
+	>>> fdf.plot_flows(flow_color='red')
+	
+![Plot Fluxes](examples/plot_flows_example.png)
+
+Plot the spatial tessellation: 
+
+	>>> fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
+
+![Plot Tessellation](examples/plot_tessellation_example.png)
