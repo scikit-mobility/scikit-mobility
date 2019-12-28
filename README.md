@@ -127,7 +127,19 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
 
 ## Examples
+
 ### Create a `TrajDataFrame`
+
+In scikit-mobility, a set of trajectories is described by a `TrajDataFrame`, an extension of the pandas `DataFrame` that has specific columns names and data types. A row in the `TrajDataFrame` represents a point of the trajectory, described by three mandatory fields (aka columns): 
+- `latitude` (type: float);
+- `longitude` (type: float);
+- `datetime` (type: date-time). 
+
+Additionally, two optional columns can be specified: 
+- `uid` (type: string) identifies the object associated with the point of the trajectory. If `uid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains trajectories associated with a single moving object; 
+- `tid` specifies the identifier of the trajectory to whichthe point belongs to. Similar to `uid`, if `tid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains a single trajectory;
+
+Note that, besides the mandatory columns, the user can add to a `TrajDataFrame` as many columns as they want since the data structures in scikit-mobility inherit all the pandas `DataFrame` functionalities.
 
 Create a `TrajDataFrame` from a list:
 
@@ -175,14 +187,26 @@ Create a `TrajDataFrame` from a file:
 	3  39.984211  116.319389 2008-10-23 05:53:16    1
 	4  39.984217  116.319422 2008-10-23 05:53:21    1
 	
-Plot the trajectory:
+A `TrajDataFrame` can be plotted on an [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_trajectory` function.
 
 	>>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
 	
 ![Plot Trajectory](examples/plot_trajectory_example.png)
 
-### Create a `FlowDataFrame`: 
-Create a spatial tessellation (a geopandas GeoDataFrame) from a file:
+### Create a `FlowDataFrame`
+
+In scikit-mobility, an origin-destination matrix is described by the `FlowDataFrame` structure, an extension of the pandas `DataFrame` that has specific column names and data types. A row in a `FlowDataFrame` represents a flow of objects between two locations, described by three mandatory columns:
+- `origin` (type: string); 
+- `destination` (type: string);
+- `flow` (type: integer). 
+
+Again, the user can add to a `FlowDataFrame` as many columnsas they want. Each `FlowDataFrame` is associated with a spatial tessellation, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
+- `tile_ID` (type: integer) indicates the identifier of a location;
+- `geometry` indicates the polygon (or point) that describes the geometric shape of the location on a territory (e.g., a square, a voronoi shape, the shape of a neighborhood). 
+
+Note that each location identifier in the `origin` and `destination` columns of a `FlowDataFrame` must be present in the associated spatial tessellation.
+
+Create a spatial tessellation from a file:
 	
 	>>> import skmob
 	>>> import geopandas as gpd
@@ -213,14 +237,21 @@ Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
 	3      11  36001       36017
 	4      30  36001       36019
 
-Plot the flows:
+A `FlowDataFrame` can be visualized on a [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_flows` function, which plots the flows on a geographic map as lines between the centroids of the tiles in the `FlowDataFrame`'s spatial tessellation:
 
 	>>> fdf.plot_flows(flow_color='red')
 	
 ![Plot Fluxes](examples/plot_flows_example.png)
 
-Plot the spatial tessellation: 
+Similarly, the spatial tessellation of a `FlowDataFrame` can be visualized using the `plot_tessellation` function. The argument `popup_features` (type:list, default:[`constants.TILE_ID`]) allows to enhance the plot's interactivity displaying popup windows that appear when the user clicks on a tile and includes information contained in the columns of the tessellation's `GeoDataFrame` specified in the argument’s list:
 
 	>>> fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
 
 ![Plot Tessellation](examples/plot_tessellation_example.png)
+
+The spatial tessellation and the flows can be visualized together using the `map_f` argument, which specified the folium object on which to plot: 
+
+	>>> m = fdf.plot_tessellation()
+	>>> fdf.plot_flows(flow_color='red', map_f=m)
+	
+![Plot Tessellation and Flows](examples/plot_tessellation_and_flows_example.png)
