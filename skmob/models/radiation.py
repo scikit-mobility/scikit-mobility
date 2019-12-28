@@ -81,6 +81,7 @@ class Radiation:
     3         8665  
     4         8871 
     >>> np.random.seed(0)
+    >>> radiation = Radiation()
     >>> rad_flows = radiation.generate(tessellation, tile_id_column='tile_ID',  tot_outflows_column='tot_outflow', relevance_column='population', out_format='flows_sample')
     >>> print(rad_flows.head())
       origin destination   flow
