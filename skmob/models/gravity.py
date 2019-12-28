@@ -180,7 +180,7 @@ class Gravity:
     4      30  36001       36019    
     >>> # compute the total outflows from each location of the tessellation (excluding self loops)
     >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
-    >>> tessellation[skmob.constants.TOT_OUTFLOW] = tot_outflows
+    >>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
     >>> print(tessellation.head())
       tile_id  population                                           geometry  \
     0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....   
