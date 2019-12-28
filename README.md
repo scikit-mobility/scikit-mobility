@@ -315,18 +315,47 @@ The goal of trajectory compression is to reduce the number of trajectory points 
 ### Mobility measures
 Several measures have been proposed in the literature to capture the patterns of human mobility, both at the individual and collective levels. Individual measures summarize the mobility patterns of a single moving object, while collective measures summarize mobility patterns of a population as a whole. scikit-mobility provides a wide set of mobility measures, each implemented as a function that takes in input a `TrajDataFrame` and outputs a pandas `DataFrame`. Individual and collective measures are implemented the in `skmob.measure.individual` and the `skmob.measures.collective` modules, respectively.
 
-For example, the following code compute the *radius of gyration* and the *jump lengths* of a `TrajDataFrame`:
+For example, the following code compute the *radius of gyration*, the *jump lengths* and the *home locations* of a `TrajDataFrame`:
 
-	>>> from skmob.measures.individual import jump_lengths, radius_of_gyration
+	>>> from skmob.measures.individual import jump_lengths, radius_of_gyration, home_location
+	>>> # load a TrajDataFrame from an URL
+	>>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+	>>> df = pd.read_csv(url, sep='\t', header=0, nrows=100000,
+             names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+	>>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
 	>>> rg_df = radius_of_gyration(tdf)
 	>>> print(rg_df)
 	   uid  radius_of_gyration
-	0    1            4.420626
-	1    5          442.872858
+	0    0         1564.436792
+	1    1         2467.773523
+	2    2         1439.649774
+	3    3         1752.604191
+	4    4         5380.503250
 	>>> jl_df = jump_lengths(tdf.sort_values(by='datetime'))
-	>>> print(jl_df)
+	>>> print(jl_df.head())
 	   uid                                       jump_lengths
-	0    1  [0.013690153134343689, 0.007403787866531697, 0...
-	1    5  [0.037247653823797015, 0.006255517687714352, 0...
+	0    0  [19.640467328877936, 0.0, 0.0, 1.7434311010381...
+	1    1  [6.505330424378251, 46.75436600375988, 53.9284...
+	2    2  [0.0, 0.0, 0.0, 0.0, 3.6410097195943507, 0.0, ...
+	3    3  [3861.2706300798827, 4.061631313492122, 5.9163...
+	4    4  [15511.92758595804, 0.0, 15511.92758595804, 1....
 
-Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be order in increasing order by the column `datetime` (see the documentation for the measures that requires this condition https://scikit-mobility.github.io/scikit-mobility/index.html).
+Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be order in increasing order by the column `datetime` (see the documentation for the measures that requires this condition https://scikit-mobility.github.io/scikit-mobility/reference/measures.html).
+	
+	>>> hl_df = home_location(tdf)
+	>>> print(hl_df.head())
+	   uid        lat         lng
+	0    0  39.891077 -105.068532
+	1    1  37.630490 -122.411084
+	2    2  39.739154 -104.984703
+	3    3  37.748170 -122.459192
+	4    4  60.180171   24.949728
+	>>> # now let's visualize a cloropleth map of the home locations 
+	>>> import folium
+	>>> m = folium.Map(tiles = 'openstreetmap', zoom_start=12, control_scale=True)
+	>>> folium.plugins.HeatMap(hl_df[['lat', 'lng']].values).add_to(m)
+	>>> m
+	
+![Cloropleth map home locations](examples/cloropleth_map_home_locations.png)	
+
+
