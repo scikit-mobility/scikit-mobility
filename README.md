@@ -323,8 +323,10 @@ For example, the following code compute the *radius of gyration* and the *jump l
 	   uid  radius_of_gyration
 	0    1            4.420626
 	1    5          442.872858
-	>>> jl_df = jump_lengths(tdf)
+	>>> jl_df = jump_lengths(tdf.sort_values(by='datetime'))
 	>>> print(jl_df)
 	   uid                                       jump_lengths
 	0    1  [0.013690153134343689, 0.007403787866531697, 0...
 	1    5  [0.037247653823797015, 0.006255517687714352, 0...
+
+Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be order in increasing order by the column `datetime` (see the documentation for the measures that requires this condition https://scikit-mobility.github.io/scikit-mobility/index.html).
