@@ -440,3 +440,24 @@ Plot the real flows and the synthetic flows:
 	>>> synth_fdf_fitted.plot_flows(min_flow=1000, flow_exp=0.01, map_f=m)
 
 ![Gravity model: real flows vs synthetic flows](examples/real_flows_vs_synth_flows.png)
+
+#### Radiation model
+The Radiation model is parameter-free and has only one method: `generate`. Given a spatial tessellation, the synthetic flows can be generated using the `Radiation` class as follows:
+
+	>>> from skmob.models import Radiation
+	>>> np.random.seed(0)
+	>>> radiation = Radiation()
+	>>> rad_flows = radiation.generate(tessellation, 
+					tile_id_column='tile_ID',  
+					tot_outflows_column='tot_outflow', 
+					relevance_column='population', 
+					out_format='flows_sample')
+	>>> print(rad_flows.head())
+	  origin destination   flow
+	0  36019       36033  11648
+	1  36019       36031   4232
+	2  36019       36089   5598
+	3  36019       36113   1596
+	4  36019       36041    117
+
+
