@@ -127,7 +127,19 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
 
 ## Examples
+
 ### Create a `TrajDataFrame`
+
+In scikit-mobility, a set of trajectories is described by a `TrajDataFrame`, an extension of the pandas `DataFrame` that has specific columns names and data types. A row in the `TrajDataFrame` represents a point of the trajectory, described by three mandatory fields (aka columns): 
+- `latitude` (type: float);
+- `longitude` (type: float);
+- `datetime` (type: date-time). 
+
+Additionally, two optional columns can be specified: 
+- `uid` (type: string) identifies the object associated with the point of the trajectory. If `uid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains trajectories associated with a single moving object; 
+- `tid` specifies the identifier of the trajectory to whichthe point belongs to. Similar to `uid`, if `tid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains a single trajectory;
+
+Note that, besides the mandatory columns, the user can add to a `TrajDataFrame` as many columns as they want since the data structures in scikit-mobility inherit all the pandas `DataFrame` functionalities.
 
 Create a `TrajDataFrame` from a list:
 
@@ -175,14 +187,26 @@ Create a `TrajDataFrame` from a file:
 	3  39.984211  116.319389 2008-10-23 05:53:16    1
 	4  39.984217  116.319422 2008-10-23 05:53:21    1
 	
-Plot the trajectory:
+A `TrajDataFrame` can be plotted on an [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_trajectory` function.
 
 	>>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
 	
 ![Plot Trajectory](examples/plot_trajectory_example.png)
 
-### Create a `FlowDataFrame`: 
-Create a spatial tessellation (a geopandas GeoDataFrame) from a file:
+### Create a `FlowDataFrame`
+
+In scikit-mobility, an origin-destination matrix is described by the `FlowDataFrame` structure, an extension of the pandas `DataFrame` that has specific column names and data types. A row in a `FlowDataFrame` represents a flow of objects between two locations, described by three mandatory columns:
+- `origin` (type: string); 
+- `destination` (type: string);
+- `flow` (type: integer). 
+
+Again, the user can add to a `FlowDataFrame` as many columnsas they want. Each `FlowDataFrame` is associated with a spatial tessellation, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
+- `tile_ID` (type: integer) indicates the identifier of a location;
+- `geometry` indicates the polygon (or point) that describes the geometric shape of the location on a territory (e.g., a square, a voronoi shape, the shape of a neighborhood). 
+
+Note that each location identifier in the `origin` and `destination` columns of a `FlowDataFrame` must be present in the associated spatial tessellation.
+
+Create a spatial tessellation from a file:
 	
 	>>> import skmob
 	>>> import geopandas as gpd
@@ -213,14 +237,72 @@ Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
 	3      11  36001       36017
 	4      30  36001       36019
 
-Plot the flows:
+A `FlowDataFrame` can be visualized on a [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_flows` function, which plots the flows on a geographic map as lines between the centroids of the tiles in the `FlowDataFrame`'s spatial tessellation:
 
 	>>> fdf.plot_flows(flow_color='red')
 	
 ![Plot Fluxes](examples/plot_flows_example.png)
 
-Plot the spatial tessellation: 
+Similarly, the spatial tessellation of a `FlowDataFrame` can be visualized using the `plot_tessellation` function. The argument `popup_features` (type:list, default:[`constants.TILE_ID`]) allows to enhance the plot's interactivity displaying popup windows that appear when the user clicks on a tile and includes information contained in the columns of the tessellation's `GeoDataFrame` specified in the argument’s list:
 
 	>>> fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
 
 ![Plot Tessellation](examples/plot_tessellation_example.png)
+
+The spatial tessellation and the flows can be visualized together using the `map_f` argument, which specified the folium object on which to plot: 
+
+	>>> m = fdf.plot_tessellation()
+	>>> fdf.plot_flows(flow_color='red', map_f=m)
+	
+![Plot Tessellation and Flows](examples/plot_tessellation_and_flows_example.png)
+
+### Trajectory preprocessing
+As any analytical process, mobility data analysis requires data cleaning and preprocessing steps. The `preprocessing` module allows the user to perform four main preprocessing steps: 
+- noise filtering; 
+- stop detection; 
+- stop clustering;
+- trajectory compression;
+
+Note that, if `TrajDataFrame` contains multiple trajectories from multiple users, the preprocessing methods automatically apply to the single trajectory and, when necessary, to the single object.
+
+#### Noise filtering
+In scikit-mobility, the standard method `filter` filters out a point if the speed from the previous point is higher than the parameter `max_speed`, whichis by default set to 500km/h. 
+
+	>>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
+	>>> print(n_deleted_points)
+	{'from_file': 'geolife_sample.txt.gz', 'filter': {'function': 'filter', 'max_speed_kmh': 500.0, 'include_loops': False, 'speed_kmh': 5.0, 'max_loop': 6, 'ratio_max': 0.25}}
+	>>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
+	>>> print(n_deleted_points)
+	54
+
+Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the list of operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
+
+#### Stop detection
+Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by an object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
+
+	>>> from skmob.preprocessing import detection
+	>>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+	>>> print(stdf.head())
+		 lat         lng            datetime  uid    leaving_datetime
+	0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
+	1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
+	2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
+	3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
+	4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
+	>>> print('Points of the original trajectory:\t%s'%len(tdf))
+	>>> print('Points of stops:\t\t\t%s'%len(stdf))
+	Points of the original trajectory:	217653
+	Points of stops:			391
+	
+A new column `leaving_datetime` is added to the `TrajDataFrame` in order to indicate the time when the user left the stop location.
+
+#### Trajectory compression
+The goal of trajectory compression is to reduce the number of trajectory points while preserving the structure of the trajectory. This step results in a significant reduction of the number of trajectory points. In scikit-mobility, we can use one of the methods in the `compression` module under the `preprocessing` module. For instance, to merge all the points that are closer than 0.2km from each other, we can use the following code:
+
+	>>> from skmob.preprocessing import compression
+	>>> # compress the trajectory using a spatial radius of 0.2 km
+	>>> ctdf = compression.compress(tdf, spatial_radius_km=0.2)
+	>>> print('Points of the original trajectory:\t%s'%len(tdf))
+	>>> print('Points of the compressed trajectory:\t%s'%len(ctdf))
+	Points of the original trajectory:	217653
+	Points of the compressed trajectory:	6281
