@@ -352,10 +352,91 @@ Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be 
 	4    4  60.180171   24.949728
 	>>> # now let's visualize a cloropleth map of the home locations 
 	>>> import folium
+	>>> from folium.plugins import HeatMap
 	>>> m = folium.Map(tiles = 'openstreetmap', zoom_start=12, control_scale=True)
-	>>> folium.plugins.HeatMap(hl_df[['lat', 'lng']].values).add_to(m)
+	>>> HeatMap(hl_df[['lat', 'lng']].values).add_to(m)
 	>>> m
 	
 ![Cloropleth map home locations](examples/cloropleth_map_home_locations.png)	
 
+### Collective generative models
+Collective generative algorithms estimate spatial flows between a set of discrete locations. Examples of spatial flows estimated with collective generative algorithms include commut-ing trips between neighborhoods, migration flows between municipalities, freight shipmentsbetween states, and phone calls between regions. 
 
+In scikit-mobility, a collective generative algorithm takes in input a spatial tessellation, i.e., a geopandas `GeoDataFrame`. To be a valid input for a collective algorithm, the spatial tessellation should contain two columns, `geometry` and `relevance`, which are necessary to compute the two variables used by collective algorithms: the distance between tiles and the importance (aka "attractiveness") of each tile. A collective algorithm produces a `FlowDataFrame` that contains the generated flows and the spatial tessellation. scikit-mobility implements the most common collective generative algorithms: 
+- the `Gravity` model; 
+- the `Radiation` model. 
+
+#### Gravity model
+The class `Gravity`, implementing the Gravity model, has two main methods: 
+- `fit`, which calibrates the model's parameters using a `FlowDataFrame`; 
+- `generate`, which generates the flows on a given spatial tessellation. 
+
+Load the spatial tessellation and a data set of real flows in a `FlowDataFrame`:
+
+	>>> from skmob.utils import utils, constants
+	>>> import geopandas as gpd
+	>>> from skmob.models import Gravity
+	>>> import numpy as np
+	>>> # load a spatial tessellation
+	>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+	>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+	>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+	>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+						tessellation=tessellation,
+						tile_id='tile_ID',
+						sep=",")
+	>>> # compute the total outflows from each location of the tessellation (excluding self loops)
+	>>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
+	>>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+
+Instantiate a Gravity model object and generate synthetic flows:
+
+	# instantiate a singly constrained Gravity model
+	>>> gravity_singly = Gravity(gravity_type='singly constrained')
+	>>> print(gravity_singly)
+	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+	>>> # generate the synthetic flows
+	>>> np.random.seed(0)
+	>>> synth_fdf = gravity_singly.generate(tessellation,
+					   tile_id_column='tile_ID',
+					   tot_outflows_column='tot_outflow',
+					   relevance_column= 'population',
+					   out_format='flows')
+	>>> print(synth_fdf.head())
+	  origin destination  flow
+	0  36019       36101   101
+	1  36019       36107    66
+	2  36019       36059  1041
+	3  36019       36011   151
+	4  36019       36123    33
+ 
+Fit the parameters of the Gravity model from the `FlowDataFrame` and generate the synthetic flows:
+
+	>>> # fit the parameters of the Gravity model from real fluxes
+	>>> gravity_singly_fitted = Gravity(gravity_type='singly constrained')
+	>>> print(gravity_singly_fitted)
+	>>> # fit the parameters of the Gravity from the FlowDataFrame
+	>>> gravity_singly_fitted.fit(fdf, relevance_column='population')
+	>>> print(gravity_singly_fitted)
+	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type="singly constrained")
+	>>> # generate the synthetics flows
+	>>> np.random.seed(0)
+	>>> synth_fdf_fitted = gravity_singly_fitted.generate(tessellation,
+								tile_id_column='tile_ID',
+								tot_outflows_column='tot_outflow',
+								relevance_column= 'population',
+								out_format='flows')
+	>>> print(synth_fdf_fitted.head())
+	  origin destination  flow
+	0  36019       36101   102
+	1  36019       36107    66
+	2  36019       36059  1044
+	3  36019       36011   152
+	4  36019       36123    33
+	
+Plot the real flows and the synthetic flows:
+
+	>>> m = fdf.plot_flows(min_flow=100, flow_exp=0.01, flow_color='blue')
+	>>> synth_fdf_fitted.plot_flows(min_flow=1000, flow_exp=0.01, map_f=m)
+
+![Gravity model: real flows vs synthetic flows](examples/real_flows_vs_synth_flows.png)
