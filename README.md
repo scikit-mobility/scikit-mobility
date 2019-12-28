@@ -294,7 +294,12 @@ Some points in a trajectory can represent Point-Of-Interests (POIs) such as scho
 	Points of the original trajectory:	217653
 	Points of stops:			391
 	
-A new column `leaving_datetime` is added to the `TrajDataFrame` in order to indicate the time when the user left the stop location.
+A new column `leaving_datetime` is added to the `TrajDataFrame` in order to indicate the time when the user left the stop location. We can then visualize the detected stops using the `plot_stops` function:
+
+	>>> m = stdf.plot_trajectory(max_users=1, start_end_markers=False)
+	>>> stdf.plot_stops(max_users=1, map_f=m)
+	
+![Plot Stops](examples/plot_stops_example_single_user.png)
 
 #### Trajectory compression
 The goal of trajectory compression is to reduce the number of trajectory points while preserving the structure of the trajectory. This step results in a significant reduction of the number of trajectory points. In scikit-mobility, we can use one of the methods in the `compression` module under the `preprocessing` module. For instance, to merge all the points that are closer than 0.2km from each other, we can use the following code:
@@ -306,3 +311,20 @@ The goal of trajectory compression is to reduce the number of trajectory points 
 	>>> print('Points of the compressed trajectory:\t%s'%len(ctdf))
 	Points of the original trajectory:	217653
 	Points of the compressed trajectory:	6281
+
+### Mobility measures
+Several measures have been proposed in the literature to capture the patterns of human mobility, both at the individual and collective levels. Individual measures summarize the mobility patterns of a single moving object, while collective measures summarize mobility patterns of a population as a whole. scikit-mobility provides a wide set of mobility measures, each implemented as a function that takes in input a `TrajDataFrame` and outputs a pandas `DataFrame`. Individual and collective measures are implemented the in `skmob.measure.individual` and the `skmob.measures.collective` modules, respectively.
+
+For example, the following code compute the *radius of gyration* and the *jump lengths* of a `TrajDataFrame`:
+
+	>>> from skmob.measures.individual import jump_lengths, radius_of_gyration
+	>>> rg_df = radius_of_gyration(tdf)
+	>>> print(rg_df)
+	   uid  radius_of_gyration
+	0    1            4.420626
+	1    5          442.872858
+	>>> jl_df = jump_lengths(tdf)
+	>>> print(jl_df)
+	   uid                                       jump_lengths
+	0    1  [0.013690153134343689, 0.007403787866531697, 0...
+	1    5  [0.037247653823797015, 0.006255517687714352, 0...
