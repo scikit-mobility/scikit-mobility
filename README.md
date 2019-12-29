@@ -18,12 +18,18 @@
 
 - assess the privacy risk associated with a mobility dataset
 
+## Table of contents
+1. [Documentation](#documentation)
+2. [Citing](#citing)
+3. [Installation](#installation)
+4. [Examples](#examples)
 
+
+<a id='documentation'></a>
 ## Documentation
+The documentation of scikit-mobility's classes and functions is available at: https://scikit-mobility.github.io/scikit-mobility/
 
-https://scikit-mobility.github.io/scikit-mobility/
-
-
+<a id='citing'></a>
 ## Citing
 
 if you use scikit-mobility please cite the following paper: https://arxiv.org/abs/1907.07062
@@ -40,8 +46,8 @@ if you use scikit-mobility please cite the following paper: https://arxiv.org/ab
 ```
 
 
+<a id='installation'></a>
 ## Install
-
 First, clone the repository - this creates a new directory `./scikit_mobility`. 
 
         git clone https://github.com/scikit-mobility/scikit-mobility scikit_mobility
@@ -126,6 +132,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 >>>
 ```
 
+<a id='examples'></a>
 ## Examples
 
 ### Create a `TrajDataFrame`
