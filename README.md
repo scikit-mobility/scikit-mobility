@@ -150,14 +150,14 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 <a id='trajdataframe'></a>
 ### Create a `TrajDataFrame`
 
-In scikit-mobility, a set of trajectories is described by a `TrajDataFrame`, an extension of the pandas `DataFrame` that has specific columns names and data types. A row in the `TrajDataFrame` represents a point of the trajectory, described by three mandatory fields (aka columns): 
+In scikit-mobility, a set of trajectories is described by a `TrajDataFrame`, an extension of the pandas `DataFrame` that has specific columns names and data types. A `TrajDataFrame` can contain many trajectories, and each row in the `TrajDataFrame` represents a point of a trajectory, described by three mandatory fields (aka columns): 
 - `latitude` (type: float);
 - `longitude` (type: float);
 - `datetime` (type: date-time). 
 
 Additionally, two optional columns can be specified: 
 - `uid` (type: string) identifies the object associated with the point of the trajectory. If `uid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains trajectories associated with a single moving object; 
-- `tid` specifies the identifier of the trajectory to whichthe point belongs to. Similar to `uid`, if `tid` is not present, scikit-mobility assumes that the `TrajDataFrame` contains a single trajectory;
+- `tid` specifies the identifier of the trajectory to which the point belongs to. If `tid` is not present, scikit-mobility assumes that all rows in the `TrajDataFrame` associated with a `uid` belong to the same trajectory;
 
 Note that, besides the mandatory columns, the user can add to a `TrajDataFrame` as many columns as they want since the data structures in scikit-mobility inherit all the pandas `DataFrame` functionalities.
 
@@ -208,7 +208,7 @@ Create a `TrajDataFrame` from a [pandas](https://pandas.pydata.org/) `DataFrame`
 	2    1  39.984224  116.319402 2008-10-23 13:53:11
 	3    1  39.984211  116.319389 2008-10-23 13:53:16
 
-Create a `TrajDataFrame` from a file:
+We can also create a `TrajDataFrame` from a file. For example, in the following we create a `TrajDataFrame` from a portion of a GPS trajectory dataset collected in the context of the [GeoLife](https://www.microsoft.com/en-us/research/publication/geolife-gps-trajectory-dataset-user-guide/) project by 178 users in a period of over four years from April 2007 to October 2011.
 
 ```python
 >>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz
@@ -224,7 +224,7 @@ Create a `TrajDataFrame` from a file:
 	3  39.984211  116.319389 2008-10-23 05:53:16    1
 	4  39.984217  116.319422 2008-10-23 05:53:21    1
 	
-A `TrajDataFrame` can be plotted on an [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_trajectory` function.
+A `TrajDataFrame` can be plotted on a [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_trajectory` function.
 
 ```python
 >>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
@@ -240,13 +240,13 @@ In scikit-mobility, an origin-destination matrix is described by the `FlowDataFr
 - `destination` (type: string);
 - `flow` (type: integer). 
 
-Again, the user can add to a `FlowDataFrame` as many columnsas they want. Each `FlowDataFrame` is associated with a spatial tessellation, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
+Again, the user can add to a `FlowDataFrame` as many columns as they want since the `FlowDataFrame` data structure inherits all the pandas `DataFrame` functionalities. Each `FlowDataFrame` is associated with a **spatial tessellation**, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
 - `tile_ID` (type: integer) indicates the identifier of a location;
 - `geometry` indicates the polygon (or point) that describes the geometric shape of the location on a territory (e.g., a square, a voronoi shape, the shape of a neighborhood). 
 
 Note that each location identifier in the `origin` and `destination` columns of a `FlowDataFrame` must be present in the associated spatial tessellation.
 
-Create a spatial tessellation from a file:
+Create a spatial tessellation from a file describing counties in New York state:
 
 ```python
 >>> import skmob
@@ -264,7 +264,7 @@ Create a spatial tessellation from a file:
 	3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
 	4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
 	
-Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
+Create a `FlowDataFrame` from a spatial tessellation and a file of real flows between counties in New York state:
 
 ```python
 >>> # load real flows into a FlowDataFrame
@@ -299,7 +299,7 @@ Similarly, the spatial tessellation of a `FlowDataFrame` can be visualized using
 
 ![Plot Tessellation](examples/plot_tessellation_example.png)
 
-The spatial tessellation and the flows can be visualized together using the `map_f` argument, which specified the folium object on which to plot: 
+The spatial tessellation and the flows can be visualized together using the `map_f` argument, which specifies the folium object on which to plot: 
 
 ```python
 >>> m = fdf.plot_tessellation() # plot the tessellation
@@ -316,10 +316,10 @@ As any analytical process, mobility data analysis requires data cleaning and pre
 - stop clustering;
 - trajectory compression;
 
-Note that, if `TrajDataFrame` contains multiple trajectories from multiple users, the preprocessing methods automatically apply to the single trajectory and, when necessary, to the single object.
+Note that, if a `TrajDataFrame` contains multiple trajectories from multiple users, the preprocessing methods automatically apply to the single trajectory and, when necessary, to the single moving object.
 
 #### Noise filtering
-In scikit-mobility, the standard method `filter` filters out a point if the speed from the previous point is higher than the parameter `max_speed`, whichis by default set to 500km/h. 
+In scikit-mobility, the function `filter` filters out a point if the speed from the previous point is higher than the parameter `max_speed`, which is by default set to 500km/h. 
 
 ```python
 >>> from skmob.preprocessing import filtering
@@ -334,10 +334,10 @@ In scikit-mobility, the standard method `filter` filters out a point if the spee
 ```
 	54
 
-Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the list of operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
+Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
 
 #### Stop detection
-Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by an object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
+Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by a moving object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
 
 ```python
 >>> from skmob.preprocessing import detection
@@ -384,7 +384,7 @@ The goal of trajectory compression is to reduce the number of trajectory points 
 
 <a id='measures'></a>
 ### Mobility measures
-Several measures have been proposed in the literature to capture the patterns of human mobility, both at the individual and collective levels. Individual measures summarize the mobility patterns of a single moving object, while collective measures summarize mobility patterns of a population as a whole. scikit-mobility provides a wide set of mobility measures, each implemented as a function that takes in input a `TrajDataFrame` and outputs a pandas `DataFrame`. Individual and collective measures are implemented the in `skmob.measure.individual` and the `skmob.measures.collective` modules, respectively.
+Several measures have been proposed in the literature to capture the patterns of human mobility, both at the individual and collective levels. Individual measures summarize the mobility patterns of a single moving object, while collective measures summarize mobility patterns of a population as a whole. scikit-mobility provides a wide set of [mobility measures](https://scikit-mobility.github.io/scikit-mobility/reference/measures.html), each implemented as a function that takes in input a `TrajDataFrame` and outputs a pandas `DataFrame`. Individual and collective measures are implemented the in `skmob.measure.individual` and the `skmob.measures.collective` modules, respectively.
 
 For example, the following code compute the *radius of gyration*, the *jump lengths* and the *home locations* of a `TrajDataFrame`:
 
@@ -443,9 +443,9 @@ Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be 
 
 <a id='collective_models'></a>
 ### Collective generative models
-Collective generative algorithms estimate spatial flows between a set of discrete locations. Examples of spatial flows estimated with collective generative algorithms include commut-ing trips between neighborhoods, migration flows between municipalities, freight shipmentsbetween states, and phone calls between regions. 
+Collective generative models estimate spatial flows between a set of discrete locations. Examples of spatial flows estimated with collective generative models include commuting trips between neighborhoods, migration flows between municipalities, freight shipments between states, and phone calls between regions. 
 
-In scikit-mobility, a collective generative algorithm takes in input a spatial tessellation, i.e., a geopandas `GeoDataFrame`. To be a valid input for a collective algorithm, the spatial tessellation should contain two columns, `geometry` and `relevance`, which are necessary to compute the two variables used by collective algorithms: the distance between tiles and the importance (aka "attractiveness") of each tile. A collective algorithm produces a `FlowDataFrame` that contains the generated flows and the spatial tessellation. scikit-mobility implements the most common collective generative algorithms: 
+In scikit-mobility, a collective generative model takes in input a spatial tessellation, i.e., a geopandas `GeoDataFrame`. To be a valid input for a collective model, the spatial tessellation should contain two columns, `geometry` and `relevance`, which are necessary to compute the two variables used by collective algorithms: the distance between tiles and the importance (aka "attractiveness") of each tile. A collective algorithm produces a `FlowDataFrame` that contains the generated flows and the spatial tessellation. scikit-mobility implements the most common collective generative algorithms: 
 - the `Gravity` model; 
 - the `Radiation` model. 
 
@@ -567,9 +567,9 @@ The Radiation model is parameter-free and has only one method: `generate`. Given
 
 <a id='individual_models'></a>
 ### Individual generative models
-The goal of individual generative algorithms of human mobility is to create a population of agents whose mobility patterns are statistically indistinguishable from those of real individuals. A generative algorithm typically generates a synthetic trajectory corresponding to a single moving object, assuming that an object is independent of the others. 
+The goal of individual generative models of human mobility is to create a population of agents whose mobility patterns are statistically indistinguishable from those of real individuals. An individual generative model typically generates a synthetic trajectory corresponding to a single moving object, assuming that an object is independent of the others. 
 
-scikit-mobility implements the most common individual generative algorithms, such as the [Exploration and Preferential Return](https://www.nature.com/articles/nphys1760) model and its variants, and [DITRAS](https://link.springer.com/article/10.1007/s10618-017-0548-4). Each generative model is a python class with a public method `generate`, which starts the generation of synthetic trajectories.
+scikit-mobility implements the most common individual generative models, such as the [Exploration and Preferential Return](https://www.nature.com/articles/nphys1760) model and its variants, and [DITRAS](https://link.springer.com/article/10.1007/s10618-017-0548-4). Each generative model is a python class with a public method `generate`, which starts the generation of synthetic trajectories.
 
 The following code generate synthetic trajectories using the `DensityEPR` model: 
 
