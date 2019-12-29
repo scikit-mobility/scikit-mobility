@@ -480,8 +480,6 @@ class DensityEPR(EPR):
     >>> tessellation = gpd.read_file(url)
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
-    >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
-    >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
     >>> depr = DensityEPR()
     >>> tdf = depr.generate(start_time, end_time, tessellation, relevance_column='population', n_agents=100, verbose=True)
     >>> print(tdf.head())
