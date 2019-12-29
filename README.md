@@ -143,31 +143,45 @@ Note that, besides the mandatory columns, the user can add to a `TrajDataFrame` 
 
 Create a `TrajDataFrame` from a list:
 
-	>>> import skmob
-	>>> # create a TrajDataFrame from a list
-	>>> data_list = [[1, 39.984094, 116.319236, '2008-10-23 13:53:05'], [1, 39.984198, 116.319322, '2008-10-23 13:53:06'], [1, 39.984224, 116.319402, '2008-10-23 13:53:11'], [1, 39.984211, 116.319389, '2008-10-23 13:53:16']]
-	>>> tdf = skmob.TrajDataFrame(data_list, latitude=1, longitude=2, datetime=3)
-	>>> print(tdf.head())
+```python
+>>> import skmob
+>>> # create a TrajDataFrame from a list
+>>> data_list = [[1, 39.984094, 116.319236, '2008-10-23 13:53:05'], [1, 39.984198, 116.319322, '2008-10-23 13:53:06'], [1, 39.984224, 116.319402, '2008-10-23 13:53:11'], [1, 39.984211, 116.319389, '2008-10-23 13:53:16']]
+>>> tdf = skmob.TrajDataFrame(data_list, latitude=1, longitude=2, datetime=3)
+>>> # print a portion of the TrajDataFrame
+>>> print(tdf.head())
+```
 	   0        lat         lng            datetime
 	0  1  39.984094  116.319236 2008-10-23 13:53:05
 	1  1  39.984198  116.319322 2008-10-23 13:53:06
 	2  1  39.984224  116.319402 2008-10-23 13:53:11
 	3  1  39.984211  116.319389 2008-10-23 13:53:16
-	>>> print(type(tdf))
+```python
+>>> print(type(tdf))
+```
 	<class 'skmob.core.trajectorydataframe.TrajDataFrame'>
 	
 Create a `TrajDataFrame` from a [pandas](https://pandas.pydata.org/) `DataFrame`:
 
-	>>> import pandas as pd
-	>>> # create a DataFrame from the previous list
-	>>> data_df = pd.DataFrame(data_list, columns=['user', 'latitude', 'lng', 'hour'])
-	>>> print(type(data_df))
+```python
+>>> import pandas as pd
+>>> # create a DataFrame from the previous list
+>>> data_df = pd.DataFrame(data_list, columns=['user', 'latitude', 'lng', 'hour'])
+>>> # print the type of the object
+>>> print(type(data_df))
+```
 	<class 'pandas.core.frame.DataFrame'>
-	>>> # now create a TrajDataFrame from the pandas DataFrame
-	>>> tdf = skmob.TrajDataFrame(data_df, latitude='latitude', datetime='hour', user_id='user')
-	>>> print(type(tdf))
-	<class 'skmob.core.trajectorydataframe.TrajDataFrame'>
-	>>> print(tdf.head())
+```python
+>>> # now create a TrajDataFrame from the pandas DataFrame
+>>> tdf = skmob.TrajDataFrame(data_df, latitude='latitude', datetime='hour', user_id='user')
+>>> # print the type of the object
+>>> print(type(tdf))
+```
+	<class 'skmob.core.trajectorydataframe.TrajDataFrame'>	
+```python
+>>> # print a portion of the TrajDataFrame
+>>> print(tdf.head())
+```
 	   uid        lat         lng            datetime
 	0    1  39.984094  116.319236 2008-10-23 13:53:05
 	1    1  39.984198  116.319322 2008-10-23 13:53:06
@@ -176,10 +190,13 @@ Create a `TrajDataFrame` from a [pandas](https://pandas.pydata.org/) `DataFrame`
 
 Create a `TrajDataFrame` from a file:
 
-	>>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz
-	>>> # read the trajectory data (GeoLife, Beijing, China)
-	>>> tdf = skmob.TrajDataFrame.from_file('geolife_sample.txt.gz', latitude='lat', longitude='lon', user_id='user', datetime='datetime')
-	>>> print(tdf.head())
+```python
+>>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz
+>>> # read the trajectory data (GeoLife, Beijing, China)
+>>> tdf = skmob.TrajDataFrame.from_file('geolife_sample.txt.gz', latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+>>> # print a portion of the TrajDataFrame
+>>> print(tdf.head())
+```
 		 lat         lng            datetime  uid
 	0  39.984094  116.319236 2008-10-23 05:53:05    1
 	1  39.984198  116.319322 2008-10-23 05:53:06    1
@@ -189,7 +206,9 @@ Create a `TrajDataFrame` from a file:
 	
 A `TrajDataFrame` can be plotted on an [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_trajectory` function.
 
-	>>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
+```python
+>>> tdf.plot_trajectory(zoom=12, weight=3, opacity=0.9, tiles='Stamen Toner')
+```
 	
 ![Plot Trajectory](examples/plot_trajectory_example.png)
 
@@ -207,13 +226,16 @@ Again, the user can add to a `FlowDataFrame` as many columnsas they want. Each `
 Note that each location identifier in the `origin` and `destination` columns of a `FlowDataFrame` must be present in the associated spatial tessellation.
 
 Create a spatial tessellation from a file:
-	
-	>>> import skmob
-	>>> import geopandas as gpd
-	>>> # load a spatial tessellation
-	>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
-	>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
-	>>> print(tessellation.head())
+
+```python
+>>> import skmob
+>>> import geopandas as gpd
+>>> # load a spatial tessellation
+>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+>>> # print a portion of the spatial tessellation
+>>> print(tessellation.head())
+```
 	  tile_ID  population                                           geometry
 	0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
 	1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
@@ -222,14 +244,17 @@ Create a spatial tessellation from a file:
 	4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
 	
 Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
-	
-	>>> # load real flows into a FlowDataFrame
-	>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
-	>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-                                        tessellation=tessellation,
-                                        tile_id='tile_ID',
-                                        sep=",")
-	>>> print(fdf.head())
+
+```python
+>>> # load real flows into a FlowDataFrame
+>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+				tessellation=tessellation,
+				tile_id='tile_ID',
+				sep=",")
+>>> # print a portion of the flows
+>>> print(fdf.head())
+```
 	     flow origin destination
 	0  121606  36001       36001
 	1       5  36001       36005
@@ -239,20 +264,26 @@ Create a `FlowDataFrame` from a spatial tessellation and a file of flows:
 
 A `FlowDataFrame` can be visualized on a [folium](https://python-visualization.github.io/folium/) interactive map using the `plot_flows` function, which plots the flows on a geographic map as lines between the centroids of the tiles in the `FlowDataFrame`'s spatial tessellation:
 
-	>>> fdf.plot_flows(flow_color='red')
+```python
+>>> fdf.plot_flows(flow_color='red')
+```
 	
 ![Plot Fluxes](examples/plot_flows_example.png)
 
 Similarly, the spatial tessellation of a `FlowDataFrame` can be visualized using the `plot_tessellation` function. The argument `popup_features` (type:list, default:[`constants.TILE_ID`]) allows to enhance the plot's interactivity displaying popup windows that appear when the user clicks on a tile and includes information contained in the columns of the tessellation's `GeoDataFrame` specified in the argument’s list:
 
-	>>> fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
+```python
+>>> fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
+```
 
 ![Plot Tessellation](examples/plot_tessellation_example.png)
 
 The spatial tessellation and the flows can be visualized together using the `map_f` argument, which specified the folium object on which to plot: 
 
-	>>> m = fdf.plot_tessellation()
-	>>> fdf.plot_flows(flow_color='red', map_f=m)
+```python
+>>> m = fdf.plot_tessellation() # plot the tessellation
+>>> fdf.plot_flows(flow_color='red', map_f=m) # plot the flows
+```
 	
 ![Plot Tessellation and Flows](examples/plot_tessellation_and_flows_example.png)
 
@@ -268,11 +299,17 @@ Note that, if `TrajDataFrame` contains multiple trajectories from multiple users
 #### Noise filtering
 In scikit-mobility, the standard method `filter` filters out a point if the speed from the previous point is higher than the parameter `max_speed`, whichis by default set to 500km/h. 
 
-	>>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
-	>>> print(n_deleted_points)
+```python
+>>> from skmob.preprocessing import filtering
+>>> # filter out all points with a speed (in km/h) from the previous point higher than 500 km/h
+>>> ftdf = filtering.filter(tdf, max_speed_kmh=500.)
+>>> print(ftdf.parameters)
+```
 	{'from_file': 'geolife_sample.txt.gz', 'filter': {'function': 'filter', 'max_speed_kmh': 500.0, 'include_loops': False, 'speed_kmh': 5.0, 'max_loop': 6, 'ratio_max': 0.25}}
-	>>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
-	>>> print(n_deleted_points)
+```python
+>>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
+>>> print(n_deleted_points)
+```
 	54
 
 Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the list of operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
@@ -280,35 +317,46 @@ Note that the `TrajDataFrame` structure as the `parameters` attribute, which ind
 #### Stop detection
 Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by an object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
 
-	>>> from skmob.preprocessing import detection
-	>>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
-	>>> print(stdf.head())
+```python
+>>> from skmob.preprocessing import detection
+>>> # compute the stops for each individual in the TrajDataFrame
+>>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+>>> # print a portion of the detected stops
+>>> print(stdf.head())
+```
 		 lat         lng            datetime  uid    leaving_datetime
 	0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
 	1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
 	2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
 	3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
 	4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
-	>>> print('Points of the original trajectory:\t%s'%len(tdf))
-	>>> print('Points of stops:\t\t\t%s'%len(stdf))
+```python
+>>> print('Points of the original trajectory:\t%s'%len(tdf))
+>>> print('Points of stops:\t\t\t%s'%len(stdf))
+```
 	Points of the original trajectory:	217653
 	Points of stops:			391
 	
 A new column `leaving_datetime` is added to the `TrajDataFrame` in order to indicate the time when the user left the stop location. We can then visualize the detected stops using the `plot_stops` function:
 
-	>>> m = stdf.plot_trajectory(max_users=1, start_end_markers=False)
-	>>> stdf.plot_stops(max_users=1, map_f=m)
+```python
+>>> m = stdf.plot_trajectory(max_users=1, start_end_markers=False)
+>>> stdf.plot_stops(max_users=1, map_f=m)
+```
 	
 ![Plot Stops](examples/plot_stops_example_single_user.png)
 
 #### Trajectory compression
 The goal of trajectory compression is to reduce the number of trajectory points while preserving the structure of the trajectory. This step results in a significant reduction of the number of trajectory points. In scikit-mobility, we can use one of the methods in the `compression` module under the `preprocessing` module. For instance, to merge all the points that are closer than 0.2km from each other, we can use the following code:
 
-	>>> from skmob.preprocessing import compression
-	>>> # compress the trajectory using a spatial radius of 0.2 km
-	>>> ctdf = compression.compress(tdf, spatial_radius_km=0.2)
-	>>> print('Points of the original trajectory:\t%s'%len(tdf))
-	>>> print('Points of the compressed trajectory:\t%s'%len(ctdf))
+```python
+>>> from skmob.preprocessing import compression
+>>> # compress the trajectory using a spatial radius of 0.2 km
+>>> ctdf = compression.compress(tdf, spatial_radius_km=0.2)
+>>> # print the difference in points between original and filtered TrajDataFrame
+>>> print('Points of the original trajectory:\t%s'%len(tdf))
+>>> print('Points of the compressed trajectory:\t%s'%len(ctdf))
+```
 	Points of the original trajectory:	217653
 	Points of the compressed trajectory:	6281
 
@@ -317,22 +365,28 @@ Several measures have been proposed in the literature to capture the patterns of
 
 For example, the following code compute the *radius of gyration*, the *jump lengths* and the *home locations* of a `TrajDataFrame`:
 
-	>>> from skmob.measures.individual import jump_lengths, radius_of_gyration, home_location
-	>>> # load a TrajDataFrame from an URL
-	>>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
-	>>> df = pd.read_csv(url, sep='\t', header=0, nrows=100000,
-             names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
-	>>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
-	>>> rg_df = radius_of_gyration(tdf)
-	>>> print(rg_df)
+```python
+>>> from skmob.measures.individual import jump_lengths, radius_of_gyration, home_location
+>>> # load a TrajDataFrame from an URL
+>>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+>>> df = pd.read_csv(url, sep='\t', header=0, nrows=100000,
+     names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+>>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+>>> # compute the radius of gyration for each individual
+>>> rg_df = radius_of_gyration(tdf)
+>>> print(rg_df)
+```
 	   uid  radius_of_gyration
 	0    0         1564.436792
 	1    1         2467.773523
 	2    2         1439.649774
 	3    3         1752.604191
 	4    4         5380.503250
-	>>> jl_df = jump_lengths(tdf.sort_values(by='datetime'))
-	>>> print(jl_df.head())
+```python
+>>> # compute the jump lengths for each individual
+>>> jl_df = jump_lengths(tdf.sort_values(by='datetime'))
+>>> print(jl_df.head())
+```
 	   uid                                       jump_lengths
 	0    0  [19.640467328877936, 0.0, 0.0, 1.7434311010381...
 	1    1  [6.505330424378251, 46.75436600375988, 53.9284...
@@ -342,20 +396,25 @@ For example, the following code compute the *radius of gyration*, the *jump leng
 
 Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be order in increasing order by the column `datetime` (see the documentation for the measures that requires this condition https://scikit-mobility.github.io/scikit-mobility/reference/measures.html).
 	
-	>>> hl_df = home_location(tdf)
-	>>> print(hl_df.head())
+```python
+>>> # compute the home location for each individual
+>>> hl_df = home_location(tdf)
+>>> print(hl_df.head())
+```
 	   uid        lat         lng
 	0    0  39.891077 -105.068532
 	1    1  37.630490 -122.411084
 	2    2  39.739154 -104.984703
 	3    3  37.748170 -122.459192
 	4    4  60.180171   24.949728
-	>>> # now let's visualize a cloropleth map of the home locations 
-	>>> import folium
-	>>> from folium.plugins import HeatMap
-	>>> m = folium.Map(tiles = 'openstreetmap', zoom_start=12, control_scale=True)
-	>>> HeatMap(hl_df[['lat', 'lng']].values).add_to(m)
-	>>> m
+```python
+>>> # now let's visualize a cloropleth map of the home locations 
+>>> import folium
+>>> from folium.plugins import HeatMap
+>>> m = folium.Map(tiles = 'openstreetmap', zoom_start=12, control_scale=True)
+>>> HeatMap(hl_df[['lat', 'lng']].values).add_to(m)
+>>> m
+```
 	
 ![Cloropleth map home locations](examples/cloropleth_map_home_locations.png)	
 
@@ -373,36 +432,43 @@ The class `Gravity`, implementing the Gravity model, has two main methods:
 
 Load the spatial tessellation and a data set of real flows in a `FlowDataFrame`:
 
-	>>> from skmob.utils import utils, constants
-	>>> import geopandas as gpd
-	>>> from skmob.models import Gravity
-	>>> import numpy as np
-	>>> # load a spatial tessellation
-	>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
-	>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
-	>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
-	>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-						tessellation=tessellation,
-						tile_id='tile_ID',
-						sep=",")
-	>>> # compute the total outflows from each location of the tessellation (excluding self loops)
-	>>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
-	>>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+```python
+>>> from skmob.utils import utils, constants
+>>> import geopandas as gpd
+>>> from skmob.models import Gravity
+>>> import numpy as np
+>>> # load a spatial tessellation
+>>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+>>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+>>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+					tessellation=tessellation,
+					tile_id='tile_ID',
+					sep=",")
+>>> # compute the total outflows from each location of the tessellation (excluding self loops)
+>>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
+>>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+```
 
 Instantiate a Gravity model object and generate synthetic flows:
 
-	# instantiate a singly constrained Gravity model
-	>>> gravity_singly = Gravity(gravity_type='singly constrained')
-	>>> print(gravity_singly)
+```python
+>>> # instantiate a singly constrained Gravity model
+>>> gravity_singly = Gravity(gravity_type='singly constrained')
+>>> print(gravity_singly)
+```
 	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
-	>>> # generate the synthetic flows
-	>>> np.random.seed(0)
-	>>> synth_fdf = gravity_singly.generate(tessellation,
-					   tile_id_column='tile_ID',
-					   tot_outflows_column='tot_outflow',
-					   relevance_column= 'population',
-					   out_format='flows')
-	>>> print(synth_fdf.head())
+```python
+>>> # start the generation of the synthetic flows
+>>> np.random.seed(0)
+>>> synth_fdf = gravity_singly.generate(tessellation,
+				   tile_id_column='tile_ID',
+				   tot_outflows_column='tot_outflow',
+				   relevance_column= 'population',
+				   out_format='flows')
+>>> # print a portion of the synthetic flows
+>>> print(synth_fdf.head())
+```
 	  origin destination  flow
 	0  36019       36101   101
 	1  36019       36107    66
@@ -412,21 +478,29 @@ Instantiate a Gravity model object and generate synthetic flows:
  
 Fit the parameters of the Gravity model from the `FlowDataFrame` and generate the synthetic flows:
 
-	>>> # fit the parameters of the Gravity model from real fluxes
-	>>> gravity_singly_fitted = Gravity(gravity_type='singly constrained')
-	>>> print(gravity_singly_fitted)
-	>>> # fit the parameters of the Gravity from the FlowDataFrame
-	>>> gravity_singly_fitted.fit(fdf, relevance_column='population')
-	>>> print(gravity_singly_fitted)
+```python
+>>> # instantiate a Gravity object (with default parameters)
+>>> gravity_singly_fitted = Gravity(gravity_type='singly constrained')
+>>> print(gravity_singly_fitted)
+```
+	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+```python
+>>> # fit the parameters of the Gravity from the FlowDataFrame
+>>> gravity_singly_fitted.fit(fdf, relevance_column='population')
+>>> print(gravity_singly_fitted)
+```
 	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type="singly constrained")
-	>>> # generate the synthetics flows
-	>>> np.random.seed(0)
-	>>> synth_fdf_fitted = gravity_singly_fitted.generate(tessellation,
-								tile_id_column='tile_ID',
-								tot_outflows_column='tot_outflow',
-								relevance_column= 'population',
-								out_format='flows')
-	>>> print(synth_fdf_fitted.head())
+```python
+>>> # generate the synthetics flows
+>>> np.random.seed(0)
+>>> synth_fdf_fitted = gravity_singly_fitted.generate(tessellation,
+							tile_id_column='tile_ID',
+							tot_outflows_column='tot_outflow',
+							relevance_column= 'population',
+							out_format='flows')
+>>> # print a portion of the synthetic flows
+>>> print(synth_fdf_fitted.head())
+```
 	  origin destination  flow
 	0  36019       36101   102
 	1  36019       36107    66
@@ -436,23 +510,30 @@ Fit the parameters of the Gravity model from the `FlowDataFrame` and generate th
 	
 Plot the real flows and the synthetic flows:
 
-	>>> m = fdf.plot_flows(min_flow=100, flow_exp=0.01, flow_color='blue')
-	>>> synth_fdf_fitted.plot_flows(min_flow=1000, flow_exp=0.01, map_f=m)
+```python
+>>> m = fdf.plot_flows(min_flow=100, flow_exp=0.01, flow_color='blue')
+>>> synth_fdf_fitted.plot_flows(min_flow=1000, flow_exp=0.01, map_f=m)
+```
 
 ![Gravity model: real flows vs synthetic flows](examples/real_flows_vs_synth_flows.png)
 
 #### Radiation model
 The Radiation model is parameter-free and has only one method: `generate`. Given a spatial tessellation, the synthetic flows can be generated using the `Radiation` class as follows:
 
-	>>> from skmob.models import Radiation
-	>>> np.random.seed(0)
-	>>> radiation = Radiation()
-	>>> rad_flows = radiation.generate(tessellation, 
-					tile_id_column='tile_ID',  
-					tot_outflows_column='tot_outflow', 
-					relevance_column='population', 
-					out_format='flows_sample')
-	>>> print(rad_flows.head())
+```python
+>>> from skmob.models import Radiation
+>>> # instantiate a Radiation object
+>>> radiation = Radiation()
+>>> # start the simulation
+>>> np.random.seed(0)
+>>> rad_flows = radiation.generate(tessellation, 
+				tile_id_column='tile_ID',  
+				tot_outflows_column='tot_outflow', 
+				relevance_column='population', 
+				out_format='flows_sample')
+>>> # print a portion of the synthetic flows
+>>> print(rad_flows.head())
+```
 	  origin destination   flow
 	0  36019       36033  11648
 	1  36019       36031   4232
@@ -460,4 +541,34 @@ The Radiation model is parameter-free and has only one method: `generate`. Given
 	3  36019       36113   1596
 	4  36019       36041    117
 
+### Individual generative models
+The goal of individual generative algorithms of human mobility is to create a population of agents whose mobility patterns are statistically indistinguishable from those of real individuals. A generative algorithm typically generates a synthetic trajectory corresponding to a single moving object, assuming that an object is independent of the others. 
 
+scikit-mobility implements the most common individual generative algorithms, such as the [Exploration and Preferential Return](https://www.nature.com/articles/nphys1760) model and its variants, and [DITRAS](https://link.springer.com/article/10.1007/s10618-017-0548-4). Each generative model is a python class with a public method `generate`, which starts the generation of synthetic trajectories.
+
+The following code generate synthetic trajectories using the `DensityEPR` model: 
+
+```python
+>>> from skmob.models.epr import DensityEPR
+>>> # load a spatial tesellation on which to perform the simulation
+>>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> tessellation = gpd.read_file(url)
+>>> # starting and end times of the simulation
+>>> start_time = pd.to_datetime('2019/01/01 08:00:00')
+>>> end_time = pd.to_datetime('2019/01/14 08:00:00')
+>>> # instantiate a DensityEPR object
+>>> depr = DensityEPR()
+>>> # start the simulation
+>>> tdf = depr.generate(start_time, end_time, tessellation, relevance_column='population', n_agents=100, verbose=True)
+>>> print(tdf.head())
+```
+	   uid                   datetime        lat        lng
+	0    1 2019-01-01 08:00:00.000000  42.452018 -76.473618
+	1    1 2019-01-01 08:32:30.108708  42.170344 -76.306260
+	2    1 2019-01-01 09:09:11.760703  43.241550 -75.435903
+	3    1 2019-01-01 10:00:22.832309  42.170344 -76.306260
+	4    1 2019-01-01 14:00:25.923314  42.267915 -77.383591
+```python
+>>> print(tdf.parameters)
+```
+	{'model': {'class': <function DensityEPR.__init__ at 0x7f70ce0a7e18>, 'generate': {'start_date': Timestamp('2019-01-01 08:00:00'), 'end_date': Timestamp('2019-01-14 08:00:00'), 'gravity_singly': {}, 'n_agents': 100, 'relevance_column': 'population', 'random_state': None, 'verbose': True}}}
