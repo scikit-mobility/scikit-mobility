@@ -22,7 +22,16 @@
 1. [Documentation](#documentation)
 2. [Citing](#citing)
 3. [Installation](#installation)
+	- [with conda](#installation_conda)
+	- [without conda](#installation_no_conda)
+	- [test installation](#test_installation)
 4. [Examples](#examples)
+	- [TrajDataFrame](#trajdataframe)
+	- [FlowDataFrame](#flowdataframe)
+	- [Preprocessing](#preprocessing)
+	- [Measures](#measures)
+	- [Collective generative models](#collective_models)
+	- [Individual generative models](#individual_models)
 
 
 <a id='documentation'></a>
@@ -32,7 +41,9 @@ The documentation of scikit-mobility's classes and functions is available at: ht
 <a id='citing'></a>
 ## Citing
 
-if you use scikit-mobility please cite the following paper: https://arxiv.org/abs/1907.07062
+if you use scikit-mobility please cite the following paper: 
+
+Luca Pappalardo, Filippo Simini, Gianni Barlacchi and Roberto Pellungrini, scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data, 2019, https://arxiv.org/abs/1907.07062
 
 ```
 @misc{pappalardo2019scikitmobility,
@@ -52,7 +63,7 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 
         git clone https://github.com/scikit-mobility/scikit-mobility scikit_mobility
 
-
+<a id='installation_conda'></a>
 ### with conda - miniconda
 
 1. Create an environment `skmob` and install pip
@@ -86,7 +97,7 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 ```
 conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
-          
+<a id='installation_no_conda'></a>          
 ### without conda (python >= 3.6 required)
 
 
@@ -122,7 +133,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 			
 			ipython kernel install --user --name=skmob
 			
-          
+<a id='test_installation'></a>    
 ### Test the installation
 
 ```
@@ -135,6 +146,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 <a id='examples'></a>
 ## Examples
 
+<a id='trajdataframe'></a>
 ### Create a `TrajDataFrame`
 
 In scikit-mobility, a set of trajectories is described by a `TrajDataFrame`, an extension of the pandas `DataFrame` that has specific columns names and data types. A row in the `TrajDataFrame` represents a point of the trajectory, described by three mandatory fields (aka columns): 
@@ -219,6 +231,7 @@ A `TrajDataFrame` can be plotted on an [folium](https://python-visualization.git
 	
 ![Plot Trajectory](examples/plot_trajectory_example.png)
 
+<a id='flowdataframe'></a>
 ### Create a `FlowDataFrame`
 
 In scikit-mobility, an origin-destination matrix is described by the `FlowDataFrame` structure, an extension of the pandas `DataFrame` that has specific column names and data types. A row in a `FlowDataFrame` represents a flow of objects between two locations, described by three mandatory columns:
@@ -294,6 +307,7 @@ The spatial tessellation and the flows can be visualized together using the `map
 	
 ![Plot Tessellation and Flows](examples/plot_tessellation_and_flows_example.png)
 
+<a id='preprocessing'></a>
 ### Trajectory preprocessing
 As any analytical process, mobility data analysis requires data cleaning and preprocessing steps. The `preprocessing` module allows the user to perform four main preprocessing steps: 
 - noise filtering; 
@@ -367,6 +381,7 @@ The goal of trajectory compression is to reduce the number of trajectory points 
 	Points of the original trajectory:	217653
 	Points of the compressed trajectory:	6281
 
+<a id='measures'></a>
 ### Mobility measures
 Several measures have been proposed in the literature to capture the patterns of human mobility, both at the individual and collective levels. Individual measures summarize the mobility patterns of a single moving object, while collective measures summarize mobility patterns of a population as a whole. scikit-mobility provides a wide set of mobility measures, each implemented as a function that takes in input a `TrajDataFrame` and outputs a pandas `DataFrame`. Individual and collective measures are implemented the in `skmob.measure.individual` and the `skmob.measures.collective` modules, respectively.
 
@@ -425,6 +440,7 @@ Note that for some measures, such as `jump_length`, the `TrajDataFrame` must be 
 	
 ![Cloropleth map home locations](examples/cloropleth_map_home_locations.png)	
 
+<a id='collective_models'></a>
 ### Collective generative models
 Collective generative algorithms estimate spatial flows between a set of discrete locations. Examples of spatial flows estimated with collective generative algorithms include commut-ing trips between neighborhoods, migration flows between municipalities, freight shipmentsbetween states, and phone calls between regions. 
 
@@ -548,6 +564,7 @@ The Radiation model is parameter-free and has only one method: `generate`. Given
 	3  36019       36113   1596
 	4  36019       36041    117
 
+<a id='individual_models'></a>
 ### Individual generative models
 The goal of individual generative algorithms of human mobility is to create a population of agents whose mobility patterns are statistically indistinguishable from those of real individuals. A generative algorithm typically generates a synthetic trajectory corresponding to a single moving object, assuming that an object is independent of the others. 
 
