@@ -597,3 +597,40 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 >>> print(tdf.parameters)
 ```
 	{'model': {'class': <function DensityEPR.__init__ at 0x7f70ce0a7e18>, 'generate': {'start_date': Timestamp('2019-01-01 08:00:00'), 'end_date': Timestamp('2019-01-14 08:00:00'), 'gravity_singly': {}, 'n_agents': 100, 'relevance_column': 'population', 'random_state': None, 'verbose': True}}}
+
+### Privacy
+Mobility data is sensitive since the movements of individuals can reveal confidential personal information or allow the re-identification of individuals in a database, creating serious privacy risks. In the literature, privacy risk assessment relies on the concept of re-identification of a moving object in a database through an attack by a malicious adversary. A common framework for privacy risk assessment assumes that during the attack a malicious adversary acquires, in some way, the access to an anonymized mobility data set, i.e., a mobility data set in which the moving object associated with a trajectory is not known. Moreover, it is assumed that the malicious adversary acquires, in some way, information about the trajectory (or a portion of it) of an individual represented in the acquired data set. Based on this information, the risk of re-identification of that individual is computed estimating how unique that individual's mobility data are with respect to the mobility data of the other individuals represented inthe acquired data set.
+
+scikit-mobility provides several attack models, each implemented as a python class. For example in a location attack model, implemented in the `LocationAttack` class, the malicious adversary knows a certain number of locations visited by an individual, but they do not know the temporal order of the visits. To instantiate a `LocationAttack` object we can run the following code:
+
+```python
+import skmob
+from skmob.privacy import attacks
+at = attacks.LocationAttack(knowledge_length=2)
+```
+
+The argument `knowledge_length` specifies how many locations the malicious adversary knows of each object's movement. The re-identification risk is computed based on the worst possible combination of `knowledge_length` locations out of all possible combinations of locations.
+
+To assess the re-identification risk associated with a mobility data set, represented as a `TrajDataFrame`, we specify it as input to the `assess_risk` method, which returns a pandas `DataFrame` that contains the `uid` of each object in the `TrajDataFrame` and the associated re-identification risk as the column `risk` (type: float, range: $[0,1]$  where 0 indicates minimum risk and 1 maximum risk).
+
+```python
+tdf = skmob.TrajDataFrame.from_file(filename="privacy_toy.csv")
+tdf_risk = at.assess_risk(tdf)
+print(tdf_risk.head())
+```
+	   uid      risk
+	0    1  0.333333
+	1    2  0.500000
+	2    3  0.333333
+	3    4  0.333333
+	4    5  0.250000
+	
+Since risk assessment may be time-consuming for more massive datasets, scikit-mobility provides the option to focus only on a subset of the objects with the argument `targets`. For example, in the following code, we compute the re-identification risk for the object with `uid` 1 and 2 only:
+
+```python
+tdf_risk = at.assess_risk(tdf, targets=[1,2])
+print(tdf_risk)
+```
+	   uid      risk
+	0    1  0.333333
+	1    2  0.500000
