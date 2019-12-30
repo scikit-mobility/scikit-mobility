@@ -33,6 +33,7 @@
 	- [Measures](#measures)
 	- [Collective generative models](#collective_models)
 	- [Individual generative models](#individual_models)
+	- [Privacy](#privacy)
 
 
 <a id='documentation'></a>
@@ -598,6 +599,7 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 ```
 	{'model': {'class': <function DensityEPR.__init__ at 0x7f70ce0a7e18>, 'generate': {'start_date': Timestamp('2019-01-01 08:00:00'), 'end_date': Timestamp('2019-01-14 08:00:00'), 'gravity_singly': {}, 'n_agents': 100, 'relevance_column': 'population', 'random_state': None, 'verbose': True}}}
 
+<a id='privacy'></a>
 ### Privacy
 Mobility data is sensitive since the movements of individuals can reveal confidential personal information or allow the re-identification of individuals in a database, creating serious privacy risks. In the literature, privacy risk assessment relies on the concept of re-identification of a moving object in a database through an attack by a malicious adversary. A common framework for privacy risk assessment assumes that during the attack a malicious adversary acquires, in some way, the access to an anonymized mobility data set, i.e., a mobility data set in which the moving object associated with a trajectory is not known. Moreover, it is assumed that the malicious adversary acquires, in some way, information about the trajectory (or a portion of it) of an individual represented in the acquired data set. Based on this information, the risk of re-identification of that individual is computed estimating how unique that individual's mobility data are with respect to the mobility data of the other individuals represented inthe acquired data set.
 
