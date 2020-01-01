@@ -234,7 +234,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/01 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">end_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/14 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">depr</span> <span class="o">=</span> <span class="n">DensityEPR</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">depr</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">tessellation</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="n">n_agents</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">depr</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">tessellation</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="n">n_agents</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">   uid                   datetime        lat        lng</span>
 <span class="go">0    1 2019-01-01 08:00:00.000000  42.780819 -76.823724</span>
@@ -243,7 +243,7 @@
 <span class="go">3    1 2019-01-01 17:13:39.999037  42.852827 -77.299810</span>
 <span class="go">4    1 2019-01-01 19:24:27.353379  42.728060 -77.775510</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function DensityEPR.__init__ at 0x7f548a49cf28&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 100, &#39;relevance_column&#39;: &#39;population&#39;, &#39;random_state&#39;: None, &#39;verbose&#39;: True}}}</span>
+<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function DensityEPR.__init__ at 0x7f548a49cf28&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 100, &#39;relevance_column&#39;: &#39;population&#39;, &#39;random_state&#39;: None, &#39;show_progress&#39;: True}}}</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>
@@ -264,7 +264,7 @@
 </div>
 <dl class="method">
 <dt id="skmob.models.epr.DensityEPR.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.DensityEPR.generate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.DensityEPR.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the simulation of a set of agents at time <cite>start_date</cite> till time <cite>end_date</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -279,7 +279,7 @@
 <li><p><strong>od_matrix</strong> (<em>numpy array or None, optional</em>) – the origin destination matrix to use for deciding the movements of the agent. If <cite>None</cite>, it is computed “on the fly” during the simulation. The default is None.</p></li>
 <li><p><strong>random_state</strong> (<em>int or None, optional</em>) – if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.</p></li>
 <li><p><strong>log_file</strong> (<em>str or None, optional</em>) – the name of the file where to write a log of the execution of the model. The logfile will contain all decisions (returns or explorations) made by the model. The default is None.</p></li>
-<li><p><strong>verbose</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is True.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -336,7 +336,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/01 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">end_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/14 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sepr</span> <span class="o">=</span> <span class="n">SpatialEPR</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">sepr</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">tessellation</span><span class="p">,</span> <span class="n">n_agents</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">sepr</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">tessellation</span><span class="p">,</span> <span class="n">n_agents</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">   uid                   datetime        lat        lng</span>
 <span class="go">0    1 2019-01-01 08:00:00.000000  42.267915 -77.383591</span>
@@ -345,7 +345,7 @@
 <span class="go">3    1 2019-01-01 14:49:30.896248  42.633510 -77.105324</span>
 <span class="go">4    1 2019-01-01 15:10:54.133150  43.382528 -78.230656</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function SpatialEPR.__init__ at 0x7f548a49e048&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 100, &#39;relevance_column&#39;: None, &#39;random_state&#39;: None, &#39;verbose&#39;: True}}}</span>
+<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function SpatialEPR.__init__ at 0x7f548a49e048&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 100, &#39;relevance_column&#39;: None, &#39;random_state&#39;: None, &#39;show_progress&#39;: True}}}</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -354,7 +354,7 @@
 </div>
 <dl class="method">
 <dt id="skmob.models.epr.SpatialEPR.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.SpatialEPR.generate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.SpatialEPR.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the simulation of a set of agents at time <cite>start_date</cite> till time <cite>end_date</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -368,7 +368,7 @@
 <li><p><strong>od_matrix</strong> (<em>numpy array or None, optional</em>) – the origin destination matrix to use for deciding the movements of the agent. If <cite>None</cite>, it is computed “on the fly” during the simulation. The default is None.</p></li>
 <li><p><strong>random_state</strong> (<em>int or None, optional</em>) – if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.</p></li>
 <li><p><strong>log_file</strong> (<em>str or None, optional</em>) – the name of the file where to write a log of the execution of the model. The logfile will contain all decisions (returns or explorations) made by the model. The default is None.</p></li>
-<li><p><strong>verbose</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is True.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -437,7 +437,7 @@
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># run the model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ditras_tdf</span> <span class="o">=</span> <span class="n">ditras</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">tessellation</span><span class="p">,</span> <span class="n">relevance_column</span><span class="o">=</span><span class="s1">&#39;population&#39;</span><span class="p">,</span>
-<span class="go">                n_agents=3, od_matrix=None, verbose=True)</span>
+<span class="go">                n_agents=3, od_matrix=None, show_progress=True)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ditras_tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">   uid            datetime        lat        lng</span>
 <span class="go">0    1 2019-01-01 08:00:00  43.382528 -78.230656</span>
@@ -446,7 +446,7 @@
 <span class="go">3    1 2019-01-03 10:00:00  43.382528 -78.230656</span>
 <span class="go">4    1 2019-01-03 21:00:00  43.309133 -77.680414</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ditras_tdf</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function Ditras.__init__ at 0x7f0cf0b7e158&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 3, &#39;relevance_column&#39;: &#39;population&#39;, &#39;random_state&#39;: None, &#39;verbose&#39;: True}}}</span>
+<span class="go">{&#39;model&#39;: {&#39;class&#39;: &lt;function Ditras.__init__ at 0x7f0cf0b7e158&gt;, &#39;generate&#39;: {&#39;start_date&#39;: Timestamp(&#39;2019-01-01 08:00:00&#39;), &#39;end_date&#39;: Timestamp(&#39;2019-01-14 08:00:00&#39;), &#39;gravity_singly&#39;: {}, &#39;n_agents&#39;: 3, &#39;relevance_column&#39;: &#39;population&#39;, &#39;random_state&#39;: None, &#39;show_progress&#39;: True}}}</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>
@@ -461,7 +461,7 @@
 </div>
 <dl class="method">
 <dt id="skmob.models.epr.Ditras.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.Ditras.generate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">spatial_tessellation</em>, <em class="sig-param">gravity_singly={}</em>, <em class="sig-param">n_agents=1</em>, <em class="sig-param">starting_locations=None</em>, <em class="sig-param">od_matrix=None</em>, <em class="sig-param">relevance_column='relevance'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">log_file=None</em>, <em class="sig-param">show_progress=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.Ditras.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the simulation of a set of agents at time <cite>start_date</cite> till time <cite>end_date</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -476,7 +476,7 @@
 <li><p><strong>relevance_column</strong> (<em>str, optional</em>) – the name of the column in <cite>spatial_tessellation</cite> to use as relevance variable. The default is “relevance”.</p></li>
 <li><p><strong>random_state</strong> (<em>int or None, optional</em>) – if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.</p></li>
 <li><p><strong>log_file</strong> (<em>str or None, optional</em>) – the name of the file where to write a log of the execution of the model. The logfile will contain all decisions (returns or explorations) made by the model. The default is None.</p></li>
-<li><p><strong>verbose</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is True.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
