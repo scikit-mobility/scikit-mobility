@@ -67,7 +67,7 @@ Bibtex:
 ## Collaborate with us
 `scikit-mobility` is an active project and any contribution is welcome.
 
-If you would like to include your algorithm in `scikit-mobility', feel free to fork the project, open an issue and contact us.
+If you would like to include your algorithm in `scikit-mobility`, feel free to fork the project, open an issue and contact us.
 
 <a id='installation'></a>
 ## Install
