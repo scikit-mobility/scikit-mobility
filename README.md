@@ -47,8 +47,11 @@ The documentation of scikit-mobility's classes and functions is available at: ht
 
 if you use scikit-mobility please cite the following paper: 
 
-Luca Pappalardo, Filippo Simini, Gianni Barlacchi and Roberto Pellungrini, scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data, 2019, https://arxiv.org/abs/1907.07062
+> Luca Pappalardo, Filippo Simini, Gianni Barlacchi and Roberto Pellungrini.
+> **scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data**,
+> 2019, https://arxiv.org/abs/1907.07062
 
+Bibtex:
 ```
 @misc{pappalardo2019scikitmobility,
     title={scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data},
