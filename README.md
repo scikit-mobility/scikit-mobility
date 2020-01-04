@@ -10,24 +10,25 @@
 
 - represent trajectories and mobility flows with proper data structures, `TrajDataFrame` and `FlowDataFrame`. 
 
-- manage and manipulate mobility data of various formats (call detail records, GPS data, data from Location Based Social Networks, survey data, etc.);
+- manage and manipulate mobility data of various formats (call detail records, GPS data, data from social media, survey data, etc.);
 
-- extract human mobility metrics and patterns from data, both at individual and collective level (e.g., length of displacements, characteristic distance, origin-destination matrix, etc.)
+- extract mobility metrics and patterns from data, both at individual and collective level (e.g., length of displacements, characteristic distance, origin-destination matrix, etc.)
 
 - generate synthetic individual trajectories using standard mathematical models (random walk models, exploration and preferential return model, etc.)
 
 - generate synthetic mobility flows using standard migration models (gravity model, radiation model, etc.)
 
-- assess the privacy risk associated with a mobility dataset
+- assess the privacy risk associated with a mobility data set
 
 ## Table of contents
 1. [Documentation](#documentation)
 2. [Citing](#citing)
-3. [Installation](#installation)
+3. [Collaborate with us](#collaborate)
+4. [Installation](#installation)
 	- [with conda](#installation_conda)
 	- [without conda](#installation_no_conda)
 	- [test installation](#test_installation)
-4. [Examples](#examples)
+5. [Examples](#examples)
 	- [TrajDataFrame](#trajdataframe)
 	- [FlowDataFrame](#flowdataframe)
 	- [Preprocessing](#preprocessing)
@@ -59,6 +60,11 @@ Luca Pappalardo, Filippo Simini, Gianni Barlacchi and Roberto Pellungrini, sciki
 }
 ```
 
+<a id='collaborate'></a>
+## Collaborate with us
+`scikit-mobility` is an active project and any contribution is welcome.
+
+If you would like to include your algorithm in `scikit-mobility', feel free to fork the project, open an issue and contact us.
 
 <a id='installation'></a>
 ## Install
