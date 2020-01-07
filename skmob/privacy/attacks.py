@@ -167,7 +167,7 @@ class Attack(object):
     @abstractmethod
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Abstract function to assess privacy risk for a whole dataframe of trajectories.
+        Abstract function to assess privacy risk for a TrajectoryDataFrame.
         An attack must implement an assessing strategy. This could involve some preprocessing, for example
         transforming the original data, and calls to the risk function.
         If it is not required to compute the risk for the entire data, the targets parameter can be used to select
@@ -246,7 +246,11 @@ class LocationAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -334,7 +338,11 @@ class LocationSequenceAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -444,7 +452,11 @@ class LocationTimeAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -528,7 +540,11 @@ class UniqueLocationAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -629,7 +645,11 @@ class LocationFrequencyAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -742,7 +762,11 @@ class LocationProbabilityAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -857,7 +881,11 @@ class LocationProportionAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
@@ -975,7 +1003,11 @@ class HomeWorkAttack(Attack):
 
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
         """
-        Assess privacy risk for a whole dataframe of trajectories.
+        Assess privacy risk for a TrajectoryDataFrame.
+        An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        transforming the original data, and calls to the risk function.
+        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        a portion of users to perform the assessment on.
 
         Parameters
         ----------
