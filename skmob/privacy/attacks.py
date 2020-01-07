@@ -9,28 +9,28 @@ from ..utils.utils import frequency_vector, probability_vector, date_time_precis
 
 class Attack(object):
 
-    """Privacy Attack
-
-    Abstract class for a generic attack. Defines a series of functions common to all attacks.
-    Provides basic functions to compute risk for all users in a trajectory dataframe.
-    Requires the implementation of both a matching function and an assessment function, which are attack dependant.
-
-    Parameters
-    ----------
-    knowledge_length : int
-        the length of the background knowledge that we want to simulate. The length of the background knowledge
-        specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
-        combinations of points of length k will be evaluated.
-    Attributes
-    ----------
-    knowledge_length : int
-        the length of the background knowledge that we want to simulate.
-
-    References
-    ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
-    """
+    # """Privacy Attack
+    #
+    # Abstract class for a generic attack. Defines a series of functions common to all attacks.
+    # Provides basic functions to compute risk for all users in a trajectory dataframe.
+    # Requires the implementation of both a matching function and an assessment function, which are attack dependant.
+    #
+    # Parameters
+    # ----------
+    # knowledge_length : int
+    #     the length of the background knowledge that we want to simulate. The length of the background knowledge
+    #     specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
+    #     combinations of points of length k will be evaluated.
+    # Attributes
+    # ----------
+    # knowledge_length : int
+    #     the length of the background knowledge that we want to simulate.
+    #
+    # References
+    # ----------
+    # .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    # .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    # """
     __metaclass__ = ABCMeta
 
     def __init__(self, knowledge_length):
