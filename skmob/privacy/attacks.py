@@ -28,8 +28,8 @@ class Attack(object):
     #
     # References
     # ----------
-    # .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    # .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    # .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    # .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     # """
     __metaclass__ = ABCMeta
 
@@ -47,32 +47,32 @@ class Attack(object):
         self._knowledge_length = val
 
     def _all_risks(self, traj, targets=None, force_instances=False, show_progress=False):
-        """
-        Computes risk for all the users in the data. It applies the risk function to every individual in the data.
-        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
-        a portion of users to perform the calculation on.
-
-        Parameters
-        ----------
-        traj: TrajectoryDataFrame
-            the dataframe against which to calculate risk.
-
-        targets : TrajectoryDataFrame or list, optional
-            the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-            in which case risk is computed on all users in traj. The default is `None`.
-
-        force_instances : boolean, optional
-            if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification. The default is `False`.
-
-        show_progress : boolean, optional
-            if True, shows the progress of the computation. The default is `False`.
-
-        Returns
-        -------
-        DataFrame
-            a DataFrame with the privacy risk for each user, in the form (user_id, risk)
-        """
+        # """
+        # Computes risk for all the users in the data. It applies the risk function to every individual in the data.
+        # If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        # a portion of users to perform the calculation on.
+        #
+        # Parameters
+        # ----------
+        # traj: TrajectoryDataFrame
+        #     the dataframe against which to calculate risk.
+        #
+        # targets : TrajectoryDataFrame or list, optional
+        #     the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+        #     in which case risk is computed on all users in traj. The default is `None`.
+        #
+        # force_instances : boolean, optional
+        #     if True, returns all possible instances of background knowledge
+        #     with their respective probability of reidentification. The default is `False`.
+        #
+        # show_progress : boolean, optional
+        #     if True, shows the progress of the computation. The default is `False`.
+        #
+        # Returns
+        # -------
+        # DataFrame
+        #     a DataFrame with the privacy risk for each user, in the form (user_id, risk)
+        # """
         if targets is None:
             targets = traj
         else:
@@ -93,20 +93,20 @@ class Attack(object):
         return risks
 
     def _generate_instances(self, single_traj):
-        """
-        Return a generator to all the possible background knowledge of length k for a single user_id.
-
-        Parameters
-        ----------
-        single_traj : TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual.
-
-        Yields
-        ------
-        generator
-            a generator to all the possible instances of length k. Instances are tuples with the values of the actual
-            records in the combination.
-        """
+        # """
+        # Return a generator to all the possible background knowledge of length k for a single user_id.
+        #
+        # Parameters
+        # ----------
+        # single_traj : TrajectoryDataFrame
+        #     the dataframe of the trajectory of a single individual.
+        #
+        # Yields
+        # ------
+        # generator
+        #     a generator to all the possible instances of length k. Instances are tuples with the values of the actual
+        #     records in the combination.
+        # """
         size = len(single_traj.index)
         if self.knowledge_length > size:
             return combinations(single_traj.values, size)
@@ -115,25 +115,25 @@ class Attack(object):
 
     def _risk(self, single_traj, traj, force_instances=False):
         """
-        Computes the risk of reidentification of an individual with respect to the entire population in the data.
-
-        Parameters
-        ----------
-        single_traj : TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual.
-
-        traj : TrajectoryDataFrame
-            the dataframe with the complete data.
-
-        force_instances : boolean, optional
-            if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification. The default is `False`.
-
-        Returns
-        -------
-        float
-            the risk for the individual, expressed as a float between 0 and 1
-        """
+        # Computes the risk of reidentification of an individual with respect to the entire population in the data.
+        #
+        # Parameters
+        # ----------
+        # single_traj : TrajectoryDataFrame
+        #     the dataframe of the trajectory of a single individual.
+        #
+        # traj : TrajectoryDataFrame
+        #     the dataframe with the complete data.
+        #
+        # force_instances : boolean, optional
+        #     if True, returns all possible instances of background knowledge
+        #     with their respective probability of reidentification. The default is `False`.
+        #
+        # Returns
+        # -------
+        # float
+        #     the risk for the individual, expressed as a float between 0 and 1
+        # """
         instances = self._generate_instances(single_traj)
         risk = 0
         if force_instances:
@@ -167,56 +167,56 @@ class Attack(object):
 
     @abstractmethod
     def assess_risk(self, traj, targets=None, force_instances=False, show_progress=False):
-        """
-        Abstract function to assess privacy risk for a TrajectoryDataFrame.
-        An attack must implement an assessing strategy. This could involve some preprocessing, for example
-        transforming the original data, and calls to the risk function.
-        If it is not required to compute the risk for the entire data, the targets parameter can be used to select
-        a portion of users to perform the assessment on.
-
-        Parameters
-        ----------
-        traj : TrajectoryDataFrame
-            the dataframe on which to assess privacy risk.
-
-        targets : TrajectoryDataFrame or list, optional
-            the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
-            in which case risk is computed on all users in traj. The defaul is `None`.
-
-        force_instances : boolean, optional
-            if True, returns all possible instances of background knowledge
-            with their respective probability of reidentification. The defaul is `False`.
-
-        show_progress : boolean, optional
-            if True, shows the progress of the computation. The defaul is `False`.
-
-        Returns
-        -------
-        DataFrame
-            a DataFrame with the privacy risk for each user, in the form (user_id, risk).
-        """
+        # """
+        # Abstract function to assess privacy risk for a TrajectoryDataFrame.
+        # An attack must implement an assessing strategy. This could involve some preprocessing, for example
+        # transforming the original data, and calls to the risk function.
+        # If it is not required to compute the risk for the entire data, the targets parameter can be used to select
+        # a portion of users to perform the assessment on.
+        #
+        # Parameters
+        # ----------
+        # traj : TrajectoryDataFrame
+        #     the dataframe on which to assess privacy risk.
+        #
+        # targets : TrajectoryDataFrame or list, optional
+        #     the users_id target of the attack.  They must be compatible with the trajectory data. Default values is None
+        #     in which case risk is computed on all users in traj. The defaul is `None`.
+        #
+        # force_instances : boolean, optional
+        #     if True, returns all possible instances of background knowledge
+        #     with their respective probability of reidentification. The defaul is `False`.
+        #
+        # show_progress : boolean, optional
+        #     if True, shows the progress of the computation. The defaul is `False`.
+        #
+        # Returns
+        # -------
+        # DataFrame
+        #     a DataFrame with the privacy risk for each user, in the form (user_id, risk).
+        # """
         pass
 
     @abstractmethod
     def _match(self, single_traj, instance):
-        """
-        Matching function for the attack. It is used to decide if an instance of background knowledge matches a certain
-        trajectory. The internal logic of an attack is represented by this function, therefore, it must be implemented
-        depending in the kind of the attack.
-
-        Parameters
-        ----------
-        single_traj : TrajectoryDataFrame
-            the dataframe of the trajectory of a single individual.
-
-        instance : tuple
-            an instance of background knowledge.
-
-        Returns
-        -------
-        int
-            1 if the instance matches the trajectory, 0 otherwise.
-        """
+        # """
+        # Matching function for the attack. It is used to decide if an instance of background knowledge matches a certain
+        # trajectory. The internal logic of an attack is represented by this function, therefore, it must be implemented
+        # depending in the kind of the attack.
+        #
+        # Parameters
+        # ----------
+        # single_traj : TrajectoryDataFrame
+        #     the dataframe of the trajectory of a single individual.
+        #
+        # instance : tuple
+        #     an instance of background knowledge.
+        #
+        # Returns
+        # -------
+        # int
+        #     1 if the instance matches the trajectory, 0 otherwise.
+        # """
         pass
 
 
@@ -232,19 +232,49 @@ class LocationAttack(Attack):
         the length of the background knowledge that we want to simulate. The length of the background knowledge
         specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
         combinations of points of length k will be evaluated.
+
     Attributes
     ----------
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
-    See Also
+    Examples
     --------
-    Attack
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+    	uid	risk
+    0	1	0.333333
+    1	2	0.500000
+    2	3	0.333333
+    3	4	0.333333
+    4	5	0.250000
+    5	6	0.250000
+    6	7	0.500000
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.250000
+    6    7  1.000000
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -334,14 +364,12 @@ class LocationSequenceAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -442,14 +470,12 @@ class LocationTimeAttack(Attack):
     time_precision : string
         the precision at which to consider the timestamps for the visits.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, time_precision="Hour"):
@@ -546,14 +572,12 @@ class UniqueLocationAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -645,14 +669,12 @@ class LocationFrequencyAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -767,14 +789,12 @@ class LocationProbabilityAttack(Attack):
     tolerance : float
         the tolarance with which to match the probability.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -891,14 +911,12 @@ class LocationProportionAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
-    See Also
-    --------
-    Attack
+
 
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -1011,14 +1029,10 @@ class HomeWorkAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
-    See Also
-    --------
-    Attack
-
     References
     ----------
-    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
-    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
+    .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length=0):
