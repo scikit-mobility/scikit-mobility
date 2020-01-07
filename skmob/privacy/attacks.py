@@ -29,6 +29,7 @@ class Attack(object):
     References
     ----------
     .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
     __metaclass__ = ABCMeta
 
@@ -239,6 +240,11 @@ class LocationAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -331,6 +337,11 @@ class LocationSequenceAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -434,6 +445,11 @@ class LocationTimeAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, time_precision="Hour"):
@@ -533,6 +549,11 @@ class UniqueLocationAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length):
@@ -627,6 +648,11 @@ class LocationFrequencyAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -744,6 +770,11 @@ class LocationProbabilityAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -863,6 +894,11 @@ class LocationProportionAttack(Attack):
     See Also
     --------
     Attack
+
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length, tolerance=0.0):
@@ -979,6 +1015,10 @@ class HomeWorkAttack(Attack):
     --------
     Attack
 
+    References
+    ----------
+    .. [TISTPELL] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
+    .. [MOBPRIV] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
     def __init__(self, knowledge_length=0):
