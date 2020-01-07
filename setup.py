@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 long_description = open('README.md').read()
 
-DEPENDENCIES = ['numpy', 'pandas==0.24', 'geopandas', 'scipy', 'powerlaw', 'tqdm', 'osmnx', 'scikit-learn',
+DEPENDENCIES = ['numpy', 'pandas==0.24', 'geopandas', 'scipy', 'powerlaw', 'tqdm', 'osmnx==0.9', 'scikit-learn',
                 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely', 'geopy', 'fiona']
 
 TEST_DEPENDENCIES = [
