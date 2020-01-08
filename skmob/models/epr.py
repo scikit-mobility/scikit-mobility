@@ -5,7 +5,7 @@ from collections import defaultdict
 import datetime
 import math
 from tqdm import tqdm
-from ..utils import constants, utils
+from ..utils import constants, utils, gislib
 from scipy.sparse import lil_matrix
 import random
 import logging
@@ -13,8 +13,7 @@ import inspect
 from ..core.trajectorydataframe import TrajDataFrame
 from ..models.gravity import Gravity
 
-from geopy.distance import distance
-earth_distance_km = (lambda p0, p1: distance(p0, p1).km)
+earth_distance_km = gislib.getDistance
 
 latitude = constants.LATITUDE
 longitude = constants.LONGITUDE
