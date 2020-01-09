@@ -6,6 +6,9 @@
 
 <img src="logo_skmob.png" width=300/>
 
+Try `scikit-mobility` without installing it in a MyBinder notebook:  
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/scikit-mobility/scikit-mobility/master)
+
 `scikit-mobility` is a library for human mobility analysis in Python. The library allows to: 
 
 - represent trajectories and mobility flows with proper data structures, `TrajDataFrame` and `FlowDataFrame`. 

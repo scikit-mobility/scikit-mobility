@@ -1,12 +1,14 @@
-from ..utils import constants
+from ..utils import constants, gislib
 import pandas as pd
 import geopandas as gpd
 import shapely
 import os
 import errno
-from geopy.distance import distance
-import osmnx
+import requests
 import numpy as np
+
+distance = gislib.getDistance
+
 
 def diff_seconds(t_0, t_1):
     return (t_1 - t_0).total_seconds()
@@ -201,17 +203,79 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
     return base.to_crs(crs)
 
 
-def bbox_from_name(area_name, crs=None):
-    # Get the shape by using osmnx, it returns the shape in DEFAULT_CRS
-    boundary = osmnx.gdf_from_place(area_name)
+def bbox_from_name(query, which_result=0, crs=None):
+    """
+    Create a GeoDataFrame from a single place name query.
+    (adapted from https://github.com/gboeing/osmnx)
 
-    if isinstance(boundary.loc[0]['geometry'], shapely.geometry.Point):
-        boundary = osmnx.gdf_from_place(area_name, which_result=2)
+    Parameters
+    ----------
+    query : string or dict
+        query string or structured query dict to geocode/download
 
-    if crs is None:
-        return boundary
+    which_result : int
+        number of result to return (`which_result=-1` to return all results)
 
-    return boundary.to_crs(crs)
+    Returns
+    -------
+    GeoDataFrame
+
+    Example
+    -------
+
+    gdf = gdf_from_string("Florence, Italy")
+
+    """
+    nominatim_url = "https://nominatim.openstreetmap.org/search.php?" + \
+                    "q=%s&polygon_geojson=1&format=json" % query
+
+    response = requests.get(nominatim_url)
+    data = response.json()
+
+    if len(data) > 0:
+
+        features = []
+        for result in data:
+            # extract data elements from the JSON response
+            bbox_south, bbox_north, bbox_west, bbox_east = [float(x) for x in result['boundingbox']]
+
+            coords = result['geojson']['coordinates']
+            try:
+                # it is a MultiPolygon
+                geometry = shapely.geometry.MultiPolygon( \
+                    [shapely.geometry.Polygon(c[0], [inner for inner in c[1:]]) for c in coords])
+            except TypeError:
+                try:
+                    # it is a Polygon
+                    geometry = shapely.geometry.MultiPolygon( \
+                        [shapely.geometry.Polygon(coords[0], [inner for inner in coords[1:]])])
+                except TypeError:
+                    # it is something else
+                    geometry = result['geojson']
+
+            place = result['display_name']
+            features += [{'type': 'Feature',
+                          'geometry': geometry,
+                          'properties': {'place_name': place,
+                                         'bbox_north': bbox_north,
+                                         'bbox_south': bbox_south,
+                                         'bbox_east': bbox_east,
+                                         'bbox_west': bbox_west}}]
+
+        gdf = gpd.GeoDataFrame.from_features(features)
+
+        if crs is None:
+            gdf.crs = constants.DEFAULT_CRS
+        else:
+            gdf = gdf.to_crs(crs)
+
+        if which_result >= 0:
+            gdf = gdf.loc[[which_result]]
+
+    else:
+        gdf = gpd.GeoDataFrame()
+
+    return gdf
 
 
 def nearest(origin, tessellation, col):

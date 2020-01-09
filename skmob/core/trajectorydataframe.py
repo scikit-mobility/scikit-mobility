@@ -624,7 +624,7 @@ class TrajDataFrame(pd.DataFrame):
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
                                hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
 
-    def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None):
+    def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None, legend=False):
         """
         Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`. The column `constants.CLUSTER` must be present.
 
@@ -641,6 +641,9 @@ class TrajDataFrame(pd.DataFrame):
 
         ax : matplotlib.axes, optional
             axes where the diary will be plotted. If `None` a new ax is created. The default is `None`.
+
+        legend : bool, optional
+            If `True`, legend with cluster IDs is shown. The default is `False`.
         
         Returns
         -------
@@ -689,7 +692,7 @@ class TrajDataFrame(pd.DataFrame):
         
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_diary_example.png
         """
-        return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax)
+        return plot.plot_diary(self, user, start_datetime=start_datetime, end_datetime=end_datetime, ax=ax, legend=legend)
 
     def route(self, G=None, index_origin=0, index_destin=-1):
         return routing.route(self, G=G, index_origin=index_origin, index_destin=index_destin)

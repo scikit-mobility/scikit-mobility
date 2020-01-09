@@ -5,8 +5,6 @@ import pandas as pd
 from ..utils import gislib, constants, utils
 from ..core.flowdataframe import FlowDataFrame
 
-# from geopy.distance import distance
-# distfunc = (lambda p0, p1: distance(p0, p1).km)
 distfunc = gislib.getDistance
 
 
