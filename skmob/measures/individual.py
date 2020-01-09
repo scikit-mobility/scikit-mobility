@@ -11,13 +11,17 @@ from ..utils import constants
 
 def _radius_of_gyration_individual(traj):
     """
-    Compute the radius of gyration of an individual given their TrajDataFrame
+    Compute the radius of gyration of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectory of the individual
-    :type traj: TrajDataFrame
-
-    :return: the radius of gyration of the individual
-    :rtype: float
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
+    
+    Returns
+    -------
+    float
+        the radius of gyration of the individual.
     """
     lats_lngs = traj[[constants.LATITUDE, constants.LONGITUDE]].values
     center_of_mass = np.mean(lats_lngs, axis=0)
@@ -26,41 +30,54 @@ def _radius_of_gyration_individual(traj):
 
 
 def radius_of_gyration(traj, show_progress=True):
-    """
-    Compute the radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
-    The radius of gyration :math:`r_g(u)` of an individual :math:`u` indicates the characteristic distance travelled by
-    :math:`u`.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Radius of gyration.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
+    The radius of gyration of an individual :math:`u` is defined as [GHB2008]_ [PRQPG2013]_: 
+    
+    .. math:: 
+        r_g(u) = \sqrt{ \\frac{1}{n_u} \sum_{i=1}^{n_u} dist(r_i(u) - r_{cm}(u))^2}
+    
+    where :math:`r_i(u)` represents the :math:`n_u` positions recorded for :math:`u`, and :math:`r_{cm}(u)` is the center of mass of :math:`u`'s trajectory. In mobility analysis, the radius of gyration indicates the characteristic distance travelled by :math:`u`.
 
-    :return: the radius of gyration of each individual
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the radius of gyration of each individual from a DataFrame of trajectories
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the radius of gyration of each individual.
+    
+    Examples
+    --------
     >>> import skmob
-    >>> from skmob import TrajDataFrame
     >>> from skmob.measures.individual import radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file('mydata.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> radius_of_gyration(traj).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> rg_df = radius_of_gyration(tdf)
+    >>> print(rg_df.head())
        uid  radius_of_gyration
-    0    1           20.815129
-    1    2           15.689436
-    2    3           14.918760
-    3    4           14.706123
-    4    5           23.990570
+    0    0         1564.436792
+    1    1         2467.773523
+    2    2         1439.649774
+    3    3         1752.604191
+    4    4         5380.503250    
 
-    References:
-        .. [gonzalez2008understanding] Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. "Understanding individual human mobility patterns." Nature 453, no. 7196 (2008): 779--782.
-        .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D., Giannotti, F. "Understanding the patterns of car travel." European Physics Journal Special Topics 215, no. 61 (2013).
-        .. [zhao2008empirical] M. Zhao, L. Mason, W. Wang, "Empirical study on human mobility for mobile wireless networks", in:  Military Communications Conference, 2008. MILCOM 2008. IEEE, IEEE, 2008, pp. 1–7.
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
+    References
+    ----------
+    .. [GHB2008] González, M. C., Hidalgo, C. A. & Barabási, A. L. (2008) Understanding individual human mobility patterns. Nature, 453, 779–782, https://www.nature.com/articles/nature06958.
+    .. [PRQPG2013] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D. & Giannotti, F. (2013) Understanding the patterns of car travel. European Physics Journal Special Topics 215(1), 61-73, https://link.springer.com/article/10.1140%2Fepjst%2Fe2013-01715-5
 
-    .. seealso:: :func:`k_radius_of_gyration`
+    See Also
+    --------
+    k_radius_of_gyration
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -74,17 +91,20 @@ def radius_of_gyration(traj, show_progress=True):
 
 
 def _k_radius_of_gyration_individual(traj, k=2):
-    """
-    Compute the k-radius of gyration of a single individual given their TrajDataFrame
+    """Compute the k-radius of gyration of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :param k: the number of most frequent locations to consider (default=2, range=[2, +inf])
-    :type k: int
-
-    :return: the k-radius of gyration of the individual 
-    :rtype: float
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    k : int, optional
+        the number of most frequent locations to consider. The default is 2. The possible range of values is math:`[2, +inf]`.
+    
+    Returns
+    -------
+    float
+        the k-radius of gyration of the individual. 
     """
     traj['visits'] = traj.groupby([constants.LATITUDE, constants.LONGITUDE]).transform('count')[constants.DATETIME]
     top_k_locations = traj.drop_duplicates(subset=[constants.LATITUDE, constants.LONGITUDE]).sort_values(by=['visits', constants.DATETIME],
@@ -100,41 +120,56 @@ def _k_radius_of_gyration_individual(traj, k=2):
 
 
 def k_radius_of_gyration(traj, k=2, show_progress=True):
-    """
-    Compute the k-radius of gyration (in kilometers) of a set of individuals 
-    The k-radius of gyration :math:`r_g^{(k)}(u)` indicates the characteristic distance travelled by an individual
-    between their $k$ most frequent locations.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param int k: the number of most frequent locations to consider (default=2, range=[2, +inf])
+    """k-radius of gyration.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the k-radii of gyration (in kilometers) of a set of individuals in a TrajDataFrame.
+    The k-radius of gyration of an individual :math:`u` is defined as [PSRPGB2015]_:
     
-    :return: the k-radii of gyration of the individuals
-    :rtype: pandas DataFrame
+    .. math::
+        r_g^{(k)}(u) = \sqrt{\\frac{1}{n_u^{(k)}} \sum_{i=1}^k (r_i(u) - r_{cm}^{(k)}(u))^2} 
+        
+    where :math:`r_i(u)` represents the :math:`n_u^{(k)}` positions recorded for :math:`u` on their k most frequent locations, and :math:`r_{cm}^{(k)}(u)` is the center of mass of :math:`u`'s trajectory considering the visits to the k most frequent locations only. In mobility analysis, the k-radius of gyration indicates the characteristic distance travelled by that individual as induced by their k most frequent locations.
 
-    Examples:
-        Computing the k-radius of gyration of each individual in a TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    k : int, optional
+        the number of most frequent locations to consider. The default is 2. The possible range of values is :math:`[2, +inf]`.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the k-radii of gyration of the individuals
+
+    Examples
+    --------
     >>> import skmob
-    >>> from skmob import TrajDataFrame
-    >>> from skmob.measures.individual import radius_of_gyration
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> k_radius_of_gyration(tdf).head()
-       uid  k_radius_of_gyration
-    0    1              1.798615
-    1    2              2.449305
-    2    3              1.223604
-    3    4              6.034151
-    4    5             20.678760
+    >>> from skmob.measures.individual import k_radius_of_gyration
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> krg_df = k_radius_of_gyration(tdf)
+    >>> print(krg_df.head())
+       uid  3k_radius_of_gyration
+    0    0               7.730516
+    1    1               3.620671
+    2    2               6.366549
+    3    3              10.543072
+    4    4            3910.808802
 
-    .. seealso:: :func:`radius_of_gyration`
-
-    References:
-        .. [pappalardo2015returners] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F., Barabasi, A.-L. "Returners and Explorers dichotomy in human mobility.", Nature Communications, 6:8166, doi: 10.1038/ncomms9166 (2015).
-        .. [barbosa2016returners] Barbosa H.S., de Lima Neto F.B., Evsukoff A., Menezes R. "Returners and Explorers Dichotomy in Web Browsing Behavior - A Human Mobility Approach.". Complex Networks VII. Studies in Computational Intelligence, vol 644. (2016).
+    References
+    ----------
+    .. [PSRPGB2015] Pappalardo, L., Simini, F. Rinzivillo, S., Pedreschi, D. Giannotti, F. & Barabasi, A. L. (2015) Returners and Explorers dichotomy in human mobility. Nature Communications 6, https://www.nature.com/articles/ncomms9166
+    
+    See Also
+    --------
+    radius_of_gyration
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -149,13 +184,17 @@ def k_radius_of_gyration(traj, k=2, show_progress=True):
 
 def _random_entropy_individual(traj):
     """
-    Compute the random entropy of a single individual given their TrajDataFrame
-
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :return: the random entropy of the individual 
-    :rtype: float
+    Compute the random entropy of a single individual given their TrajDataFrame.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual
+    
+    Returns
+    -------
+    float
+        the random entropy of the individual 
     """
     n_distinct_locs = len(traj.groupby([constants.LATITUDE, constants.LONGITUDE]))
     entropy = np.log2(n_distinct_locs)
@@ -163,39 +202,54 @@ def _random_entropy_individual(traj):
 
 
 def random_entropy(traj, show_progress=True):
-    """
-    Compute the random entropy of a set of individuals 
-    The random entropy :math:`E_{rand}(u)` (in base 2) of an individual :math:`u` captures the degree of predictability of :math:`u`'s whereabouts if each location is visited with equal probability.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Random entropy.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the random entropy of a set of individuals in a TrajDataFrame.
+    The random entropy of an individual :math:`u` is defined as [EP2009]_ [SQBB2010]_: 
     
-    :return: the random entropies of the individuals
-    :rtype: pandas DataFrame
+    .. math::
+        E_{rand}(u) = log_2(N_u)
+    
+    where :math:`N_u` is the number of distinct locations visited by :math:`u`, capturing the degree of predictability of :math:`u`’s whereabouts if each location is visited with equal probability. 
 
-    Examples:
-        Computing the random entropy of each individual in a TrajDataFrame
-
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the random entropy of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import random_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> random_entropy(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> re_df = random_entropy(tdf)
+    >>> print(re_df.head())
        uid  random_entropy
-    0    1        6.658211
-    1    2        6.942515
-    2    3        6.491853
-    3    4        6.228819
-    4    5        6.727920
+    0    0        9.082149
+    1    1        6.599913
+    2    2        8.845490
+    3    3        9.262095
+    4    4        7.754888
 
-    .. seealso:: :func:`uncorrelated_entropy`, :func:`real_entropy`
-
-    References:
-        .. [eagle2009eigenbehaviors] Eagle, Nathan and Pentland, Alex Sandy. "Eigenbehaviors: identifying structure in routine." Behavioral Ecology and Sociobiology 63 , no. 7 (2009): 1057--1066.
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
+    References
+    ----------
+    .. [EP2009] Eagle, N. & Pentland, A. S. (2009) Eigenbehaviors: identifying structure in routine. Behavioral Ecology and Sociobiology 63(7), 1057-1066, https://link.springer.com/article/10.1007/s00265-009-0830-6
+    .. [SQBB2010] Song, C., Qu, Z., Blumm, N. & Barabási, A. L. (2010) Limits of Predictability in Human Mobility. Science 327(5968), 1018-1021, https://science.sciencemag.org/content/327/5968/1018
+    
+    See Also
+    --------
+    uncorrelated_entropy, real_entropy
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -210,15 +264,20 @@ def random_entropy(traj, show_progress=True):
 
 def _uncorrelated_entropy_individual(traj, normalize=False):
     """
-    Compute the uncorrelated entropy of a single individual given their TrajDataFrame
+    Compute the uncorrelated entropy of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    normalize : boolean, optional
+        if True, normalize the entropy in the range :math:`[0, 1]` by dividing by :math:`log_2(N_u)`, where :math:`N` is the number of distinct locations visited by individual :math:`u`. The default is False.
 
-    :param normalize: if True normalize the entropies in the range [0, 1]
-
-    :return: the temporal-uncorrelated entropy of the individual
-    :rtype: float
+    Returns
+    -------
+    float
+        the temporal-uncorrelated entropy of the individual
     """
     n = len(traj)
     probs = [1.0 * len(group) / n for group in traj.groupby(by=[constants.LATITUDE, constants.LONGITUDE]).groups.values()]
@@ -233,41 +292,55 @@ def _uncorrelated_entropy_individual(traj, normalize=False):
 
 
 def uncorrelated_entropy(traj, normalize=False, show_progress=True):
-    """
-    Compute the temporal-uncorrelated entropy of a set of individuals given a TrajDataFrame. The temporal-uncorrelated entropy :math:`E_{unc}(u)` (in base 2) of an individual :math:`u` is the historical probability that a location :math:`j` was visited by :math:`u` and characterizes the heterogeneity of :math:`u`'s visitation patterns.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param boolean normalize: if True normalize the entropy in the range [0, 1] by dividing by log2(N), where N is the number of distinct locations visited by the individual
-
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
-
-    :return: the temporal-uncorrelated entropies of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the temporal uncorrelated entropy of each individual in a TrajDataFrame
-        
+    """Uncorrelated entropy.
+    
+    Compute the temporal-uncorrelated entropy of a set of individuals in a TrajDataFrame. The temporal-uncorrelated entropy of an individual :math:`u` is defined as [EP2009]_ [SQBB2010]_ [PVGSPG2016]_: 
+    
+    .. math::
+        E_{unc}(u) = - \sum_{j=1}^{N_u} p_u(j) log_2 p_u(j)
+    
+    where :math:`N_u` is the number of distinct locations visited by :math:`u` and :math:`p_u(j)` is the historical probability that a location :math:`j` was visited by :math:`u`. The temporal-uncorrelated entropy characterizes the heterogeneity of :math:`u`'s visitation patterns.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    normalize : boolean, optional
+        if True, normalize the entropy in the range :math:`[0, 1]` by dividing by :math:`log_2(N_u)`, where :math:`N` is the number of distinct locations visited by individual :math:`u`. The default is False.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the temporal-uncorrelated entropy of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import uncorrelated_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> uncorrelated_entropy(tdf, normalize=True).head()
-       uid  uncorrelated_entropy
-    0    1              5.492801
-    1    2              5.764952
-    2    3              4.628958
-    3    4              5.112809
-    4    5              5.696118
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> ue_df = uncorrelated_entropy(tdf, normalize=True)
+    >>> print(ue_df.head())
+       uid  norm_uncorrelated_entropy
+    0    0                   0.819430
+    1    1                   0.552972
+    2    2                   0.764304
+    3    3                   0.794553
+    4    4                   0.756421
 
-    .. seealso:: :func:`random_entropy`, :func:`real_entropy`
-
-    References:
-        .. [eagle2009eigenbehaviors] Eagle, Nathan and Pentland, Alex Sandy. "Eigenbehaviors: identifying structure in routine." Behavioral Ecology and Sociobiology 63 , no. 7 (2009): 1057--1066.
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
-        .. [pappalardo2016analytical] Pappalardo, Luca, et al. "An analytical framework to nowcast well-being using mobile phone data." International Journal of Data Science and Analytics 2, no. 75 (2016)
+    References
+    ----------
+    .. [PVGSPG2016] Pappalardo, L., Vanhoof, M., Gabrielli, L., Smoreda, Z., Pedreschi, D. & Giannotti, F. (2016) An analytical framework to nowcast well-being using mobile phone data. International Journal of Data Science and Analytics 2(75), 75-92, https://link.springer.com/article/10.1007/s41060-016-0013-2
+    
+    See Also
+    --------
+    random_entropy, real_entropy
     """
     column_name = sys._getframe().f_code.co_name
     if normalize:
@@ -312,13 +385,17 @@ def _true_entropy(sequence):
 
 def _real_entropy_individual(traj):
     """
-    Compute the real entropy of a single individual given their TrajDataFrame
+    Compute the real entropy of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
     
-    :return: the real entropy of the individual
-    :rtype: float
+    Returns
+    -------
+    float
+        the real entropy of the individual.
     """
     time_series = tuple(map(tuple, traj[[constants.LATITUDE, constants.LONGITUDE]].values))
     entropy = _true_entropy(time_series)
@@ -326,37 +403,53 @@ def _real_entropy_individual(traj):
 
 
 def real_entropy(traj, show_progress=True):
-    """
-    Compute the real entropy of a set of individuals given a TrajDataFrame. The real entropy :math:`E(u)` of an individual :math:`u` depends not only on the frequency of visitation, but also the order in which the nodes were visited and the time spent at each location, thus capturing the full spatiotemporal order present in an :math:`u`'s mobility patterns.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Real entropy.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the real entropy of a set of individuals in a TrajDataFrame. 
+    The real entropy of an individual :math:`u` is defined as [SQBB2010]_: 
     
-    :return: the real entropies of the individuals
-    :rtype: pandas DataFrame
+    .. math:: 
+        E(u) = - \sum_{T'_u}P(T'_u)log_2[P(T_u^i)]
     
-    Examples:
-        Computing the real entropy of each individual in a TrajDataFrame
-
+    where :math:`P(T'_u)` is the probability of finding a particular time-ordered subsequence :math:`T'_u` in the trajectory :math:`T_u`. The real entropy hence depends not only on the frequency of visitation, but also the order in which the nodes were visited and the time spent at each location, thus capturing the full spatiotemporal order present in an :math:`u`'s mobility patterns.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals
+    
+    show_progress : boolean, optional 
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the real entropy of the individuals
+    
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`. Note that the computation of this measure is, by construction, slow.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import real_entropy
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> real_entropy(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> re_df = real_entropy(tdf[tdf.uid < 50]) # computed on a subset of individuals
+    >>> print(re_df.head())
        uid  real_entropy
-    0    1      4.416683
-    1    2      4.643135
-    2    3      3.759747
-    3    4      4.255130
-    4    5      4.601280
+    0    0      4.906479
+    1    1      2.207224
+    2    2      4.467225
+    3    3      4.782442
+    4    4      3.585371
 
-    .. seealso:: :func:`random_entropy`, :func:`uncorrelated_entropy`
-
-    References:
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
+    See Also
+    --------
+    random_entropy, uncorrelated_entropy
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -371,13 +464,17 @@ def real_entropy(traj, show_progress=True):
 
 def _jump_lengths_individual(traj):
     """
-    Compute the jump lengths (in kilometers) of a single individual from their TrajDataFrame
-
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Compute the jump lengths (in kilometers) of a single individual from their TrajDataFrame.
     
-    :return: the list of distances (in kilometers) traveled by the individual
-    :rtype: list
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    Returns
+    -------
+    list
+        the list of distances (in kilometers) traveled by the individual.
     """
     if len(traj) == 1:  # if there is just one point, no distance can be computed
         return []
@@ -387,48 +484,62 @@ def _jump_lengths_individual(traj):
 
 
 def jump_lengths(traj, show_progress=True, merge=False):
-    """
-    Compute the jump lengths (in kilometers) of a set of individuals.
-    A jump length (or trip distance) is defined as the geographic distance between the position of a visit and the next one.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    """Jump lengths.
     
-    :param merge: if True merge the individuals' lists into one list (default: False)
-    :type merge: boolean
+    Compute the jump lengths (in kilometers) of a set of individuals in a TrajDataFrame.
+    A jump length (or trip distance) :math:`\Delta r`made by an individual :math:`u` is defined as the geographic distance between two consecutive points visited by :math:`u`: 
     
-    :return: the jump lengths for each individual (a NaN indicate that an individual visited just one location) or a list with all jumps together
-    :rtype: pandas DataFrame or list
+    .. math:: \Delta r = dist(r_i, r_{i + 1})
+    
+    where :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a latitude, longitude pair, in the time-ordered trajectory of an individual, and :math:`dist` is the geographic distance between the two points [BHG2006]_ [GHB2008]_ [PRQPG2013]_.
 
-    Examples:
-        Computing the jump lenghts of each individual in a TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    merge : boolean, optional
+        if True, merge the individuals' lists into one list. The default is False.
+    
+    Returns
+    -------
+    pandas DataFrame or list
+        the jump lengths for each individual, where :math:`NaN` indicates that an individual visited just one location and hence distance is not defined; or a list with all jumps together if `merge` is True.
 
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`. 
+
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import jump_lengths
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> jump_lengths(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> jl_df = jump_lengths(tdf)
+    >>> print(jl_df.head())
        uid                                       jump_lengths
-    0    1  [0.0, 2.235208041718699, 0.996946934364258, 68...
-    1    2  [0.0, 0.0, 5.649741880693563, 1.41265548245858...
-    2    3  [2.2311820297176572, 2.824995904497732, 4.9916...
-    3    4  [48.52874706948018, 1.4124821185158252, 0.9972...
-    4    5  [0.0, 1.0004402836501967, 2.825374437917952, 1...
-
-    .. seealso:: :func:`maximum_distance` :func:`distance_straight_line`
-https://scholar.google.it/citations?user=88VJDhcAAAAJ&hl=it&oi=ao
-    References:
-        .. [brockmann2006scaling] Brockmann, D., Hufnagel, L. and Geisel, T.. "The scaling laws of human travel." Nature 439 (2006): 462.
-        .. [gonzalez2008understanding] Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. "Understanding individual human mobility patterns." Nature 453, no. 7196 (2008): 779--782.
-        .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D., Giannotti, F. "Understanding the patterns of car travel." European Physics Journal Special Topics 215, no. 61 (2013)
-        .. [shin2008levy] R. Shin, S. Hong, K. Lee, S. Chong, "On the levy-walk nature of human mobility: Do humans walk like monkeys?", in: Proc. IEEE INFOCOM, 2008, pp. 924–932.
-        .. [bazzani2010statistical] A. Bazzani, B. Giorgini, S. Rambaldi, R. Gallotti, L. Giovannini, "Statistical laws in urban mobility from microscopic gps data in the area of florence", Journal of Statistical Mechanics: Theory and Experiment 2010 (05) (2010) P05001.
-        .. [turchin1998measuring] P. Turchin, "Quantitative Analysis of Movement: Measuring and Modeling Population Redistribution in Animals and Plants", Sinauer Associates, Sunderland, Massachusetts, USA, 1998.
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
-        .. [zhao2015explaining] K. Zhao, M. Musolesi, P. Hui, W. Rao, S. Tarkoma, Explaining the power-law distribution of human mobility through transportation modality decomposition, Scientific reports 5. 2015
+    0    0  [19.640467328877936, 0.0, 0.0, 1.7434311010381...
+    1    1  [6.505330424378251, 46.75436600375988, 53.9284...
+    2    2  [0.0, 0.0, 0.0, 0.0, 3.6410097195943507, 0.0, ...
+    3    3  [3861.2706300798827, 4.061631313492122, 5.9163...
+    4    4  [15511.92758595804, 0.0, 15511.92758595804, 1....
+    >>> jl_list = jump_lengths(tdf, merge=True)
+    >>> print(jl_list[:10]) # print the first ten elements in the list
+    [19.640467328877936, 0.0, 0.0, 1.743431101038163, 1553.5011134765616, 0.0, 30.14517724008101, 0.0, 2.563647571198179, 1.9309489380903868]
+    
+    References
+    ----------
+    .. [BHG2006] Brockmann, D., Hufnagel, L. & Geisel, T. (2006) The scaling laws of human travel. Nature 439, 462-465, https://www.nature.com/articles/nature04292
+    
+    See Also
+    --------
+    maximum_distance, distance_straight_line
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -452,13 +563,17 @@ https://scholar.google.it/citations?user=88VJDhcAAAAJ&hl=it&oi=ao
 
 def _maximum_distance_individual(traj):
     """
-    Compute the maximum distance (in kilometers) traveled by an individual given their TrajDataFrame
+    Compute the maximum distance (in kilometers) traveled by an individual given their TrajDataFrame.
     
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual
     
-    :return: the maximum traveled distance for the individual (a NaN indicate that an individual visited just one location)
-    :rtype: float
+    Returns
+    -------
+    float
+        the maximum traveled distance for the individual. Note that :math:`NaN` indicates that an individual visited just one location and hence distance is not defined.
     """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
@@ -466,38 +581,52 @@ def _maximum_distance_individual(traj):
     return np.NaN
 
 def maximum_distance(traj, show_progress=True):
-    """
-    Compute the maximum distance (in kilometers) traveled by a set of individuals.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Maximum distance.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the maximum distance (in kilometers) traveled by a set of individuals in a TrajDataFrame. The maximum distance :math:`d_{max}` travelled by an individual :math:`u` is defined as: 
     
-    :return: the maximum traveled distance for each individual (a NaN indicate that an individual visited just one location)
-    :rtype: pandas DataFrame
+    .. math:: d_{max} = \max\limits_{1 \leq i \lt j \lt n_u} dist(r_i, r_j)
+    
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in :math:`u`'s time-ordered trajectory, and :math:`dist` is the geographic distance between the two points [WTDED2015]_ [LBH2012]_.
 
-    Examples:
-        Computing the maximum distance traveled by each individual in a TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the maximum traveled distance for each individual. Note that :math:`NaN` indicates that an individual visited just one location and so the maximum distance is not defined.
 
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import maximum_distance
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> maximum_distance(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> md_df = maximum_distance(tdf)
+    >>> print(md_df.head())
        uid  maximum_distance
-    0    1         84.923674
-    1    2         73.190512
-    2    3         92.713548
-    3    4         79.425210
-    4    5         73.036719
+    0    0      11294.436420
+    1    1      12804.895064
+    2    2      11286.745660
+    3    3      12803.259219
+    4    4      15511.927586
 
-    .. seealso:: :func:`jump_lengths` :func:`distance_straight_line`
-
-    References:
-        .. [williams2014measures] Williams, Nathalie E., Thomas, Timothy A., Dunbar, Matthew, Eagle, Nathan and Dobra, Adrian. "Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data." CoRR abs/1408.5420 (2014).
-        .. [lu2012predictability] Lu, Xin, Bengtsson, Linus and Holme, Petter. "Predictability of population displacement after the 2010 haiti earthquake." National Academy of Sciences 109 , no. 29 (2012): 11576--11581.
+    References
+    ----------
+    .. [WTDED2015] Williams, N. E., Thomas, T. A., Dunbar, M., Eagle, N. & Dobra, A. (2015) Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data. PLOS ONE 10(7): e0133630. https://doi.org/10.1371/journal.pone.0133630
+    .. [LBH2012] Lu, X., Bengtsson, L. & Holme, P. (2012) Predictability of population displacement after the 2010 haiti earthquake. Proceedings of the National Academy of Sciences 109 (29) 11576-11581; https://doi.org/10.1073/pnas.1203882109
+    
+    See Also
+    --------
+    jump_lengths, distance_straight_line
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -511,13 +640,17 @@ def maximum_distance(traj, show_progress=True):
 
 def _distance_straight_line_individual(traj):
     """
-    Compute the distance straight line traveled by the individual given their TrajDataFrame
+    Compute the distance straight line travelled by the individual given their TrajDataFrame.
     
-    param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual
     
-    :return: the straight line distance traveled by the individual (a NaN indicate that the individual visited just one location)
-    :rtype: float
+    Returns
+    -------
+    float
+        the straight line distance traveled by the individual. Note the :math:`NaN` indicates that the individual visited just one location and hence distance is not defined.
     """
     jumps = _jump_lengths_individual(traj)
     if len(jumps) > 0:
@@ -525,38 +658,51 @@ def _distance_straight_line_individual(traj):
     return 0.0
 
 def distance_straight_line(traj, show_progress=True):
-    """
-    Compute the distance (in kilometers) traveled straight line by a set of individuals.
-    The distance straight line is the sum of the distances traveled by an individual.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Distance straight line.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the distance (in kilometers) travelled straight line by a set of individuals in a TrajDataFrame. The distance straight line :math:`d_{SL}` travelled by an individual :math:`u` is computed as the sum of the distances travelled :math:`u`: 
     
-    :return: the straight line distance traveled by the individuals (a NaN indicate that an individual visited just one location)
-    :rtype: pandas DataFrame
+    .. math:: d_{SL} = \sum_{j=2}^{n_u} dist(r_{j-1}, r_j)
+    
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_{j-1}` and :math:`r_j` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in :math:`u`'s time-ordered trajectory, and :math:`dist` is the geographic distance between the two points [WTDED2015]_.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional 
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the straight line distance traveled by the individuals. Note that :math:`NaN` indicates that an individual visited just one location and hence distance is not defined.
 
-    Examples:
-        Computing the distance straight line of each individual in a TrajDataFrame
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
 
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import distance_straight_line
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> distance_straight_line(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> dsl_df = distance_straight_line(tdf)
+    >>> print(dsl_df.head())
        uid  distance_straight_line
-    0    1             7917.805713
-    1    2             5330.312205
-    2    3             6481.041936
-    3    4             3370.984587
-    4    5             7300.563980
+    0    0           374530.954882
+    1    1           774346.816009
+    2    2            88710.682464
+    3    3           470986.771764
+    4    4           214623.524252
 
-    .. seealso:: :func:`jump_lengths` :func:`maximum_distance`
-
-    References:
-        .. [williams2014measures] Williams, Nathalie E., Thomas, Timothy A., Dunbar, Matthew, Eagle, Nathan and Dobra, Adrian. "Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data." CoRR abs/1408.5420 (2014).
+    See Also
+    --------
+    jump_lengths, maximum_distance
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -571,13 +717,17 @@ def distance_straight_line(traj, show_progress=True):
 
 def _waiting_times_individual(traj):
     """
-    Compute the waiting times for a single individual, given their TrajDataFrame
+    Compute the waiting times for a single individual given their TrajDataFrame.
     
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
     
-    :return: the waiting times of the individual
-    :rtype: list
+    Returns
+    -------
+    list
+        the waiting times of the individual.
     """
     if len(traj) == 1:
         return []
@@ -587,40 +737,58 @@ def _waiting_times_individual(traj):
 
 
 def waiting_times(traj, show_progress=True, merge=False):
-    """
-    Compute the waiting times (or inter-times) between the movements of an individual.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
-
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
-
-    :param merge: if True merge the individuals' lists into one list (default: False)
-    :type merge: boolean
-
-    :return: the list of waiting times of the individual (a NaN indicate that an individual visited just one location) or a list with all waiting times together
-    :rtype: pandas DataFrame or list
-
-    Examples:
-        Computing the waiting times of each individual in a TrajDataFrame
-
+    """Waiting times.
+    
+    Compute the waiting times (in seconds) between the movements of each individual in a TrajDataFrame. A waiting time (or inter-time) by an individual :math:`u` is defined as the time between two consecutive points in :math:`u`'s trajectory:
+    
+    .. math:: \Delta t = |t(r_i) - t(r_{i + 1})|
+    
+    where :math:`r_i` and :math:`r_{i + 1}` are two consecutive points, described as a :math:`(latitude, longitude)` pair, in the time-ordered trajectory of :math:`u`, and :math:`t(r)` indicates the time when :math:`u` visits point :math:`r` [SKWB2010]_ [PF2018]_.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    merge : boolean, optional
+        if True, merge the individuals' lists into one list. The default is False.
+    
+    Returns
+    -------
+    pandas DataFrame or list
+        the list of waiting times for each individual, where :math:`NaN` indicates that an individual visited just one location and hence waiting time is not defined; or a list with all waiting times together if `merge` is True.
+    
+    Warning
+    -------
+    The input TrajDataFrame must by sorted in ascending order by `datetime`.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import waiting_times
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data/brightkite_data.csv', sep=',',  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> waiting_times(df).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> wt_df = waiting_times(tdf)
+    >>> print(wt_df.head())
        uid                                      waiting_times
-    0    1  [2005.0, 2203.0, 1293.0, 823.0, 2636.0, 893.0,...
-    1    2  [1421.0, 1948.0, 1508.0, 815.0, 8954.0, 1248.0...
-    2    3  [5014.0, 838.0, 1425.0, 1250.0, 993.0, 1596.0,...
-    3    4  [5623.0, 617.0, 721.0, 1954.0, 956.0, 1479.0, ...
-    4    5  [1461.0, 13354.0, 1258.0, 7966.0, 768.0, 615.0...sys._getframe().f_code.co_name
-
-    References:
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
-        .. [pappalardo2016human] Pappalardo, Luca, Rinzivillo, Salvatore, Simini, Filippo "Human Mobility Modelling: exploration and preferential return meet the gravity model." Procedia Computer Science, Volume 83, 2016, Pages 934-939
-        .. [pappalardo2017data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
+    0    0  [2358.0, 136.0, 303.0, 1836.0, 14869.0, 517.0,...
+    1    1  [43460.0, 34353.0, 8347.0, 40694.0, 281.0, 16....
+    2    2  [293.0, 308.0, 228.0, 402.0, 16086.0, 665.0, 9...
+    3    3  [10200079.0, 30864.0, 54415.0, 2135.0, 63.0, 1...
+    4    4  [82845.0, 56.0, 415156.0, 1372.0, 23.0, 42679....
+    >>> wl_list = waiting_times(tdf, merge=True)
+    >>> print(wl_list[:10])
+    [2358.0, 136.0, 303.0, 1836.0, 14869.0, 517.0, 8995.0, 41306.0, 949.0, 11782.0]
+    
+    References
+    ----------
+    .. [SKWB2010] Song, C., Koren, T., Wang, P. & Barabasi, A.L. (2010) Modelling the scaling properties of human mobility. Nature Physics 6, 818-823, https://www.nature.com/articles/nphys1760
+    .. [PF2018] Pappalardo, L. & Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, https://link.springer.com/article/10.1007/s10618-017-0548-4
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -644,51 +812,56 @@ def waiting_times(traj, show_progress=True, merge=False):
 
 def _number_of_locations_individual(traj):
     """
-    Compute the number of visited locations of a single individual given their TrajDataFrame
+    Compute the number of visited locations of a single individual given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :return: number of distinct locations visited by the individual 
-    :rtype: int
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individual.
+    
+    Returns
+    -------
+    int
+        number of distinct locations visited by the individual.
     """
     n_locs = len(traj.groupby([constants.LATITUDE, constants.LONGITUDE]).groups)
     return n_locs
 
 
 def number_of_locations(traj, show_progress=True):
-    """
-    Compute the number of distinct locations visited by a set of individuals.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Number of distinct locations.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the number of distinct locations visited by a set of individuals in a TrajDataFrame [GHB2008]_.
     
-    :return: the number of distinct locations visited by the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the number of locations of each individual in a TrajDataFrame
-
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the number of distinct locations visited by the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import number_of_locations
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file(datadata,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> number_of_locations(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> nl_df = number_of_locations(tdf)
+    >>> print(nl_df.head())
        uid  number_of_locations
-    0    1                  101
-    1    2                  123
-    2    3                   90
-    3    4                   75
-    4    5                  106
-
-    References:
-    ----------
-    .. [gonzalez2008understanding] Gonzalez, Marta C., Hidalgo, Cesar A. and Barabasi, Albert-Laszlo. "Understanding individual human mobility patterns." Nature 453, no. 7196 (2008): 779--782.
-    .. [pappalardo2013understanding] Pappalardo, L., Rinzivillo, S., Qu, Z., Pedreschi, D., Giannotti, F. "Understanding the patterns of car travel." European Physics Journal Special Topics 215, no. 61 (2013).
-    .. [williams2014measures] Williams, Nathalie E., Thomas, Timothy A., Dunbar, Matthew, Eagle, Nathan and Dobra, Adrian. "Measures of Human Mobility Using Mobile Phone Records Enhanced with GIS Data." CoRR abs/1408.5420 (2014).
+    0    0                  542
+    1    1                   97
+    2    2                  460
+    3    3                  614
+    4    4                  216
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -703,16 +876,23 @@ def number_of_locations(traj, show_progress=True):
 
 def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
     """
-    Compute the home location of a single individual given their TrajDataFrame
+    Compute the home location of a single individual given their TrajDataFrame.
     
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :param start_night:the starting time for the night (format HH:MM)
-    :param end_night: the ending time for the night (format HH:MM)
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
     
-    :return: the latitude and longitude coordinates of the individual's home location 
-    :type: tuple
+    start_night : str, optional
+        the starting time of the night (format HH:MM). The default is '22:00'.
+        
+    end_night : str, optional
+        the ending time for the night (format HH:MM). The default is '07:00'.
+    
+    Returns
+    -------
+    tuple
+        the latitude and longitude coordinates of the individual's home location 
     """
     night_visits = traj.set_index(pd.DatetimeIndex(traj.datetime)).between_time(start_night, end_night)
     if len(night_visits) != 0:
@@ -724,38 +904,59 @@ def _home_location_individual(traj, start_night='22:00', end_night='07:00'):
 
 
 def home_location(traj, start_night='22:00', end_night='07:00', show_progress=True):
-    """
-    Compute the home location of an individual
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Home location.
     
-    :param str start_night: the starting time (format HH:MM)
-    :param str end_night: the ending time for the night (format HH:MM)
+    Compute the home location of a set of individuals in a TrajDataFrame. The home location :math:`h(u)` of an individual :math:`u` is defined as the location :math:`u` visits the most during nighttime [CBTDHVSB2012]_ [PSO2012]_: 
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    .. math:: 
+        h(u) = \\arg\max_{i} |\{r_i | t(r_i) \in [t_{startnight}, t_{endnight}] \}|
     
-    :return: the home location (in terms of latitude and longitude coordinates) of the individuals
-    :rtype: pandas DataFrame
+    where :math:`r_i` is a location visited by :math:`u`, :math:`t(r_i)` is the time when :math:`u` visited :math:`r_i`, and :math:`t_{startnight}` and :math:`t_{endnight}` indicates the times when nighttime starts and ends, respectively.
 
-    Examples:
-        Computing the home location of each individual in a TrajDataFrame
-
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    start_night : str, optional
+        the starting time of the night (format HH:MM). The default is '22:00'.
+        
+    end_night : str, optional
+        the ending time for the night (format HH:MM). The default is '07:00'.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the home location, as a :math:`(latitude, longitude)` pair, of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import home_location
-    >>> df = skmob.read_trajectories('data_test/gps_test_dataset.csvdata', user_id='user', longitude='lon')
-    >>> home_location(df).head()
-       uid        lat        lng
-    0    1  46.126505  11.867149
-    1    2  46.442010  10.998368
-    2    3  45.818599  11.130413
-    3    4  45.873280  11.093846
-    4    5  46.215770  11.067935
-
-    References:
-        .. [csaji2012exploring] Csáji, Balázs Csanád, Browet, Arnaud, Traag, Vincent A., Delvenne, Jean-Charles, Huens, Etienne, Dooren, Paul Van, Smoreda, Zbigniew and Blondel, Vincent D. "Exploring the Mobility of Mobile Phone Users." CoRR abs/1211.6014 (2012).
-        .. [phithakkitnukoon2012socio] Phithakkitnukoon, Santi, Smoreda, Zbigniew and Olivier, Patrick. "Socio-geography of human mobility: A study using longitudinal mobile phone data." PloS ONE 7 , no. 6 (2012): e39253.
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> hl_df = home_location(tdf)
+    >>> print(hl_df.head())
+       uid        lat         lng
+    0    0  39.891077 -105.068532
+    1    1  37.630490 -122.411084
+    2    2  39.739154 -104.984703
+    3    3  37.748170 -122.459192
+    4    4  60.180171   24.949728
+    
+    References
+    ----------
+    .. [CBTDHVSB2012] Csáji, B. C., Browet, A., Traag, V. A., Delvenne, J.-C., Huens, E., Van Dooren, P., Smoreda, Z. & Blondel, V. D. (2012) Exploring the Mobility of Mobile Phone Users. Physica A: Statistical Mechanics and its Applications 392(6), 1459-1473, https://www.sciencedirect.com/science/article/pii/S0378437112010059
+    .. [PSO2012] Phithakkitnukoon, S., Smoreda, Z. & Olivier, P. (2012) Socio-geography of human mobility: A study using longitudinal mobile phone data. PLOS ONE 7(6): e39253. https://doi.org/10.1371/journal.pone.0039253
+    
+    See Also
+    --------
+    max_distance_from_home
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -770,16 +971,23 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
 
 def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:00'):
     """
-    Compute the maximum distance from home traveled by a single individual, given their TrajDataFrame
+    Compute the maximum distance from home traveled by a single individual, given their TrajDataFrame.
 
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
-
-    :param str start_night: the starting time for the night (format HH:MM)
-    :param str end_night: the ending time for the night (format HH:MM)
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
     
-    :return: the maximum distance traveled from home by the individual 
-    :type: float
+    start_night : str, optional
+        the starting time of the night (format HH:MM). The default is '22:00'.
+        
+    end_night : str, optional
+        the ending time for the night (format HH:MM). The default is '07:00'.
+    
+    Returns
+    -------
+    float
+        the maximum distance from home traveled by the individual.
     """    
     lats_lngs = traj.sort_values(by=constants.DATETIME)[[constants.LATITUDE, constants.LONGITUDE]].values
     home = home_location(traj, start_night=start_night, end_night=end_night, show_progress=False).iloc[0]
@@ -789,40 +997,58 @@ def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:
 
 
 def max_distance_from_home(traj, start_night='22:00', end_night='07:00', show_progress=True):
-    """
-    Compute the maximum distance from home (in kilometers) traveled by an individual.
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Maximum distance from home.
     
-    :param str start_night: the starting time for the night (format HH:MM)
-    :param str end_night: the ending time for the night (format HH:MM)
+    Compute the maximum distance (in kilometers) traveled from their home location by a set of individuals in a TrajDataFrame. The maximum distance from home :math:`dh_{max}(u)` of an individual :math:`u` is defined as [CM2015]_:
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    .. math:: 
+        dh_{max}(u) = \max\limits_{1 \leq i \lt j \lt n_u} dist(r_i, h(u))
     
-    :return: the maximum distance from home of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-        Computing the maximum distance from home of each individual in a TrajDataFrame
-
+    where :math:`n_u` is the number of points recorded for :math:`u`, :math:`r_i` is a location visited by :math:`u` described as a :math:`(latitude, longitude)` pair, :math:`h(u)` is the home location of :math:`u`, and :math:`dist` is the geographic distance between two points.
+    
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    start_night : str, optional
+        the starting time of the night (format HH:MM). The default is '22:00'.
+        
+    end_night : str, optional
+        the ending time for the night (format HH:MM). The default is '07:00'.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the maximum distance from home of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import max_distance_from_home
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> max_distance_from_home(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> dh_max = max_distance_from_home(tdf)
+    >>> print(df_max.head())
        uid  max_distance_from_home
-    0    1               46.409510
-    1    2               68.499333
-    2    3               56.806038
-    3    4               78.949592
-    4    5               69.393777
-date_time
-    .. seealso:: :func:`maximum_distance`, :func:`home_location`
+    0    0            11286.942949
+    1    1            12800.547682
+    2    2            11282.748348
+    3    3            12799.754644
+    4    4            15512.788707
 
-    References:
-        .. [canzian2015trajectories] Luca Canzian and Mirco Musolesi. "Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobilhttps://www.gazzetta.it/?refresh_ceity traces analysis." In Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp '15), 1293--1304, 2015.
+    References
+    ----------
+    .. [CM2015] Canzian, L. & Musolesi, M. (2015) Trajectories of depression: unobtrusive monitoring of depressive states by means of smartphone mobility traces analysis. Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing, 1293-1304, https://dl.acm.org/citation.cfm?id=2805845
+    
+    See Also
+    --------
+    maximum_distance, home_location
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -838,32 +1064,39 @@ date_time
 
 
 def number_of_visits(traj, show_progress=True):
-    """
-    Compute the number of visits of an individual given their TrajDataFrame
-
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    """Number of visits.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the number of visits (i.e., data points) for each individual in a TrajDataFrame.
+
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
     
-    :return: the number of visits or points per each individual
-    :rtype: pandas DataFrame
-
-    Examples:
-            Computing the number of visits per location in a TrajDataFrame
-
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the number of visits or points per each individual.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import number_of_visits
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> number_of_visits(tdf).head()
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> num_v_df = number_of_visits(tdf)
+    >>> print(num_v_df.head())
        uid  number_of_visits
-    0    1               340
-    1    2               316
-    2    3               355
-    3    4               375
-    4    5               245
+    0    0              2099
+    1    1              1210
+    2    2              2100
+    3    3              1807
+    4    4               779
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -879,15 +1112,23 @@ def number_of_visits(traj, show_progress=True):
 def _location_frequency_individual(traj, normalize=True,
                                    location_columns=[constants.LATITUDE, constants.LONGITUDE]):
     """
-    Compute the visitation frequency of each location for a single individual given their TrajDataFrame
+    Compute the visitation frequency of each location for a single individual given their TrajDataFrame.
     
-    :param traj: the trajectories of the individual
-    :type TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
     
-    :param normalize: if True compute the ratio of visits, otherwise the row count of visits to each location
+    normalize : boolean, optional
+        if True, compute the ratio of visits, otherwise the row count of visits to each location. The default is True.
     
-    :return: the location frequency of each location of the individual 
-    :type: pandas DataFrame
+    location_columns : list, optional
+        the name of the column(s) indicating the location. The default is [constants.LATITUDE, constants.LONGITUDE].
+    
+    Returns
+    -------
+    pandas DataFrame
+        the location frequency of each location of the individual. 
     """
     freqs = traj.groupby(location_columns).count()[constants.DATETIME].sort_values(ascending=False)
     if normalize:
@@ -897,43 +1138,68 @@ def _location_frequency_individual(traj, normalize=True,
 
 def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
                        location_columns=[constants.LATITUDE, constants.LONGITUDE]):
-    """
-    Visitation frequency of each location, for each individual
+    """Location frequency.
+    
+    Compute the visitation frequency of each location, for a set of individuals in a TrajDataFrame. Given an individual :math:`u`, the visitation frequency of a location :math:`r_i` is the number of visits to that location by :math:`u`. The visitation frequency :math:`f(r_i)` of location :math:`r_i` is also defined in the literaure as the probability of visiting location :math:`r_i` by :math:`u` [SKWB2010]_ [PF2018]_:
+    
+    .. math::
+        f(r_i) = \\frac{n(r_i)}{n_u}
+        
+    where :math:`n(r_i)` is the number of visits to location :math:`r_i` by :math:`u`, and :math:`n_u` is the total number of data points in :math:`u`'s trajectory.
 
-    :param traj: the trajectories of the individuals
-    :type traj: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
     
-    :param boolean normalize: if True, the frequencies are normalized (divided by the individual's total number of visits)
+    normalize : boolean, optional
+        if True, the number of visits to a location by an individual is computed as probability, i.e., divided by the individual's total number of visits. The default is True.
     
-    :param as_ranks: if True return a list where element i indicates the average visitation frequency of the i-th most frequent location
-    :type as_ranks: boolean
+    as_ranks : boolean, optional
+        if True, return a list where element :math:`i` indicates the average visitation frequency of the :math:`i`-th most frequent location. The default is False.
+   
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+        
+    location_columns : list, optional
+        the name of the column(s) indicating the location. The default is [constants.LATITUDE, constants.LONGITUDE].
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Returns
+    -------
+    pandas DataFrame or list
+        the location frequency for each location for each individual, or the ranks list for each individual.
     
-    :return: the location frequency for each location of the individuals or ranks list
-    :rtype: pandas DataFrame or list
-
-    Examples:
-            Computing the number of visits per location in a TrajDataFrame
-
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import location_frequency
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> location_frequency(df).head()
-       uid        lat        lng  datetime
-    0    1  46.180259  11.040689  0.255882
-    1    1  46.180027  11.053637  0.055882
-    2    1  46.337311  10.799639  0.044118
-    3    1  46.307321  10.980472  0.032353
-    4    1  46.144740  11.013478  0.026471
-
-    .. seealso:: :func:`visits_per_location`
-
-    References:
-        .. [song2010modelling] Song, Chaoming, Koren, Tal, Wang, Pu and Barabasi, Albert-Laszlo. "Modelling the scaling properties of human mobility." Nature Physics 6 , no. 10 (2010): 818--823.
-        .. [pappalardo2018data] Pappalardo, Luca and Simini, Filippo. "Data-driven generation of spatio-temporal routines in human mobility.." Data Min. Knowl. Discov. 32 , no. 3 (2018): 787-829.
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> lf_df = location_frequency(tdf, normalize=False).reset_index()
+    >>> print(lf_df.head())
+       uid        lat         lng  location_frequency
+    0    0  39.762146 -104.982480                 214
+    1    0  39.891077 -105.068532                 137
+    2    0  39.739154 -104.984703                 126
+    3    0  39.891586 -105.068463                  72
+    4    0  39.827022 -105.143191                  53
+    >>> lf_df = location_frequency(tdf, normalize=True).reset_index() # frequencies ad probabilities
+    >>> print(lf_df.head())
+           uid        lat         lng  location_frequency
+    0    0  39.762146 -104.982480            0.101953
+    1    0  39.891077 -105.068532            0.065269
+    2    0  39.739154 -104.984703            0.060029
+    3    0  39.891586 -105.068463            0.034302
+    4    0  39.827022 -105.143191            0.025250
+    >>> ranks = location_frequency(tdf, as_ranks=True) # as rank list
+    >>> print(ranks[:10])
+    [0.26774954912290716, 0.12699129836809203, 0.07090642778490935, 0.04627646190564675, 0.03657120208870922, 0.029353331229094993, 0.025050267239164755, 0.020284764933447663, 0.018437443393907686, 0.01656729815097415]
+    
+    See Also
+    --------
+    visits_per_location
     """
     # TrajDataFrame without 'uid' column
     if constants.UID not in traj.columns: 
@@ -969,15 +1235,20 @@ def location_frequency(traj, normalize=True, as_ranks=False, show_progress=True,
 
 def _individual_mobility_network_individual(traj, self_loops=False):
     """
-    Compute the individual mobility network of a single individual given their TrajDataFrame
+    Compute the individual mobility network of a single individual given their TrajDataFrame.
     
-    :param traj: the trajectories of the individual
-    :type traj: TrajDataFrame
+    Parameters
+    -----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
     
-    :param self_loops: if True also considers the self loops
+    self_loops : boolean, optional
+        if True adds self loops also. The default is False.
     
-    :return: the individual mobility network of the individual 
-    :rtype: pandas DataFrame
+    Returns
+    -------
+    pandas DataFrame
+        the individual mobility network of the individual.
     """
     loc2loc2weight = defaultdict(lambda: defaultdict(lambda: 0))
     traj = traj.sort_values(by=constants.DATETIME)
@@ -1004,40 +1275,56 @@ def _individual_mobility_network_individual(traj, self_loops=False):
 
 
 def individual_mobility_network(traj, self_loops=False, show_progress=True):
-    """
-    Compute the individual mobility network of a set of individuals given their TrajDataFrame
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Individual Mobility Network.
     
-    :param boolean self_loops: if True adds self loops also
+    Compute the individual mobility network of a set of individuals in a TrajDataFrame. An Individual Mobility Network (aka IMN) of an individual :math:`u` is a directed graph :math:`G_u=(V,E)`, where :math:`V` is the set of nodes and :math:`E` is the set of edges. Nodes indicate locations visisted by :math:`u`, and edges indicate trips between two locations by :math:`u`. On the edges the following function is defined:
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    .. math::
+        \omega: E \\rightarrow \mathbb{N} 
+        
+    which returns the weight of an edge, i.e., the number of travels performed by :math:`u` on that edge [RGNPPG2014]_ [BL2012]_ [SQBB2010]_.
     
-    :return: the individual mobility network of the individual
-    :rtype: pandas DataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    self_loops : boolean, optional
+        if True, adds self loops also. The default is False.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the individual mobility network of each individual.
 
-    Examples:
-            Computing the number of visits per location in a TrajDataFrame
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
 
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import individual_mobility_network
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> individual_mobility_network(tdf).head()
-    uid
-    324    ((43.79221124464029, 11.245646834881), (4.. seealso:: :func:`visits_per_location`3.404...
-    333             ((43.5439336194691, 12.084056016463402))
-    344    ((43.337466026311205, 11.337722717145901), (43...
-    582    ((43.754596610925894, 11.270932719966302), (43...
-    604    ((43.9025535031616, 11.074993570253), (43.8201...
-    dtype: object
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> imn_df = individual_mobility_network(tdf)
+    >>> print(imn_df.head())
+       uid  lat_origin  lng_origin   lat_dest    lng_dest n_trips
+    0    0   37.774929 -122.419415  37.600747 -122.382376       1
+    1    0   37.600747 -122.382376  37.615223 -122.389979       1
+    2    0   37.600747 -122.382376  37.580304 -122.343679       1
+    3    0   37.615223 -122.389979  39.878664 -104.682105       1
+    4    0   37.615223 -122.389979  37.580304 -122.343679       1
 
-    References:
-        .. [rinzivillo2014purpose] Rinzivillo, Salvatore, Gabrielli, Lorenzo, Nanni, Mirco, Pappalardo, Luca, Pedreschi, Dino and Giannotti, Fosca. "The purpose of motion: Learning activities from Individual Mobility Networks." Proceedings of the 2014 IEEE International Conference on Data Science and Advanced Analytics (DSAA).
-        .. [bagrow2012mesoscopic] Bagrow, James P. and Lin, Yu-Ru. "Mesoscopic Structure and Social Aspects of Human Mobility." PLoS ONE 7 , no. 5 (2012): e37676.
-        .. [song2010limits] Song, Chaoming, Qu, Zehui, Blumm, Nicholas and Barabási, Albert-László. "Limits of Predictability in Human Mobility." Science 327 , no. 5968 (2010): 1018-1021.
+    References
+    ----------
+    .. [RGNPPG2014] Rinzivillo, S., Gabrielli, L., Nanni, M., Pappalardo, L., Pedreschi, D. & Giannotti, F. (2012) The purpose of motion: Learning activities from Individual Mobility Networks. Proceedings of the 2014 IEEE International Conference on Data Science and Advanced Analytics, 312-318, https://ieeexplore.ieee.org/document/7058090
+    .. [BL2012] Bagrow, J. P. & Lin, Y.-R. (2012) Mesoscopic Structure and Social Aspects of Human Mobility. PLOS ONE 7(5): e37676. https://doi.org/10.1371/journal.pone.0037676
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1052,6 +1339,19 @@ def individual_mobility_network(traj, self_loops=False, show_progress=True):
 
 
 def _recency_rank_individual(traj):
+    """
+    Compute the recency rank of the locations of an individual given their TrajDataFrame.
+
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the recency rank for each location of the individual.
+    """
     traj = traj.sort_values(constants.DATETIME, ascending=False).drop_duplicates(subset=[constants.LATITUDE,
                                                                                          constants.LONGITUDE],
                                                                                  keep="first")
@@ -1060,38 +1360,52 @@ def _recency_rank_individual(traj):
 
 
 def recency_rank(traj, show_progress=True):
-    """
-    Compute the recency rank of the locations of a set of individuals
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Recency rank.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the recency rank of the locations of a set of individuals in a TrajDataFrame. The recency rank :math:`K_s(r_i)` of a location :math:`r_i` of an individual :math:`u` is :math:`K_s(r_i) = 1` if location :math:`r_i` is the last visited location, it is :math:`K_s(r_i) = 2` if :math:`r_i` is the second-last visited location, and so on [BDEM2015]_. 
     
-    :return: the recency rank for each location of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-            Computing the number of visits per location in a TrajDataFrame
-
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
+    
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the recency rank for each location of the individuals.
+    
+    Warning
+    -------
+    The input TrajDataFrame must be sorted in ascending order by `datetime`.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import recency_rank
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file('../data_test/brightkite_data.csv'data,  user_id='user', datetime='check-in time', latitude='latitude', longitude='longitude')
-    >>> recency_rank(df).head()
-                  lat        lng  recency_rank
-    uid
-    324 18  43.776687  11.235343             1
-        17  43.792211  11.245647             2
-        16  43.824934  11.282771             3
-        15  43.797951  11.240277             4
-        14  43.530801  10.319265             5
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> rr_df = recency_rank(tdf)
+    >>> print(rr_df.head())
+                 lat         lng  recency_rank
+    uid                                       
+    0   0  39.891383 -105.070814             1
+        1  39.891077 -105.068532             2
+        2  39.750469 -104.999073             3
+        3  39.752713 -104.996337             4
+        4  39.752508 -104.996637             5
 
-    .. seealso:: :func:`frequency_rank`
-
-    References:
-        .. [barbosa2015effect] Barbosa, Hugo, de Lima-Neto, Fernando B., Evsukoff, Alexandre, Menezes, Ronaldo."The effect of recency to human mobility", EPJ Data Science 4:21 (2015)
+    References
+    ----------
+    .. [BDEM2015] Barbosa, H., de Lima-Neto, F. B., Evsukoff, A., Menezes, R. (2015) The effect of recency to human mobility, EPJ Data Science 4(21), https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-015-0059-8
+    
+    See Also
+    --------
+    frequency_rank
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:
@@ -1106,13 +1420,17 @@ def recency_rank(traj, show_progress=True):
 
 def _frequency_rank_individual(traj):
     """
-    Compute the frequency rank of the locations of a single individual given their TrajDataFrame
+    Compute the frequency rank of the locations of a single individual given their TrajDataFrame.
     
-    :param traj: trajectories of the individual
-    :type: TrajDataFrame
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectory of the individual.
     
-    :return: the frequency of each location visited by the individual
-    :type: pandas DataFrame
+    Returns
+    -------
+    pandas DataFrame
+        the frequency rank for each location of the individual.
     """
     traj = traj.groupby([constants.LATITUDE, constants.LONGITUDE]).count().sort_values(by=constants.DATETIME, ascending=False).reset_index()
     traj['frequency_rank'] = range(1, len(traj) + 1)
@@ -1120,38 +1438,44 @@ def _frequency_rank_individual(traj):
 
 
 def frequency_rank(traj, show_progress=True):
-    """
-    Compute the frequency rank of the locations of a set of individuals
-
-    :param traj: the trajectories of the individuals
-    :type traj: pandas DataFrame
+    """Frequency rank.
     
-    :param show_progress: if True show a progress bar
-    :type show_progress: boolean
+    Compute the frequency rank of the locations of a set of individuals in a TrajDataFrame. The frequency rank :math:`K_f(r_i)` of a location :math:`r_i` of an individual :math:`u` is :math:`K_f(r_i) = 1` if location :math:`r_i` is the most visited location, it is :math:`K_f(r_i) = 2` if :math:`r_i` is the second-most visited location, and so on [BDEM2015]_.
+
+    Parameters
+    ----------
+    traj : TrajDataFrame
+        the trajectories of the individuals.
     
-    :return: the frequency rank for each location of the individuals
-    :rtype: pandas DataFrame
-
-    Examples:
-            Computing the number of visits per location in a TrajDataFrame
-
+    show_progress : boolean, optional
+        if True, show a progress bar. The default is True.
+    
+    Returns
+    -------
+    pandas DataFrame
+        the frequency rank for each location of the individuals.
+    
+    Examples
+    --------
     >>> import skmob
     >>> from skmob.measures.individual import frequency_rank
-    >>> from skmob import TrajDataFrame
-    >>> tdf = TrajDataFrame.from_file(data, sep=',',  user_id='user', dadataheck-in time', latitude='latitude', longitude='longitude')
-    >>> frequency_rank(df).head()
-                lat        lng  frequency_rank
-    uid
-    324 0  42.970399  10.695334               1
-        1  43.404161  10.873485               2
-        2  43.530801  10.319265               3
-        3  43.776687  11.235343               4
-        4  43.797951  11.240277               5
+    >>> url = "https://snap.stanford.edu/data/loc-brightkite_totalCheckins.txt.gz"
+    >>> df = pd.read_csv(url, sep='\\t', header=0, nrows=100000, 
+                 names=['user', 'check-in_time', 'latitude', 'longitude', 'location id'])
+    >>> tdf = skmob.TrajDataFrame(df, latitude='latitude', longitude='longitude', datetime='check-in_time', user_id='user')
+    >>> fr_df = frequency_rank(tdf)
+    >>> print(fr_df.head())
+                 lat         lng  frequency_rank
+    uid                                         
+    0   0  39.762146 -104.982480               1
+        1  39.891077 -105.068532               2
+        2  39.739154 -104.984703               3
+        3  39.891586 -105.068463               4
+        4  39.827022 -105.143191               5
 
-    .. seealso:: :func:`recency_rank`
-
-    References:
-        .. [barbosa2015effect] Barbosa, Hugo, de Lima-Neto, Fernando B., Evsukoff, Alexandre, Menezes, Ronaldo."The effect of recency to human mobility", EPJ Data Science 4:21 (2015)
+    See Also
+    --------
+    recency_rank
     """
     # if 'uid' column in not present in the TrajDataFrame
     if constants.UID not in traj.columns:

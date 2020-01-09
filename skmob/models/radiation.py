@@ -5,63 +5,93 @@ import pandas as pd
 from ..utils import gislib, constants, utils
 from ..core.flowdataframe import FlowDataFrame
 
-# from geopy.distance import distance
-# distfunc = (lambda p0, p1: distance(p0, p1).km)
 distfunc = gislib.getDistance
 
 
 class Radiation:
-    """
-    The radiation model for human migration.
+    """Radiation model.
+    
+    The radiation model for human migration. The radiation model assumes that the choice of a traveler's destination consists of two steps. First, each opportunity in every location is assigned a fitness represented by a number :math:`z`, chosen from some distribution :math:`P(z)` whose value represents the quality of the opportunity for the traveler. Second, the traveler ranks all opportunities according to their distances from the origin location and chooses the closest opportunity with a fitness higher than the traveler's fitness threshold, which is another random number extracted from the fitness distribution :math:`P(z)`. As a result, the average number of travelers from location :math:`i` to location :math:`j` takes the form [SGMB2012]_:
+    
+    .. math:: 
+        T_{ij} = O_i \\frac{1}{1 - \\frac{m_i}{M}}\\frac{m_i m_j}{(m_i + s_{ij})(m_i + m_j + s_{ij})}.
+        
+    The destination of the :math:`O_i` trips originating in :math:`i` is sampled from a distribution of probabilities that a trip originating in :math:`i` ends in location :math:`j`. This probability depends on the number of opportunities at the origin :math:`m_i`, at the destination :math:`m_j` and the number of opportunities :math:`s_{ij}` in a circle of radius :math:`r_{ij}` centered in :math:`i` (excluding the source and destination). This conditional probability needs to be normalized so that the probability that a trip originating in the region of interest ends in this region is equal to 1. In case of a finite system it is possible to show that this is equal to :math:`1 - \\frac{m_i}{M}` where :math:`M=\\sum_i m_i` is the total number of opportunities. In the original version of the radiation model, the number of opportunities is approximated by the population, but the total inflows :math:`D_j` to each destination can also be used.
 
-    :param name: str
-        the name of the instantiation of the radiation model
+    .. image:: https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fnature10856/MediaObjects/41586_2012_Article_BFnature10856_Fig1_HTML.jpg?as=webp
+    *(a)* To demonstrate the limitations of the gravity law we highlight two pairs of counties, one in Utah (UT) and the other in Alabama (AL), with similar origin (:math:`m`, blue) and destination (:math:`n`, green) populations and comparable distance :math:`r` between them (see bottom left table). The US census 2000 reports a flux that is an order of magnitude greater between the Utah counties, a difference correctly captured by the radiation model *(b, c)*. *(b)* The definition of the radiation model: an individual (for example, living in Saratoga County, New York) applies for jobs in all counties and collects potential employment offers. The number of job opportunities in each county (:math:`j`) is :math:`n_j / n_{jobs}`, chosen to be proportional to the resident population :math:`n_j`. Each offer's attractiveness (benefit) is represented by a random variable with distribution :math:`P(z)`, the numbers placed in each county representing the best offer among the :math:`n_j / n_{jobs}` trials in that area. Each county is marked in green (red) if its best offer is better (lower) than the best offer in the home county (here :math:`z = 10`). *(c)* An individual accepts the closest job that offers better benefits than his home county. In the shown configuration the individual will commute to Oneida County, New York, the closest county whose benefit :math:`z = 13` exceeds the home county benefit :math:`z = 10`. This process is repeated for each potential commuter, choosing new benefit variables :math:`z` in each case. Figure from [SGMB2012]_.
+    
+    Parameters
+    ----------
+    name : str, optional
+        the name of the instantiation of the radiation model. The default is 'Radiation model'. 
 
     Attributes
     ----------
-    :ivar name: str
-        the name of the instantiation of the model
-        default: "Radiation model"
-
-    :ivar edges_: pandas DataFrame
-        the generated edges (flows or probabilities)
-
-    Notes
-    ------
-    The radiation model describes the flows of people between different locations.
-    In particular, the fundamental equation of the radiation model gives the average
-    flux between two counties:
-    .. math::
-
-        <T_{ij}> = \frac{m_i n_j}{(m_i + s_{ij})(m_i + n_j + s_{ij})}
-
-    where where :math:T_{ij} is the total number of commuters from county :math:i, :math:m_i and :math:n_j
-    are the population in county :math:i and :math:j respectively, and :math:s_{ij} is the total population
-    in the circle centered at :math:i and touching :math:j excluding the source and the destination population.
-
-    References
-    ----------
-    .. [1] Simini, Filippo, Gonzalez, Marta C., Maritan, Amos and Barabasi, Albert-Laszlo.
-    "A universal model for mobility and migration patterns."
-    Nature 484 , no. 7392 (2012): 96--100.
-
-    .. [2] https://en.wikipedia.org/wiki/Radiation_law_for_human_mobility
-
+    name : str
+        the name of the instantiation of the model.
+    
     Examples
     --------
-    >>> locations_info = pd.read_csv('../datasets/city_fluxes_US.csv').rename(columns={'population': 'relevance'})
-    >>> locations_info = locations_info.assign(id=locations_info.index)
-    >>> radiation = Radiation("my first radiation")
-    >>> radiation.start_simulation(locations_info, filename='radiation_OD_trips_cities.csv', filter_threshold=1.0)
-    Processing location 385 of 385...
-    Done.
-    >>> radiation.flows_.head()
-    origin  destination flows_average
-    0       304         67327.0
-    1       374         34105.0
-    2       230         16413.0
-    3       213         15943.0
-    4       49          3560.0
+    >>> import skmob
+    >>> from skmob.utils import utils, constants
+    >>> import pandas as pd
+    >>> import geopandas as gpd
+    >>> import numpy as np
+    >>> from skmob.models import Radiation
+    >>> # load a spatial tessellation
+    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+    >>> print(tessellation.head())
+      tile_ID  population                                           geometry
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
+    >>> # load real flows into a FlowDataFrame
+    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+    >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv", 
+                                            tessellation=tessellation, 
+                                            tile_id='tile_ID', 
+                                            sep=",")
+    >>> print(fdf.head())
+         flow origin destination
+    0  121606  36001       36001
+    1       5  36001       36005
+    2      29  36001       36007
+    3      11  36001       36017
+    4      30  36001       36019    
+    >>> # compute the total outflows from each location of the tessellation (excluding self loops)
+    >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
+    >>> tessellation[skmob.constants.TOT_OUTFLOW] = tot_outflows
+    >>> print(tessellation.head())
+      tile_id  population                                           geometry  \
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....   
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...   
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...   
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....   
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...   
+       tot_outflow  
+    0        29981  
+    1         5319  
+    2       295916  
+    3         8665  
+    4         8871 
+    >>> np.random.seed(0)
+    >>> radiation = Radiation()
+    >>> rad_flows = radiation.generate(tessellation, tile_id_column='tile_ID',  tot_outflows_column='tot_outflow', relevance_column='population', out_format='flows_sample')
+    >>> print(rad_flows.head())
+      origin destination   flow
+    0  36019       36033  11648
+    1  36019       36031   4232
+    2  36019       36089   5598
+    3  36019       36113   1596
+    4  36019       36041    117
+    
+    References
+    ----------
+    .. [SGMB2012] Simini, F., Gonzàlez, M. C., Maritan, A. & Barabasi, A.-L. (2012) A universal model for mobility and migration patterns. Nature 484(7392), 96-100, https://www.nature.com/articles/nature10856
 
     """
 
@@ -156,21 +186,28 @@ class Radiation:
                  relevance_column=constants.RELEVANCE, out_format='flows_average'):
         """
         Start the simulation of the Radiation model.
-
-        :param spatial_tessellation : GeoDataFrame
-            a pandas DataFrame containing the information about the spatial tessellation
-            to use. It must contain the following columns:
-            - "id": str, name or identifier of the location
-            - "lat": float, l_edges_atitude of the location's centroid
-            - "lon": float, longitude of the location's centroid
-            - "relevance": float, number of opportunities at the location (e.g., population or total number of visits).
-
-        :param out_format: {"flows_sample", "flows_average", "probs"}
-            the type of edges to be generated. Three possible values:
-            - "flows_sample" : the number of migrations generation by a single execution of the model
-            -    "flows_average" : the average number of migrations between two locations
-            - "probs" : the probability of movement between two locations
-            default : "flows_average"
+        
+        Parameters
+        ----------
+        spatial_tessellation : GeoDataFrame
+            the spatial tessellation on which to perform the simulation. 
+        
+        tile_id_column : str, optional
+            the column in `spatial_tessellation` of the location identifier. The default is `constants.TILE_ID`.
+            
+        tot_outflows_column : str, optional
+            the column in `spatial_tessellation` with the outflow of the location. The default is `constants.TOT_OUTFLOW`.
+            
+        relevance_column : str, optional
+            the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
+            
+        out_format : str, optional
+            the format of the generated flows. Possible values are: "flows_sample" (the number of migrations generation by a single execution of the model), "flows_average" (average number of migrations between two locations) and "probs" (probability of movement between two locations). The default is "flows_average".
+            
+        Returns
+        -------
+        FlowDataFrame
+            the fluxes generated by the Radiation model.
         """
         self._out_format = out_format
         self._tile_id_column = tile_id_column

@@ -1,5 +1,5 @@
 ===================
-Installation
+Scikit-mobility Installation
 ===================
 
 scikit-mobility is a library for human mobility analysis in Python. The library allows to:

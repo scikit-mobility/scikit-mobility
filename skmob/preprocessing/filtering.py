@@ -4,32 +4,66 @@ import numpy as np
 import inspect
 
 def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=6, ratio_max=0.25):
-    """
-    Filter out trajectory points that are considered noise or outliers.
+    """Trajectory filtering.
+    
+    For each individual in a TrajDataFrame, filter out the trajectory points that are considered noise or outliers [Z2015]_.
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the trajectories of the individuals.
 
-    :param tdf: TrajDataFrame
-        the raw trajectory
+    max_speed_kmh : float, optional
+        delete a trajectory point if the speed (in km/h) from the previous point is higher than `max_speed_kmh`. The default is `500.0`.
 
-    :param max_speed: float (default 500.0)
-        delete trajectory point if the speed from the previous point is higher than `max_speed`
+    include_loops: boolean, optional
+        If `True`, trajectory points belonging to short and fast "loops" are removed. Specifically, points are removed if within the next `max_loop` points the individual has come back to a distance (`ratio_max` * the maximum distance reached), AND the average speed (in km/h) is higher than `speed`. The default is `False`.
+    
+    speed : float, optional 
+        the default is 5km/h (walking speed).
 
-    :param include_loops: bool (default False)
-        optional: this filter is very slow. Use only if raw data is really noisy.
-        If `True`, trajectory points belonging to short and fast "loops" are removed.
-        Remove points if within the next `max_loop` points the user has come back to a distance
-        (`ratio_max` * the maximum distance reached), AND the average speed is higher than `speed` km/h.
+    max_loop : int, optional
+        the default is `6`.
 
-    :param speed: float (default 5 km/h, walking speed)
-
-    :param max_loop: int (default 6)
-
-    :param ratio_max: float (default 0.25)
-
-    :return: TrajDataFrame
+    ratio_max : float, optional
+        the default is `0.25`.
+    
+    Returns
+    -------
+    TrajDataFrame
         the TrajDataFrame without the trajectory points that have been filtered out.
-
-    References:
-        .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
+    
+    Warnings
+    --------
+    if `include_loops` is `True`, the filter is very slow. Use only if raw data is really noisy.
+    
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import filtering
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> # filter out all points with a speed (in km/h) from the previous point higher than 500 km/h
+    >>> ftdf = filtering.filter(tdf, max_speed_kmh=500.)
+    >>> print(ftdf.parameters)
+    {'filter': {'function': 'filter', 'max_speed_kmh': 500.0, 'include_loops': False, 'speed_kmh': 5.0, 'max_loop': 6, 'ratio_max': 0.25}}
+    >>> n_deleted_points = len(tdf) - len(ftdf) # number of deleted points
+    >>> print(n_deleted_points)
+    54
+    
+    References
+    ----------
+    .. [Z2015] Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), https://dl.acm.org/citation.cfm?id=2743025
     """
     # Sort
     tdf = tdf.sort_by_uid_and_datetime()

@@ -4,45 +4,75 @@ import numpy as np
 import inspect
 
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True,
-          no_data_for_minutes=1e12, min_speed_kmh=None):
-    """
-    Detect a stop when the user spends at least `minutes_for_a_stop` minutes
-    within a distance (`stop_radius_factor` * `spatial_radius`) km
-    from a given trajectory point.
-    The stop's coordinates are the median latitude and longitude values of the points found
-    within the specified distance.
+def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
+    """Stops detection.
+    
+    Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
+    
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        the input trajectories of the individuals.
 
-    :param tdf: TrajDataFrame
-        the input trajectory
+    stop_radius_factor : float, optional 
+        the radius of the ball enclosing all trajectory points within the stop location. The default is `0.5`.
 
-    :param stop_radius_factor: float (default 0.5)
-        radius of the ball enclosing all trajectory points within the stop location
+    minutes_for_a_stop : float, optional
+        the minimum stop duration, in minutes. The default is `20.0`.
 
-    :param minutes_for_a_stop: float (default 20.0)
-        minimum stop duration (in minutes)
+    spatial_radius_km : float or None, optional
+        if `None`, use the spatial_radius specified in the TrajDataFrame properties (assigned by a `preprocessing.compression` function). The default is `0.2`.
 
-    :param spatial_radius_km: float (default None)
-        if `None` use the spatial_radius specified in the TrajDataFrame properties
-        (assigned by a `preprocessing.compression` function)
+    leaving_time : boolean, optional
+        if `True`, a new column 'leaving_datetime' is added with the departure time from the stop location. The default is `True`.
 
-    :param leaving_time: bool (default True)
-        if `True` a new column 'leaving_datetime' is added with the departure time from the stop location
-
-    :param no_data_for_minutes: float (default 1e12)
+    no_data_for_minutes : float, optional
         if the number of minutes between two consecutive points is larger than `no_data_for_minutes`,
-        then this is interpreted as missing data and does not count as a stop
+        then this is interpreted as missing data and does not count as a stop. The default is `1e12`.
 
-    :param min_speed_kmh: float
-        if not None, remove the points at the end of a stop if their speed is larger than `min_speed_kmh` km/h
+    min_speed_kmh : float or None, optional
+        if not `None`, remove the points at the end of a stop if their speed is larger than `min_speed_kmh` km/h. The default is `None`.
+    
+    Returns
+    -------
+    TrajDataFrame
+        a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations.
 
-    :return: TrajDataFrame
-        a TrajDataFrame with the coordinates (latitude, longitude) of the stop locations
-
-
-    References:
-        .. [hariharan2004project] Hariharan, Ramaswamy, and Kentaro Toyama. "Project Lachesis: parsing and modeling location histories." In International Conference on Geographic Information Science, pp. 106-124. Springer, Berlin, Heidelberg, 2004.
-        .. [zheng2015trajectory] Zheng, Yu. "Trajectory data mining: an overview." ACM Transactions on Intelligent Systems and Technology (TIST) 6, no. 3 (2015): 29.
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import detection
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> print(stdf.head())
+             lat         lng            datetime  uid    leaving_datetime
+    0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
+    1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27
+    2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
+    3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
+    4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
+    >>> print(stdf.parameters)
+    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
+    >>> print('Points of the original trajectory:\\t%s'%len(tdf))
+    >>> print('Points of stops:\\t\\t\\t%s'%len(stdf))
+    Points of the original trajectory:	217653
+    Points of stops:			391
+    
+    References
+    ----------
+    .. [RT2004] Ramaswamy, H. & Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf
+    .. [Z2015] Zheng, Y. (2015) Trajectory data mining: an overview. ACM Transactions on Intelligent Systems and Technology 6(3), https://dl.acm.org/citation.cfm?id=2743025
     """
     # Sort
     tdf = tdf.sort_by_uid_and_datetime()

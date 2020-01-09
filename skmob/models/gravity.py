@@ -9,8 +9,6 @@ from tqdm import tqdm
 from ..utils import gislib, constants, utils
 from ..core.flowdataframe import FlowDataFrame
 
-# from geopy.distance import distance
-# distfunc = (lambda p0, p1: distance(p0, p1).km)
 distfunc = gislib.getDistance
 
 
@@ -47,14 +45,19 @@ def powerlaw_deterrence_func(x, exponent):
 
 def compute_distance_matrix(spatial_tessellation, origins):
     """
-    Compute the matrix of distances between origin locations and all other locations
+    Compute the matrix of distances between origin locations and all other locations.
 
-    :param spatial_tessellation: GeoDataFrame tessellation
-
-    :param origins: list, indexes of the locations of origin
-
-    :return
-    distance_matrix: numpy array with distances between locations in `origins`
+    Parameters
+    ----------
+    spatial_tessellation : GeoDataFrame
+        the spatial tessellation.
+    
+    origins : list
+        indexes of the locations of origin.
+    
+    Returns
+    -------
+    distance_matrix : numpy array with distances between locations in `origins`
         and all locations in `spatial_tessellation`
     """
     coordinates = spatial_tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
@@ -73,43 +76,169 @@ def compute_distance_matrix(spatial_tessellation, origins):
 
 
 class Gravity:
-    """
-    The Gravity model of human migration.
+    """Gravity model.
+    
+    The Gravity model of human migration. In its original formulation, the probability :math:`T_{ij}` of moving from a location :math:`i` to location :math:`j` is defined as [Z1946]_:
+    
+    .. math::
+        T_{ij} \propto \\frac{P_i P_j}{r_{ij}} 
 
-    :param deterrence_func_type:  str
-        the type of deterrence function.
-        available types: 'power_law' (default), 'exponential'
+    where :math:`P_i` and :math:`P_j` are the population of location :math:`i` and :math:`j` and :math:`r_{ij}` is the distance between :math:`i` and :math:`j`. The basic assumptions of this model are that the number of trips leaving location :math:`i` is proportional to its population :math:`P_i`, the attractivity of location :math:`j` is also proportional to :math:`P_j`, and finally, that there is a cost effect in terms of distance traveled. These ideas can be generalized assuming a relation of the type [BBGJLLMRST2018]_:
+    
+    .. math::
+        T_{ij} = K m_i m_j f(r_{ij})
+        
+    where :math:`K` is a constant, the masses :math:`m_i` and :math:`m_j` relate to the number of trips leaving location :math:`i` or the ones attracted by location :math:`j`, and :math:`f(r_{ij})`, called *deterrence function*, is a decreasing function of distance. The deterrence function :math:`f(r_{ij})` is commonly modeled with a powerlaw or an exponential form.
 
-    :param deterrence_func_args:  list
-        arguments of the deterrence function.
+    **Constrained gravity models**. Some of the limitations of the gravity model can be resolved via constrained versions. For example, one may hold the number of people originating from a location :math:`i` to be a known quantity :math:`O_i`, and the gravity model is then used to estimate the destination, constituting a so-called *singly constrained* gravity model of the form:
 
-    :param origin_exp:  float (1.0), exponent of origin's relevance
-        (only relevant to globally-constrained model).
+    .. math::
+        T_{ij} = K_i O_i m_j f(r_{ij}) = O_i \\frac{m_i f(r_{ij})}{\sum_k m_k f(r_{ik})}.
+        
+    In this formulation, the proportionality constants :math:`K_i` depend on the location of the origin and its distance to the other places considered. We can fix also the total number of travelers arriving at a destination :math:`j` as :math:`D_j = \sum_i T_{ij}`, leading to a *doubly-constrained* gravity model. For each origin-destination pair, the flow is calculated as:
+    
+    .. math::
+        T_{ij} = K_i O_i L_j D_j f(r_{ij})
+        
+    where there are now two flavors of proportionality constants
+    
+    .. math::
+        K_i = \\frac{1}{\sum_j L_j D_j f(r_{ij})}, L_j = \\frac{1}{\sum_i K_i O_i f(r_{ij})}.
 
-    :param destination_exp:  float (1.0), exponent of destination's relevance.
+    Parameters
+    ----------
+    deterrence_func_type : str, optional
+        the deterrence function to use. The possible deterrence function are "power_law" and "exponential". The default is "power_law".
 
-    :param gravity_type:  str
-        gravity model type.
-        available types: 'singly constrained', 'globally constrained'.
-        default: 'singly constrained'
+    deterrence_func_args : list, optional
+        the arguments of the deterrence function. The default is [-2.0].
 
-    Notes
-    -----
-    The gravity model is a model of human migration derived from Newton's law of gravity,
-    and it is used to predict the degree of interaction between two places.
-    The gravity model of migration is based upon the idea that as the importance of one
-    or both of the location increases, there will also be an increase in movement between them.
-    The farther apart the two locations are, however, the movement between them will be less (distance decay).
+    origin_exp : float, optional 
+        the exponent of the origin's relevance (only relevant to globally-constrained model). The default is `1.0`.
 
+    destination_exp : float, optional 
+        the explonent of the destination's relevance. The default is 1.0.
+
+    gravity_type : str, optional
+        the type of gravity model. Possible values are "singly constrained" and "globally constrained". The default is "singly constrained".
+        
+    name : str, optional
+        the name of the instantiation of the Gravity model. The default is "Gravity model".
+    
+    Attributes
+    ----------
+    deterrence_func_type : str
+        the deterrence function to use. The possible deterrence function are "power_law" and "exponential". 
+
+    deterrence_func_args : list
+        the arguments of the deterrence function. 
+
+    origin_exp : float
+        the exponent of the origin's relevance (only relevant to globally-constrained model). 
+
+    destination_exp : float
+        the explonent of the destination's relevance.
+
+    gravity_type : str
+        the type of gravity model. Possible values are "singly constrained" and "globally constrained". 
+        
+    name : str
+        the name of the instantiation of the Gravity model. 
+    
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.utils import utils, constants
+    >>> import pandas as pd
+    >>> import geopandas as gpd
+    >>> import numpy as np
+    >>> from skmob.models import Gravity
+    >>> # load a spatial tessellation
+    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+    >>> print(tessellation.head())
+      tile_ID  population                                           geometry
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
+    >>> # load real flows into a FlowDataFrame
+    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+    >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv", 
+                                            tessellation=tessellation, 
+                                            tile_id='tile_ID', 
+                                            sep=",")
+    >>> print(fdf.head())
+         flow origin destination
+    0  121606  36001       36001
+    1       5  36001       36005
+    2      29  36001       36007
+    3      11  36001       36017
+    4      30  36001       36019    
+    >>> # compute the total outflows from each location of the tessellation (excluding self loops)
+    >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
+    >>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+    >>> print(tessellation.head())
+      tile_id  population                                           geometry  \
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....   
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...   
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...   
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....   
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...   
+       tot_outflow  
+    0        29981  
+    1         5319  
+    2       295916  
+    3         8665  
+    4         8871 
+    >>> # instantiate a singly constrained Gravity model
+    >>> gravity_singly = Gravity(gravity_type='singly constrained')
+    >>> print(gravity_singly)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+    >>> np.random.seed(0)
+    >>> synth_fdf = gravity_singly.generate(tessellation, 
+                                       tile_id_column='tile_ID', 
+                                       tot_outflows_column='tot_outflow', 
+                                       relevance_column= 'population',
+                                       out_format='flows')
+    >>> print(synth_fdf.head())
+      origin destination  flow
+    0  36019       36101   101
+    1  36019       36107    66
+    2  36019       36059  1041
+    3  36019       36011   151
+    4  36019       36123    33
+    >>> # fit the parameters of the Gravity model from real fluxes
+    >>> gravity_singly_fitted = Gravity(gravity_type='singly constrained')
+    >>> print(gravity_singly_fitted)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")
+    >>> gravity_singly_fitted.fit(fdf, relevance_column='population')
+    >>> print(gravity_singly_fitted)
+    Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-1.9947152031914186], origin_exp=1.0, destination_exp=0.6471759552223144, gravity_type="singly constrained") 
+    >>> np.random.seed(0)
+    >>> synth_fdf_fitted = gravity_singly_fitted.generate(tessellation, 
+                                                            tile_id_column='tile_ID', 
+                                                            tot_outflows_column='tot_outflow', 
+                                                            relevance_column= 'population', 
+                                                            out_format='flows')
+    >>> print(synth_fdf_fitted.head())
+      origin destination  flow
+    0  36019       36101   102
+    1  36019       36107    66
+    2  36019       36059  1044
+    3  36019       36011   152
+    4  36019       36123    33
+    
     References
     ----------
-    .. [1] Zipf, George Kingsley. "The P 1 P 2/D hypothesis: on the intercity movement of persons."
-    American sociological review 11.6 (1946): 677-686.
-    .. [2] Wilson, Alan Geoffrey. "A family of spatial interaction models, and associated developments."
-    Environment and Planning A 3.1 (1971): 1-32.
-    .. [3] Erlander, Sven, and Neil F. Stewart. "The gravity model in transportation analysis: theory and extensions".
-    Vol. 3. Vsp, 1990.
-
+    .. [Z1946] Zipf, G. K. (1946) The P 1 P 2/D hypothesis: on the intercity movement of persons. American sociological review 11(6), 677-686, https://www.jstor.org/stable/2087063?seq=1#metadata_info_tab_contents
+    .. [W1971] Wilson, A. G. (1971) A family of spatial interaction models, and associated developments. Environment and Planning A 3(1), 1-32, https://econpapers.repec.org/article/pioenvira/v_3a3_3ay_3a1971_3ai_3a1_3ap_3a1-32.htm
+    .. [BBGJLLMRST2018] Barbosa, H., Barthelemy, M., Ghoshal, G., James, C. R., Lenormand, M., Louail, T., Menezes, R., Ramasco, J. J. , Simini, F. & Tomasini, M. (2018) Human mobility: Models and applications. Physics Reports 734, 1-74, https://www.sciencedirect.com/science/article/abs/pii/S037015731830022X
+    
+    See Also
+    --------
+    Radiation
     """
 
     def __init__(self, deterrence_func_type='power_law', deterrence_func_args=[-2.0],
@@ -176,6 +305,31 @@ class Gravity:
 
     def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
                  tot_outflows_column=constants.TOT_OUTFLOW, relevance_column=constants.RELEVANCE, out_format='flows'):
+        """
+        Start the simulation of the Gravity model.
+        
+        Parameters
+        ----------
+        spatial_tessellation : GeoDataFrame
+            the spatial tessellation on which to run the simulation.
+            
+        tile_id_column : str, optional
+            the column in `spatial_tessellation` of the location identifier. The default is `constants.TILE_ID`.
+            
+        tot_outflows_column : str, optional
+            the column in `spatial_tessellation` with the outflow of the location. The default is `constants.TOT_OUTFLOW`.
+            
+        relevance_column : str, optional
+            the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
+            
+        out_format : str, optional
+            the format of the generated flows. Possible values are "flows" and "probabilities". The default is "flows".
+            
+        Returns
+        -------
+        FlowDataFrame
+            the flows generated by the Gravity model.
+        """
         n_locs = len(spatial_tessellation)
         relevances = spatial_tessellation[relevance_column].fillna(0).values
         self._tile_id_column = tile_id_column
@@ -276,37 +430,19 @@ class Gravity:
 
     def fit(self, flow_df, relevance_column=constants.RELEVANCE):
         """
-        Fit the gravity model parameters to the flows in file `filename`.
-        Can fit globally or singly constrained gravity models using a
-        Generalized Linear Model (GLM) with a Poisson regression.
+        Fit the parameters of the Gravity model to the flows provided in input, using a Generalized Linear Model (GLM) with a Poisson regression [FM1982]_.
 
         Parameters
         ----------
-        flow_df  :  FlowDataFrame where the flows are stored and with info about the spatial tessellation.
-            In addition to the default columns, the spatial tessellation must contain the column
-            "relevance": float, number of opportunities at the location
-                (e.g., population or total number of visits).
-
-        Returns
-        -------
-
-        X  :  list of independent variables (features) used in the GLM fit.
-
-        y   :  list of dependent variables (flows) used in the GLM fit.
-
-        poisson_results  :  statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
-            statsmodels object with information on the fit's quality and predictions.
+        flow_df  :  FlowDataFrame 
+            the real flows on the spatial tessellation. 
+            
+        relevance_column : str, optional
+            the column in the spatial tessellation with the relevance of the location. The default is constants.RELEVANCE.
 
         References
         ----------
-
-        .. [1] Agresti, Alan.
-            "Categorical data analysis."
-            Vol. 482. John Wiley & Sons, 2003.
-
-        .. [2] Flowerdew, Robin, and Murray Aitkin.
-            "A method of fitting the gravity model based on the Poisson distribution."
-            Journal of regional science 22.2 (1982): 191-202.
+        .. [FM1982] Flowerdew, R. & Murray, A. (1982) A method of fitting the gravity model based on the Poisson distribution. Journal of regional science 22(2), 191-202, https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9787.1982.tb00744.x
 
         """
         self.lats_lngs = flow_df.tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values

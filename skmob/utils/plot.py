@@ -267,39 +267,43 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     return map_f
 
 
-def plot_diary(cstdf, uid, start_datetime=None, end_datetime=None, ax=None):
+def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, legend=False):
     """
-    :param cstdf: TrajDataFrame
-         Requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`.
-         The column `constants.CLUSTER` must be present.
+        Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of `preprocessing.clustering.cluster`. The column `constants.CLUSTER` must be present.
 
-    :param uid: str or int
-        user ID whose diary should be plotted.
+        Parameters
+        ----------
+        user : str or int
+            user identifier whose diary should be plotted.
 
-    :param start_datetime: datetime.datetime
-        Only stops made after this date will be plotted.
-        If `None` the datetime of the oldest stop will be selected.
+        start_datetime : datetime.datetime, optional
+            only stops made after this date will be plotted. If `None` the datetime of the oldest stop will be selected. The default is `None`.
 
-    :param end_datetime: datetime.datetime
-        Only stops made before this date will be plotted.
-        If `None` the datetime of the newest stop will be selected.
+        end_datetime : datetime.datetime, optional
+            only stops made before this date will be plotted. If `None` the datetime of the newest stop will be selected. The default is `None`.
 
-    :param ax: matplotlib.axes
-        axes where the diary will be plotted.
+        ax : matplotlib.axes, optional
+            axes where the diary will be plotted. If `None` a new ax is created. The default is `None`.
 
-    :return: `matplotlib.axes` of the plotted diary.
+        legend : bool, optional
+            If `True`, legend with cluster IDs is shown. The default is `False`.
+
+        Returns
+        -------
+        matplotlib.axes
+            the `matplotlib.axes` object of the plotted diary.
 
     """
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 2))
 
-    if uid is None:
+    if user is None:
         df = cstdf
     else:
-        df = cstdf[cstdf[constants.UID] == uid]
+        df = cstdf[cstdf[constants.UID] == user]
 
     if len(df) == 0:
-        raise KeyError("""User id 'uid' is not in the input TrajDataFrame 'cstdf'.""")
+        raise KeyError("""User id is not in the input TrajDataFrame 'cstdf'.""")
 
     # TODO: add warning if days between start_datetime and end_datetime do not overlap with cstdf
     if start_datetime is None:
@@ -311,6 +315,8 @@ def plot_diary(cstdf, uid, start_datetime=None, end_datetime=None, ax=None):
     elif type(end_datetime) is str:
         end_datetime = pd.to_datetime(end_datetime)
 
+    current_labels = []
+
     for idx, row in df.iterrows():
 
         t0 = row[constants.DATETIME]
@@ -319,12 +325,25 @@ def plot_diary(cstdf, uid, start_datetime=None, end_datetime=None, ax=None):
 
         color = get_color(cl)
         if start_datetime <= t0 <= end_datetime:
-            ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
+            if cl in current_labels:
+                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
+            else:
+                current_labels += [cl]
+                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color, label=cl)
 
     plt.xlim(start_datetime, end_datetime)
-    # plt.legend(loc='lower right', frameon=False)
-    # plt.legend(ncol=15 ,bbox_to_anchor=(1., -0.2), frameon=0)
-    ax.set_title('user %s' % uid)
+
+    if legend:
+        handles, labels_str = ax.get_legend_handles_labels()
+        labels = list(map(int, labels_str))
+        # sort them by labels
+        import operator
+        hl = sorted(zip(handles, labels), key=operator.itemgetter(1))
+        handles2, labels2 = zip(*hl)
+
+        ax.legend(handles2, labels2, ncol=15, bbox_to_anchor=(1., -0.2), frameon=0)
+
+    ax.set_title('user %s' % user)
 
     return ax
 

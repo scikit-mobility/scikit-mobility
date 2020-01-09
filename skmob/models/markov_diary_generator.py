@@ -14,22 +14,67 @@ user_id = constants.UID
 
 
 class MarkovDiaryGenerator:
-    """
-    The Markov model which describes the probability that an individual follows her routine and visits a typical location
-    at the usual time, or she breaks the routine and visits another location.
+    """Markov Diary Learner and Generator.
+    
+    A diary generator :math:`G` produces a mobility diary, :math:`D(t)`, containing the sequence of trips made by an agent during a time period divided in time slots of :math:`t` seconds. For example, :math:`G(3600)` and :math:`G(60)` produce mobility diaries with temporal resolutions of one hour and one minute, respectively [PS2018]_. 
+    
+    A Mobility Diary Learner (MDL) is a data-driven algorithm to compute a mobility diary :math:`MD` from the mobility trajectories of a set of real individuals. We use a Markov model to describe the probability that an individual follows her routine and visits a typical location at the usual time, or she breaks the routine and visits another location. First, MDL translates mobility trajectory data of real individuals into abstract mobility trajectories. Second, it uses the obtained abstract trajectory data to compute the transition probabilities of the Markov model :math:`MD(t)` [PS2018]_.
+    
+    Parameters
+    ----------
+    name : str, optional
+        name of the instantiation of the class. The default is "Markov diary".
+    
+    Attributes
+    ----------
+    name : str
+        name of the instantiation of the class. 
+        
+    markov_chain_ : dict
+        the trained markov chain.
 
-    :param name: str
-        name of the object
-
-    :ivar: markov_chain_: dict
-        the trained markov chain
-
-    :ivar time_slot_length: str
-        length of the time slot (1h)
-
-    References:
-        .. [pappalardo2017data] Pappalardo, L., Simini, F. "Data-driven generation of spatio-temporal routines in human mobility.", Data Mining and Knowledge Discovery, 32:3, 2017.
-
+    time_slot_length : str
+        length of the time slot (1h).
+    
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> import geopandas as gpd
+    >>> from skmob.models.epr import Ditras
+    >>> from skmob.models.markov_diary_generator import MarkovDiaryGenerator
+    >>> from skmob.preprocessing import filtering, compression, detection, clustering
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> 
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> 
+    >>> ctdf = compression.compress(tdf)
+    >>> stdf = detection.stops(ctdf)
+    >>> cstdf = clustering.cluster(stdf)
+    >>> 
+    >>> mdg = MarkovDiaryGenerator()
+    >>> mdg.fit(cstdf, 2, lid='cluster')
+    >>> 
+    >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
+    >>> diary = mdg.generate(100, start_time)
+    >>> print(diary)
+                 datetime  abstract_location
+    0 2019-01-01 08:00:00                  0
+    1 2019-01-02 19:00:00                  1
+    2 2019-01-02 20:00:00                  0
+    3 2019-01-03 17:00:00                  1
+    4 2019-01-03 18:00:00                  2
+    5 2019-01-04 08:00:00                  0
+    6 2019-01-05 03:00:00                  1
+    
+    References
+    ----------
+    .. [PS2018] Pappalardo, L. & Simini, F. (2018) Data-driven generation of spatio-temporal routines in human mobility. Data Mining and Knowledge Discovery 32, 787-829, https://link.springer.com/article/10.1007/s10618-017-0548-4
+    
+    See Also
+    --------
+    Ditras
     """
     def __init__(self, name='Markov diary'):
         self._markov_chain_ = None
@@ -85,12 +130,19 @@ class MarkovDiaryGenerator:
     def _get_location2frequency(traj, location_column='location'):
         """
         Compute the visitation frequency and rank of each location of an individual
-
-        :param traj: the trajectories of the individuals
-        :type traj: pandas DataFrame
-
-        :return: tuple
-            a tuple of two dictionaries of locations to the corresponding visitation frequency and rank, respectively
+        
+        Parameters
+        ----------
+        traj : pandas DataFrame
+            the trajectories of the individuals.
+        
+        location_column : str, optional
+            the name of the column containing the location identifier. The default is "location".
+            
+        Returns
+        -------
+        tuple
+            a tuple of two dictionaries of locations to the corresponding visitation frequency and rank, respectively.
         """
         location2frequency, location2rank = defaultdict(int), defaultdict(int)
         for i, row in traj.iterrows():
@@ -112,17 +164,16 @@ class MarkovDiaryGenerator:
         """
         Parameters
         ----------
-        :param traj: the trips of an individual
-        :type traj: pandas DataFrame
-
-        :param start_date: datetime
-            the initial date of the simulation
-
-        :param end_date: datetime
-            the end date of the simulation
-
-        :return: the time series of the abstract locations visited by the individual
-        :rtype: pandas DataFrame
+        traj : pandas DataFrame
+            the trips of an individual.
+        
+        lid : str, optional
+            the name of the column containing the location identifier. The default is "location".
+        
+        Returns
+        -------
+        pandas DataFrame
+            the time series of the abstract locations visited by the individual.
         """
         # lat_lng_df = traj[['lat', 'lng']].drop_duplicates(subset=['lat', 'lng'])
         # lat_lng_df[lid] = np.arange(len(lat_lng_df)).astype('str')
@@ -154,9 +205,11 @@ class MarkovDiaryGenerator:
     def _update_markov_chain(self, time_series, shift=0):
         """
         Update the Markov Chain by including the behavior of an individual
-
-        :param time_series: time series of abstract locations visisted by an individual
-        :type traj: pandas DataFrame
+        
+        Parameters
+        ----------
+        time_series: pandas DataFrame
+            time series of abstract locations visisted by an individual.
         """
         HOME = 1
         TYPICAL, NON_TYPICAL = 1, 0
@@ -247,19 +300,18 @@ class MarkovDiaryGenerator:
 
     def fit(self, traj, n_individuals, lid='location'): #start_date, end_date
         """
-        Fit a Markov chain diary based on the trajectories in input
-
-        :param traj: the trajectories of the individuals
-        :type traj: pandas DataFrame
-
-        :param n_individuals: int
-            the number of individuals to consider
-
-        :param start_date: datetime
-            the starting date
-
-        :param end_date: datetime
-            the ending date
+        Train the markov mobility diary from real trajectories.
+        
+        Parameters
+        ----------
+        traj : TrajDataFrame
+            the trajectories of the individuals.
+        
+        n_individuals : int
+            the number of individuals in the TrajDataFrame to consider.
+        
+        lid : string, optional
+            the name of the column containing the identifier of the location. The default is "location".
         """
         self._create_empty_markov_chain()  # initialize the markov chain
 
@@ -311,16 +363,20 @@ class MarkovDiaryGenerator:
 
     def generate(self, diary_length, start_date):
         """
-        Start the simulation of the mobility diary given the diary_length
+        Start the generation of the mobility diary.
+        
+        Parameters
+        ----------
+        diary_length : int
+            the length of the diary in hours.
 
-        :param diary_length: int
-            the length of the diary in the time unit of the MD Markov chain
-
-        :param start_date: datetime
-            the starting date
-
-        :return: the generated diarySeries
-        :rtype: pandas DataFrame
+        start_date : datetime
+            the starting date of the generation.
+        
+        Returns
+        -------
+        pandas DataFrame
+            the generated mobility diary.
         """
         current_date = start_date
         V, i = [], 0

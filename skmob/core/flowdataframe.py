@@ -19,7 +19,66 @@ class FlowSeries(pd.Series):
 
 
 class FlowDataFrame(pd.DataFrame):
+    """
+    A FlowDataFrame object is a pandas.DataFrame that has three columns origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:
 
+    Parameters
+    ----------
+    data : list or dict or pandas DataFrame
+        the data that must be embedded into a FlowDataFrame.
+
+    origin : str, optional
+        the name of the column in `data` containing the origin location. The default is `constants.ORIGIN`.
+
+    destination : str, optional
+        the name of the column in `data` containing the destination location. The default is `constants.DESTINATION`.
+
+    flow : str, optional
+        the name of the column in `data` containing the flow between two locations. The default is `constants.FLOW`.
+
+    datetime : str, optional
+        the name of the column in `data` containing the datetime the flow refers to. The default is `constants.DATETIME`.
+
+    tile_id : std, optional
+        the name of the column in `data` containing the tile identifier. The default is `constants.TILE_ID`.
+
+    timestamp : boolean, optional
+        it True, the datetime is a timestamp. The default is `False`.
+
+    tessellation : GeoDataFrame, optional
+        the spatial tessellation on which the flows take place. The default is `None`.
+
+    parameters : dict, optional
+        parameters to add to the FlowDataFrame. The default is `{}` (no parameters).
+
+    Examples
+    --------
+    >>> import skmob
+    >>> import geopandas as gpd
+    >>> # load a spatial tessellation
+    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+    >>> print(tessellation.head())
+      tile_ID  population                                           geometry
+    0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+    1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+    2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+    3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
+    >>> # load real flows into a FlowDataFrame
+    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+    >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+                                            tessellation=tessellation,
+                                            tile_id='tile_ID',
+                                            sep=",")
+    >>> print(fdf.head())
+         flow origin destination
+    0  121606  36001       36001
+    1       5  36001       36005
+    2      29  36001       36007
+    3      11  36001       36017
+    4      30  36001       36019
+    """
     _metadata = ['_tessellation', '_parameters']
 
     def __init__(self, data, origin=constants.ORIGIN, destination=constants.DESTINATION, flow=constants.FLOW,
@@ -105,10 +164,50 @@ class FlowDataFrame(pd.DataFrame):
     def get_flow(self, origin_id, destination_id):
         """
         Get the flow between two locations. If there is no flow between two locations it returns 0.
-        :param origin_id: the id of the origin tile
-        :param destination_id: the id of the tessellation tile
-        :return: The flow between the two locations
-        :rtype: int
+
+        Parameters
+        ----------
+        origin_id : str
+            the identifier of the origin tile.
+
+        destination_id : str
+            the identifier of the tessellation tile.
+
+        Returns
+        -------
+        int
+            the flow between the two locations.
+
+        Examples
+        --------
+        >>> import skmob
+        >>> import geopandas as gpd
+        >>> # load a spatial tessellation
+        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+        >>> print(tessellation.head())
+          tile_ID  population                                           geometry
+        0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....
+        1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
+        2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
+        3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
+        4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
+        >>> # load real flows into a FlowDataFrame
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+                                                tessellation=tessellation,
+                                                tile_id='tile_ID',
+                                                sep=",")
+        >>> print(fdf.head())
+             flow origin destination
+        0  121606  36001       36001
+        1       5  36001       36005
+        2      29  36001       36007
+        3      11  36001       36017
+        4      30  36001       36019
+        >>> flow = fdf.get_flow('36001', '36007')
+        >>> print(flow)
+        29
         """
 
         if (origin_id not in self._tessellation[constants.TILE_ID].values) or \
@@ -124,8 +223,12 @@ class FlowDataFrame(pd.DataFrame):
 
     def settings_from(self, flowdataframe):
         """
-        Method to copy attributes from another FlowDataFrame.
-        :param flowdataframe: FlowDataFrame from which copy the attributes.
+        Copy the attributes from another FlowDataFrame.
+
+        Parameters
+        ----------
+        flowdataframe : FlowDataFrame
+            the FlowDataFrame from which to copy the attributes.
         """
         for k in flowdataframe.metadata:
             value = getattr(flowdataframe, k)
@@ -135,6 +238,7 @@ class FlowDataFrame(pd.DataFrame):
         if tile_id not in self._tessellation[constants.TILE_ID].values:
             raise ValueError("%s \"%s\" is not in the tessellation." % (constants.TILE_ID, tile_id))
 
+        # selecting from geopandas will return a series with one element, for this reason we use iloc to get the object
         return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.iloc[0]
 
     def to_matrix(self):
@@ -365,51 +469,81 @@ class FlowDataFrame(pd.DataFrame):
                    flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
                    color_origin_point='#3186cc'):
         """
-        :param map_f: folium.Map
-            `folium.Map` object where the flows will be plotted. If `None`, a new map will be created.
+        Plot the flows of a FlowDataFrame on a Folium map.
 
-        :param min_flow: float
-            only flows larger than `min_flow` will be plotted.
+        Parameters
+        ----------
+        map_f : folium.Map, optional
+            the `folium.Map` object where the flows will be plotted. If `None`, a new map will be created. The default is `None`.
 
-        :param tiles: str
-            folium's `tiles` parameter.
+        min_flow : float, optional
+            only flows larger than `min_flow` will be plotted. The default is `0`.
 
-        :param zoom: int
-            initial zoom.
+        tiles: str, optional
+            folium's `tiles` parameter. The default is `Stamen Toner`.
 
-        :param flow_color: str
-            color of the flow edges
+        zoom : int, optional
+            initial zoom of the map. The default is `6`.
 
-        :param opacity: float
-            opacity (alpha level) of the flow edges.
+        flow_color : str, optional
+            the color of the flow edges. The default is `red`.
 
-        :param flow_weight: float
-            weight factor used in the function to compute the thickness of the flow edges.
+        opacity : float, optional
+            the opacity (alpha level) of the flow edges. The default is `0.5`.
 
-        :param flow_exp: float
-            weight exponent used in the function to compute the thickness of the flow edges.
+        flow_weight : float, optional
+            the weight factor used in the function to compute the thickness of the flow edges. The default is `5`.
 
-        :param style_function: lambda function
-            GeoJson style function.
+        flow_exp : float, optional
+            the weight exponent used in the function to compute the thickness of the flow edges. The default is `0.5`.
 
-        :param flow_popup: bool
-            if `True`, when clicking on a flow edge a popup window displaying information on the flow will appear.
+        style_function : lambda function, optional
+            the GeoJson style function. The default is `plot.flow_style_function`.
 
-        :param num_od_popup: int
-            number of origin-destination pairs to show in the popup window of each origin location.
+        flow_popup : boolean, optional
+            if `True`, when clicking on a flow edge a popup window displaying information on the flow will appear. The default is `False`.
 
-        :param tile_popup: bool
-            if `True`, when clicking on a location marker a popup window displaying information on the flows
-            departing from that location will appear.
+        num_od_popup : int, optional
+            number of origin-destination pairs to show in the popup window of each origin location. The default is `5`.
 
-        :param radius_origin_point: float
-            size of the location markers.
+        tile_popup : boolean, optional
+            if `True`, when clicking on a location marker a popup window displaying information on the flows departing from that location will appear. The default is `True`.
 
-        :param color_origin_point: str
-            color of the location markers.
+        radius_origin_point : float, optional
+            the size of the location markers. The default is `5`.
 
-        :return: `folium.Map` object with the plotted flows.
+        color_origin_point : str, optional
+            the color of the location markers. The default is '#3186cc'.
 
+        Returns
+        -------
+        folium.Map
+            the `folium.Map` object with the plotted flows.
+
+        Examples
+        --------
+        >>> import skmob
+        >>> import geopandas as gpd
+        >>> # load a spatial tessellation
+        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+        >>> # load real flows into a FlowDataFrame
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+                                                tessellation=tessellation,
+                                                tile_id='tile_ID',
+                                                sep=",")
+        >>> print(fdf.head())
+             flow origin destination
+        0  121606  36001       36001
+        1       5  36001       36005
+        2      29  36001       36007
+        3      11  36001       36017
+        4      30  36001       36019
+        >>> m = fdf.plot_flows(flow_color='red')
+        >>> m
+
+        .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_flows_example.png
         """
         return plot.plot_flows(self, map_f=map_f, min_flow=min_flow,  tiles=tiles, zoom=zoom, flow_color=flow_color,
                                opacity=opacity, flow_weight=flow_weight, flow_exp=flow_exp,
@@ -420,31 +554,54 @@ class FlowDataFrame(pd.DataFrame):
     def plot_tessellation(self, map_f=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
         """
-        :param map_f: folium.Map
-            `folium.Map` object where the GeoDataFrame `gdf` will be plotted. If `None`, a new map will be created.
+        Plot the spatial tessellation on a Folium map.
 
-        :param maxitems: int
-            maximum number of tiles to plot. If `-1`, all tiles will be plotted.
+        Parameters
+        ----------
+        map_osm : folium.Map, optional
+            the `folium.Map` object where the GeoDataFrame describing the spatial tessellation will be plotted. If `None`, a new map will be created. The default is `None`.
 
-        :param style_func_args: dict
-            dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons:
-            'weight', 'color', 'opacity', 'fillColor', 'fillOpacity', 'radius'
+        maxitems : int, optional
+            maximum number of tiles to plot. If `-1`, all tiles will be plotted. The default is `-1`.
 
-        :param popup_features: list
+        style_func_args : dict, optional
+            a dictionary to pass the following style parameters (keys) to the GeoJson style function of the polygons: 'weight', 'color', 'opacity', 'fillColor', 'fillOpacity'. The default is `{}`.
+
+        popup_features : list, optional
             when clicking on a tile polygon, a popup window displaying the information in the
-            columns of `gdf` listed in `popup_features` will appear.
+            columns of `gdf` listed in `popup_features` will appear. The default is `[constants.TILE_ID]`.
 
-        :param tiles: str
-            folium's `tiles` parameter.
+        tiles : str, optional
+            folium's `tiles` parameter. The default is 'Stamen Toner'.
 
-        :param zoom: int
-            initial zoom.
+        zoom : int, optional
+            the initial zoom of the map. The default is `6`.
 
-        :param geom_col: str
-             name of the geometry column of `gdf`.
+        geom_col : str, optional
+             the name of the geometry column of the GeoDataFrame representing the spatial tessellation. The default is 'geometry'.
 
-        :return: `folium.Map` object with the plotted GeoDataFrame.
+        Returns
+        -------
+        folium.Map
+            the `folium.Map` object with the plotted GeoDataFrame.
 
+        Examples
+        --------
+        >>> import skmob
+        >>> import geopandas as gpd
+        >>> # load a spatial tessellation
+        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+        >>> # load real flows into a FlowDataFrame
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+                                                tessellation=tessellation,
+                                                tile_id='tile_ID',
+                                                sep=",")
+        >>> m = fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
+        >>> m
+
+        .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png
         """
         return plot.plot_gdf(self.tessellation, map_f=map_f, maxitems=maxitems, style_func_args=style_func_args,
                              popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

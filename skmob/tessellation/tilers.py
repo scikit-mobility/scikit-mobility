@@ -89,7 +89,7 @@ class SquaredTessellationTiler(TessellationTiler):
         if not self._instance:
 
             if isinstance(base_shape, str):
-                # Try to obatain the base shape from OSMNX
+                # Try to obatain the base shape from OSM
                 base_shape = utils.bbox_from_name(base_shape)
 
             elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
