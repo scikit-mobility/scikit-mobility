@@ -292,6 +292,8 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, leg
     if end_datetime is None:
         end_datetime = df[constants.LEAVING_DATETIME].max()
 
+    current_labels = []
+
     for idx, row in df.iterrows():
 
         t0 = row[constants.DATETIME]
@@ -300,12 +302,24 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, leg
 
         color = get_color(cl)
         if start_datetime <= t0 <= end_datetime:
-            ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color, label=idx)
+            if cl in current_labels:
+                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
+            else:
+                current_labels += [cl]
+                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color, label=cl)
 
     plt.xlim(start_datetime, end_datetime)
+
     if legend:
-        plt.legend(loc='lower right', frameon=False)
-        plt.legend(ncol=15, bbox_to_anchor=(1., -0.2), frameon=0)
+        handles, labels_str = ax.get_legend_handles_labels()
+        labels = list(map(int, labels_str))
+        # sort them by labels
+        import operator
+        hl = sorted(zip(handles, labels), key=operator.itemgetter(1))
+        handles2, labels2 = zip(*hl)
+
+        ax.legend(handles2, labels2, ncol=15, bbox_to_anchor=(1., -0.2), frameon=0)
+
     ax.set_title('user %s' % user)
 
     return ax
