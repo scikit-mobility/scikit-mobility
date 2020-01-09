@@ -576,7 +576,88 @@ class LocationTimeAttack(Attack):
     time_precision : string
         the precision at which to consider the timestamps for the visits.
 
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationTimeAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid  risk
+    0    1   1.0
+    1    2   1.0
+    2    3   1.0
+    3    4   1.0
+    4    5   1.0
+    5    6   0.5
+    6    7   1.0
 
+    >>> #change the time granularity of the attack
+    >>> at.time_precision = "Month"
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  0.500000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.250000
+    5    6  0.250000
+    6    7  0.500000
+
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.250000
+    6    7  1.000000
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+              lat        lng            datetime  uid  instance  instance_elem      prob
+    0   43.843014  10.507994 2011-02-03 08:34:04    1         1              1  0.333333
+    1   43.544270  10.326150 2011-02-03 09:34:04    1         1              2  0.333333
+    2   43.708530  10.403600 2011-02-03 10:34:04    1         1              3  0.333333
+    3   43.843014  10.507994 2011-02-03 08:34:04    1         2              1  0.500000
+    4   43.544270  10.326150 2011-02-03 09:34:04    1         2              2  0.500000
+    5   43.779250  11.246260 2011-02-04 10:34:04    1         2              3  0.500000
+    6   43.843014  10.507994 2011-02-03 08:34:04    1         3              1  0.333333
+    7   43.708530  10.403600 2011-02-03 10:34:04    1         3              2  0.333333
+    8   43.779250  11.246260 2011-02-04 10:34:04    1         3              3  0.333333
+    9   43.544270  10.326150 2011-02-03 09:34:04    1         4              1  0.333333
+    10  43.708530  10.403600 2011-02-03 10:34:04    1         4              2  0.333333
+    11  43.779250  11.246260 2011-02-04 10:34:04    1         4              3  0.333333
+    12  43.843014  10.507994 2011-02-03 08:34:04    2         1              1  1.000000
+    13  43.708530  10.403600 2011-02-03 09:34:04    2         1              2  1.000000
+    14  43.843014  10.507994 2011-02-04 10:34:04    2         1              3  1.000000
+    15  43.843014  10.507994 2011-02-03 08:34:04    2         2              1  0.333333
+    16  43.708530  10.403600 2011-02-03 09:34:04    2         2              2  0.333333
+    17  43.544270  10.326150 2011-02-04 11:34:04    2         2              3  0.333333
+    18  43.843014  10.507994 2011-02-03 08:34:04    2         3              1  1.000000
+    19  43.843014  10.507994 2011-02-04 10:34:04    2         3              2  1.000000
+    20  43.544270  10.326150 2011-02-04 11:34:04    2         3              3  1.000000
+    21  43.708530  10.403600 2011-02-03 09:34:04    2         4              1  0.333333
+    22  43.843014  10.507994 2011-02-04 10:34:04    2         4              2  0.333333
+    23  43.544270  10.326150 2011-02-04 11:34:04    2         4              3  0.333333
 
     References
     ----------
@@ -684,7 +765,79 @@ class UniqueLocationAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
+ Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationFrequencyAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  1.000000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.333333
+    6    7  1.000000
 
+    >>> # change the tolerance with witch the frequency is matched
+    >>> at.tolerance = 0.5
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  1.000000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.250000
+    5    6  0.250000
+    6    7  1.000000
+
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.250000
+    6    7  1.000000
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid  risk
+    0    1   0.5
+    1    2   1.0
+
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+        lat        lng   datetime  uid  instance  instance_elem      prob
+    0   1.0  43.544270  10.326150  1.0         1              1  0.333333
+    1   1.0  43.708530  10.403600  1.0         1              2  0.333333
+    2   1.0  43.779250  11.246260  1.0         1              3  0.333333
+    3   1.0  43.544270  10.326150  1.0         2              1  0.333333
+    4   1.0  43.708530  10.403600  1.0         2              2  0.333333
+    5   1.0  43.843014  10.507994  1.0         2              3  0.333333
+    6   1.0  43.544270  10.326150  1.0         3              1  0.500000
+    7   1.0  43.779250  11.246260  1.0         3              2  0.500000
+    8   1.0  43.843014  10.507994  1.0         3              3  0.500000
+    9   1.0  43.708530  10.403600  1.0         4              1  0.333333
+    10  1.0  43.779250  11.246260  1.0         4              2  0.333333
+    11  1.0  43.843014  10.507994  1.0         4              3  0.333333
+    12  2.0  43.544270  10.326150  1.0         1              1  1.000000
+    13  2.0  43.708530  10.403600  1.0         1              2  1.000000
+    14  2.0  43.843014  10.507994  2.0         1              3  1.000000
 
     References
     ----------
