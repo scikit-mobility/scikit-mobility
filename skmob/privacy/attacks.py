@@ -651,19 +651,13 @@ class LocationTimeAttack(Attack):
         int
             1 if the instance matches the trajectory, 0 otherwise.
         """
-        locs = single_traj.groupby([constants.LATITUDE, constants.LONGITUDE, constants.TEMP]).size().reset_index(name=constants.COUNT)
         inst = pd.DataFrame(data=instance, columns=single_traj.columns)
-        inst = inst.groupby([constants.LATITUDE, constants.LONGITUDE,constants.TEMP]).size().reset_index(name=constants.COUNT + "inst")
-        locs_inst = pd.merge(locs, inst, left_on=[constants.LATITUDE, constants.LONGITUDE, constants.TEMP],
-                             right_on=[constants.LATITUDE, constants.LONGITUDE,constants.TEMP])
-        if len(locs_inst.index) != len(inst.index):
-            return 0
+        locs_inst = pd.merge(single_traj, inst, left_on=[constants.LATITUDE, constants.LONGITUDE, constants.TEMP],
+                             right_on=[constants.LATITUDE, constants.LONGITUDE, constants.TEMP])
+        if len(locs_inst.index) == len(inst.index):
+            return 1
         else:
-            condition = locs_inst[constants.COUNT] >= locs_inst[constants.COUNT + "inst"]
-            if len(locs_inst[condition].index) != len(inst.index):
-                return 0
-            else:
-                return 1
+            return 0
 
 
 class UniqueLocationAttack(Attack):
