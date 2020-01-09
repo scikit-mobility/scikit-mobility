@@ -774,50 +774,38 @@ class UniqueLocationAttack(Attack):
     >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
-    >>> at = attacks.LocationFrequencyAttack(knowledge_length=2)
+    >>> at = attacks.UniqueLocationAttack(knowledge_length=2)
     >>> r = at.assess_risk(trjdat)
     >>> print(r)
        uid      risk
     0    1  0.333333
-    1    2  1.000000
-    2    3  0.333333
-    3    4  0.333333
-    4    5  0.333333
-    5    6  0.333333
-    6    7  1.000000
-
-    >>> # change the tolerance with witch the frequency is matched
-    >>> at.tolerance = 0.5
-    >>> r = at.assess_risk(trjdat)
-    >>> print(r)
-       uid      risk
-    0    1  0.333333
-    1    2  1.000000
+    1    2  0.250000
     2    3  0.333333
     3    4  0.333333
     4    5  0.250000
     5    6  0.250000
-    6    7  1.000000
+    6    7  0.250000
 
     >>> # change the length of the background knowledge and reassess risk
     >>> at.knowledge_length = 3
     >>> r = at.assess_risk(trjdat)
     >>> print(r)
+
        uid      risk
     0    1  0.500000
-    1    2  1.000000
+    1    2  0.333333
     2    3  0.500000
     3    4  0.333333
     4    5  0.333333
     5    6  0.250000
-    6    7  1.000000
+    6    7  0.250000
 
     >>> # limit privacy assessment to some target uids
     >>> r = at.assess_risk(trjdat, targets=[1,2])
     >>> print(r)
-       uid  risk
-    0    1   0.5
-    1    2   1.0
+       uid      risk
+    0    1  0.500000
+    1    2  0.333333
 
     >>> # inspect probability of reidentification for each background knowledge instance
     >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
@@ -835,9 +823,9 @@ class UniqueLocationAttack(Attack):
     9   1.0  43.708530  10.403600  1.0         4              1  0.333333
     10  1.0  43.779250  11.246260  1.0         4              2  0.333333
     11  1.0  43.843014  10.507994  1.0         4              3  0.333333
-    12  2.0  43.544270  10.326150  1.0         1              1  1.000000
-    13  2.0  43.708530  10.403600  1.0         1              2  1.000000
-    14  2.0  43.843014  10.507994  2.0         1              3  1.000000
+    12  2.0  43.544270  10.326150  1.0         1              1  0.333333
+    13  2.0  43.708530  10.403600  1.0         1              2  0.333333
+    14  2.0  43.843014  10.507994  2.0         1              3  0.333333
 
     References
     ----------
@@ -934,7 +922,79 @@ class LocationFrequencyAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
+ Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationFrequencyAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  1.000000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.333333
+    6    7  1.000000
 
+    >>> # change the tolerance with witch the frequency is matched
+    >>> at.tolerance = 0.5
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  1.000000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.250000
+    5    6  0.250000
+    6    7  1.000000
+
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.250000
+    6    7  1.000000
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid  risk
+    0    1   0.5
+    1    2   1.0
+
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+        lat        lng   datetime  uid  instance  instance_elem      prob
+    0   1.0  43.544270  10.326150  1.0         1              1  0.333333
+    1   1.0  43.708530  10.403600  1.0         1              2  0.333333
+    2   1.0  43.779250  11.246260  1.0         1              3  0.333333
+    3   1.0  43.544270  10.326150  1.0         2              1  0.333333
+    4   1.0  43.708530  10.403600  1.0         2              2  0.333333
+    5   1.0  43.843014  10.507994  1.0         2              3  0.333333
+    6   1.0  43.544270  10.326150  1.0         3              1  0.500000
+    7   1.0  43.779250  11.246260  1.0         3              2  0.500000
+    8   1.0  43.843014  10.507994  1.0         3              3  0.500000
+    9   1.0  43.708530  10.403600  1.0         4              1  0.333333
+    10  1.0  43.779250  11.246260  1.0         4              2  0.333333
+    11  1.0  43.843014  10.507994  1.0         4              3  0.333333
+    12  2.0  43.544270  10.326150  1.0         1              1  1.000000
+    13  2.0  43.708530  10.403600  1.0         1              2  1.000000
+    14  2.0  43.843014  10.507994  2.0         1              3  1.000000
 
     References
     ----------
