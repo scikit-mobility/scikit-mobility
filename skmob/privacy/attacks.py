@@ -1114,7 +1114,78 @@ class LocationProbabilityAttack(Attack):
     tolerance : float
         the tolarance with which to match the probability.
 
+ Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationProbabilityAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid  risk
+    0    1   0.5
+    1    2   1.0
+    2    3   0.5
+    3    4   1.0
+    4    5   1.0
+    5    6   1.0
+    6    7   1.0
 
+    >>> # change the tolerance with witch the frequency is matched
+    >>> at.tolerance = 0.5
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  0.500000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.250000
+    5    6  1.000000
+    6    7  1.000000
+
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  1.000000
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  1.000000
+    6    7  1.000000
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid  risk
+    0    1   0.5
+    1    2   1.0
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+        lat        lng   datetime   uid  instance  instance_elem      prob
+    0   1.0  43.544270  10.326150  0.25         1              1  0.333333
+    1   1.0  43.708530  10.403600  0.25         1              2  0.333333
+    2   1.0  43.779250  11.246260  0.25         1              3  0.333333
+    3   1.0  43.544270  10.326150  0.25         2              1  0.333333
+    4   1.0  43.708530  10.403600  0.25         2              2  0.333333
+    5   1.0  43.843014  10.507994  0.25         2              3  0.333333
+    6   1.0  43.544270  10.326150  0.25         3              1  0.500000
+    7   1.0  43.779250  11.246260  0.25         3              2  0.500000
+    8   1.0  43.843014  10.507994  0.25         3              3  0.500000
+    9   1.0  43.708530  10.403600  0.25         4              1  0.333333
+    10  1.0  43.779250  11.246260  0.25         4              2  0.333333
+    11  1.0  43.843014  10.507994  0.25         4              3  0.333333
+    12  2.0  43.544270  10.326150  0.25         1              1  1.000000
+    13  2.0  43.708530  10.403600  0.25         1              2  1.000000
+    14  2.0  43.843014  10.507994  0.50         1              3  1.000000
 
     References
     ----------
@@ -1236,7 +1307,79 @@ class LocationProportionAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
+ Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.LocationProportionAttack(knowledge_length=2)
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  1.000000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.333333
+    6    7  1.000000
 
+    >>> # change the tolerance with witch the frequency is matched
+    >>> at.tolerance = 0.5
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.333333
+    1    2  0.250000
+    2    3  0.333333
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.333333
+    6    7  0.250000
+
+    >>> # change the length of the background knowledge and reassess risk
+    >>> at.knowledge_length = 3
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  0.333333
+    2    3  0.500000
+    3    4  0.333333
+    4    5  0.333333
+    5    6  0.333333
+    6    7  0.250000
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid      risk
+    0    1  0.500000
+    1    2  0.333333
+
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+        lat        lng   datetime  uid  instance  instance_elem      prob
+    0   1.0  43.544270  10.326150  1.0         1              1  0.333333
+    1   1.0  43.708530  10.403600  1.0         1              2  0.333333
+    2   1.0  43.779250  11.246260  1.0         1              3  0.333333
+    3   1.0  43.544270  10.326150  1.0         2              1  0.500000
+    4   1.0  43.708530  10.403600  1.0         2              2  0.500000
+    5   1.0  43.843014  10.507994  1.0         2              3  0.500000
+    6   1.0  43.544270  10.326150  1.0         3              1  0.500000
+    7   1.0  43.779250  11.246260  1.0         3              2  0.500000
+    8   1.0  43.843014  10.507994  1.0         3              3  0.500000
+    9   1.0  43.708530  10.403600  1.0         4              1  0.333333
+    10  1.0  43.779250  11.246260  1.0         4              2  0.333333
+    11  1.0  43.843014  10.507994  1.0         4              3  0.333333
+    12  2.0  43.544270  10.326150  1.0         1              1  0.333333
+    13  2.0  43.708530  10.403600  1.0         1              2  0.333333
+    14  2.0  43.843014  10.507994  2.0         1              3  0.333333
 
     References
     ----------
@@ -1354,13 +1497,50 @@ class HomeWorkAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
+ Examples
+    --------
+    >>> import skmob
+    >>> from skmob.privacy import attacks
+    >>> from skmob.core.trajectorydataframe import TrajDataFrame
+    >>> # load data
+    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
+    >>> # create a location attack and assess risk
+    >>> at = attacks.HomeWorkAttack()
+    >>> r = at.assess_risk(trjdat)
+    >>> print(r)
+       uid  risk
+    0    1  0.25
+    1    2  0.25
+    2    3  0.25
+    3    4  0.25
+    4    5  1.00
+    5    6  1.00
+    6    7  1.00
+
+    >>> # limit privacy assessment to some target uids
+    >>> r = at.assess_risk(trjdat, targets=[1,2])
+    >>> print(r)
+       uid  risk
+    0    1  0.25
+    1    2  0.25
+
+    >>> # inspect probability of reidentification for each background knowledge instance
+    >>> r = at.assess_risk(trjdat, targets=[1,2], force_instances=True)
+    >>> print(r)
+       lat       lng  datetime  uid  instance  instance_elem  prob
+    0  1.0  43.54427  10.32615  1.0         1              1  0.25
+    1  1.0  43.70853  10.40360  1.0         1              2  0.25
+    2  2.0  43.54427  10.32615  1.0         1              1  0.25
+    3  2.0  43.70853  10.40360  1.0         1              2  0.25
+
     References
     ----------
     .. [TIST2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: https://doi.org/10.1145/3106774
     .. [MOB2018] Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129
     """
 
-    def __init__(self, knowledge_length=0):
+    def __init__(self, knowledge_length=1):
         super(HomeWorkAttack, self).__init__(knowledge_length)
 
     def _generate_instances(self, single_traj):
