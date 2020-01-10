@@ -4,7 +4,6 @@ Privacy
 .. currentmodule:: skmob.privacy.attacks
 
 .. autosummary::
-	Attack
 	LocationAttack
 	LocationTimeAttack
 	LocationFrequencyAttack
@@ -13,4 +12,4 @@ Privacy
 	HomeWorkAttack
 
 .. automodule:: skmob.privacy.attacks
-	:members: 
+	:members:

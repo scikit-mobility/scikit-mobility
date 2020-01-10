@@ -267,7 +267,7 @@
 
 <dl class="method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_diary">
-<code class="sig-name descname">plot_diary</code><span class="sig-paren">(</span><em class="sig-param">user</em>, <em class="sig-param">start_datetime=None</em>, <em class="sig-param">end_datetime=None</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_diary</code><span class="sig-paren">(</span><em class="sig-param">user</em>, <em class="sig-param">start_datetime=None</em>, <em class="sig-param">end_datetime=None</em>, <em class="sig-param">ax=None</em>, <em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of <cite>preprocessing.clustering.cluster</cite>. The column <cite>constants.CLUSTER</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -276,6 +276,7 @@
 <li><p><strong>start_datetime</strong> (<em>datetime.datetime, optional</em>) – only stops made after this date will be plotted. If <cite>None</cite> the datetime of the oldest stop will be selected. The default is <cite>None</cite>.</p></li>
 <li><p><strong>end_datetime</strong> (<em>datetime.datetime, optional</em>) – only stops made before this date will be plotted. If <cite>None</cite> the datetime of the newest stop will be selected. The default is <cite>None</cite>.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes, optional</em>) – axes where the diary will be plotted. If <cite>None</cite> a new ax is created. The default is <cite>None</cite>.</p></li>
+<li><p><strong>legend</strong> (<em>bool, optional</em>) – If <cite>True</cite>, legend with cluster IDs is shown. The default is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

@@ -177,8 +177,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, …])</p></td>
 <td><p>Clustering of locations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.routing.route" title="skmob.preprocessing.routing.route"><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing.route</span></code></a>(tdf[, G, index_origin, …])</p></td>
-<td><p>Routing.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing.route</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -417,30 +417,6 @@ then this is interpreted as missing data and does not count as a stop. The defau
 <dd><p>Ramaswamy, H. &amp; Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, <a class="reference external" href="http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf">http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf</a></p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skmob.preprocessing.routing.route">
-<code class="sig-prename descclassname">skmob.preprocessing.routing.</code><code class="sig-name descname">route</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">G=None</em>, <em class="sig-param">index_origin=0</em>, <em class="sig-param">index_destin=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.routing.route" title="Permalink to this definition">¶</a></dt>
-<dd><p>Routing.</p>
-<p>Create a route on Google Maps between two locations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the TrajDataFrame with the locations</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>G, shortest_route = route(tdf)</p>
-<p>m = ox.plot_route_folium(G, shortest_route, route_color=’green’)</p>
-<p>origin_coords = tuple(tdf1.iloc[0][[‘lat’, ‘lng’]].values)
-destin_coords = tuple(tdf1.iloc[-1][[‘lat’, ‘lng’]].values)</p>
-<dl class="simple">
-<dt>folium.Marker(location=origin_coords,</dt><dd><p>icon=folium.Icon(color=’red’)).add_to(m)</p>
-</dd>
-<dt>folium.Marker(location=destin_coords,</dt><dd><p>icon=folium.Icon(color=’blue’)).add_to(m)</p>
-</dd>
-</dl>
-<p>tdf1.plot_trajectory(map_f=m)</p>
 </dd></dl>
 
 </div>
