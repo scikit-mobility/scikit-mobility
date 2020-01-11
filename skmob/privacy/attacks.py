@@ -760,6 +760,7 @@ class UniqueLocationAttack(Attack):
         the length of the background knowledge that we want to simulate. The length of the background knowledge
         specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
         combinations of points of length k will be evaluated.
+
     Attributes
     ----------
     knowledge_length : int
@@ -790,7 +791,6 @@ class UniqueLocationAttack(Attack):
     >>> at.knowledge_length = 3
     >>> r = at.assess_risk(trjdat)
     >>> print(r)
-
        uid      risk
     0    1  0.500000
     1    2  0.333333
