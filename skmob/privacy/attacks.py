@@ -765,7 +765,7 @@ class UniqueLocationAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
- Examples
+    Examples
     --------
     >>> import skmob
     >>> from skmob.privacy import attacks
@@ -922,7 +922,7 @@ class LocationFrequencyAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
- Examples
+    Examples
     --------
     >>> import skmob
     >>> from skmob.privacy import attacks
@@ -1114,7 +1114,7 @@ class LocationProbabilityAttack(Attack):
     tolerance : float
         the tolarance with which to match the probability.
 
- Examples
+    Examples
     --------
     >>> import skmob
     >>> from skmob.privacy import attacks
@@ -1307,7 +1307,7 @@ class LocationProportionAttack(Attack):
     tolerance : float
         the tolarance with which to match the frequency.
 
- Examples
+    Examples
     --------
     >>> import skmob
     >>> from skmob.privacy import attacks
@@ -1497,7 +1497,7 @@ class HomeWorkAttack(Attack):
     knowledge_length : int
         the length of the background knowledge that we want to simulate.
 
- Examples
+    Examples
     --------
     >>> import skmob
     >>> from skmob.privacy import attacks
