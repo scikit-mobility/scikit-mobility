@@ -170,6 +170,12 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationTimeAttack" title="skmob.privacy.attacks.LocationTimeAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationTimeAttack</span></code></a>(knowledge_length[, …])</p></td>
 <td><p>Location Time Attack</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.UniqueLocationAttack" title="skmob.privacy.attacks.UniqueLocationAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UniqueLocationAttack</span></code></a>(knowledge_length)</p></td>
+<td><p>Unique Location Attack</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationSequenceAttack" title="skmob.privacy.attacks.LocationSequenceAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationSequenceAttack</span></code></a>(knowledge_length)</p></td>
+<td><p>Location Sequence Attack In a location sequence attack the adversary knows the coordinates of locations visited by an individual and the order in which they were visited and matches them against trajectories.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skmob.privacy.attacks.LocationFrequencyAttack" title="skmob.privacy.attacks.LocationFrequencyAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationFrequencyAttack</span></code></a>(knowledge_length[, …])</p></td>
 <td><p>Location Frequency Attack</p></td>
 </tr>
@@ -188,25 +194,23 @@
 <dt id="skmob.privacy.attacks.HomeWorkAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">HomeWorkAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length=1</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.HomeWorkAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Home And Work Attack</p>
-<blockquote>
-<div><p>In a home and work attack the adversary knows the coordinates of
+<p>In a home and work attack the adversary knows the coordinates of
 the two locations most frequently visited by an individual, and matches them against frequency vectors.
 A frequency vector is an aggregation on trajectory data showing the unique
 locations visited by an individual and the frequency with which he visited those locations.
 This attack does not require the generation of combinations to build the possible instances of background knowledge.</p>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate. The length of the background knowledge
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
 specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
 combinations of points of length k will be evaluated.</p>
 </dd>
-</dl>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate.</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
-</div></blockquote>
-<dl>
-<dt>Examples</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
@@ -244,14 +248,13 @@ combinations of points of length k will be evaluated.</p>
 <span class="go">3  2.0  43.70853  10.40360  1.0         1              2  0.25</span>
 </pre></div>
 </div>
+<p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="tist2018"><span class="brackets">TIST2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 <dt class="label" id="mob2018"><span class="brackets">MOB2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="method">
@@ -416,28 +419,28 @@ with their respective probability of reidentification. The defaul is <cite>False
 <dt id="skmob.privacy.attacks.LocationFrequencyAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationFrequencyAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationFrequencyAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Location Frequency Attack</p>
-<blockquote>
-<div><p>In a location frequency attack the adversary knows the coordinates of the unique locations visited by an individual
+<p>In a location frequency attack the adversary knows the coordinates of the unique locations visited by an individual
 and the frequency with which he visited them, and matches them against frequency vectors. A frequency vector,
 is an aggregation on trajectory data showing the unique locations visited by an individual and the frequency
 with which he visited those locations. It is possible to specify a tolerance level for the matching of the frequency.</p>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate. The length of the background knowledge
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
 specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
-combinations of points of length k will be evaluated.</p>
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
 </dd>
-<dt>tolerance<span class="classifier">float, optional</span></dt><dd><p>the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the frequency.</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate.</p>
-</dd>
-<dt>tolerance<span class="classifier">float</span></dt><dd><p>the tolarance with which to match the frequency.</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>Examples</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
@@ -514,14 +517,13 @@ combinations of points of length k will be evaluated.</p>
 <span class="go">14  2.0  43.843014  10.507994  2.0         1              3  1.000000</span>
 </pre></div>
 </div>
+<p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="id3"><span class="brackets">TIST2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 <dt class="label" id="id4"><span class="brackets">MOB2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="method">
@@ -558,30 +560,30 @@ with their respective probability of reidentification. The defaul is <cite>False
 <dt id="skmob.privacy.attacks.LocationProbabilityAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationProbabilityAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProbabilityAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Location Probability Attack</p>
-<blockquote>
-<div><p>In a location probability attack the adversary knows the coordinates of
+<p>In a location probability attack the adversary knows the coordinates of
 the unique locations visited by an individual and the probability with which he visited them,
 and matches them against probability vectors.
 A probability vector, is an aggregation on trajectory data showing the unique locations visited by an individual
 and the probability with which he visited those locations.
 It is possible to specify a tolerance level for the matching of the probability.</p>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate. The length of the background knowledge
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
 specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
-combinations of points of length k will be evaluated.</p>
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the probability. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
 </dd>
-<dt>tolerance<span class="classifier">float, optional</span></dt><dd><p>the tolarance with which to match the probability. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the probability.</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate.</p>
-</dd>
-<dt>tolerance<span class="classifier">float</span></dt><dd><p>the tolarance with which to match the probability.</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>Examples</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
@@ -656,14 +658,13 @@ combinations of points of length k will be evaluated.</p>
 <span class="go">14  2.0  43.843014  10.507994  0.50         1              3  1.000000</span>
 </pre></div>
 </div>
+<p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="id5"><span class="brackets">TIST2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 <dt class="label" id="id6"><span class="brackets">MOB2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="method">
@@ -700,30 +701,30 @@ with their respective probability of reidentification. The defaul is <cite>False
 <dt id="skmob.privacy.attacks.LocationProportionAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">LocationProportionAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em>, <em class="sig-param">tolerance=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.LocationProportionAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Location Proportion Attack</p>
-<blockquote>
-<div><p>In a location proportion attack the adversary knows the coordinates of the unique locations visited
+<p>In a location proportion attack the adversary knows the coordinates of the unique locations visited
 by an individual and the relative proportions between their frequencies of visit,
 and matches them against frequency vectors.
 A frequency vector is an aggregation on trajectory data showing the unique locations visited by an individual
 and the frequency with which he visited those locations.
 It is possible to specify a tolerance level for the matching of the proportion.</p>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate. The length of the background knowledge
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
 specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
-combinations of points of length k will be evaluated.</p>
+combinations of points of length k will be evaluated.</p></li>
+<li><p><strong>tolerance</strong> (<em>float, optional</em>) – the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p></li>
+</ul>
 </dd>
-<dt>tolerance<span class="classifier">float, optional</span></dt><dd><p>the tolarance with which to match the frequency. It can assume values between 0 and 1. The defaul is <cite>0</cite>.</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – the tolarance with which to match the frequency.</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate.</p>
-</dd>
-<dt>tolerance<span class="classifier">float</span></dt><dd><p>the tolarance with which to match the frequency.</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>Examples</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
@@ -800,14 +801,13 @@ combinations of points of length k will be evaluated.</p>
 <span class="go">14  2.0  43.843014  10.507994  2.0         1              3  0.333333</span>
 </pre></div>
 </div>
+<p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="id7"><span class="brackets">TIST2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 <dt class="label" id="id8"><span class="brackets">MOB2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="method">
@@ -1122,23 +1122,21 @@ with their respective probability of reidentification. The defaul is <cite>False
 <dt id="skmob.privacy.attacks.UniqueLocationAttack">
 <em class="property">class </em><code class="sig-prename descclassname">skmob.privacy.attacks.</code><code class="sig-name descname">UniqueLocationAttack</code><span class="sig-paren">(</span><em class="sig-param">knowledge_length</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.privacy.attacks.UniqueLocationAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unique Location Attack</p>
-<blockquote>
-<div><p>In a unique location attack the adversary knows the coordinates of unique locations visited by an individual,
+<p>In a unique location attack the adversary knows the coordinates of unique locations visited by an individual,
 and matches them against frequency vectors. A frequency vector, is an aggregation on trajectory
 data showing the unique locations visited by an individual and the frequency with which he visited those locations.</p>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate. The length of the background knowledge
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate. The length of the background knowledge
 specifies the amount of knowledge that the adversary will use for her attack. For each individual all the
 combinations of points of length k will be evaluated.</p>
 </dd>
-</dl>
-<dl class="simple">
-<dt>knowledge_length<span class="classifier">int</span></dt><dd><p>the length of the background knowledge that we want to simulate.</p>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>knowledge_length</strong> (<em>int</em>) – the length of the background knowledge that we want to simulate.</p>
 </dd>
 </dl>
-</div></blockquote>
-<dl>
-<dt>Examples</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
@@ -1162,18 +1160,16 @@ combinations of points of length k will be evaluated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span><span class="o">.</span><span class="n">knowledge_length</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">at</span><span class="o">.</span><span class="n">assess_risk</span><span class="p">(</span><span class="n">trjdat</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">   uid      risk</span>
+<span class="go">0    1  0.500000</span>
+<span class="go">1    2  0.333333</span>
+<span class="go">2    3  0.500000</span>
+<span class="go">3    4  0.333333</span>
+<span class="go">4    5  0.333333</span>
+<span class="go">5    6  0.250000</span>
+<span class="go">6    7  0.250000</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>uid      risk</p>
-</div></blockquote>
-<p>0    1  0.500000
-1    2  0.333333
-2    3  0.500000
-3    4  0.333333
-4    5  0.333333
-5    6  0.250000
-6    7  0.250000</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># limit privacy assessment to some target uids</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">at</span><span class="o">.</span><span class="n">assess_risk</span><span class="p">(</span><span class="n">trjdat</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
@@ -1203,14 +1199,13 @@ combinations of points of length k will be evaluated.</p>
 <span class="go">14  2.0  43.843014  10.507994  2.0         1              3  0.333333</span>
 </pre></div>
 </div>
+<p class="rubric">References</p>
 <dl class="citation">
 <dt class="label" id="id13"><span class="brackets">TIST2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, and Anna Monreale. 2017. A Data Mining Approach to Assess Privacy Risk in Human Mobility Data. ACM Trans. Intell. Syst. Technol. 9, 3, Article 31 (December 2017), 27 pages. DOI: <a class="reference external" href="https://doi.org/10.1145/3106774">https://doi.org/10.1145/3106774</a></p>
 </dd>
 <dt class="label" id="id14"><span class="brackets">MOB2018</span></dt>
 <dd><p>Roberto Pellungrini, Luca Pappalardo, Francesca Pratesi, Anna Monreale: Analyzing Privacy Risk in Human Mobility Data. STAF Workshops 2018: 114-129</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="method">

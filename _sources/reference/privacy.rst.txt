@@ -6,6 +6,8 @@ Privacy
 .. autosummary::
 	LocationAttack
 	LocationTimeAttack
+	UniqueLocationAttack
+	LocationSequenceAttack
 	LocationFrequencyAttack
 	LocationProbabilityAttack
 	LocationProportionAttack
