@@ -90,6 +90,9 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
     else:
         ctdf = _cluster_trajectory(stops_df, cluster_radius_km=cluster_radius_km, min_samples=min_samples).reset_index(drop=True)
 
+    # TODO: remove the following line when issue #71 (Preserve the TrajDataFrame index during preprocessing operations) is solved.
+    ctdf.reset_index(inplace=True, drop=True)
+
     ctdf.parameters = tdf.parameters
     ctdf.set_parameter(constants.CLUSTERING_PARAMS, arguments)
     return ctdf

@@ -106,6 +106,9 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
                             leaving_time=leaving_time, no_data_for_minutes=no_data_for_minutes,
                             min_speed_kmh=min_speed_kmh).reset_index(drop=True)
 
+    # TODO: remove the following line when issue #71 (Preserve the TrajDataFrame index during preprocessing operations) is solved.
+    stdf.reset_index(inplace=True, drop=True)
+
     stdf.parameters = tdf.parameters
     stdf.set_parameter(constants.DETECTION_PARAMS, arguments)
     return stdf

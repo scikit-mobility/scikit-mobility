@@ -33,7 +33,7 @@ def exponential_deterrence_func(x, R):
     """
     Exponential deterrence function
     """
-    return np.exp(- x / R)
+    return np.exp(- x * R)
 
 
 def powerlaw_deterrence_func(x, exponent):
@@ -367,7 +367,11 @@ class Gravity:
                 return self._from_matrix_to_flowdf(trip_probs_matrix, origins, spatial_tessellation)
 
         else:  # singly constrained gravity model
-            trip_probs_matrix = np.transpose(trip_probs_matrix / np.sum(trip_probs_matrix, axis=0))
+            # trip_probs_matrix = np.transpose(trip_probs_matrix / np.sum(trip_probs_matrix, axis=0))
+            trip_probs_matrix = (trip_probs_matrix.T / np.sum(trip_probs_matrix, axis=1)).T
+            # put the NaN and Inf to 0.0
+            np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
+            np.putmask(trip_probs_matrix, np.isinf(trip_probs_matrix), 0.0)
 
             if out_format == 'flows':
                 # generate random fluxes according to trip probabilities

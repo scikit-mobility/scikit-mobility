@@ -85,11 +85,13 @@ def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=
         ftdf = tdf.groupby(groupby, group_keys=False).apply(_filter_trajectory, max_speed=max_speed_kmh,
                                                             include_loops=include_loops, speed=speed_kmh,
                                                              max_loop=max_loop, ratio_max=ratio_max)
-
     else:
         ftdf = _filter_trajectory(tdf, speed=speed_kmh, max_speed=max_speed_kmh,
                         max_loop=max_loop, ratio_max=ratio_max,
                         include_loops=include_loops)
+
+    # TODO: remove the following line when issue #71 (Preserve the TrajDataFrame index during preprocessing operations) is solved.
+    ftdf.reset_index(inplace=True, drop=True)
 
     ftdf.parameters = tdf.parameters
     ftdf.set_parameter(constants.FILTERING_PARAMS, arguments)
