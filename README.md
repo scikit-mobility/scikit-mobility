@@ -31,7 +31,8 @@
 	- [with conda](#installation_conda)
 	- [without conda](#installation_no_conda)
 	- [test installation](#test_installation)
-5. [Examples](#examples)
+5. [Tutorials](#tutorials)
+6. [Examples](#examples)
 	- [TrajDataFrame](#trajdataframe)
 	- [FlowDataFrame](#flowdataframe)
 	- [Preprocessing](#preprocessing)
@@ -157,6 +158,10 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 >>> import skmob
 >>>
 ```
+
+<a id='tutorials'></a>
+### Tutorials
+You can some tutorials on scikit-mobility here: https://github.com/scikit-mobility/tutorials.
 
 <a id='examples'></a>
 ## Examples
