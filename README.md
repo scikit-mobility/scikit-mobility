@@ -160,7 +160,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
 
 <a id='tutorials'></a>
-### Tutorials
+## Tutorials
 You can some tutorials on scikit-mobility here: https://github.com/scikit-mobility/tutorials.
 
 <a id='examples'></a>
