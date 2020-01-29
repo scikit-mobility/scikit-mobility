@@ -1,5 +1,6 @@
 from ..utils import constants, utils
 import folium
+from folium.plugins import HeatMap
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -163,6 +164,77 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
 
     return map_f
 
+def plot_points_heatmap(tdf, map_f=None, max_points=1000, 
+                        tiles='cartodbpositron', zoom=2,
+                       min_opacity=0.5, radius=25, blur=15,
+                       gradient=None):
+    """
+    Plot the points in a trajectories on a Folium map.
+
+    Parameters
+    ----------
+    map_f : folium.Map, optional
+        a `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created. The default is `None`.
+
+    max_points : int, optional
+        maximum number of points per individual to plot. The default is `1000`. If necessary, an individual's trajectory will be down-sampled to have at most `max_points` points.
+
+    tiles : str, optional
+        folium's `tiles` parameter. The default is 'cartodbpositron'.
+
+    zoom : int, optional
+        the initial zoom on the map. The default is `2`.
+
+    min_opacity : float, optional
+        the minimum opacity (alpha level) the heat will start at. The default is `0.5`.
+
+    radius : int, optional
+        radius of each "point" of the heatmap. The default is `25`.
+    
+    blur : int, optional
+        amount of blur. The default is blur 15.
+        
+    gradient : dict, optional 
+        color gradient configuration, e.g. {0.4: ‘blue’, 0.65: ‘lime’, 1: ‘red’}. The default is `None`.
+    
+    Returns
+    -------
+    folium.Map
+        a `folium.Map` object with the plotted trajectories.
+
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> # read the trajectory data (GeoLife, Beijing, China)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> m = tdf.plot_points_heatmap(zoom=12, opacity=0.9, tiles='Stamen Toner')
+    >>> m
+    """   
+    if max_points is None:
+        di = 1
+    else:
+        di = max(1, len(tdf) // max_points)
+    traj = tdf[::di]
+    traj = traj[[constants.LATITUDE, constants.LONGITUDE]]
+
+    if map_f is None:
+        center = list(np.median(traj[[constants.LONGITUDE, constants.LATITUDE]], axis=0)[::-1])
+        map_f = folium.Map(zoom_start=zoom, tiles=tiles, control_scale=True, location=center)
+    HeatMap(traj.values, 
+            min_opacity=min_opacity, radius=radius,
+           blur=blur, gradient=gradient).add_to(map_f)
+    
+    return map_f
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
                hex_color=-1, opacity=0.3, radius=12, number_of_sides=4, popup=True):
