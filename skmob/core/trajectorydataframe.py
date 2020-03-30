@@ -262,7 +262,7 @@ class TrajDataFrame(pd.DataFrame):
 
         return gdf
 
-    def mapping(self, tessellation, remove_na=False):
+    def mapping(self, tessellation, remove_na=False, inside=False):
         """
         Assign each point of the TrajDataFrame to the corresponding tile of a spatial tessellation.
 
@@ -273,7 +273,11 @@ class TrajDataFrame(pd.DataFrame):
 
         remove_na : boolean, optional
             if `True`, remove points that do not have a corresponding tile in the spatial tessellation. The default is `False`.
-
+        
+        inside : boolean, optional
+            if `True`, remove all the trajecories that have at least one point outside the tessellation.
+            Note that if `inside=True` then argument `remove_na` is ignored. The default is `False`.
+        
         Returns
         -------
         TrajDataFrame
@@ -307,7 +311,9 @@ class TrajDataFrame(pd.DataFrame):
         3  39.984211  116.319389 2008-10-23 05:53:16    1      63
         4  39.984217  116.319422 2008-10-23 05:53:21    1      63
         """
-
+        if inside:
+            remove_na = False
+            
         gdf = self.to_geodataframe()
 
         if constants.TILE_ID not in tessellation.columns:
@@ -328,7 +334,34 @@ class TrajDataFrame(pd.DataFrame):
 
         new_data = self._constructor(self).__finalize__(self)
         new_data = new_data.merge(tile_ids, right_index=True, left_index=True)
+        
+        def check_nan(a_tdf):
+            """
+            Check if there is a NaN in a trajectory's TrajDataFrame. 
 
+            Parameters
+            ----------
+            uid_tid_tdf: TrajDataFrame
+                contains info about a user's trajectory
+
+            Returns
+            -------
+            TrajDataFrame
+                the a user's trajectory
+            """
+            if not a_tdf[constants.TILE_ID].isna().values.any():
+                return a_tdf
+            else:
+                a_tdf[constants.TILE_ID] = -1
+                return a_tdf
+        
+        if inside:
+            if constants.TID in new_data.columns:
+                new_data = new_data.groupby([constants.UID, constants.TID]).apply(lambda uid_tid_tdf: check_nan(uid_tid_tdf))
+            else:
+                new_data = new_data.groupby(constants.UID).apply(lambda uid_tdf: check_nan(uid_tdf))
+            new_data = new_data[new_data[constants.TILE_ID] != -1]
+        
         return new_data
 
     def __getitem__(self, key):
