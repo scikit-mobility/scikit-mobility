@@ -102,7 +102,6 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
     - Install the kernel
     
           conda install ipykernel
-	  `conda install jupyter`
           
     - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
     
