@@ -28,12 +28,14 @@ def is_multi_trajectory(data):
     return False
 
 
-def to_matrix(data, columns=None):
+def to_matrix(data, columns=None, with_index=False):
     if columns is None:
-        columns = [constants.LATITUDE, constants.LONGITUDE, constants.DATETIME]
-        columns = columns + list(set(data.columns) - set(columns))
+        columns = get_columns(data)
 
-    return data[columns].values
+    if with_index:
+        return data.reset_index()[columns + ['index']].values
+    else:
+        return data[columns].values
 
 
 def get_columns(data):
