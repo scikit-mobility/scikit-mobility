@@ -103,11 +103,16 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
     
           conda install ipykernel
           
-    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
-    
-          env=$(basename `echo $CONDA_PREFIX`)
-          python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
-
+    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following: 
+    	- On Mac and Linux
+	    
+          	  env=$(basename `echo $CONDA_PREFIX`)
+          	  python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
+		
+       - On Windows
+       
+             python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
+	       
 :exclamation: You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
 
 ```
