@@ -630,7 +630,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -640,7 +640,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -676,7 +676,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -686,7 +686,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -739,10 +739,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -789,10 +789,10 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
