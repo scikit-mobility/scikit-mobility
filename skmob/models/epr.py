@@ -475,7 +475,7 @@ class DensityEPR(EPR):
     >>> import pandas as pd
     >>> import geopandas as gpd
     >>> from skmob.models.epr import DensityEPR
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
     >>> tessellation = gpd.read_file(url)
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
@@ -618,7 +618,7 @@ class SpatialEPR(EPR):
     >>> import pandas as pd
     >>> import geopandas as gpd
     >>> from skmob.models.epr import SpatialEPR
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
     >>> tessellation = gpd.read_file(url)
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
@@ -738,7 +738,7 @@ class Ditras(EPR):
     >>> from skmob.preprocessing import filtering, compression, detection, clustering
     >>> 
     >>> # load and preprocess data to train the MarkovDiaryGenerator
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> url = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz'
     >>> df = pd.read_csv(url, sep=',', compression='gzip')
     >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
     >>> ctdf = compression.compress(tdf)
@@ -752,6 +752,7 @@ class Ditras(EPR):
     >>> # set start time, end time and tessellation for the simulation
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
+    >>> # download tessellation data from https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson
     >>> tessellation = gpd.GeoDataFrame.from_file("data/NY_counties_2011.geojson")
     >>> 
     >>> # instantiate the model
