@@ -229,7 +229,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models.epr</span> <span class="kn">import</span> <span class="n">DensityEPR</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/01 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">end_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/14 08:00:00&#39;</span><span class="p">)</span>
@@ -331,7 +331,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models.epr</span> <span class="kn">import</span> <span class="n">SpatialEPR</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/01 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">end_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/14 08:00:00&#39;</span><span class="p">)</span>
@@ -416,7 +416,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load and preprocess data to train the MarkovDiaryGenerator</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ctdf</span> <span class="o">=</span> <span class="n">compression</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">tdf</span><span class="p">)</span>
@@ -430,6 +430,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># set start time, end time and tessellation for the simulation</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/01 08:00:00&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">end_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019/01/14 08:00:00&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download tessellation data from https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;data/NY_counties_2011.geojson&quot;</span><span class="p">)</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># instantiate the model</span>
@@ -518,7 +519,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models.epr</span> <span class="kn">import</span> <span class="n">Ditras</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models.markov_diary_generator</span> <span class="kn">import</span> <span class="n">MarkovDiaryGenerator</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
@@ -643,7 +644,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models</span> <span class="kn">import</span> <span class="n">Gravity</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -653,7 +654,7 @@
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -809,7 +810,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.models</span> <span class="kn">import</span> <span class="n">Radiation</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -819,7 +820,7 @@
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
