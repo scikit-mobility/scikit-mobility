@@ -6,17 +6,8 @@ from setuptools import setup, find_packages
 
 long_description = open('README.md').read()
 
-DEPENDENCIES = ['numpy', 'pandas', 'geopandas', 'scipy', 'powerlaw',
-                'tqdm', 'requests', 'scikit-learn', 'statsmodels',
-                'folium', 'matplotlib', 'geojson', 'shapely', 'fiona']
-
-TEST_DEPENDENCIES = [
-    'hypothesis',
-    'mock',
-    'python-Levenshtein',
-]
-
-
+DEPENDENCIES = ['numpy', 'scipy', 'pandas', 'geopandas', 'powerlaw', 'tqdm', 'requests',
+                'scikit-learn', 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely']
 setup(
     name='scikit-mobility',
     version='1.0',
@@ -38,11 +29,8 @@ setup(
                  'Operating System :: Microsoft :: Windows',
                  'Operating System :: Unix',
                  'Operating System :: MacOS',
-                 #'Programming Language :: Python :: 3',
-                 #'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
                  'Programming Language :: Python :: 3.7',
                  ],
     install_requires=DEPENDENCIES
-    #extra_requires={'geometry_support':'geopandas'}
     )
