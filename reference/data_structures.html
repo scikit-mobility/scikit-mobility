@@ -219,13 +219,15 @@
 </div>
 <dl class="method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.mapping">
-<code class="sig-name descname">mapping</code><span class="sig-paren">(</span><em class="sig-param">tessellation</em>, <em class="sig-param">remove_na=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mapping</code><span class="sig-paren">(</span><em class="sig-param">tessellation</em>, <em class="sig-param">remove_na=False</em>, <em class="sig-param">inside=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign each point of the TrajDataFrame to the corresponding tile of a spatial tessellation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tessellation</strong> (<em>GeoDataFrame</em>) – the spatial tessellation containing a geometry column with points or polygons.</p></li>
 <li><p><strong>remove_na</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, remove points that do not have a corresponding tile in the spatial tessellation. The default is <cite>False</cite>.</p></li>
+<li><p><strong>inside</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, remove all the trajecories that have at least one point outside the tessellation.
+Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ignored. The default is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -241,7 +243,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -291,7 +293,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -330,8 +332,52 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_points_heatmap">
+<code class="sig-name descname">plot_points_heatmap</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_points=1000</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=2</em>, <em class="sig-param">min_opacity=0.5</em>, <em class="sig-param">radius=25</em>, <em class="sig-param">blur=15</em>, <em class="sig-param">gradient=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_points_heatmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the points in a trajectories on a Folium map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_f</strong> (<em>folium.Map, optional</em>) – a <cite>folium.Map</cite> object where the trajectory will be plotted. If <cite>None</cite>, a new map will be created. The default is <cite>None</cite>.</p></li>
+<li><p><strong>max_points</strong> (<em>int, optional</em>) – maximum number of points per individual to plot. The default is <cite>1000</cite>. If necessary, an individual’s trajectory will be down-sampled to have at most <cite>max_points</cite> points.</p></li>
+<li><p><strong>tiles</strong> (<em>str, optional</em>) – folium’s <cite>tiles</cite> parameter. The default is ‘cartodbpositron’.</p></li>
+<li><p><strong>zoom</strong> (<em>int, optional</em>) – the initial zoom on the map. The default is <cite>2</cite>.</p></li>
+<li><p><strong>min_opacity</strong> (<em>float, optional</em>) – the minimum opacity (alpha level) the heat will start at. The default is <cite>0.5</cite>.</p></li>
+<li><p><strong>radius</strong> (<em>int, optional</em>) – radius of each “point” of the heatmap. The default is <cite>25</cite>.</p></li>
+<li><p><strong>blur</strong> (<em>int, optional</em>) – amount of blur. The default is blur 15.</p></li>
+<li><p><strong>gradient</strong> (<em>dict, optional</em>) – color gradient configuration, e.g. {0.4: ‘blue’, 0.65: ‘lime’, 1: ‘red’}. The default is <cite>None</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a <cite>folium.Map</cite> object with the plotted trajectories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>folium.Map</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">         lat         lng            datetime  uid</span>
+<span class="go">0  39.984094  116.319236 2008-10-23 05:53:05    1</span>
+<span class="go">1  39.984198  116.319322 2008-10-23 05:53:06    1</span>
+<span class="go">2  39.984224  116.319402 2008-10-23 05:53:11    1</span>
+<span class="go">3  39.984211  116.319389 2008-10-23 05:53:16    1</span>
+<span class="go">4  39.984217  116.319422 2008-10-23 05:53:21    1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">plot_points_heatmap</span><span class="p">(</span><span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;Stamen Toner&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_points_heatmap_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_points_heatmap_example.png" />
+</dd></dl>
+
+<dl class="method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_stops">
-<code class="sig-name descname">plot_stops</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">opacity=0.3</em>, <em class="sig-param">radius=12</em>, <em class="sig-param">popup=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_stops</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">opacity=0.3</em>, <em class="sig-param">radius=12</em>, <em class="sig-param">number_of_sides=4</em>, <em class="sig-param">popup=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of <cite>preprocessing.detection.stops</cite> or <cite>preprocessing.clustering.cluster</cite> functions. The column <cite>constants.LEAVING_DATETIME</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -358,7 +404,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -385,7 +431,7 @@
 
 <dl class="method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory">
-<code class="sig-name descname">plot_trajectory</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">max_points=1000</em>, <em class="sig-param">style_function=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">weight=2</em>, <em class="sig-param">opacity=0.75</em>, <em class="sig-param">start_end_markers=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_trajectory</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">max_points=1000</em>, <em class="sig-param">style_function=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">weight=2</em>, <em class="sig-param">opacity=0.75</em>, <em class="sig-param">dashArray='0</em>, <em class="sig-param">0'</em>, <em class="sig-param">start_end_markers=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the trajectories on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -413,7 +459,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -443,7 +489,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf1</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf1</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
@@ -475,7 +521,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -522,7 +568,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -717,7 +763,7 @@
 
 <dl class="method">
 <dt id="skmob.core.flowdataframe.FlowDataFrame.plot_tessellation">
-<code class="sig-name descname">plot_tessellation</code><span class="sig-paren">(</span><em class="sig-param">map_osm=None, maxitems=-1, style_func_args={}, popup_features=['tile_ID'], tiles='Stamen Toner', zoom=6, geom_col='geometry'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_tessellation</code><span class="sig-paren">(</span><em class="sig-param">map_f=None, maxitems=-1, style_func_args={}, popup_features=['tile_ID'], tiles='Stamen Toner', zoom=6, geom_col='geometry'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the spatial tessellation on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
