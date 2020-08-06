@@ -214,7 +214,7 @@ combinations of points of length k will be evaluated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">HomeWorkAttack</span><span class="p">()</span>
@@ -308,7 +308,7 @@ combinations of points of length k will be evaluated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -444,7 +444,7 @@ combinations of points of length k will be evaluated.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationFrequencyAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -587,7 +587,7 @@ combinations of points of length k will be evaluated.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationProbabilityAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -728,7 +728,7 @@ combinations of points of length k will be evaluated.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationProportionAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -861,7 +861,7 @@ combinations of points of length k will be evaluated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationSequenceAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -997,7 +997,7 @@ The possible precisions are: Year, Month, Day, Hour, Minute, Second. The default
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">LocationTimeAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -1140,7 +1140,7 @@ combinations of points of length k will be evaluated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.privacy</span> <span class="kn">import</span> <span class="n">attacks</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.core.trajectorydataframe</span> <span class="kn">import</span> <span class="n">TrajDataFrame</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_priv_ex</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trjdat</span> <span class="o">=</span> <span class="n">TrajDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">url_priv_ex</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a location attack and assess risk</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">at</span> <span class="o">=</span> <span class="n">attacks</span><span class="o">.</span><span class="n">UniqueLocationAttack</span><span class="p">(</span><span class="n">knowledge_length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
