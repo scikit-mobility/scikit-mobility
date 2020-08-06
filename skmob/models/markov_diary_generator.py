@@ -44,7 +44,7 @@ class MarkovDiaryGenerator:
     >>> from skmob.models.epr import Ditras
     >>> from skmob.models.markov_diary_generator import MarkovDiaryGenerator
     >>> from skmob.preprocessing import filtering, compression, detection, clustering
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> url = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz'
     >>> 
     >>> df = pd.read_csv(url, sep=',', compression='gzip')
     >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
