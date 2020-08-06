@@ -244,7 +244,7 @@ class LocationAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationAttack(knowledge_length=2)
@@ -408,7 +408,7 @@ class LocationSequenceAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationSequenceAttack(knowledge_length=2)
@@ -582,7 +582,7 @@ class LocationTimeAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationTimeAttack(knowledge_length=2)
@@ -772,7 +772,7 @@ class UniqueLocationAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.UniqueLocationAttack(knowledge_length=2)
@@ -928,7 +928,7 @@ class LocationFrequencyAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationFrequencyAttack(knowledge_length=2)
@@ -1120,7 +1120,7 @@ class LocationProbabilityAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationProbabilityAttack(knowledge_length=2)
@@ -1313,7 +1313,7 @@ class LocationProportionAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.LocationProportionAttack(knowledge_length=2)
@@ -1503,7 +1503,7 @@ class HomeWorkAttack(Attack):
     >>> from skmob.privacy import attacks
     >>> from skmob.core.trajectorydataframe import TrajDataFrame
     >>> # load data
-    >>> url_priv_ex = "https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/privacy_toy.csv"
+    >>> url_priv_ex = "https://github.com/scikit-mobility/tutorials/blob/master/AMLD%202020/data/privacy_toy.csv"
     >>> trjdat = TrajDataFrame.from_file(filename=url_priv_ex)
     >>> # create a location attack and assess risk
     >>> at = attacks.HomeWorkAttack()
