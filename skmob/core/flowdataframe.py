@@ -56,7 +56,7 @@ class FlowDataFrame(pd.DataFrame):
     >>> import skmob
     >>> import geopandas as gpd
     >>> # load a spatial tessellation
-    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
     >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
     >>> print(tessellation.head())
       tile_ID  population                                           geometry
@@ -66,7 +66,7 @@ class FlowDataFrame(pd.DataFrame):
     3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
     4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
     >>> # load real flows into a FlowDataFrame
-    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+    >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
     >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
                                             tessellation=tessellation,
                                             tile_id='tile_ID',
@@ -183,7 +183,7 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
         >>> print(tessellation.head())
           tile_ID  population                                           geometry
@@ -193,7 +193,7 @@ class FlowDataFrame(pd.DataFrame):
         3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
         4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
                                                 tessellation=tessellation,
                                                 tile_id='tile_ID',
@@ -525,10 +525,10 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
                                                 tessellation=tessellation,
                                                 tile_id='tile_ID',
@@ -590,10 +590,10 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
                                                 tessellation=tessellation,
                                                 tile_id='tile_ID',
