@@ -10,28 +10,49 @@ import geopandas as gpd
 import json
 
 
+# COLOR = {
+#     0: '#FF0000',  # Red
+#     1: '#008000',  # Green
+#     2: '#000080',  # Navy
+#     3: '#800000',  # Maroon
+#     4: '#FFD700',  # Gold
+#     5: '#00FF00',  # Lime
+#     6: '#800080',  # Purple
+#     7: '#00FFFF',  # Aqua
+#     8: '#DC143C',  # Crimson
+#     9: '#0000FF',  # Blue
+#     10: '#F08080',  # LightCoral
+#     11: '#FF00FF',  # Fuchsia
+#     12: '#FF8C00',  # DarkOrange
+#     13: '#6A5ACD',  # SlateBlue
+#     14: '#8B4513',  # SaddleBrown
+#     15: '#1E90FF',  # DodgerBlue
+#     16: '#FFFF00',  # Yellow
+#     17: '#808080',  # Gray
+#     18: '#008080',  # Teal
+#     19: '#9370DB',  # MediumPurple
+#     20: '#2F4F4F'  # DarkSlateGray
+# }
+
+
+# PALETTE FOR COLOR BLINDNESS
+# from <http://mkweb.bcgsc.ca/colorblind/palettes.mhtml>
 COLOR = {
-    0: '#FF0000',  # Red
-    1: '#008000',  # Green
-    2: '#000080',  # Navy
-    3: '#800000',  # Maroon
-    4: '#FFD700',  # Gold
-    5: '#00FF00',  # Lime
-    6: '#800080',  # Purple
-    7: '#00FFFF',  # Aqua
-    8: '#DC143C',  # Crimson
-    9: '#0000FF',  # Blue
-    10: '#F08080',  # LightCoral
-    11: '#FF00FF',  # Fuchsia
-    12: '#FF8C00',  # DarkOrange
-    13: '#6A5ACD',  # SlateBlue
-    14: '#8B4513',  # SaddleBrown
-    15: '#1E90FF',  # DodgerBlue
-    16: '#FFFF00',  # Yellow
-    17: '#808080',  # Gray
-    18: '#008080',  # Teal
-    19: '#9370DB',  # MediumPurple
-    20: '#2F4F4F'  # DarkSlateGray
+    0:  '#6A0213',
+    1:  '#008607',
+    2:  '#F60239',
+    3:  '#00E307',
+    4:  '#FFDC3D',
+    5:  '#003C86',
+    6:  '#9400E6',
+    7:  '#009FFA',
+    8:  '#FF71FD',
+    9:  '#7CFFFA',
+    10: '#68023F',
+    11: '#008169',
+    12: '#EF0096',
+    13: '#00DCB5',
+    14: '#FFCFE2'
 }
 
 
@@ -42,7 +63,7 @@ def get_color(k=-1, color_dict=COLOR):
     if k < 0:
         return np.random.choice(list(color_dict.values()))  # color_dict[random.randint(0,20)]
     else:
-        return color_dict[k % 21]
+        return color_dict[k % len(color_dict)]
 
 
 def random_hex():
