@@ -378,9 +378,10 @@ class TrajDataFrame(pd.DataFrame):
 
     @classmethod
     def from_file(cls, filename, latitude=constants.LATITUDE, longitude=constants.LONGITUDE, datetime=constants.DATETIME,
-                  user_id=constants.UID, trajectory_id=constants.TID,
+                  user_id=constants.UID, trajectory_id=constants.TID, encoding=None,
                   usecols=None, header='infer', timestamp=False, crs={"init": "epsg:4326"}, sep=",", parameters=None):
-        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols)
+
+        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=encoding)
 
         if parameters is None:
             # Init prop dictionary
