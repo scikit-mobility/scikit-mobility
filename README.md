@@ -264,7 +264,9 @@ In scikit-mobility, an origin-destination matrix is described by the `FlowDataFr
 - `destination` (type: string);
 - `flow` (type: integer). 
 
-Again, the user can add to a `FlowDataFrame` as many columns as they want since the `FlowDataFrame` data structure inherits all the pandas `DataFrame` functionalities. Each `FlowDataFrame` is associated with a **spatial tessellation**, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
+Again, the user can add to a `FlowDataFrame` as many columns as they want since the `FlowDataFrame` data structure inherits all the pandas `DataFrame` functionalities. 
+
+In mobility tasks, the territory is often discretized by mapping the coordinates to a spatial tessellation, i.e., a covering of the bi-dimensional space using a countable number of geometric shapes (e.g., squares, hexagons), called tiles, with no overlaps and no gaps. For instance, for the analysis or prediction of mobility flows, a spatial tessellation is used to aggregate flows of people moving among locations (the tiles of the tessellation). For this reason, each `FlowDataFrame` is associated with a **spatial tessellation**, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
 - `tile_ID` (type: integer) indicates the identifier of a location;
 - `geometry` indicates the polygon (or point) that describes the geometric shape of the location on a territory (e.g., a square, a voronoi shape, the shape of a neighborhood). 
 
