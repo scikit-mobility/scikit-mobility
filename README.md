@@ -661,3 +661,6 @@ print(tdf_risk)
 	   uid      risk
 	0    1  0.333333
 	1    2  0.500000
+	
+# Related packages
+[*movingpandas*](https://github.com/anitagraser/movingpandas) is a similar package that deals with movement data. Instead of implementing new data structures tailored for trajectories (`TrajDataFrame`) and mobility flows (`FlowDataFrame`), *movingpandas* describes a trajectory using a *geopandas* `GeoDataFrame`. There is little overlap in the covered use cases and implemented functionality (comparing [*scikit-mobility* tutorials](https://github.com/scikit-mobility/tutorials) and [*movingpandas* tutorials](https://github.com/anitagraser/movingpandas/tree/master/tutorials)): *scikit-mobility* focuses on computing human mobility metrics, generating synthetic trajectories and assessing privacy risks of mobility datasets. *movingpandas* on the other hand focuses on spatio-temporal data exploration with corresponding functions for data manipulation and analysis.
