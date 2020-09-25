@@ -7,7 +7,6 @@ import math
 from tqdm import tqdm
 from ..utils import constants, utils, gislib
 from scipy.sparse import lil_matrix
-import random
 import logging
 import inspect
 from ..core.trajectorydataframe import TrajDataFrame
@@ -79,7 +78,7 @@ def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
     ll_origin = lats_lngs[location]
     distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs])
 
-    scores = gravity_singly.compute_gravity_score(distances, relevances[location], relevances)
+    scores = gravity_singly.compute_gravity_score(distances, relevances[location, None], relevances)[0]
     return scores / sum(scores)
 
 
@@ -258,7 +257,7 @@ class EPR:
         agent_id, current_time, current_location = self._trajectories_[-1]  # the last visited location
 
         # choose a probability to return or explore
-        p_new = random.uniform(0, 1)
+        p_new = np.random.uniform(0, 1)
 
         if (p_new <= self._rho * math.pow(n_visited_locations, -self._gamma) and n_visited_locations != \
                 self._od_matrix.shape[0]) or n_visited_locations == 1:  # choose to return or explore
@@ -355,7 +354,7 @@ class EPR:
 
         # if specified, fix the random seeds to guarantee reproducibility of simulation
         if random_state is not None:
-            random.seed(random_state)
+            # random.seed(random_state)
             np.random.seed(random_state)
 
         if log_file is not None:
@@ -851,7 +850,7 @@ class Ditras(EPR):
 
         # if specified, fix the random seeds to guarantee reproducibility of simulation
         if random_state is not None:
-            random.seed(random_state)
+            # random.seed(random_state)
             np.random.seed(random_state)
 
         if log_file is not None:
