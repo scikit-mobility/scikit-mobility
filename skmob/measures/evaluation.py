@@ -16,7 +16,7 @@ def common_part_of_commuters(values1, values2):
     :return: float
         the common part of commuters
     """
-    return 2.0 * np.sum(np.minimum(values1, values2)) / (np.sum(values2) + np.sum(values2))
+    return 2.0 * np.sum(np.minimum(values1, values2)) / (np.sum(values1) + np.sum(values2))
 
 
 def common_part_of_links(values1, values2):
