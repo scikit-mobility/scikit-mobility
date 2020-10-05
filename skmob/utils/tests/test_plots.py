@@ -109,7 +109,7 @@ def test_plot_stops_tdf(tdf):
 def test_plot_diary(tdf, user, start_datetime):
     stdf = detection.stops(tdf)
     cstdf = clustering.cluster(stdf)
-    ax = plot.plot_diary(cstdf, uid=user, start_datetime=start_datetime)
+    ax = plot.plot_diary(cstdf, user, start_datetime=start_datetime)
 
     assert type(ax) is matplotlib.axes._subplots.Subplot
 
@@ -120,7 +120,7 @@ def test_plot_diary(tdf, user, start_datetime):
 def test_plot_diary(tdf, user, start_datetime):
     stdf = detection.stops(tdf)
     cstdf = clustering.cluster(stdf)
-    ax = cstdf.plot_diary(uid=user, start_datetime=start_datetime)
+    ax = cstdf.plot_diary(user, start_datetime=start_datetime)
 
     assert type(ax) is matplotlib.axes._subplots.Subplot
 
