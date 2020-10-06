@@ -357,28 +357,28 @@ def uncorrelated_entropy(traj, normalize=False, show_progress=True):
     return pd.DataFrame(df).reset_index().rename(columns={0: column_name})
 
 
-def _stringify(seq):
-    return '|'.join(['_'.join(list(map(str, r))) for r in seq])
-
-
 def _true_entropy(sequence):
     n = len(sequence)
 
     # these are the first and last elements
     sum_lambda = 1. + 2.
 
+    def in_seq(a, b):
+        for i in range(len(a) - len(b) + 1):
+            valid = True
+            for j, v in enumerate(b):
+                if a[i + j] != v:
+                    valid = False
+                    break
+            if valid: return True
+        return False
+
     for i in range(1, n - 1):
-        str_seq = _stringify(sequence[:i])
-        j = 1
-        str_sub_seq = _stringify(sequence[i:i + j])
-        while str_sub_seq in str_seq:
+        j = i + 1
+        while j < n and in_seq(sequence[:i], sequence[i:j]):
             j += 1
-            str_sub_seq = _stringify(sequence[i:i + j])
-            if i + j == n:
-                # EOF character
-                j += 1
-                break
-        sum_lambda += j
+        if j == n: j += 1     # EOF character
+        sum_lambda += j - i
 
     return 1. / sum_lambda * n * np.log2(n)
 

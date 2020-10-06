@@ -14,14 +14,14 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     tdf : TrajDataFrame
         the input trajectories of the individuals.
 
-    stop_radius_factor : float, optional 
-        the radius of the ball enclosing all trajectory points within the stop location. The default is `0.5`.
+    stop_radius_factor : float, optional
+        if argument `spatial_radius_km` is `None`, the spatial_radius used is the value specified in the TrajDataFrame properties ("spatial_radius_km" assigned by a `preprocessing.compression` function) multiplied by this argument, `stop_radius_factor`. The default is `0.5`.
 
     minutes_for_a_stop : float, optional
         the minimum stop duration, in minutes. The default is `20.0`.
 
     spatial_radius_km : float or None, optional
-        if `None`, use the spatial_radius specified in the TrajDataFrame properties (assigned by a `preprocessing.compression` function). The default is `0.2`.
+        the radius of the ball enclosing all trajectory points within the stop location. The default is `0.2`.
 
     leaving_time : boolean, optional
         if `True`, a new column 'leaving_datetime' is added with the departure time from the stop location. The default is `True`.
@@ -91,10 +91,11 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
 
     # Use the spatial_radius in the tdf parameters, if present, otherwise use the default argument.
     try:
-        spatial_radius_km = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius_km']
+        stop_radius = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius_km'] * stop_radius_factor
     except KeyError:
         pass
-    stop_radius = spatial_radius_km * stop_radius_factor
+    if spatial_radius_km is not None:
+        stop_radius = spatial_radius_km
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points

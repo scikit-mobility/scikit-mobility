@@ -92,7 +92,7 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 
 3. Install skmob
 
-        cd scikit_mobility
+        cd scikit-mobility
         python setup.py install
 
     If the installation of a required library fails, reinstall it with `conda install`.      
@@ -103,11 +103,16 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
     
           conda install ipykernel
           
-    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
-    
-          env=$(basename `echo $CONDA_PREFIX`)
-          python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
-
+    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following: 
+    	- On Mac and Linux
+	    
+          	  env=$(basename `echo $CONDA_PREFIX`)
+          	  python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
+		
+       - On Windows
+       
+             python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
+	       
 :exclamation: You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
 
 ```
@@ -127,7 +132,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 
 3. Install skmob
 
-        cd scikit_mobility
+        cd scikit-mobility
         python setup.py install
 
 
@@ -259,7 +264,9 @@ In scikit-mobility, an origin-destination matrix is described by the `FlowDataFr
 - `destination` (type: string);
 - `flow` (type: integer). 
 
-Again, the user can add to a `FlowDataFrame` as many columns as they want since the `FlowDataFrame` data structure inherits all the pandas `DataFrame` functionalities. Each `FlowDataFrame` is associated with a **spatial tessellation**, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
+Again, the user can add to a `FlowDataFrame` as many columns as they want since the `FlowDataFrame` data structure inherits all the pandas `DataFrame` functionalities. 
+
+In mobility tasks, the territory is often discretized by mapping the coordinates to a spatial tessellation, i.e., a covering of the bi-dimensional space using a countable number of geometric shapes (e.g., squares, hexagons), called tiles, with no overlaps and no gaps. For instance, for the analysis or prediction of mobility flows, a spatial tessellation is used to aggregate flows of people moving among locations (the tiles of the tessellation). For this reason, each `FlowDataFrame` is associated with a **spatial tessellation**, a [geopandas](http://geopandas.org/) `GeoDataFrame` that contains two mandatory columns:
 - `tile_ID` (type: integer) indicates the identifier of a location;
 - `geometry` indicates the polygon (or point) that describes the geometric shape of the location on a territory (e.g., a square, a voronoi shape, the shape of a neighborhood). 
 
@@ -654,3 +661,6 @@ print(tdf_risk)
 	   uid      risk
 	0    1  0.333333
 	1    2  0.500000
+	
+# Related packages
+[*movingpandas*](https://github.com/anitagraser/movingpandas) is a similar package that deals with movement data. Instead of implementing new data structures tailored for trajectories (`TrajDataFrame`) and mobility flows (`FlowDataFrame`), *movingpandas* describes a trajectory using a *geopandas* `GeoDataFrame`. There is little overlap in the covered use cases and implemented functionality (comparing [*scikit-mobility* tutorials](https://github.com/scikit-mobility/tutorials) and [*movingpandas* tutorials](https://github.com/anitagraser/movingpandas/tree/master/tutorials)): *scikit-mobility* focuses on computing human mobility metrics, generating synthetic trajectories and assessing privacy risks of mobility datasets. *movingpandas* on the other hand focuses on spatio-temporal data exploration with corresponding functions for data manipulation and analysis.

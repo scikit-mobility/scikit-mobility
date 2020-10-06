@@ -321,7 +321,7 @@ class FlowDataFrame(pd.DataFrame):
         return result
 
     @classmethod
-    def from_file(cls, filename, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
+    def from_file(cls, filename, encoding=None, origin=None, destination=None, origin_lat=None, origin_lng=None, destination_lat=None,
                   destination_lng=None, flow=constants.FLOW, datetime=constants.DATETIME, timestamp=False, sep=",",
                   tessellation=None, tile_id=constants.TILE_ID, usecols=None, header='infer', parameters=None,
                   remove_na=False):
@@ -332,7 +332,7 @@ class FlowDataFrame(pd.DataFrame):
             if not isinstance(tessellation, gpd.GeoDataFrame):
                 raise AttributeError("tessellation must be a GeoDataFrame.")
 
-        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols)
+        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=None)
 
         # Case 2: origin_lat, origin_lng, destination_lat, destination_lng, flow, [datetime]
         if (origin_lat is not None) and (origin_lng is not None) and (destination_lat is not None) and \
