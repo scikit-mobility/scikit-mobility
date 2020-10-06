@@ -56,12 +56,14 @@ COLOR = {
 }
 
 
-def get_color(k=-1, color_dict=COLOR):
+def get_color(k=-2, color_dict=COLOR):
     """
     Return a color (random if "k" is negative)
     """
-    if k < 0:
+    if k < -1:
         return np.random.choice(list(color_dict.values()))  # color_dict[random.randint(0,20)]
+    elif k == -1:
+        return '#808080'  # Gray
     else:
         return color_dict[k % len(color_dict)]
 
@@ -76,7 +78,7 @@ traj_style_function = lambda weight, color, opacity, dashArray: \
 
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
-                    tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, dashArray='0, 0',
+                    tiles='cartodbpositron', zoom=12, hex_color=-2, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True):
     """
     :param tdf: TrajDataFrame
@@ -102,7 +104,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         initial zoom.
 
     :param hex_color: str or int
-        hex color of the trajectory line. If `-1` a random color will be generated for each trajectory.
+        hex color of the trajectory line. If less than `-1` a random color will be generated for each trajectory.
 
     :param weight: float
         thickness of the trajectory line.
@@ -152,7 +154,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         trajlist = traj.values.tolist()
         line = LineString(trajlist)
 
-        if hex_color == -1:
+        if hex_color < -1:
             color = get_color(hex_color)
         else:
             color = hex_color
@@ -258,7 +260,7 @@ def plot_points_heatmap(tdf, map_f=None, max_points=1000,
     return map_f
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-1, opacity=0.3, radius=12, number_of_sides=4, popup=True):
+               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True):
     """
     :param stdf: TrajDataFrame
          Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
@@ -277,7 +279,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
         initial zoom.
 
     :param hex_color: str or int
-        hex color of the stop markers. If `-1` a random color will be generated for each user.
+        hex color of the stop markers. If less than `-1` a random color will be generated for each user.
 
     :param opacity: float
         opacity (alpha level) of the stop makers.
@@ -315,7 +317,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
             break
         nu += 1
 
-        if hex_color == -1:
+        if hex_color < -1:
             color = get_color(hex_color)
         else:
             color = hex_color

@@ -147,7 +147,7 @@ def _cluster_array(lat_lng_dtime_other, cluster_radius_km, min_samples, verbose=
     # Map cluster index to most frequent location: label2fml
     c2mfl = dict([(c[1] ,i) for i ,c in \
                   enumerate(sorted([[len(v) ,l] for l ,v in l02x.items() if l> -0.5], reverse=True))])
-    c2mfl[-1] = c2mfl[-1]
+    c2mfl[-1] = -1
     l2x = dict([(c2mfl[k], v) for k, v in l02x.items() if k > -0.5])
     try:
         l2x[-1] = l02x[-1.]
