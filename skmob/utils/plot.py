@@ -58,7 +58,7 @@ COLOR = {
 
 def get_color(k=-2, color_dict=COLOR):
     """
-    Return a color (random if "k" is negative)
+    Return a color (gray if k == 1, random if k < -1)
     """
     if k < -1:
         return np.random.choice(list(color_dict.values()))  # color_dict[random.randint(0,20)]
