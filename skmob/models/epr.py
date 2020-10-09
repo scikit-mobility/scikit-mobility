@@ -78,7 +78,7 @@ def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
     ll_origin = lats_lngs[location]
     distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs])
 
-    scores = gravity_singly.compute_gravity_score(distances, relevances[location, None], relevances)[0]
+    scores = gravity_singly._compute_gravity_score(distances, relevances[location, None], relevances)[0]
     return scores / sum(scores)
 
 
@@ -474,7 +474,7 @@ class DensityEPR(EPR):
     >>> import pandas as pd
     >>> import geopandas as gpd
     >>> from skmob.models.epr import DensityEPR
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url = >>> url = skmob.utils.constants.NY_COUNTIES_2011
     >>> tessellation = gpd.read_file(url)
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
@@ -617,7 +617,7 @@ class SpatialEPR(EPR):
     >>> import pandas as pd
     >>> import geopandas as gpd
     >>> from skmob.models.epr import SpatialEPR
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url = >>> url = skmob.utils.constants.NY_COUNTIES_2011
     >>> tessellation = gpd.read_file(url)
     >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
     >>> end_time = pd.to_datetime('2019/01/14 08:00:00')
@@ -737,7 +737,7 @@ class Ditras(EPR):
     >>> from skmob.preprocessing import filtering, compression, detection, clustering
     >>> 
     >>> # load and preprocess data to train the MarkovDiaryGenerator
-    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
     >>> df = pd.read_csv(url, sep=',', compression='gzip')
     >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
     >>> ctdf = compression.compress(tdf)

@@ -154,7 +154,7 @@ class Gravity:
     >>> import numpy as np
     >>> from skmob.models import Gravity
     >>> # load a spatial tessellation
-    >>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+    >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
     >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
     >>> print(tessellation.head())
       tile_ID  population                                           geometry
@@ -164,8 +164,7 @@ class Gravity:
     3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
     4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
     >>> # load real flows into a FlowDataFrame
-    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
-    >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv", 
+    >>> fdf = skmob.FlowDataFrame.from_file(skmob.utils.constants.NY_FLOWS_2011,
                                             tessellation=tessellation, 
                                             tile_id='tile_ID', 
                                             sep=",")
@@ -292,7 +291,7 @@ class Gravity:
                (self._name, self._deterrence_func_type, self._deterrence_func_args, self._origin_exp,
                 self._destination_exp, self._gravity_type)
 
-    def compute_gravity_score(self, distance_matrix, relevances_orig, relevances_dest):
+    def _compute_gravity_score(self, distance_matrix, relevances_orig, relevances_dest):
         trip_probs_matrix = self._deterrence_func(distance_matrix, *self._deterrence_func_args)
         # trip_probs_matrix = np.transpose(
         #     trip_probs_matrix * relevances ** self.destination_exp) * relevances ** self._origin_exp
@@ -323,7 +322,7 @@ class Gravity:
             the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
             
         out_format : str, optional
-            the format of the generated flows. Possible values are "flows" and "probabilities". The default is "flows".
+            the format of the generated flows. Possible values are "flows" (i.e. average flows, "sample_flows" and "probabilities". The default is "flows".
             
         Returns
         -------
@@ -335,12 +334,12 @@ class Gravity:
         self._tile_id_column = tile_id_column
         # self._spatial_tessellation = spatial_tessellation
 
-        if out_format not in ['flows', 'probabilities']:
+        if out_format not in ['flows', 'sample_flows', 'probabilities']:
             print('Output format \"%s\" not available. Flows will be used.\n'
-                  'Available output formats are [flows, probabilities]' % out_format)
+                  'Available output formats are [flows, sample_flows, probabilities]' % out_format)
             out_format = "flows"
 
-        if out_format == 'flows':
+        if 'flows' in out_format:
             if tot_outflows_column not in spatial_tessellation.columns:
                 raise KeyError("The column 'tot_outflows' must be present in the tessellation.")
             tot_outflows = spatial_tessellation[tot_outflows_column].fillna(0).values
@@ -352,12 +351,16 @@ class Gravity:
         distance_matrix = compute_distance_matrix(spatial_tessellation, origins)
 
         # compute scores
-        trip_probs_matrix = self.compute_gravity_score(distance_matrix, relevances, relevances)
+        trip_probs_matrix = self._compute_gravity_score(distance_matrix, relevances, relevances)
 
         if self._gravity_type == 'globally constrained':  # globally constrained gravity model
             trip_probs_matrix /= np.sum(trip_probs_matrix)
 
             if out_format == 'flows':
+                # return average flows
+                od_matrix = trip_probs_matrix * np.sum(tot_outflows)
+                return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
+            elif out_format == 'sample_flows':
                 # generate random fluxes according to trip probabilities
                 od_matrix = np.reshape(np.random.multinomial(np.sum(tot_outflows), trip_probs_matrix.flatten()),
                                        (n_locs, n_locs))
@@ -374,6 +377,9 @@ class Gravity:
             np.putmask(trip_probs_matrix, np.isinf(trip_probs_matrix), 0.0)
 
             if out_format == 'flows':
+                od_matrix = (trip_probs_matrix.T * tot_outflows).T
+                return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
+            elif out_format == 'sample_flows':
                 # generate random fluxes according to trip probabilities
                 od_matrix = np.array([np.random.multinomial(tot_outflows[i], trip_probs_matrix[i]) for i in origins])
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)

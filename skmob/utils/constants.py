@@ -43,4 +43,7 @@ COMPRESSION_PARAMS = 'compress'
 CLUSTERING_PARAMS = 'cluster'
 DETECTION_PARAMS = 'detect'
 
-
+# Data files
+GEOLIFE_SAMPLE = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/geolife_sample.txt.gz'
+NY_COUNTIES_2011 = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/NY_counties_2011.geojson'
+NY_FLOWS_2011 = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/NY_commuting_flows_2011.csv'

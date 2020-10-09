@@ -212,7 +212,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> from skmob.preprocessing import filtering
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())
@@ -286,7 +286,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> from skmob.preprocessing import filtering
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())
@@ -359,7 +359,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import pandas as pd
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf1 = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> tdf1 = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
@@ -538,7 +538,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import pandas as pd
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())
@@ -599,7 +599,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> from skmob.preprocessing import detection
         >>> import pandas as pd
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())
@@ -657,7 +657,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> from skmob.preprocessing import detection, clustering
         >>> import pandas as pd
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())
@@ -715,7 +715,7 @@ class TrajDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import pandas as pd
         >>> # read the trajectory data (GeoLife, Beijing, China)
-        >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+        >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
         >>> df = pd.read_csv(url, sep=',', compression='gzip')
         >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
         >>> print(tdf.head())

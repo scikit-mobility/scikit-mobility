@@ -1,7 +1,7 @@
 import skmob
 import pandas as pd
 from datetime import datetime
-from skmob.utils.constants import UID, DATETIME, LATITUDE, LONGITUDE
+from skmob.utils.constants import UID, DATETIME, LATITUDE, LONGITUDE, GEOLIFE_SAMPLE
 
 
 EXPECTED_NUM_OF_COLUMNS_IN_TDF = 4
@@ -39,7 +39,7 @@ class TestTrajectoryDataFrame:
         self.perform_default_asserts(tdf)
 
     def test_tdf_from_csv_file(self):
-        tdf = skmob.TrajDataFrame.from_file('../../../tutorial/data/geolife_sample.txt.gz', sep=',')
+        tdf = skmob.TrajDataFrame.from_file(GEOLIFE_SAMPLE, sep=',')
         assert tdf._is_trajdataframe()
         assert tdf.shape == (217653, EXPECTED_NUM_OF_COLUMNS_IN_TDF)
         assert list(tdf[UID].unique()) == [1, 5]
