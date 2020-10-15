@@ -185,19 +185,17 @@ class TrajDataFrame(pd.DataFrame):
         if not inplace:
             return frame
 
-    def to_flowdataframe(self, tessellation, remove_na=False, self_loops=True):
+    def to_flowdataframe(self, tessellation, self_loops=True):
         """
         Aggregate a TrajDataFrame into a FlowDataFrame.
+        The points that do not have a corresponding tile in the spatial tessellation are removed.
         
         Parameters
         ----------
         tessellation : GeoDataFrame
-            the spatial tessellation to use to aggregate the points. 
+            the spatial tessellation to use to aggregate the points.
             
-        remove_na : boolean 
-            if True, remove the points that do not have a corresponding tile in the spatial tessellation. The default is `False`.
-            
-        self_loop : boolean
+        self_loops : boolean
             if True, it counts movements that start and end in the same tile. The default is `True`.
         
         Returns
@@ -224,8 +222,8 @@ class TrajDataFrame(pd.DataFrame):
         4  39.984217  116.319422 2008-10-23 05:53:21    1
         >>> # build a tessellation over the city
         >>> tessellation = tilers.tiler.get("squared", base_shape="Beijing, China", meters=15000)
-        >>> # remove_na enable removing points that are not contained in the tessellation
-        >>> fdf = tdf.to_flowdataframe(tessellation=tessellation, self_loops=True, remove_na=True)
+        >>> # counting movements that start and end in the same tile
+        >>> fdf = tdf.to_flowdataframe(tessellation=tessellation, self_loops=True)
         >>> print(fdf.head())
           origin destination  flow
         0     49          49   788
@@ -243,11 +241,15 @@ class TrajDataFrame(pd.DataFrame):
         self.sort_values(by=self.__operate_on(), ascending=True, inplace=True)
 
         # Step 2: map the trajectory onto the tessellation
-        flow = self.mapping(tessellation, remove_na=remove_na)
+        flow = self.mapping(tessellation, remove_na=False)
 
         # Step 3: groupby tile_id and sum to obtain the flow
         flow.loc[:, constants.DESTINATION] = flow[constants.TILE_ID].shift(-1)
-        flow = flow.groupby([constants.TILE_ID, constants.DESTINATION]).size().reset_index(name=constants.FLOW)
+        # excluding rows with points of different users
+        flow.loc[:, 'next_uid'] = flow[constants.UID].shift(-1)
+        flow = flow.loc[flow['uid'] == flow['next_uid']]
+
+        flow = flow.groupby([constants.TILE_ID, constants.DESTINATION], dropna=True).size().reset_index(name=constants.FLOW)
         flow.rename(columns={constants.TILE_ID: constants.ORIGIN}, inplace=True)
 
         if not self_loops:

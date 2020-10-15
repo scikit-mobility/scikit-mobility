@@ -161,7 +161,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
 
             dtime, la, lo = df.loc[df['datetime'].idxmin()]\
                 [[constants.DATETIME, constants.LATITUDE, constants.LONGITUDE]].values
-            dtime = pd.datetime.strftime(dtime, '%Y/%m/%d %H:%M')
+            dtime = dtime.strftime('%Y/%m/%d %H:%M')
             mker = folium.Marker(trajlist[0][::-1], icon=folium.Icon(color='green'))
             popup = folium.Popup('<i>Start</i><BR>{}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a>'.\
                           format(dtime, la, lo, np.round(la, 4), np.round(lo, 4)), max_width=300)
@@ -170,7 +170,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
 
             dtime, la, lo = df.loc[df['datetime'].idxmax()]\
                 [[constants.DATETIME, constants.LATITUDE, constants.LONGITUDE]].values
-            dtime = pd.datetime.strftime(dtime, '%Y/%m/%d %H:%M')
+            dtime = dtime.strftime('%Y/%m/%d %H:%M')
             mker = folium.Marker(trajlist[-1][::-1], icon=folium.Icon(color='red'))
             popup = folium.Popup('<i>End</i><BR>{}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a>'.\
                           format(dtime, la, lo, np.round(la, 4), np.round(lo, 4)), max_width=300)
@@ -263,8 +263,8 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
             if popup:
                 popup = folium.Popup('User: {}<BR>Coord: <a href="https://www.google.co.uk/maps/place/{},{}" target="_blank">{}, {}</a><BR>Arr: {}<BR>Dep: {}{}' \
                     .format(u, la, lo, np.round(la, 4), np.round(lo, 4),
-                            pd.datetime.strftime(t0, '%Y/%m/%d %H:%M'),
-                            pd.datetime.strftime(t1, '%Y/%m/%d %H:%M'), cl), max_width=300)
+                            t0.strftime('%Y/%m/%d %H:%M'),
+                            t1.strftime('%Y/%m/%d %H:%M'), cl), max_width=300)
                 fpoly = fpoly.add_child(popup)
 
             fpoly.add_to(map_f)
@@ -327,10 +327,10 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, leg
         color = get_color(cl)
         if start_datetime <= t0 <= end_datetime:
             if cl in current_labels:
-                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
+                ax.axvspan(t0.to_pydatetime(), t1.to_pydatetime(), lw=0.0, alpha=0.75, color=color)
             else:
                 current_labels += [cl]
-                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color, label=cl)
+                ax.axvspan(t0.to_pydatetime(), t1.to_pydatetime(), lw=0.0, alpha=0.75, color=color, label=cl)
 
     plt.xlim(start_datetime, end_datetime)
 

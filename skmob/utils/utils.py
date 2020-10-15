@@ -203,7 +203,7 @@ def bbox_from_area(area, bbox_side_len=500, crs=None):
     return base.to_crs(crs)
 
 
-def bbox_from_name(query, which_result=0, crs=None):
+def bbox_from_name(query, which_osm_result=0, crs=None):
     """
     Create a GeoDataFrame from a single place name query.
     (adapted from https://github.com/gboeing/osmnx)
@@ -213,8 +213,8 @@ def bbox_from_name(query, which_result=0, crs=None):
     query : string or dict
         query string or structured query dict to geocode/download
 
-    which_result : int
-        number of result to return (`which_result=-1` to return all results)
+    which_osm_result : int
+        number of result to return (`which_osm_result=-1` to return all results)
 
     Returns
     -------
@@ -269,8 +269,8 @@ def bbox_from_name(query, which_result=0, crs=None):
         else:
             gdf = gdf.to_crs(crs)
 
-        if which_result >= 0:
-            gdf = gdf.loc[[which_result]]
+        if which_osm_result >= 0:
+            gdf = gdf.loc[[which_osm_result]]
 
     else:
         gdf = gpd.GeoDataFrame()

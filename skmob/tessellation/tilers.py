@@ -85,12 +85,12 @@ class SquaredTessellationTiler(TessellationTiler):
         super().__init__()
         self._instance = None
 
-    def __call__(self, base_shape, meters=50, crs=constants.DEFAULT_CRS, window_size=None):
+    def __call__(self, base_shape, meters=50, which_osm_result=0, crs=constants.DEFAULT_CRS, window_size=None):
         if not self._instance:
 
             if isinstance(base_shape, str):
                 # Try to obatain the base shape from OSM
-                base_shape = utils.bbox_from_name(base_shape)
+                base_shape = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
 
             elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
 

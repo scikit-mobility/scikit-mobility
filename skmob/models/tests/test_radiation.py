@@ -1,51 +1,82 @@
-import skmob
-from skmob.utils import utils, constants
+from ...core.flowdataframe import FlowDataFrame
+from ...utils import constants, gislib
 import geopandas as gpd
-from skmob.models import Radiation
+from ...models import Radiation
 import numpy as np
-import math
+import shapely
+import pytest
 
-class TestRadiation:
+distfunc = gislib.getDistance
 
-    def setup_method(self):
-        url_tess = '../../../tutorial/data/NY_counties_2011.geojson'
+atol = 1e-12
 
-        self.tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+# fix a random seed
+np.random.seed(2)
 
-        self.fdf = skmob.FlowDataFrame.from_file("../../../tutorial/data/NY_commuting_flows_2011.csv",
-                                                 tessellation=self.tessellation,
-                                                 tile_id='tile_ID',
-                                                 sep=",")
 
-        tot_outflows = self.fdf[self.fdf['origin'] != self.fdf['destination']].groupby(by='origin', axis=0)[
-            'flow'].sum().fillna(
-            0).values
-        self.tessellation[constants.TOT_OUTFLOW] = tot_outflows
+def all_equal(a, b):
+    return np.allclose(a, b, rtol=0., atol=atol)
 
-    def test_radiation(self):
-        radiation = Radiation()
 
-        np.random.seed(0)
-        rad_flows = radiation.generate(self.tessellation,
-                                       tile_id_column='tile_ID',
-                                       tot_outflows_column='tot_outflow',
-                                       relevance_column='population',
-                                       out_format='flows_sample')
+# tessellation
 
-        expecter_36019 = [11648,  4232,  5598,  1596,   117,  1017,   354,   701,  1411,
-                         270,   408,   135,   341,   410,   189,   287,    79,    23,
-                          42,    38,    30,    37,   203,    18,    15,    37,    10,
-                          23,    45,    69,     5,    41,    20,     9,     6,   100,
-                           8,     4,    18,    34,     5,     3,     3,    73,    13,
-                           7,     3,     1,    56,    48,     3,    43,    21,     1,
-                          28,    38,     4,     3]
+tess_polygons = [[[7.481, 45.184],
+                  [7.481, 45.216],
+                  [7.526, 45.216],
+                  [7.526, 45.184],
+                  [7.481, 45.184]],
+                 [[7.481, 45.216],
+                  [7.481, 45.247],
+                  [7.526, 45.247],
+                  [7.526, 45.216],
+                  [7.481, 45.216]],
+                 [[7.526, 45.184],
+                  [7.526, 45.216],
+                  [7.571, 45.216],
+                  [7.571, 45.184],
+                  [7.526, 45.184]],
+                 [[7.526, 45.216],
+                  [7.526, 45.247],
+                  [7.571, 45.247],
+                  [7.571, 45.216],
+                  [7.526, 45.216]]]
 
-        output_36019 = rad_flows[rad_flows.origin == '36019']['flow'].values
+geom = [shapely.geometry.Polygon(p) for p in tess_polygons]
+tessellation = gpd.GeoDataFrame(geometry=geom, crs="EPSG:4326")
+tessellation = tessellation.reset_index().rename(columns={"index": constants.TILE_ID})
 
-        print(len(expecter_36019))
-        print(len(output_36019))
-        assert(len(expecter_36019) == len(output_36019))
-        for i in range(len(output_36019)):
-            assert(expecter_36019[i] == output_36019[i])
+tot_outflow = np.random.randint(10, 20, size=len(tessellation))
+relevance = np.random.randint(5, 10, size=len(tessellation))
+tessellation[constants.TOT_OUTFLOW] = tot_outflow
+tessellation[constants.RELEVANCE] = relevance
+
+# # flows
+# locs = tessellation[constants.TILE_ID].values
+# ods = [[o, d] for o in locs for d in locs if o != d]
+#
+# # centroids
+# centroid = [[lnla.y, lnla.x] for lnla in tessellation.geometry.centroid.values]
+# # distance matrix
+# distance = np.reshape([distfunc(laln0, laln1) for laln0 in centroid for laln1 in centroid], (len(locs), len(locs)))
+
+
+# compute expected flows and probabilities
+
+def correct_radiation():
+    # TODO
+    return 0
+
+
+# generate
+
+@pytest.mark.parametrize('out_format', ['flows', 'flows_sample', 'probabilities'])
+def test_radiation_generate(out_format):
+
+    # TODO: check correctness of results
+
+    radiation = Radiation()
+    rad_fdf = radiation.generate(tessellation, out_format=out_format)
+
+    assert isinstance(rad_fdf, FlowDataFrame)
 
 

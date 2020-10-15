@@ -300,6 +300,10 @@ class Gravity:
         # put the NaN and Inf to 0.0
         np.putmask(trip_probs_matrix, np.isnan(trip_probs_matrix), 0.0)
         np.putmask(trip_probs_matrix, np.isinf(trip_probs_matrix), 0.0)
+
+        # put diagonal elements to zero: i.e. exclude intra-location trips (self flows)
+        np.fill_diagonal(trip_probs_matrix, 0.)
+
         return trip_probs_matrix
 
     def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
@@ -322,7 +326,7 @@ class Gravity:
             the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
             
         out_format : str, optional
-            the format of the generated flows. Possible values are "flows" (i.e. average flows, "sample_flows" and "probabilities". The default is "flows".
+            the format of the generated flows. Possible values are "flows" (average flow between two locations), "flows_sample" (random sample of flows), and "probabilities" (probability of a unit flow between two locations). The default is "flows".
             
         Returns
         -------
@@ -334,9 +338,9 @@ class Gravity:
         self._tile_id_column = tile_id_column
         # self._spatial_tessellation = spatial_tessellation
 
-        if out_format not in ['flows', 'sample_flows', 'probabilities']:
+        if out_format not in ['flows', 'flows_sample', 'probabilities']:
             print('Output format \"%s\" not available. Flows will be used.\n'
-                  'Available output formats are [flows, sample_flows, probabilities]' % out_format)
+                  'Available output formats are [flows, flows_sample, probabilities]' % out_format)
             out_format = "flows"
 
         if 'flows' in out_format:
@@ -360,7 +364,7 @@ class Gravity:
                 # return average flows
                 od_matrix = trip_probs_matrix * np.sum(tot_outflows)
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
-            elif out_format == 'sample_flows':
+            elif out_format == 'flows_sample':
                 # generate random fluxes according to trip probabilities
                 od_matrix = np.reshape(np.random.multinomial(np.sum(tot_outflows), trip_probs_matrix.flatten()),
                                        (n_locs, n_locs))
@@ -379,7 +383,7 @@ class Gravity:
             if out_format == 'flows':
                 od_matrix = (trip_probs_matrix.T * tot_outflows).T
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)
-            elif out_format == 'sample_flows':
+            elif out_format == 'flows_sample':
                 # generate random fluxes according to trip probabilities
                 od_matrix = np.array([np.random.multinomial(tot_outflows[i], trip_probs_matrix[i]) for i in origins])
                 return self._from_matrix_to_flowdf(od_matrix, origins, spatial_tessellation)

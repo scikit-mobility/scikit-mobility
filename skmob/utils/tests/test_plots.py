@@ -101,8 +101,6 @@ df = pd.DataFrame(flow_list, columns=[constants.FLOW, constants.ORIGIN, constant
 fdf = FlowDataFrame(df, tessellation=tessellation)
 
 
-
-
 # plot_trajectory
 
 @pytest.mark.parametrize('tdf', [tdf_test])
@@ -123,7 +121,7 @@ def test_plot_trajectory_tdf(tdf, marker):
 
 @pytest.mark.parametrize('tdf', [tdf_test])
 def test_plot_stops(tdf):
-    # map_f = plot.plot_trajectory(tdf)
+    map_f = plot.plot_trajectory(tdf)
     # map_f = plot.plot_stops(tdf, map_f=map_f)
 
     stdf = detection.stops(tdf)
@@ -134,7 +132,7 @@ def test_plot_stops(tdf):
 
 @pytest.mark.parametrize('tdf', [tdf_test])
 def test_plot_stops_tdf(tdf):
-    # map_f = tdf.plot_trajectory()
+    map_f = tdf.plot_trajectory()
     # map_f = tdf.plot_stops(map_f=map_f)
 
     stdf = detection.stops(tdf)

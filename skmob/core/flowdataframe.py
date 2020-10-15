@@ -244,13 +244,20 @@ class FlowDataFrame(pd.DataFrame):
 
         m = np.zeros((len(self._tessellation), len(self._tessellation)))
 
-        def _to_matrix(df, matrix, tessellation):
-            o = tessellation.index[tessellation['tile_ID'] == df['origin']].iloc[0]
-            d = tessellation.index[tessellation['tile_ID'] == df['destination']].iloc[0]
+        # def _to_matrix(df, matrix, tessellation):
+        #     o = tessellation.index[tessellation['tile_ID'] == df['origin']].iloc[0]
+        #     d = tessellation.index[tessellation['tile_ID'] == df['destination']].iloc[0]
+        #
+        #     matrix[o][d] = df['flow']
+        #
+        # self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
 
-            matrix[o][d] = df['flow']
+        def _to_matrix(fdf, x, matrix):
+            o = fdf.tessellation.index[fdf.tessellation[constants.TILE_ID] == x[constants.ORIGIN]].values[0]
+            d = fdf.tessellation.index[fdf.tessellation[constants.TILE_ID] == x[constants.DESTINATION]].values[0]
+            matrix[o][d] = x[constants.FLOW]
 
-        self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
+        self.apply(lambda x: _to_matrix(self, x, m), axis=1)
 
         return m
 

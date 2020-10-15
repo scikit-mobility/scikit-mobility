@@ -309,7 +309,7 @@ class EPR:
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained or doubly constrained) to use when generating the probability to move between two locations. The default is "{}".
+            the gravity model (singly constrained) to use when generating the probability to move between two locations. The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -318,7 +318,7 @@ class EPR:
             a list of integers, each identifying the location from which to start the simulation of each agent. Note that, if `starting_locations` is not None, its length must be equal to the value of `n_agents`, i.e., you must specify one starting location per agent. The default is None.
         
         od_matrix : numpy array or None, optional
-            the origin destination matrix to use for deciding the movements of the agent. If `None`, it is computed "on the fly" during the simulation. The default is None.
+            the origin destination matrix to use for deciding the movements of the agent (element [i,j] is the probability of one trip from location with tessellation index i to j, normalized by origin location) (element [i,j] is the probability of one trip from location with tessellation index i to j, normalized by origin location). If `None`, it is computed "on the fly" during the simulation. The default is None.
         
         relevance_column : str, optional
             the name of the column in `spatial_tessellation` to use as relevance variable. The default is "relevance".
@@ -342,6 +342,10 @@ class EPR:
 
         if gravity_singly == {}:
             self.gravity_singly = Gravity(gravity_type='singly constrained')
+        elif type(gravity_singly) is Gravity:
+            self.gravity_singly = gravity_singly
+        else:
+            raise TypeError("Argument `gravity_singly` should be of type skmob.models.gravity.Gravity.")
 
         # Save function arguments and values in a dictionary
         frame = inspect.currentframe()
@@ -377,6 +381,7 @@ class EPR:
             self._od_matrix = lil_matrix((num_locs, num_locs))
             self._is_sparse = True
         else:
+            # TODO: check it is a properly formatted stochastic matrix
             self._od_matrix = od_matrix
             self._is_sparse = False
 
@@ -524,7 +529,7 @@ class DensityEPR(EPR):
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained or doubly constrained) to use when generating the probability to move between two locations (note, used by DensityEPR). The default is "{}".
+            the gravity model (singly constrained) to use when generating the probability to move between two locations (note, used by DensityEPR). The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -536,7 +541,7 @@ class DensityEPR(EPR):
             a list of integers, each identifying the location from which to start the simulation of each agent. Note that, if `starting_locations` is not None, its length must be equal to the value of `n_agents`, i.e., you must specify one starting location per agent. The default is None.
         
         od_matrix : numpy array or None, optional
-            the origin destination matrix to use for deciding the movements of the agent. If `None`, it is computed "on the fly" during the simulation. The default is None.
+            the origin destination matrix to use for deciding the movements of the agent (element [i,j] is the probability of one trip from location with tessellation index i to j, normalized by origin location). If `None`, it is computed "on the fly" during the simulation. The default is None.
         
         random_state : int or None, optional
             if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.
@@ -660,7 +665,7 @@ class SpatialEPR(EPR):
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained or doubly constrained) to use when generating the probability to move between two locations (note, used by DensityEPR). The default is "{}".
+            the gravity model (singly constrained) to use when generating the probability to move between two locations (note, used by DensityEPR). The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -669,7 +674,7 @@ class SpatialEPR(EPR):
             a list of integers, each identifying the location from which to start the simulation of each agent. Note that, if `starting_locations` is not None, its length must be equal to the value of `n_agents`, i.e., you must specify one starting location per agent. The default is None.
         
         od_matrix : numpy array or None, optional
-            the origin destination matrix to use for deciding the movements of the agent. If `None`, it is computed "on the fly" during the simulation. The default is None.
+            the origin destination matrix to use for deciding the movements of the agent (element [i,j] is the probability of one trip from location with tessellation index i to j, normalized by origin location). If `None`, it is computed "on the fly" during the simulation. The default is None.
         
         random_state : int or None, optional
             if int, it is the seed used by the random number generator; if None, the random number generator is the RandomState instance used by np.random and random.random. The default is None.
@@ -805,7 +810,7 @@ class Ditras(EPR):
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained or doubly constrained) to use when generating the probability to move between two locations. The default is "{}".
+            the gravity model (singly constrained) to use when generating the probability to move between two locations. The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -814,7 +819,7 @@ class Ditras(EPR):
             a list of integers, each identifying the location from which to start the simulation of each agent. Note that, if `starting_locations` is not None, its length must be equal to the value of `n_agents`, i.e., you must specify one starting location per agent. The default is None.
         
         od_matrix : numpy array or None, optional
-            the origin destination matrix to use for deciding the movements of the agent. If `None`, it is computed "on the fly" during the simulation. The default is None.
+            the origin destination matrix to use for deciding the movements of the agent (element [i,j] is the probability of one trip from location with tessellation index i to j, normalized by origin location). If `None`, it is computed "on the fly" during the simulation. The default is None.
         
         relevance_column : str, optional
             the name of the column in `spatial_tessellation` to use as relevance variable. The default is "relevance".
@@ -838,6 +843,10 @@ class Ditras(EPR):
 
         if gravity_singly == {}:
             self.gravity_singly = Gravity(gravity_type='singly constrained')
+        elif type(gravity_singly) is Gravity:
+            self.gravity_singly = gravity_singly
+        else:
+            raise TypeError("Argument `gravity_singly` should be of type skmob.models.gravity.Gravity.")
 
         # Save function arguments and values in a dictionary
         frame = inspect.currentframe()

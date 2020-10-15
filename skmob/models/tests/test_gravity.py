@@ -12,6 +12,9 @@ distfunc = gislib.getDistance
 
 atol = 1e-12
 
+# fix a random seed
+np.random.seed(2)
+
 
 def all_equal(a, b):
     return np.allclose(a, b, rtol=0., atol=atol)
@@ -33,14 +36,19 @@ tess_polygons = [[[7.481, 45.184],
                   [7.526, 45.216],
                   [7.571, 45.216],
                   [7.571, 45.184],
-                  [7.526, 45.184]]]
-
-tot_outflow = [10, 8, 4]
-relevance = [1, 20, 6]
+                  [7.526, 45.184]],
+                 [[7.526, 45.216],
+                  [7.526, 45.247],
+                  [7.571, 45.247],
+                  [7.571, 45.216],
+                  [7.526, 45.216]]]
 
 geom = [shapely.geometry.Polygon(p) for p in tess_polygons]
 tessellation = gpd.GeoDataFrame(geometry=geom, crs="EPSG:4326")
 tessellation = tessellation.reset_index().rename(columns={"index": constants.TILE_ID})
+
+tot_outflow = np.random.randint(10, 20, size=len(tessellation))
+relevance = np.random.randint(5, 10, size=len(tessellation))
 tessellation[constants.TOT_OUTFLOW] = tot_outflow
 tessellation[constants.RELEVANCE] = relevance
 
@@ -101,7 +109,7 @@ def correct_gm(locs, tot_outflow, relevance, distance, detfunc, gravity_type, or
 
 # generate
 
-@pytest.mark.parametrize('deterrence_func_type_args', [['power_law', [-2]], ['exponential', [2]]])
+@pytest.mark.parametrize('deterrence_func_type_args', [['power_law', [-2]], ['exponential', [0.2]]])
 @pytest.mark.parametrize('gravity_type', ['singly constrained', 'globally constrained'])
 @pytest.mark.parametrize('origin_exp', [1.5])
 @pytest.mark.parametrize('destination_exp', [2.0])
@@ -120,7 +128,7 @@ def test_gravity_generate(deterrence_func_type_args, gravity_type, origin_exp, d
     # correct flows
     if deterrence_func_type == 'exponential':
         detfunc = functools.partial(exponential_deterrence_func, R=deterrence_func_args[0])
-        exclude_selfflow = False
+        exclude_selfflow = True #False
     else:
         detfunc = functools.partial(powerlaw_deterrence_func, exponent=deterrence_func_args[0])
         exclude_selfflow = True
@@ -137,9 +145,37 @@ def test_gravity_generate(deterrence_func_type_args, gravity_type, origin_exp, d
 
 # fit
 
-# @pytest.mark.parametrize('', [])
-# @pytest.mark.parametrize('', [])
-# def test_gravity_fit():
-#     result =
-#     expected_result =
-#     assert np.abs(result - expected_result) < atol
+@pytest.mark.parametrize('deterrence_func_type_args', [['power_law', [-2]], ['exponential', [0.2]]])
+@pytest.mark.parametrize('gravity_type', ['singly constrained', 'globally constrained'])
+@pytest.mark.parametrize('origin_exp', [1.0])
+@pytest.mark.parametrize('destination_exp', [2.0])
+@pytest.mark.parametrize('out_format', ['flows'])
+def test_gravity_fit(deterrence_func_type_args, gravity_type, origin_exp, destination_exp, out_format):
+
+    # TODO: check correctness of results
+
+    deterrence_func_type, deterrence_func_args = deterrence_func_type_args
+
+    # generate flows
+    gm_gen = Gravity(deterrence_func_type=deterrence_func_type,
+                     deterrence_func_args=deterrence_func_args,
+                     gravity_type=gravity_type,
+                     origin_exp=origin_exp,
+                     destination_exp=destination_exp)
+
+    gmfdf = gm_gen.generate(tessellation, out_format=out_format)
+
+    # transform flows to integers
+    gmfdf[constants.FLOW] = list(map(int, gmfdf[constants.FLOW].values + 0.5))
+
+    # instantiate a new model and fit
+    gm_fit = Gravity(deterrence_func_type=deterrence_func_type,
+                     deterrence_func_args=deterrence_func_args,
+                     gravity_type=gravity_type,
+                     origin_exp=origin_exp,
+                     destination_exp=destination_exp)
+
+    fit_result = gm_fit.fit(gmfdf)
+
+    assert fit_result is None
+
