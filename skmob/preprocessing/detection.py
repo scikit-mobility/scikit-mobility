@@ -4,7 +4,7 @@ import numpy as np
 import inspect
 
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
+def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, leaving_index=True, no_data_for_minutes=1e12, min_speed_kmh=None):
     """Stops detection.
     
     Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
@@ -25,6 +25,9 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
 
     leaving_time : boolean, optional
         if `True`, a new column 'leaving_datetime' is added with the departure time from the stop location. The default is `True`.
+
+    leaving_index : boolean, optional
+        if `True`, a new column 'leaving_index' is added with the index of the stop location. The default is `True`.
 
     no_data_for_minutes : float, optional
         if the number of minutes between two consecutive points is larger than `no_data_for_minutes`,
@@ -100,44 +103,46 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
         stdf = tdf.groupby(groupby, group_keys=False, as_index=False).apply(_stops_trajectory, stop_radius=stop_radius,
-                           minutes_for_a_stop=minutes_for_a_stop, leaving_time=leaving_time,
-                           no_data_for_minutes=no_data_for_minutes, min_speed_kmh=min_speed_kmh).reset_index(drop=True)
+                                                                            minutes_for_a_stop=minutes_for_a_stop,
+                                                                            leaving_time=leaving_time, leaving_index=leaving_index,
+                                                                            no_data_for_minutes=no_data_for_minutes, min_speed_kmh=min_speed_kmh)
     else:
         stdf = _stops_trajectory(tdf, stop_radius=stop_radius, minutes_for_a_stop=minutes_for_a_stop,
-                            leaving_time=leaving_time, no_data_for_minutes=no_data_for_minutes,
-                            min_speed_kmh=min_speed_kmh).reset_index(drop=True)
-
-    # TODO: remove the following line when issue #71 (Preserve the TrajDataFrame index during preprocessing operations) is solved.
-    stdf.reset_index(inplace=True, drop=True)
+                                 leaving_time=leaving_time, leaving_index=leaving_index,
+                                 no_data_for_minutes=no_data_for_minutes,
+                                 min_speed_kmh=min_speed_kmh)
 
     stdf.parameters = tdf.parameters
     stdf.set_parameter(constants.DETECTION_PARAMS, arguments)
     return stdf
 
 
-def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, leaving_index, no_data_for_minutes, min_speed_kmh):
 
     # From dataframe convert to numpy matrix
-    lat_lng_dtime_other = list(utils.to_matrix(tdf))
-    columns_order = list(tdf.columns)
+    lat_lng_dtime_other = list(utils.to_matrix(tdf, with_index=True))
+    columns_order = list(tdf.columns) + ['index']
 
-    stops, leaving_times = _stops_array(lat_lng_dtime_other, stop_radius,
-                                        minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh)
+    stops, leaving_times, leaving_indices = _stops_array(lat_lng_dtime_other, stop_radius,
+                                                         minutes_for_a_stop, leaving_time, leaving_index, no_data_for_minutes, min_speed_kmh)
 
     #print(utils.get_columns(data))
     # stops = utils.to_dataframe(stops, utils.get_columns(data))
-    stops = nparray_to_trajdataframe(stops, utils.get_columns(tdf), {})
+    stops = nparray_to_trajdataframe(stops, list(utils.get_columns(tdf)) + ['index'], {})
 
     # Put back to the original order
     stops = stops[columns_order]
+    stops.set_index('index', inplace=True)
 
     if leaving_time:
         stops.loc[:, 'leaving_datetime'] = leaving_times
+    if leaving_index:
+        stops.loc[:, 'leaving_index'] = leaving_indices
 
     return stops
 
 
-def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, leaving_index, no_data_for_minutes, min_speed_kmh):
     """
     Create a stop if the user spend at least `minutes_for_a_stop` minutes
     within a distance `stop_radius` from a given point.
@@ -147,9 +152,11 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
 
     stops = []
     leaving_times = []
+    leaving_indices = []
 
+    idx_0 = lat_lng_dtime_other[0][-1]  # the index
     lat_0, lon_0, t_0 = lat_lng_dtime_other[0][:3]
-    sum_lat, sum_lon, sum_t = [lat_0], [lon_0], [t_0]
+    sum_lat, sum_lon, sum_t, sum_idx = [lat_0], [lon_0], [t_0], [idx_0]
     speeds_kmh = []
 
     count = 1
@@ -157,13 +164,14 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
 
     for i in range(lendata):
 
-        lat, lon, t = lat_lng_dtime_other[i+1][:3]
+        lat, lon, t = lat_lng_dtime_other[i + 1][:3]
+        idx = lat_lng_dtime_other[i + 1][-1]
 
         if utils.diff_seconds(lat_lng_dtime_other[i][2], t) / 60. > no_data_for_minutes:
             # No data for more than `no_data_for_minutes` minutes: Not a stop
             count = 0
-            lat_0, lon_0, t_0 = lat, lon, t
-            sum_lat, sum_lon, sum_t = [], [], []
+            lat_0, lon_0, t_0, idx_0 = lat, lon, t, idx
+            sum_lat, sum_lon, sum_t, sum_idx = [], [], [], []
             speeds_kmh = []
 
         Dt = utils.diff_seconds(t_0, t) / 60.
@@ -175,11 +183,12 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
 
         if Dr > stop_radius:
             if Dt > minutes_for_a_stop:
-                extra_cols = list(lat_lng_dtime_other[i][3:])
+                extra_cols = list(lat_lng_dtime_other[i][3:])[:-1]
 
                 # estimate the leaving time
                 if min_speed_kmh is None:
                     estimated_final_t = t
+                    estimated_final_idx = idx
                 else:
                     j = 1
                     for j in range(1, len(speeds_kmh)):
@@ -187,31 +196,36 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
                             break
                     if j == 1:
                         estimated_final_t = t
+                        estimated_final_idx = idx
                     else:
                         estimated_final_t = sum_t[-j]
                         sum_lat = sum_lat[:-j]
                         sum_lon = sum_lon[:-j]
+                        estimated_final_idx = sum_idx[:-j]
 
                 if len(sum_lat) > 0:
                     if leaving_time:
                         leaving_times.append(estimated_final_t)
 
-                    stops += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
+                    if leaving_index:
+                        leaving_indices.append(estimated_final_idx)
+                    stops += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols + [idx_0]]
 
                 count = 0
-                lat_0, lon_0, t_0 = lat, lon, t
-                sum_lat, sum_lon, sum_t = [], [], []
+                lat_0, lon_0, t_0, idx_0 = lat, lon, t, idx
+                sum_lat, sum_lon, sum_t, sum_idx = [], [], [], []
                 speeds_kmh = []
             else:
                 # Not a stop
                 count = 0
-                lat_0, lon_0, t_0 = lat, lon, t
-                sum_lat, sum_lon, sum_t = [], [], []
+                lat_0, lon_0, t_0, idx_0 = lat, lon, t, idx
+                sum_lat, sum_lon, sum_t, sum_idx = [], [], [], []
                 speeds_kmh = []
 
         count += 1
         sum_lat += [lat]
         sum_lon += [lon]
         sum_t += [t]
+        sum_idx += [idx]
 
-    return stops, leaving_times
+    return stops, leaving_times, leaving_indices
