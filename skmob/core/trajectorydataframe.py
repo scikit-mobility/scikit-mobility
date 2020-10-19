@@ -332,7 +332,7 @@ class TrajDataFrame(pd.DataFrame):
 
     def __getitem__(self, key):
         """
-        It the result contains lat, lng and datetime, return a TrajDataFrame, else a pandas DataFrame.
+        If the result contains lat, lng and datetime, return a TrajDataFrame, else a pandas DataFrame.
         """
         result = super(TrajDataFrame, self).__getitem__(key)
 
