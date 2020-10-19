@@ -557,14 +557,14 @@ class FlowDataFrame(pd.DataFrame):
                                tile_popup=tile_popup, radius_origin_point=radius_origin_point,
                                color_origin_point=color_origin_point)
 
-    def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
+    def plot_tessellation(self, map_f=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
         """
         Plot the spatial tessellation on a Folium map.
         
         Parameters
         ----------
-        map_osm : folium.Map, optional
+        map_f : folium.Map, optional
             the `folium.Map` object where the GeoDataFrame describing the spatial tessellation will be plotted. If `None`, a new map will be created. The default is `None`.
 
         maxitems : int, optional
@@ -609,5 +609,5 @@ class FlowDataFrame(pd.DataFrame):
         
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png
         """
-        return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
+        return plot.plot_gdf(self.tessellation, map_f=map_f, maxitems=maxitems, style_func_args=style_func_args,
                              popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

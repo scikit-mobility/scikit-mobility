@@ -421,10 +421,10 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, leg
         color = get_color(cl)
         if start_datetime <= t0 <= end_datetime:
             if cl in current_labels:
-                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color)
+                ax.axvspan(t0.to_pydatetime(), t1.to_pydatetime(), lw=0.0, alpha=0.75, color=color)
             else:
                 current_labels += [cl]
-                ax.axvspan(t0, t1, lw=0.0, alpha=0.75, color=color, label=cl)
+                ax.axvspan(t0.to_pydatetime(), t1.to_pydatetime(), lw=0.0, alpha=0.75, color=color, label=cl)
 
     plt.xlim(start_datetime, end_datetime)
 
