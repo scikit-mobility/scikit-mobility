@@ -18,6 +18,5 @@ Collective Measures
    visits_per_location
    homes_per_location
    visits_per_time_unit
-   origin_destination_matrix
 
    

@@ -59,7 +59,7 @@ class TestCompression:
     def test_compress(self):
         output = compression.compress(self.trjdat)
 
-        expected = self.trjdat.drop([3, 7, 11, 14, 17, 19])
+        expected = self.trjdat.copy()
 
         output.reset_index(inplace=True)
         output.drop(columns=['index'], inplace=True)
@@ -67,11 +67,23 @@ class TestCompression:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 
-        output = compression.compress(self.trjdat, spatial_radius_km=100)
+        output = compression.compress(self.trjdat, spatial_radius_km=20)
 
-        expected = self.trjdat.drop([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
+        expected = TrajDataFrame({"lat":{"0":43.8430139,"1":43.6264,"2":43.77925,"3":43.8430139,"4":43.54427,
+                                         "5":43.6264,"6":43.8430139,"7":43.77925,"8":43.6264,"9":43.77925,
+                                         "10":43.70853,"11":43.77925,"12":43.8430139,"13":43.8430139,"14":43.54427},
+                                  "lng":{"0":10.507994,"1":10.364875,"2":11.24626,"3":10.507994,"4":10.32615,
+                                         "5":10.364875,"6":10.507994,"7":11.24626,"8":10.364875,"9":11.24626,
+                                         "10":10.4036,"11":11.24626,"12":10.507994,"13":10.507994,"14":10.32615},
+                                  "datetime":{"0":1296722044,"1":1296725644,"2":1296815644,"3":1296722044,
+                                              "4":1296819244,"5":1296722044,"6":1296815644,"7":1296819244,
+                                              "8":1296815644,"9":1296822844,"10":1296815644,"11":1296819244,
+                                              "12":1296909244,"13":1296815644,"14":1296819244},
+                                  "uid":{"0":1,"1":1,"2":1,"3":2,"4":2,"5":3,"6":3,"7":3,"8":4,"9":4,"10":5,
+                                         "11":5,"12":5,"13":6,"14":6}}, timestamp=True)
 
         output.reset_index(inplace=True)
         output.drop(columns=['index'], inplace=True)
@@ -79,4 +91,5 @@ class TestCompression:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected, check_dtype=False) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected, check_dtype=False)

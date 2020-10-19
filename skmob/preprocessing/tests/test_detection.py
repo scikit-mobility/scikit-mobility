@@ -76,7 +76,8 @@ class TestDetection:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected, check_dtype=False) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected, check_dtype=False)
 
         output = detection.stops(self.trjdat, minutes_for_a_stop=60.0, leaving_time=False)
 
@@ -88,5 +89,6 @@ class TestDetection:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected, check_dtype=False) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected, check_dtype=False)
 

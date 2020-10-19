@@ -1,16 +1,9 @@
-import pytest
-import skmob
-import pandas as pd
-from datetime import datetime
-
 from skmob import TrajDataFrame
 from skmob.measures import collective
 from skmob.utils import constants
 import numpy as np
 import pandas as pd
 import math
-from skmob.utils.constants import UID, DATETIME, LATITUDE, LONGITUDE
-from skmob.utils.utils import frequency_vector, probability_vector
 
 
 class TestCollectiveMetrics:
@@ -131,17 +124,17 @@ class TestCollectiveMetrics:
 
         assert (len(output) == 3)
         assert (isinstance(output, pd.core.frame.DataFrame))
-        assert (output[(output.lat == 43.544270)]['n_visits'].values[0] == 4)
-        assert (output[(output.lat == 43.708530)]['n_visits'].values[0] == 1)
-        assert (output[(output.lng == 10.507994)]['n_visits'].values[0] == 1)
+        assert (output[(output.lat == 43.544270)]['n_homes'].values[0] == 4)
+        assert (output[(output.lat == 43.708530)]['n_homes'].values[0] == 1)
+        assert (output[(output.lng == 10.507994)]['n_homes'].values[0] == 1)
 
         output_2 = collective.homes_per_location(self.trjdat, start_night='18:00', end_night='11:00')
 
-        assert (len(output) == 3)
-        assert (isinstance(output, pd.core.frame.DataFrame))
-        assert ( output[(output.lat == 43.544270)]['n_visits'].values[0] == 2)
-        assert ( output[(output.lat == 43.708530)]['n_visits'].values[0] == 2)
-        assert ( output[(output.lng == 10.507994)]['n_visits'].values[0] == 2)
+        assert (len(output_2) == 3)
+        assert (isinstance(output_2, pd.core.frame.DataFrame))
+        assert (output_2[(output_2.lat == 43.544270)]['n_homes'].values[0] == 2)
+        assert (output_2[(output_2.lat == 43.708530)]['n_homes'].values[0] == 2)
+        assert (output_2[(output_2.lng == 10.507994)]['n_homes'].values[0] == 2)
 
     def test_visits_per_time_unit(self):
 
@@ -155,12 +148,3 @@ class TestCollectiveMetrics:
 
         for i in range(len(output_1)):
             assert (output_1[i] == expected_out_1[i])
-
-    def test_origin_destination_matrix(self):
-
-        output_1 = collective.origin_destination_matrix(self.trjdat)
-
-        output_2 = collective.origin_destination_matrix(self.trjdat, self_loops=True)
-
-        assert(len(output_1) == 9)
-        assert(len(output_2) == 9)

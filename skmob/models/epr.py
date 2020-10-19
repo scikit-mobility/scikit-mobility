@@ -309,7 +309,7 @@ class EPR:
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained) to use when generating the probability to move between two locations. The default is "{}".
+            the (singly constrained) gravity model to use when generating the probability to move between two locations. The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -343,7 +343,10 @@ class EPR:
         if gravity_singly == {}:
             self.gravity_singly = Gravity(gravity_type='singly constrained')
         elif type(gravity_singly) is Gravity:
-            self.gravity_singly = gravity_singly
+            if gravity_singly.gravity_type == 'singly constrained':
+                self.gravity_singly = gravity_singly
+            else:
+                raise AttributeError("Argument `gravity_singly` should be a skmob.models.gravity.Gravity object with argument `gravity_type` equal to 'singly constrained'.")
         else:
             raise TypeError("Argument `gravity_singly` should be of type skmob.models.gravity.Gravity.")
 
@@ -810,7 +813,7 @@ class Ditras(EPR):
             the spatial tessellation, i.e., a division of the territory in locations. 
         
         gravity_singly : {} or Gravity, optional
-            the gravity model (singly constrained) to use when generating the probability to move between two locations. The default is "{}".
+            the (singly constrained) gravity model to use when generating the probability to move between two locations. The default is "{}".
         
         n_agents : int, optional
             the number of agents to generate. The default is 1.
@@ -844,7 +847,10 @@ class Ditras(EPR):
         if gravity_singly == {}:
             self.gravity_singly = Gravity(gravity_type='singly constrained')
         elif type(gravity_singly) is Gravity:
-            self.gravity_singly = gravity_singly
+            if gravity_singly.gravity_type == 'singly constrained':
+                self.gravity_singly = gravity_singly
+            else:
+                raise AttributeError("Argument `gravity_singly` should be a skmob.models.gravity.Gravity object with argument `gravity_type` equal to 'singly constrained'.")
         else:
             raise TypeError("Argument `gravity_singly` should be of type skmob.models.gravity.Gravity.")
 

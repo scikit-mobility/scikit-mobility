@@ -1,4 +1,3 @@
-import numpy as np
 from skmob.utils import gislib
 import math
 
@@ -29,11 +28,11 @@ class TestClustering:
         output = gislib.getDistanceByHaversine(self.point_1, self.point_1)
         assert (math.isclose(output, 0))
 
-    def test_decimal_to_DMS(self):
-        output = gislib.DecimalToDMS(self.decimal)
-        assert (output[0] == 43)
-        assert (output[1] == 50)
-        assert (math.isclose(output[2], 34.85))
+    # def test_decimal_to_DMS(self):
+    #     output = gislib.DecimalToDMS(self.decimal)
+    #     assert (output[0] == 43)
+    #     assert (output[1] == 50)
+    #     assert (math.isclose(output[2], 34.85))
 
     def test_DMS_to_decimal(self):
         output = gislib.DMSToDecimal(self.DMS[0], self.DMS[1], self.DMS[2])
@@ -44,6 +43,6 @@ class TestClustering:
         assert (math.isclose(output[0], 0.134989200863))
         assert (math.isclose(output[1], 0.187162559305))
 
-    def test_is_within_distance(self):
-        assert (gislib.isWithinDistance(self.point_1, self.point_2, 20))
-        assert (gislib.isWithinDistance(self.point_1, self.point_2, 40) is False)
+    # def test_is_within_distance(self):
+    #     assert (gislib.isWithinDistance(self.point_1, self.point_2, 20))
+    #     assert (gislib.isWithinDistance(self.point_1, self.point_2, 40) is False)

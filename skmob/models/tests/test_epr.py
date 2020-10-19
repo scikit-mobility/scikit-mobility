@@ -4,6 +4,7 @@ import geopandas as gpd
 import numpy as np
 import shapely
 import pytest
+from contextlib import ExitStack
 
 from ...core.trajectorydataframe import TrajDataFrame
 from ...models.gravity import Gravity
@@ -59,6 +60,8 @@ def global_variables():
     gmfdf = gm.generate(tessellation, out_format='probabilities')
     odM = gmfdf.to_matrix()
 
+    gcgm = Gravity(gravity_type='globally constrained')
+
     # instantiate a TrajDataFrame to fit the markov diary generator
 
     lats_lngs = np.array([[39.978253, 116.3272755],
@@ -79,16 +82,16 @@ def global_variables():
     tdf = TrajDataFrame(traj)
     stdf = detection.stops(tdf)
     cstdf = clustering.cluster(stdf)
-    return tessellation, gm, gmfdf, odM, cstdf
+    return tessellation, gm, gmfdf, gcgm, odM, cstdf
 
-tessellation, gm, gmfdf, odM, cstdf = global_variables()
+tessellation, gm, gmfdf, gcgm, odM, cstdf = global_variables()
 
 
 # generate
 @pytest.mark.parametrize('epr_model_type', [EPR, DensityEPR, SpatialEPR, Ditras])
 @pytest.mark.parametrize('start_date', [pd.to_datetime('2019/01/01 08:00:00')])
 @pytest.mark.parametrize('end_date', [pd.to_datetime('2019/01/02 08:00:00')])
-@pytest.mark.parametrize('gravity_singly', [{}, gm])
+@pytest.mark.parametrize('gravity_singly', [{}, gm, gcgm])
 @pytest.mark.parametrize('n_agents', [1, 2])
 @pytest.mark.parametrize('starting_locations', [None, 'random'])
 @pytest.mark.parametrize('od_matrix', [None, odM])
@@ -112,7 +115,12 @@ def test_epr_generate(epr_model_type, start_date, end_date, gravity_singly,
         epr = epr_model_type()
 
     # generate flows
-    tdf = epr.generate(start_date, end_date,
+    with ExitStack() as stack:
+        if gravity_singly != {}:
+            if gravity_singly.gravity_type != 'singly constrained':
+                stack.enter_context(pytest.raises(AttributeError))
+
+        tdf = epr.generate(start_date, end_date,
                        spatial_tessellation=tessellation,
                        gravity_singly=gravity_singly,
                        n_agents=n_agents,
@@ -121,4 +129,4 @@ def test_epr_generate(epr_model_type, start_date, end_date, gravity_singly,
                        random_state=random_state,
                        show_progress=show_progress)
 
-    assert isinstance(tdf, TrajDataFrame)
+        assert isinstance(tdf, TrajDataFrame)

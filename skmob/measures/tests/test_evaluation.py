@@ -11,7 +11,6 @@ class TestEvaluationMetrics:
         self.prediction_b = [2,2,2]
         self.prediction_c = [3,2,1]
 
-
     def test_r_squared(self):
         assert(sk.r_squared(self.ground, self.prediction_a) == 1)
         assert(sk.r_squared(self.ground, self.prediction_b) == 0)
@@ -29,8 +28,8 @@ class TestEvaluationMetrics:
 
     def test_nrmse(self):
         assert (math.sqrt(sk.mse(self.ground, self.prediction_a))/np.sum(self.ground) == 0)
-        assert (math.isclose(math.sqrt(sk.mse(self.ground, self.prediction_b))/np.sum(self.ground), 0.11111111111))
-        assert (math.isclose(math.sqrt(sk.mse(self.ground, self.prediction_c))/np.sum(self.ground), 0.44444444444))
+        assert (math.isclose(math.sqrt(sk.mse(self.ground, self.prediction_b))/np.sum(self.ground), 0.1360827635))
+        assert (math.isclose(math.sqrt(sk.mse(self.ground, self.prediction_c))/np.sum(self.ground), 0.272165527))
 
     def test_max_error(self):
         assert (sk.max_error(self.ground, self.prediction_a) == 0)

@@ -89,8 +89,8 @@ class TestFlowDataFrame:
     @pytest.mark.parametrize('flow_popup', [False, True])
     def test_plot_flows(self, min_flow, flow_popup):
         map_f = fdf.plot_flows(min_flow=min_flow, flow_popup=flow_popup)
-        assert type(map_f) is folium.folium.Map
+        assert isinstance(map_f, folium.folium.Map)
 
     def test_plot_gdf(self):
         map_f = fdf.plot_tessellation()
-        assert type(map_f) is folium.folium.Map
+        assert isinstance(map_f, folium.folium.Map)

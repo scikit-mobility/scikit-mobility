@@ -133,15 +133,15 @@ class TestTrajectoryDataFrame:
 
     def test_plot_trajectory(self):
         map_f = self.tdf0.plot_trajectory()
-        assert type(map_f) is folium.folium.Map
+        assert isinstance(map_f, folium.folium.Map)
 
     def test_plot_stops(self):
         map_f = self.stdf.plot_stops()
-        assert type(map_f) is folium.folium.Map
+        assert isinstance(map_f, folium.folium.Map)
 
     def test_plot_diary(self):
         ax = self.cstdf.plot_diary(self.tdf0[UID].iloc[0])
-        assert type(ax) is matplotlib.axes._subplots.Subplot
+        assert isinstance(ax, matplotlib.axes._subplots.Subplot)
 
     @pytest.mark.parametrize('self_loops', [True, False])
     def test_to_flowdataframe(self, self_loops):

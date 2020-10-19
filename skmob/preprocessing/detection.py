@@ -132,7 +132,7 @@ def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_dat
     stops = stops[columns_order]
 
     if leaving_time:
-        stops.loc[:, 'leaving_datetime'] = leaving_times
+        stops.loc[:, constants.LEAVING_DATETIME] = pd.to_datetime(leaving_times)
 
     return stops
 

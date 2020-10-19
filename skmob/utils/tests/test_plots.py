@@ -107,14 +107,14 @@ fdf = FlowDataFrame(df, tessellation=tessellation)
 @pytest.mark.parametrize('marker', [True, False])
 def test_plot_trajectory(tdf, marker):
     map_f = plot.plot_trajectory(tdf, start_end_markers=marker)
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 
 @pytest.mark.parametrize('tdf', [tdf_test])
 @pytest.mark.parametrize('marker', [True, False])
 def test_plot_trajectory_tdf(tdf, marker):
     map_f = tdf.plot_trajectory(start_end_markers=marker)
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 
 # plot_stops
@@ -127,7 +127,7 @@ def test_plot_stops(tdf):
     stdf = detection.stops(tdf)
     map_f = plot.plot_stops(stdf, map_f=map_f)
 
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 
 @pytest.mark.parametrize('tdf', [tdf_test])
@@ -138,7 +138,7 @@ def test_plot_stops_tdf(tdf):
     stdf = detection.stops(tdf)
     map_f = stdf.plot_stops(map_f=map_f)
 
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 
 # plot_diary
@@ -151,7 +151,7 @@ def test_plot_diary(tdf, user, start_datetime):
     cstdf = clustering.cluster(stdf)
     ax = plot.plot_diary(cstdf, user, start_datetime=start_datetime)
 
-    assert type(ax) is matplotlib.axes._subplots.Subplot
+    assert isinstance(ax, matplotlib.axes._subplots.Subplot)
 
 
 @pytest.mark.parametrize('tdf', [tdf_test])
@@ -162,7 +162,7 @@ def test_plot_diary(tdf, user, start_datetime):
     cstdf = clustering.cluster(stdf)
     ax = cstdf.plot_diary(user, start_datetime=start_datetime)
 
-    assert type(ax) is matplotlib.axes._subplots.Subplot
+    assert isinstance(ax, matplotlib.axes._subplots.Subplot)
 
 
 # plot_flows
@@ -172,14 +172,14 @@ def test_plot_diary(tdf, user, start_datetime):
 @pytest.mark.parametrize('flow_popup', [False, True])
 def test_plot_flows(fdf, min_flow, flow_popup):
     map_f = plot.plot_flows(fdf, min_flow=min_flow, flow_popup=flow_popup)
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 @pytest.mark.parametrize('fdf', [fdf])
 @pytest.mark.parametrize('min_flow', [0, 2])
 @pytest.mark.parametrize('flow_popup', [False, True])
 def test_plot_flows_fdf(fdf, min_flow, flow_popup):
     map_f = fdf.plot_flows(min_flow=min_flow, flow_popup=flow_popup)
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 
 # plot_gdf
@@ -188,6 +188,6 @@ def test_plot_flows_fdf(fdf, min_flow, flow_popup):
 def test_plot_gdf(geom):
     gdf = gpd.GeoDataFrame(geom, columns=['geometry'])
     map_f = plot.plot_gdf(gdf)
-    assert type(map_f) is folium.folium.Map
+    assert isinstance(map_f, folium.folium.Map)
 
 

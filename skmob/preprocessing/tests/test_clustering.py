@@ -63,7 +63,8 @@ class TestClustering:
         expected = self.trjdat
         expected['cluster'] = expected_cluster
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 
         output = clustering.cluster(self.trjdat, cluster_radius_km=40)
 
@@ -71,5 +72,5 @@ class TestClustering:
         expected = self.trjdat
         expected['cluster'] = expected_cluster
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
-
+        # assert
+        pd.testing.assert_frame_equal(output, expected)

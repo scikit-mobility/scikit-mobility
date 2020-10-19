@@ -67,12 +67,14 @@ class TestFiltering:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 
         output = filtering.filter(self.trjdat, max_speed_kmh=120.)
         expected = self.trjdat
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 
         output = filtering.filter(self.trjdat, max_speed_kmh=10., max_loop=1)
 
@@ -84,7 +86,8 @@ class TestFiltering:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 
         output = filtering.filter(self.trjdat, max_speed_kmh=10., ratio_max=0.9)
 
@@ -96,6 +99,6 @@ class TestFiltering:
         expected.reset_index(inplace=True)
         expected.drop(columns=['index'], inplace=True)
 
-        assert (pd.testing.assert_frame_equal(output, expected) is None)
-
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
 

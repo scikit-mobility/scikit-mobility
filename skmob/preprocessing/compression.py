@@ -14,7 +14,7 @@ def compress(tdf, spatial_radius_km=0.2):
         the input trajectories of the individuals.
 
     spatial_radius_km : float, optional
-        the minimum distance (in km) between points of the compressed trajectory. The default is `0.2`.
+        the minimum distance (in km) between consecutive points of the compressed trajectory. The default is `0.2`.
     
     Returns
     -------
@@ -92,6 +92,9 @@ def _compress_trajectory(tdf, spatial_radius):
 
 
 def _compress_array(lat_lng_dtime_other, spatial_radius):
+    if len(lat_lng_dtime_other) < 2:
+        return lat_lng_dtime_other
+
     # Define the distance function to use
     measure_distance = gislib.getDistance
 
@@ -100,6 +103,7 @@ def _compress_array(lat_lng_dtime_other, spatial_radius):
 
     sum_lat, sum_lon = [lat_0], [lon_0]
     t_0 = lat_lng_dtime_other[0][2]
+    i_0 = 0
     count = 1
     lendata = len(lat_lng_dtime_other) - 1
 
@@ -110,16 +114,21 @@ def _compress_array(lat_lng_dtime_other, spatial_radius):
 
         if Dr > spatial_radius:
 
-            extra_cols = list(lat_lng_dtime_other[i][3:])
+            extra_cols = list(lat_lng_dtime_other[i_0][3:])
             compressed_traj += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
 
             t_0 = t
             count = 0
             lat_0, lon_0 = lat, lon
+            i_0 = i + 1
             sum_lat, sum_lon = [], []
 
         count += 1
         sum_lat += [lat]
         sum_lon += [lon]
+
+        if i == lendata - 1:
+            extra_cols = list(lat_lng_dtime_other[i_0][3:])
+            compressed_traj += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
 
     return compressed_traj
