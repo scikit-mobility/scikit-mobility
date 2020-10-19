@@ -235,7 +235,7 @@ Create a `TrajDataFrame` from a [pandas](https://pandas.pydata.org/) `DataFrame`
 We can also create a `TrajDataFrame` from a file. For example, in the following we create a `TrajDataFrame` from a portion of a GPS trajectory dataset collected in the context of the [GeoLife](https://www.microsoft.com/en-us/research/publication/geolife-gps-trajectory-dataset-user-guide/) project by 178 users in a period of over four years from April 2007 to October 2011.
 
 ```python
->>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz
+>>> # download the file from https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/geolife_sample.txt.gz
 >>> # read the trajectory data (GeoLife, Beijing, China)
 >>> tdf = skmob.TrajDataFrame.from_file('geolife_sample.txt.gz', latitude='lat', longitude='lon', user_id='user', datetime='datetime')
 >>> # print a portion of the TrajDataFrame
@@ -278,7 +278,7 @@ Create a spatial tessellation from a file describing counties in New York state:
 >>> import skmob
 >>> import geopandas as gpd
 >>> # load a spatial tessellation
->>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
 >>> # print a portion of the spatial tessellation
 >>> print(tessellation.head())
@@ -294,8 +294,7 @@ Create a `FlowDataFrame` from a spatial tessellation and a file of real flows be
 
 ```python
 >>> # load real flows into a FlowDataFrame
->>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
->>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+>>> fdf = skmob.FlowDataFrame.from_file(skmob.utils.constants.NY_FLOWS_2011,
 				tessellation=tessellation,
 				tile_id='tile_ID',
 				sep=",")
@@ -488,10 +487,10 @@ Load the spatial tessellation and a data set of real flows in a `FlowDataFrame`:
 >>> from skmob.models import Gravity
 >>> import numpy as np
 >>> # load a spatial tessellation
->>> url_tess = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
->>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
->>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
+>>> # load the file with the real fluxes
+>>> fdf = skmob.FlowDataFrame.from_file(skmob.utils.constants.NY_FLOWS_2011,
 					tessellation=tessellation,
 					tile_id='tile_ID',
 					sep=",")
@@ -602,7 +601,7 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 ```python
 >>> from skmob.models.epr import DensityEPR
 >>> # load a spatial tesellation on which to perform the simulation
->>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_counties_2011.geojson'
+>>> url = >>> url = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url)
 >>> # starting and end times of the simulation
 >>> start_time = pd.to_datetime('2019/01/01 08:00:00')

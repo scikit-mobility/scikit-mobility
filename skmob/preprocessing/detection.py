@@ -44,7 +44,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     >>> import pandas as pd
     >>> from skmob.preprocessing import detection
     >>> # read the trajectory data (GeoLife)
-    >>> url = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz'
+    >>> url = skmob.utils.constants.GEOLIFE_SAMPLE
     >>> df = pd.read_csv(url, sep=',', compression='gzip')
     >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
     >>> print(tdf.head())
@@ -132,7 +132,7 @@ def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_dat
     stops = stops[columns_order]
 
     if leaving_time:
-        stops.loc[:, 'leaving_datetime'] = leaving_times
+        stops.loc[:, constants.LEAVING_DATETIME] = pd.to_datetime(leaving_times)
 
     return stops
 

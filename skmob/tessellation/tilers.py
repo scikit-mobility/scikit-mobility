@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import math
 import geopandas as gpd
-from shapely.geometry import Polygon, Point
+from shapely.geometry import MultiPolygon, Polygon, Point, box
 from shapely.ops import cascaded_union
 from ..utils import constants, utils
 import numpy as np
@@ -85,12 +85,18 @@ class SquaredTessellationTiler(TessellationTiler):
         super().__init__()
         self._instance = None
 
-    def __call__(self, base_shape, meters=50, crs=constants.DEFAULT_CRS, window_size=None):
+    def __call__(self, base_shape, meters=50, which_osm_result=-1, crs=constants.DEFAULT_CRS, window_size=None):
         if not self._instance:
 
             if isinstance(base_shape, str):
                 # Try to obatain the base shape from OSM
-                base_shape = utils.bbox_from_name(base_shape)
+                base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
+                i = 0
+                base_shape = base_shapes.loc[[i]]
+                while not (isinstance(base_shape.geometry.iloc[0], Polygon) or
+                           isinstance(base_shape.geometry.iloc[0], MultiPolygon)):
+                    i += 1
+                    base_shape = base_shapes.loc[[i]]
 
             elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
 
@@ -118,6 +124,12 @@ class SquaredTessellationTiler(TessellationTiler):
         tmp_crs['units'] = 'm'
 
         area = base_shape.to_crs(tmp_crs)
+
+        # bb = [base_shape.iloc[0].bbox_west,
+        #       base_shape.iloc[0].bbox_south,
+        #       base_shape.iloc[0].bbox_east,
+        #       base_shape.iloc[0].bbox_north]
+        # area = gpd.GeoDataFrame(geometry=[box(*bb, ccw=True)], crs=constants.DEFAULT_CRS).to_crs(tmp_crs)
 
         # Obtain the boundaries of the geometry
         boundaries = dict({'min_x': area.total_bounds[0],

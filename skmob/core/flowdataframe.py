@@ -21,42 +21,42 @@ class FlowSeries(pd.Series):
 class FlowDataFrame(pd.DataFrame):
     """
     A FlowDataFrame object is a pandas.DataFrame that has three columns origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:
-
+    
     Parameters
     ----------
     data : list or dict or pandas DataFrame
         the data that must be embedded into a FlowDataFrame.
-
+        
     origin : str, optional
         the name of the column in `data` containing the origin location. The default is `constants.ORIGIN`.
-
+        
     destination : str, optional
         the name of the column in `data` containing the destination location. The default is `constants.DESTINATION`.
-
+        
     flow : str, optional
         the name of the column in `data` containing the flow between two locations. The default is `constants.FLOW`.
-
+        
     datetime : str, optional
         the name of the column in `data` containing the datetime the flow refers to. The default is `constants.DATETIME`.
-
+        
     tile_id : std, optional
         the name of the column in `data` containing the tile identifier. The default is `constants.TILE_ID`.
-
+        
     timestamp : boolean, optional
         it True, the datetime is a timestamp. The default is `False`.
-
+        
     tessellation : GeoDataFrame, optional
         the spatial tessellation on which the flows take place. The default is `None`.
-
+        
     parameters : dict, optional
         parameters to add to the FlowDataFrame. The default is `{}` (no parameters).
-
+        
     Examples
     --------
     >>> import skmob
     >>> import geopandas as gpd
     >>> # load a spatial tessellation
-    >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
+    >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
     >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
     >>> print(tessellation.head())
       tile_ID  population                                           geometry
@@ -64,12 +64,12 @@ class FlowDataFrame(pd.DataFrame):
     1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
     2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
     3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
-    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
+    4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
     >>> # load real flows into a FlowDataFrame
-    >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
+    >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
     >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-                                            tessellation=tessellation,
-                                            tile_id='tile_ID',
+                                            tessellation=tessellation, 
+                                            tile_id='tile_ID', 
                                             sep=",")
     >>> print(fdf.head())
          flow origin destination
@@ -77,7 +77,7 @@ class FlowDataFrame(pd.DataFrame):
     1       5  36001       36005
     2      29  36001       36007
     3      11  36001       36017
-    4      30  36001       36019
+    4      30  36001       36019      
     """
     _metadata = ['_tessellation', '_parameters']
 
@@ -164,26 +164,26 @@ class FlowDataFrame(pd.DataFrame):
     def get_flow(self, origin_id, destination_id):
         """
         Get the flow between two locations. If there is no flow between two locations it returns 0.
-
+        
         Parameters
         ----------
-        origin_id : str
+        origin_id : str 
             the identifier of the origin tile.
-
+            
         destination_id : str
             the identifier of the tessellation tile.
-
+            
         Returns
         -------
         int
             the flow between the two locations.
-
+        
         Examples
         --------
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
+        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
         >>> print(tessellation.head())
           tile_ID  population                                           geometry
@@ -191,12 +191,12 @@ class FlowDataFrame(pd.DataFrame):
         1   36101       99145  POLYGON ((-77.099754 42.274215, -77.0996569999...
         2   36107       50872  POLYGON ((-76.25014899999999 42.296676, -76.24...
         3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....
-        4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...
+        4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...    
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-                                                tessellation=tessellation,
-                                                tile_id='tile_ID',
+                                                tessellation=tessellation, 
+                                                tile_id='tile_ID', 
                                                 sep=",")
         >>> print(fdf.head())
              flow origin destination
@@ -204,7 +204,7 @@ class FlowDataFrame(pd.DataFrame):
         1       5  36001       36005
         2      29  36001       36007
         3      11  36001       36017
-        4      30  36001       36019
+        4      30  36001       36019 
         >>> flow = fdf.get_flow('36001', '36007')
         >>> print(flow)
         29
@@ -212,8 +212,7 @@ class FlowDataFrame(pd.DataFrame):
 
         if (origin_id not in self._tessellation[constants.TILE_ID].values) or \
                 (destination_id not in self._tessellation[constants.TILE_ID].values):
-            raise ValueError("Both %s and %s must be present in the tessellation."
-                             % (constants.ORIGIN, constants.DESTINATION))
+            raise ValueError("Both origin_id and destination_id must be present in the tessellation.")
 
         tmp = self[(self[constants.ORIGIN] == origin_id) & (self[constants.DESTINATION] == destination_id)]
         if len(tmp) == 0:
@@ -224,10 +223,10 @@ class FlowDataFrame(pd.DataFrame):
     def settings_from(self, flowdataframe):
         """
         Copy the attributes from another FlowDataFrame.
-
+        
         Parameters
         ----------
-        flowdataframe : FlowDataFrame
+        flowdataframe : FlowDataFrame 
             the FlowDataFrame from which to copy the attributes.
         """
         for k in flowdataframe.metadata:
@@ -236,7 +235,7 @@ class FlowDataFrame(pd.DataFrame):
 
     def get_geometry(self, tile_id):
         if tile_id not in self._tessellation[constants.TILE_ID].values:
-            raise ValueError("%s \"%s\" is not in the tessellation." % (constants.TILE_ID, tile_id))
+            raise ValueError("tile_id \"%s\" is not in the tessellation." % tile_id)
 
         # selecting from geopandas will return a series with one element, for this reason we use iloc to get the object
         return self.tessellation[self.tessellation[constants.TILE_ID] == tile_id].geometry.iloc[0]
@@ -245,13 +244,20 @@ class FlowDataFrame(pd.DataFrame):
 
         m = np.zeros((len(self._tessellation), len(self._tessellation)))
 
-        def _to_matrix(df, matrix, tessellation):
-            o = tessellation.index[tessellation['tile_ID'] == df['origin']].iloc[0]
-            d = tessellation.index[tessellation['tile_ID'] == df['destination']].iloc[0]
+        # def _to_matrix(df, matrix, tessellation):
+        #     o = tessellation.index[tessellation['tile_ID'] == df['origin']].iloc[0]
+        #     d = tessellation.index[tessellation['tile_ID'] == df['destination']].iloc[0]
+        #
+        #     matrix[o][d] = df['flow']
+        #
+        # self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
 
-            matrix[o][d] = df['flow']
+        def _to_matrix(fdf, x, matrix):
+            o = fdf.tessellation.index[fdf.tessellation[constants.TILE_ID] == x[constants.ORIGIN]].values[0]
+            d = fdf.tessellation.index[fdf.tessellation[constants.TILE_ID] == x[constants.DESTINATION]].values[0]
+            matrix[o][d] = x[constants.FLOW]
 
-        self.apply(_to_matrix, args=(m, self._tessellation), axis=1)
+        self.apply(lambda x: _to_matrix(self, x, m), axis=1)
 
         return m
 
@@ -470,7 +476,7 @@ class FlowDataFrame(pd.DataFrame):
                    color_origin_point='#3186cc'):
         """
         Plot the flows of a FlowDataFrame on a Folium map.
-
+        
         Parameters
         ----------
         map_f : folium.Map, optional
@@ -483,7 +489,7 @@ class FlowDataFrame(pd.DataFrame):
             folium's `tiles` parameter. The default is `Stamen Toner`.
 
         zoom : int, optional
-            initial zoom of the map. The default is `6`.
+            initial zoom of the map. The default is `6`. 
 
         flow_color : str, optional
             the color of the flow edges. The default is `red`.
@@ -514,24 +520,24 @@ class FlowDataFrame(pd.DataFrame):
 
         color_origin_point : str, optional
             the color of the location markers. The default is '#3186cc'.
-
+        
         Returns
         -------
         folium.Map
             the `folium.Map` object with the plotted flows.
-
+        
         Examples
         --------
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
-        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})    
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-                                                tessellation=tessellation,
-                                                tile_id='tile_ID',
+                                                tessellation=tessellation, 
+                                                tile_id='tile_ID', 
                                                 sep=",")
         >>> print(fdf.head())
              flow origin destination
@@ -539,10 +545,10 @@ class FlowDataFrame(pd.DataFrame):
         1       5  36001       36005
         2      29  36001       36007
         3      11  36001       36017
-        4      30  36001       36019
+        4      30  36001       36019  
         >>> m = fdf.plot_flows(flow_color='red')
         >>> m
-
+        
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_flows_example.png
         """
         return plot.plot_flows(self, map_f=map_f, min_flow=min_flow,  tiles=tiles, zoom=zoom, flow_color=flow_color,
@@ -551,11 +557,11 @@ class FlowDataFrame(pd.DataFrame):
                                tile_popup=tile_popup, radius_origin_point=radius_origin_point,
                                color_origin_point=color_origin_point)
 
-    def plot_tessellation(self, map_f=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
+    def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
                           tiles='Stamen Toner', zoom=6, geom_col='geometry'):
         """
         Plot the spatial tessellation on a Folium map.
-
+        
         Parameters
         ----------
         map_osm : folium.Map, optional
@@ -579,29 +585,29 @@ class FlowDataFrame(pd.DataFrame):
 
         geom_col : str, optional
              the name of the geometry column of the GeoDataFrame representing the spatial tessellation. The default is 'geometry'.
-
+        
         Returns
         -------
         folium.Map
             the `folium.Map` object with the plotted GeoDataFrame.
-
+            
         Examples
         --------
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = 'https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson'
-        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
+        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+        >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})    
         >>> # load real flows into a FlowDataFrame
-        >>> # download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv
+        >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
         >>> fdf = skmob.FlowDataFrame.from_file("NY_commuting_flows_2011.csv",
-                                                tessellation=tessellation,
-                                                tile_id='tile_ID',
+                                                tessellation=tessellation, 
+                                                tile_id='tile_ID', 
                                                 sep=",")
         >>> m = fdf.plot_tessellation(popup_features=['tile_ID', 'population'])
         >>> m
-
+        
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png
         """
-        return plot.plot_gdf(self.tessellation, map_f=map_f, maxitems=maxitems, style_func_args=style_func_args,
+        return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
                              popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)

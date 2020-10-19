@@ -49,12 +49,12 @@ def getDistanceByHaversine(loc1, loc2):
     return km
 
 
-def DecimalToDMS(decimalvalue):
-    "convert a decimal value to degree,minute,second tuple"
-    d = modf(decimalvalue)[0]
-    m=0
-    s=0
-    return (d,m,s)
+# def DecimalToDMS(decimalvalue):
+#     "convert a decimal value to degree,minute,second tuple"
+#     d = modf(decimalvalue)[0]
+#     m=0
+#     s=0
+#     return (d,m,s)
 
 
 def DMSToDecimal(degrees,minutes,seconds):
@@ -86,35 +86,9 @@ def getCoordinatesForDistance(originlat, originlon, distance, units="km"):
     return (lat, lon)
 
 
-def isWithinDistance(origin, loc, distance):
-    "boolean for checking whether a location is within a distance"
-    if getDistanceByHaversine(origin, loc) <= distance:
-        return True
-    else:
-        return False
-
-def load_spatial_tessellation(filename='location2info_trentino', delimiter=','):
-    """
-    Load into a dictionary the locations and corresponding information (latitude, longitude, relevance)
-
-    Parameters
-    ----------
-    filename: str
-        the filename where the location info is stored
-
-    Returns
-    -------
-    dict
-        the dictionary of locations
-    """
-    spatial_tessellation = {}
-    f = csv.reader(open(filename), delimiter=delimiter)
-    f.__next__()  # delete header
-    i = 0
-    for line in f:  # tqdm print a progress bar
-        relevance = int(line[2])
-        spatial_tessellation[i] = {constants.LATITUDE: float(line[0]),
-                                       constants.LONGITUDE: float(line[1]),
-                                       'relevance': relevance}
-        i += 1
-    return spatial_tessellation
+# def isWithinDistance(origin, loc, distance):
+#     "boolean for checking whether a location is within a distance"
+#     if getDistanceByHaversine(origin, loc) <= distance:
+#         return True
+#     else:
+#         return False

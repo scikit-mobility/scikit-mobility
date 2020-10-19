@@ -966,7 +966,7 @@ def home_location(traj, start_night='22:00', end_night='07:00', show_progress=Tr
         df = traj.groupby(constants.UID).progress_apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
     else:
         df = traj.groupby(constants.UID).apply(lambda x: _home_location_individual(x, start_night=start_night, end_night=end_night))
-    return df.apply(pd.Series).reset_index().rename(columns={0: constants.LATITUDE, 1: constants.LONGITUDE})
+    return pd.DataFrame(df.to_list(), index=df.index).reset_index().rename(columns={0: constants.LATITUDE, 1: constants.LONGITUDE})
 
 
 def _max_distance_from_home_individual(traj, start_night='22:00', end_night='07:00'):
