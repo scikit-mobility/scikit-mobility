@@ -473,7 +473,7 @@ class FlowDataFrame(pd.DataFrame):
     def plot_flows(self, map_f=None, min_flow=0, tiles='Stamen Toner', zoom=6, flow_color='red', opacity=0.5,
                    flow_weight=5, flow_exp=0.5, style_function=plot.flow_style_function,
                    flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
-                   color_origin_point='#3186cc'):
+                   color_origin_point='#3186cc', control_scale=True):
         """
         Plot the flows of a FlowDataFrame on a Folium map.
         
@@ -520,6 +520,9 @@ class FlowDataFrame(pd.DataFrame):
 
         color_origin_point : str, optional
             the color of the location markers. The default is '#3186cc'.
+
+        control_scale: boolean; optional
+            if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
         
         Returns
         -------
@@ -555,10 +558,10 @@ class FlowDataFrame(pd.DataFrame):
                                opacity=opacity, flow_weight=flow_weight, flow_exp=flow_exp,
                                style_function=style_function, flow_popup=flow_popup, num_od_popup=num_od_popup,
                                tile_popup=tile_popup, radius_origin_point=radius_origin_point,
-                               color_origin_point=color_origin_point)
+                               color_origin_point=color_origin_point, control_scale=control_scale)
 
     def plot_tessellation(self, map_osm=None, maxitems=-1, style_func_args={}, popup_features=[constants.TILE_ID],
-                          tiles='Stamen Toner', zoom=6, geom_col='geometry'):
+                          tiles='Stamen Toner', zoom=6, geom_col='geometry',control_scale=True):
         """
         Plot the spatial tessellation on a Folium map.
         
@@ -585,7 +588,10 @@ class FlowDataFrame(pd.DataFrame):
 
         geom_col : str, optional
              the name of the geometry column of the GeoDataFrame representing the spatial tessellation. The default is 'geometry'.
-        
+
+        control_scale: boolean; optional
+            if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
         Returns
         -------
         folium.Map
@@ -610,4 +616,4 @@ class FlowDataFrame(pd.DataFrame):
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png
         """
         return plot.plot_gdf(self.tessellation, map_osm=map_osm, maxitems=maxitems, style_func_args=style_func_args,
-                             popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col)
+                             popup_features=popup_features, tiles=tiles, zoom=zoom, geom_col=geom_col,control_scale=control_scale)
