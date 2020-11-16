@@ -6,7 +6,7 @@ DEPENDENCIES = ['numpy', 'scipy', 'pandas', 'geopandas', 'powerlaw', 'tqdm', 're
                 'scikit-learn', 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely']
 setup(
     name='scikit-mobility',
-    version='1.0',
+    version='1.1.2',
     packages=['skmob', 'skmob.core', 'skmob.utils', 'skmob.io', 'skmob.measures', 'skmob.models',
               'skmob.preprocessing', 'skmob.privacy', 'skmob.tessellation' ],
     #TODO: fix it with find_packages(include=["skmob", "skmob.*"])
