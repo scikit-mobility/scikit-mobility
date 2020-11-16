@@ -494,7 +494,8 @@ class TrajDataFrame(pd.DataFrame):
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
-                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
+                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True,
+                        control_scale=True):
         """
         Plot the trajectories on a Folium map.
         
@@ -529,7 +530,9 @@ class TrajDataFrame(pd.DataFrame):
 
         start_end_markers: boolean, optional
             if `True`, add markers on the start and end points of the trajectory. The default is `True`.
-        
+
+        control_scale: boolean; optional
+            if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
         Returns
         -------
         folium.Map
@@ -557,10 +560,11 @@ class TrajDataFrame(pd.DataFrame):
         """
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
                                     style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
-                                    weight=weight, opacity=opacity, start_end_markers=start_end_markers)
+                                    weight=weight, opacity=opacity, start_end_markers=start_end_markers,
+                                    control_scale=control_scale)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
-                   radius=12, popup=True):
+                   radius=12, popup=True, control_scale=True):
         """
         Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
         
@@ -589,7 +593,10 @@ class TrajDataFrame(pd.DataFrame):
 
         popup : boolean, optional
             if `True`, when clicking on a marker a popup window displaying information on the stop will appear. The default is `True`.
-        
+
+        control_scale: boolean; optional
+            if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
         Returns
         -------
         folium.Map
@@ -625,7 +632,7 @@ class TrajDataFrame(pd.DataFrame):
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
-                               hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
+                               hex_color=hex_color, opacity=opacity, radius=radius, popup=popup, control_scale=control_scale)
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None, legend=False):
         """
