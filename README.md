@@ -28,8 +28,9 @@
 2. [Citing](#citing)
 3. [Collaborate with us](#collaborate)
 4. [Installation](#installation)
+	- [with pip](#installation_pip)
 	- [with conda](#installation_conda)
-	- [without conda](#installation_no_conda)
+	- [known issues](#known_issues)
 	- [test installation](#test_installation)
 5. [Tutorials](#tutorials)
 6. [Examples](#examples)
@@ -75,16 +76,47 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 
 <a id='installation'></a>
 ## Install
-First, clone the repository - this creates a new directory `./scikit_mobility`. 
 
-        git clone https://github.com/scikit-mobility/scikit-mobility scikit_mobility
+<a id='installation_pip'></a>
+### with pip (python >= 3.6 required)
+
+1. Create an environment `skmob`
+
+        python3 -m venv skmob
+
+2. Activate
+    
+        source skmob/bin/activate
+
+3. Install skmob
+
+        pip install scikit-mobility
+
+4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
+
+	- Activate the virutalenv:
+	
+			source skmob/bin/activate
+	
+	- Install jupyter notebook:
+		
+			pip install jupyter 
+	
+	- Run jupyter notebook 			
+			
+			jupyter notebook
+			
+	- (Optional) install the kernel with a specific name
+			
+			ipython kernel install --user --name=skmob
+		
 
 <a id='installation_conda'></a>
 ### with conda - miniconda
 
 1. Create an environment `skmob` and install pip
 
-        conda create -n skmob pip python=3.7
+        conda create -n skmob pip python=3.7 rtree
 
 2. Activate
     
@@ -92,8 +124,7 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 
 3. Install skmob
 
-        cd scikit-mobility
-        python setup.py install
+        pip install scikit-mobility
 
     If the installation of a required library fails, reinstall it with `conda install`.      
 
@@ -118,42 +149,20 @@ First, clone the repository - this creates a new directory `./scikit_mobility`.
 ```
 conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
-<a id='installation_no_conda'></a>          
-### without conda (python >= 3.6 required)
 
+<a id='known_conda'></a>
+### Known Issues
+the installation of package rtree could not work with pip within a conda environment. If so, try 
+```
+pip install "rtree>=0.8,<0.9" 
+```
+or install rtree with conda
+```
+conda install rtree
+```
+https://github.com/Toblerity/rtree/issues/120
 
-1. Create an environment `skmob`
-
-        python3 -m venv skmob
-
-2. Activate
-    
-        source skmob/bin/activate
-
-3. Install skmob
-
-        cd scikit-mobility
-        python setup.py install
-
-
-4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
-
-	- Activate the virutalenv:
 	
-			source skmob/bin/activate
-	
-	- Install jupyter notebook:
-		
-			pip install jupyter 
-	
-	- Run jupyter notebook 			
-			
-			jupyter notebook
-			
-	- (Optional) install the kernel with a specific name
-			
-			ipython kernel install --user --name=skmob
-			
 <a id='test_installation'></a>    
 ### Test the installation
 
