@@ -287,7 +287,7 @@ Create a spatial tessellation from a file describing counties in New York state:
 >>> import skmob
 >>> import geopandas as gpd
 >>> # load a spatial tessellation
->>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+>>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
 >>> # print a portion of the spatial tessellation
 >>> print(tessellation.head())
