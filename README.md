@@ -124,9 +124,7 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 
 3. Install skmob
 
-        pip install scikit-mobility
-
-    If the installation of a required library fails, reinstall it with `conda install`.      
+        conda install --channel=conda-forge scikit-mobility
 
 4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
