@@ -30,7 +30,7 @@
 4. [Installation](#installation)
 	- [with pip](#installation_pip)
 	- [with conda](#installation_conda)
-	- [known issues](#known_issues)
+	- [known issues](#known_conda)
 	- [test installation](#test_installation)
 5. [Tutorials](#tutorials)
 6. [Examples](#examples)
@@ -75,10 +75,14 @@ Bibtex:
 If you would like to include your algorithm in `scikit-mobility`, feel free to fork the project, open an issue and contact us.
 
 <a id='installation'></a>
-## Install
+## Installation
+scikit-mobility for Python >= 3.7 and all it's dependencies are available from conda-forge and can be installed using 
+`conda install -c conda-forge scikit-mobility`.
+
+Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you're on Windows or Mac, many GeoPandas / scikit-mobility dependencies cannot be pip installed (for details see the corresponding notes in the GeoPandas documentation).
 
 <a id='installation_pip'></a>
-### with pip (python >= 3.6 required)
+### installation with pip (python >= 3.7 required)
 
 1. Create an environment `skmob`
 
@@ -112,7 +116,7 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 		
 
 <a id='installation_conda'></a>
-### with conda - miniconda
+### installation with conda - miniconda
 
 1. Create an environment `skmob` and install pip
 
@@ -124,7 +128,7 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 
 3. Install skmob
 
-        conda install --channel=conda-forge scikit-mobility
+        conda install -c conda-forge scikit-mobility
 
 4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
