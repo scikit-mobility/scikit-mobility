@@ -32,6 +32,7 @@
 	- [with conda](#installation_conda)
 	- [known issues](#known_conda)
 	- [test installation](#test_installation)
+	- [Google Colab](#google_colab)
 5. [Tutorials](#tutorials)
 6. [Examples](#examples)
 	- [TrajDataFrame](#trajdataframe)
@@ -173,6 +174,22 @@ https://github.com/Toblerity/rtree/issues/120
 (skmob)> python
 >>> import skmob
 >>>
+```
+
+<a id='google_colab'></a>
+## Google Colab
+scikit-mobility can be installed on <a href="https://colab.research.google.com/notebooks/intro.ipynb#recent=true">Google Colab</a> using the following commands:
+```
+!apt-get install -qq curl g++ make
+!curl -L http://download.osgeo.org/libspatialindex/spatialindex-src-1.8.5.tar.gz | tar xz
+import os
+os.chdir('spatialindex-src-1.8.5')
+!./configure
+!make
+!make install
+!pip install rtree
+!ldconfig
+!pip install scikit-mobility
 ```
 
 <a id='tutorials'></a>
