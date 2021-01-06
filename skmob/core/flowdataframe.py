@@ -56,7 +56,7 @@ class FlowDataFrame(pd.DataFrame):
     >>> import skmob
     >>> import geopandas as gpd
     >>> # load a spatial tessellation
-    >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+    >>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
     >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
     >>> print(tessellation.head())
       tile_ID  population                                           geometry
@@ -183,7 +183,7 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+        >>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
         >>> print(tessellation.head())
           tile_ID  population                                           geometry
@@ -534,7 +534,7 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+        >>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})    
         >>> # load real flows into a FlowDataFrame
         >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
@@ -602,7 +602,7 @@ class FlowDataFrame(pd.DataFrame):
         >>> import skmob
         >>> import geopandas as gpd
         >>> # load a spatial tessellation
-        >>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+        >>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
         >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})    
         >>> # load real flows into a FlowDataFrame
         >>> # download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv
