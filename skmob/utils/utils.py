@@ -326,18 +326,9 @@ def get_geom_centroid(geom, return_lat_lng=False):
         coordinates of `geom`'s centroid.
 
     """
-    try:
-        lonO, latO = np.array(geom.centroid.xy).flatten()
-    except:
-        if type(geom) == shapely.geometry.multipolygon.MultiPolygon:
-            m_n = [[np.mean(pol.exterior.xy, axis=1), len(pol.exterior.xy[0])] for pol in geom]
-            lonO, latO = np.sum([[ln*n, la*n] for (ln,la),n in m_n], axis=0) / np.sum(m_n, axis=0)[1]
-        elif type(geom) == shapely.geometry.polygon.Polygon:
-            lonO, latO = np.mean(geom.exterior.xy, axis=1)
-        else:
-            lonO, latO = np.mean(geom.xy, axis=1)
+    lng, lat = map(lambda x: x.pop(), geom.centroid.xy)
     if return_lat_lng:
-        return [latO, lonO]
+        return [lat, lng]
     else:
-        return [lonO, latO]
+        return [lng, lat]
 
