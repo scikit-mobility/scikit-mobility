@@ -6,7 +6,7 @@ import logging
 import geopandas
 from tqdm import tqdm
 from igraph import *
-from math import sqrt, sin, cos, pi, asin, pow, ceil
+from math import sqrt, sin, cos, pi, asin
 from ..utils import utils
 from ..core.trajectorydataframe import TrajDataFrame
 from ..models.markov_diary_generator import MarkovDiaryGenerator
@@ -566,14 +566,10 @@ class STS_epr():
         if choice == 'individual_return':
             location_id = self.make_individual_exploration_action(agent)
             corrections.append('individual_exploration')
-            if location_id < 0:
-                choice  = 'individual_exploration'
 
         elif choice == 'individual_exploration':
             location_id = self.make_individual_return_action(agent)
             corrections.append('individual_return')
-            if location_id < 0:
-                choice  = 'individual_return'
            
         return location_id, corrections
     
