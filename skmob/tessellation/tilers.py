@@ -218,9 +218,27 @@ class H3TessellationTiler(TessellationTiler):
         else:
             warnings.warn(f' The cell side-length you provided is too large to cover the input area.'
                           f' Try something smaller, e.g. :'
-                          f' Side-Length {constants.H3_UTILS["avg_hex_edge_len_km"][str(min_res_cover - 1)]/1000} Km')
+                          f' Side-Length {constants.H3_UTILS["avg_hex_edge_len_km"][str(min_res_cover - 1)] / 1000} Km')
             res = min_res_cover - 1
         return res
+
+    def _handle_polyfill(self, base_shape, res):
+
+        def get_hex(x):
+            h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
+            if len(h) > 0:
+                return h
+            else:
+                return None
+
+        if base_shape.type[0] == "MultiPolygon":
+            tmp_hexs = base_shape.explode().apply(lambda x: get_hex(x))
+            hexs = list(set(np.concatenate(tmp_hexs[tmp_hexs.notna()].to_list())))
+        else:
+            hexs = h3.polyfill(
+                base_shape.geometry.__geo_interface__['features'][0]['geometry'], res, geo_json_conformant=True)
+
+        return hexs
 
     def __call__(self, base_shape, meters=50, which_osm_result=-1, crs=constants.DEFAULT_CRS, window_size=None):
         if not self._instance:
@@ -245,11 +263,6 @@ class H3TessellationTiler(TessellationTiler):
                 raise ValueError(
                     "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
 
-        # NOTE: the new logic added in bbox_from_name when fetching multiple OSM results does not merge potential multiple results
-        # this results into a multipolygon that crashes h3 polyfill
-        # solution: I"ve temporarily copied this method here to merge IN ANY CASE all the base_shape shapes
-        # Apparently H3 doesn't handle multipolygons https://github.com/uber/h3-py/blob/master/src/h3/_cy/geo.pyx#L183
-
         # Merge all the polygons
         polygons = base_shape.geometry.values
         base_shape = gpd.GeoSeries(
@@ -260,15 +273,14 @@ class H3TessellationTiler(TessellationTiler):
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
 
         # We work with the universal crs epsg:3857
-        tmp_crs = constants.UNIVERSAL_CRS
+        tmp_crs = constants.DEFAULT_CRS
         tmp_crs['units'] = 'm'
 
         #  translate input meters to appropriate h3 resolution 
         res = self._get_appropriate_res(base_shape, meters)
 
         # cover the base_shape with h3 hexagonal polygons
-        hexs = h3.polyfill(
-            base_shape.geometry.__geo_interface__['features'][0]['geometry'], res, geo_json_conformant=True)
+        hexs = self._handle_polyfill(base_shape, res)
 
         # get actual geoms out of H3 hexagons
         # from https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
@@ -280,7 +292,7 @@ class H3TessellationTiler(TessellationTiler):
         all_polys = gpd.GeoDataFrame(
             {'geometry': list(map(polygonise, hexs)),
              'H3_INDEX': hexs},
-            crs=constants.UNIVERSAL_CRS
+            crs=constants.DEFAULT_CRS
         )
 
         # add TileID
