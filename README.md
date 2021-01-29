@@ -125,7 +125,7 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 
 2. Activate
     
-        source activate skmob
+        conda activate skmob
 
 3. Install skmob
 
@@ -135,7 +135,7 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 
     - Install the kernel
     
-          conda install ipykernel
+          conda install jupyter -c conda-forge
           
     - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following: 
     	- On Mac and Linux
