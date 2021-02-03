@@ -2,8 +2,8 @@
 Useful constants
 """
 
-UNIVERSAL_CRS = {"init": "epsg:3857"}
-DEFAULT_CRS = {"init": "epsg:4326"}
+UNIVERSAL_CRS = {"epsg": "3857"}
+DEFAULT_CRS = {"epsg": "4326"}
 
 UID = 'uid'
 TID = 'tid'
