@@ -8,6 +8,7 @@ import shapely
 from geojson import LineString
 import geopandas as gpd
 import json
+import warnings
 
 
 # COLOR = {
@@ -122,6 +123,8 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :return: `folium.Map` object with the plotted trajectories.
 
     """
+    warnings.warn("Only the trajectories of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
+
     # group by user and keep only the first `max_users`
     nu = 0
 
@@ -132,6 +135,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         # column 'uid' is not present
         groups = [[None, tdf]]
 
+    warned = False
     for user, df in groups:
 
         if nu >= max_users:
@@ -143,6 +147,9 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         if max_points is None:
             di = 1
         else:
+            if not warned: 
+                warnings.warn("If necessary, trajectories will be down-sampled to have at most `max_points` points. To avoid this, sepecify `max_points=None`.")
+                warned = True
             di = max(1, len(traj) // max_points)
         traj = traj[::di]
 
@@ -296,6 +303,8 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     :return: `folium.Map` object with the plotted stops.
 
     """
+    warnings.warn("Only the stops of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
+
     if map_f is None:
         # initialise map
         lo_la = stdf[['lng', 'lat']].values
@@ -398,7 +407,7 @@ def plot_diary(cstdf, user, start_datetime=None, end_datetime=None, ax=None, leg
         df = cstdf[cstdf[constants.UID] == user]
 
     if len(df) == 0:
-        raise KeyError("""User id is not in the input TrajDataFrame 'cstdf'.""")
+        raise KeyError("""User id is not in the input TrajDataFrame.""")
 
     # TODO: add warning if days between start_datetime and end_datetime do not overlap with cstdf
     if start_datetime is None:
