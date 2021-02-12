@@ -188,11 +188,11 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
                     if j == 1:
                         estimated_final_t = t
                     else:
-                        estimated_final_t = sum_t[-j]
+                        estimated_final_t = sum_t[-j + 1]
                         sum_lat = sum_lat[:-j]
                         sum_lon = sum_lon[:-j]
 
-                if len(sum_lat) > 0:
+                if len(sum_lat) > 0 and utils.diff_seconds(t_0, estimated_final_t) / 60. > minutes_for_a_stop:
                     if leaving_time:
                         leaving_times.append(estimated_final_t)
 

@@ -494,47 +494,51 @@ class TrajDataFrame(pd.DataFrame):
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
-                        tiles='cartodbpositron', zoom=12, hex_color=-1, weight=2, opacity=0.75, start_end_markers=True):
+                    tiles='cartodbpositron', zoom=12, hex_color=-2, weight=2, opacity=0.75, dashArray='0, 0',
+                    start_end_markers=True):
         """
         Plot the trajectories on a Folium map.
         
         Parameters
         ----------
-        map_f : folium.Map, optional
-            a `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created. The default is `None`.
+        :param map_f: folium.Map
+            `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created.
+    
+        :param max_users: int
+            maximum number of users whose trajectories should be plotted.
+    
+        :param max_points: int
+            maximum number of points per user to plot.
+            If necessary, a user's trajectory will be down-sampled to have at most `max_points` points.
+    
+        :param style_function: lambda function
+            function specifying the style (weight, color, opacity) of the GeoJson object.
+    
+        :param tiles: str
+            folium's `tiles` parameter.
+    
+        :param zoom: int
+            initial zoom.
+    
+        :param hex_color: str or int
+            hex color of the trajectory line. If less than `-1` a random color will be generated for each trajectory.
+    
+        :param weight: float
+            thickness of the trajectory line.
+    
+        :param opacity: float
+            opacity (alpha level) of the trajectory line.
+    
+        :param dashArray: str
+            style of the trajectory line: '0, 0' for a solid trajectory line, '5, 5' for a dashed line
+            (where dashArray='size of segment, size of spacing').
+    
+        :param start_end_markers: bool
+            add markers on the start and end points of the trajectory.
+    
+        :return: `folium.Map` object with the plotted trajectories.
 
-        max_users : int, optional
-            maximum number of users whose trajectories should be plotted. The default is `10`.
-
-        max_points : int, optional
-            maximum number of points per individual to plot. The default is `1000`. If necessary, an individual's trajectory will be down-sampled to have at most `max_points` points.
-
-        style_function : lambda function, optional
-            function specifying the style (weight, color, opacity) of the GeoJson object. The default is `plot.traj_style_function`.
-
-        tiles : str, optional
-            folium's `tiles` parameter. The default is 'cartodbpositron'.
-
-        zoom : int, optional
-            the initial zoom on the map. The default is `12`.
-
-        hex_color : str or int, optional
-            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory. The default is `-1`.
-
-        weight : float, optional
-            thickness of the trajectory line. The default is `2`.
-
-        opacity : float, optional
-            opacity (alpha level) of the trajectory line. The default is `0.75`.
-
-        start_end_markers: boolean, optional
-            if `True`, add markers on the start and end points of the trajectory. The default is `True`.
-        
-        Returns
-        -------
-        folium.Map
-            a `folium.Map` object with the plotted trajectories.
-        
+       
         Examples
         --------
         >>> import skmob
@@ -555,46 +559,47 @@ class TrajDataFrame(pd.DataFrame):
         
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_trajectory_example.png
         """
-        return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points,
-                                    style_function=style_function, tiles=tiles, zoom=zoom, hex_color=hex_color,
-                                    weight=weight, opacity=opacity, start_end_markers=start_end_markers)
+        return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, style_function=style_function,
+                    tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity, dashArray=dashArray,
+                    start_end_markers=start_end_markers)
 
-    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=-1, opacity=0.3,
-                   radius=12, popup=True):
+    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
+               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True):
         """
         Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
         
         Parameters
         ----------
-        map_f : folium.Map
-            a `folium.Map` object where the trajectory will be plotted. If `None`, a new map will be created. The default is `None`.
-            
-        max_users : int, optional
-            maximum number of users whose trajectories should be plotted. The default is `10`.
-            
-        tiles : str, optional
-            folium's `tiles` parameter. The default is 'cartodbpositron'.
+        :param map_f: folium.Map
+            `folium.Map` object where the stops will be plotted. If `None`, a new map will be created.
+    
+        :param max_users: int
+            maximum number of users whose stops should be plotted.
+    
+        :param tiles: str
+            folium's `tiles` parameter.
+    
+        :param zoom: int
+            initial zoom.
+    
+        :param hex_color: str or int
+            hex color of the stop markers. If less than `-1` a random color will be generated for each user.
+    
+        :param opacity: float
+            opacity (alpha level) of the stop makers.
+    
+        :param radius: float
+            size of the markers.
+    
+        :param number_of_sides: int
+            number of sides of the markers.
+    
+        :param popup: bool
+            if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
+    
+        :return: `folium.Map` object with the plotted stops.
 
-        zoom : int, optional
-            the initial zoom on the map. The default is `12`.
-
-        hex_color : str or int, optional
-            hex color of the trajectory line. If `-1` a random color will be generated for each trajectory. The default is `-1`.
-
-        opacity : float, optional
-            opacity (alpha level) of the trajectory line. The default is `0.75`.
-
-        radius : float, optional
-            size of the markers. The defeault is `12`.
-
-        popup : boolean, optional
-            if `True`, when clicking on a marker a popup window displaying information on the stop will appear. The default is `True`.
-        
-        Returns
-        -------
-        folium.Map
-            a `folium.Map` object with the plotted stops.
-        
+       
         Examples
         --------
         >>> import skmob
@@ -625,7 +630,7 @@ class TrajDataFrame(pd.DataFrame):
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
-                               hex_color=hex_color, opacity=opacity, radius=radius, popup=popup)
+               hex_color=hex_color, opacity=opacity, radius=radius, number_of_sides=number_of_sides, popup=popup)
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None, legend=False):
         """
