@@ -6,7 +6,7 @@ import fnmatch
 from ..core.trajectorydataframe import TrajDataFrame
 from ..core.flowdataframe import FlowDataFrame
 from ..preprocessing import filtering, compression
-
+from tqdm import tqdm
 
 def write(skmob_df, file):
     """
@@ -102,14 +102,13 @@ def load_geolife_trajectories(path_to_geolife_data_dir, user_ids=[],
     :rtype: TrajDataFrame
 
     """
-    tdf = pd.DataFrame()
+    tdf = TrajDataFrame(pd.DataFrame())
 
     path = path_to_geolife_data_dir + 'Data/'
     if len(user_ids) == 0:
         user_ids = os.listdir(path)
 
-    for uid in user_ids:
-
+    for uid in tqdm(user_ids):
         try:
             all_files = fnmatch.filter(os.listdir(path + '%s/Trajectory/' % uid), "*.plt")
 
@@ -132,6 +131,7 @@ def load_geolife_trajectories(path_to_geolife_data_dir, user_ids=[],
             tdf0 = compression.compress(tdf0, **compress_kwargs)
 
         tdf = tdf.append(tdf0)
+        tdf.parameters = tdf0.parameters
 
     return tdf
 

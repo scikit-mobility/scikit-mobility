@@ -92,7 +92,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     # Use the spatial_radius in the tdf parameters, if present, otherwise use the default argument.
     try:
         stop_radius = tdf.parameters[constants.COMPRESSION_PARAMS]['spatial_radius_km'] * stop_radius_factor
-    except KeyError:
+    except (KeyError, TypeError):
         pass
     if spatial_radius_km is not None:
         stop_radius = spatial_radius_km
