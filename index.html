@@ -173,16 +173,20 @@
 <li><p>generate synthetic mobility flows using standard migration models (gravity model, radiation model, etc.)</p></li>
 <li><p>assess the privacy risk associated with a mobility dataset</p></li>
 </ul>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Full instructions to install the library are available int the <a class="reference external" href="https://github.com/scikit-mobility/scikit-mobility">scikit-mobilty repository</a>.</p>
 </div>
 <div class="section" id="installation-with-pip-python-3-7-required">
-<h2>Installation with pip (python &gt;= 3.7 required)<a class="headerlink" href="#installation-with-pip-python-3-7-required" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Create an environment <cite>skmob</cite></p></li>
-</ol>
-<ol class="arabic simple" start="2">
+<h3>Installation with pip (python &gt;= 3.7 required)<a class="headerlink" href="#installation-with-pip-python-3-7-required" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Create an environment <cite>skmob</cite></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv skmob</span>
+</pre></div>
+</div>
+</li>
 <li><p>Activate</p></li>
 </ol>
 <ol class="arabic simple" start="3">
@@ -197,7 +201,7 @@
 <p>(Optional) install the kernel with a specific name</p>
 </div>
 <div class="section" id="installation-with-conda-miniconda">
-<h2>Installation with conda - miniconda<a class="headerlink" href="#installation-with-conda-miniconda" title="Permalink to this headline">¶</a></h2>
+<h3>Installation with conda - miniconda<a class="headerlink" href="#installation-with-conda-miniconda" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Create an environment <cite>skmob</cite> and install pip</p></li>
 </ol>
@@ -220,7 +224,7 @@
 <p>On Windows</p>
 <p>You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.</p>
 <div class="section" id="known-issues">
-<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<h4>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h4>
 <p>the installation of package rtree could not work with pip within a conda environment. If so, try</p>
 <p>or install rtree with conda</p>
 <div class="admonition warning">
@@ -252,6 +256,7 @@
 <li class="toctree-l1"><a class="reference internal" href="reference/io.html">Input/Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/privacy.html">Privacy</a></li>
 </ul>
+</div>
 </div>
 </div>
 </div>
