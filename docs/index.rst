@@ -18,23 +18,23 @@ scikit-mobility is a library for human mobility analysis in Python. The library 
 
 
 
-***********
 Installation
-************
+============
 
 .. note::
   Full instructions to install the library are available int the `scikit-mobilty repository <https://github.com/scikit-mobility/scikit-mobility>`_.
 
 
 Installation with pip (python >= 3.7 required)
-===============================================
+-----------------------------------------------
 
-1. Create an environment `skmob`
+#. Create an environment `skmob`
 
-.. code-block:: console
-        python3 -m venv skmob
+   .. code-block:: console
+     
+     python3 -m venv skmob
 
-2. Activate
+#. Activate
 
 .. code-block:: console
         source skmob/bin/activate
@@ -68,7 +68,7 @@ Run jupyter notebook
 
 
 Installation with conda - miniconda
-===============================================
+-----------------------------------------------
 
 1. Create an environment `skmob` and install pip
 
@@ -111,8 +111,9 @@ You may run into dependency issues if you try to import the package in Python. I
 .. code-block:: console
     conda install -n skmob pyproj urllib3 chardet markupsafe
 
+
 Known Issues
-------------
+^^^^^^^^^^^^
 
 the installation of package rtree could not work with pip within a conda environment. If so, try
 
