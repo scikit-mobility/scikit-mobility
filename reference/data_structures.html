@@ -1,40 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Data Structures &mdash; scikit-mobility  documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script type="text/javascript" src="../_static/copybutton.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/copybutton.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Preprocessing" href="preprocessing.html" />
@@ -78,6 +80,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -102,6 +105,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -136,18 +140,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Data Structures</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/data_structures.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -166,9 +172,9 @@
 <p>scikit-mobility provides two different data structures, both extending the Pandas dataframe: TrajDataframe is designed to deal with trajectories, i.e., data in form of GPS points; FlowDataFrame allows to manage fluxes between places.</p>
 <div class="section" id="module-skmob.core.trajectorydataframe">
 <span id="trajdataframe"></span><h2>TrajDataframe<a class="headerlink" href="#module-skmob.core.trajectorydataframe" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame">
-<em class="property">class </em><code class="sig-prename descclassname">skmob.core.trajectorydataframe.</code><code class="sig-name descname">TrajDataFrame</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">latitude='lat'</em>, <em class="sig-param">longitude='lng'</em>, <em class="sig-param">datetime='datetime'</em>, <em class="sig-param">user_id='uid'</em>, <em class="sig-param">trajectory_id='tid'</em>, <em class="sig-param">timestamp=False</em>, <em class="sig-param">crs={'init': 'epsg:4326'}</em>, <em class="sig-param">parameters={}</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></code><code class="sig-name descname"><span class="pre">TrajDataFrame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lng'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'init':</span> <span class="pre">'epsg:4326'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>TrajDataFrame.</p>
 <p>A TrajDataFrame object is a pandas.DataFrame that has three columns latitude, longitude and datetime. TrajDataFrame accepts the following keyword arguments:</p>
 <dl class="field-list simple">
@@ -187,7 +193,7 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a TrajDataFrame from a list</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data_list</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">39.984094</span><span class="p">,</span> <span class="mf">116.319236</span><span class="p">,</span> <span class="s1">&#39;2008-10-23 13:53:05&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">39.984198</span><span class="p">,</span> <span class="mf">116.319322</span><span class="p">,</span> <span class="s1">&#39;2008-10-23 13:53:06&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">39.984224</span><span class="p">,</span> <span class="mf">116.319402</span><span class="p">,</span> <span class="s1">&#39;2008-10-23 13:53:11&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">39.984211</span><span class="p">,</span> <span class="mf">116.319389</span><span class="p">,</span> <span class="s1">&#39;2008-10-23 13:53:16&#39;</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -217,17 +223,15 @@
 <span class="go">3    1  39.984211  116.319389 2008-10-23 13:53:16</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.mapping">
-<code class="sig-name descname">mapping</code><span class="sig-paren">(</span><em class="sig-param">tessellation</em>, <em class="sig-param">remove_na=False</em>, <em class="sig-param">inside=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">mapping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign each point of the TrajDataFrame to the corresponding tile of a spatial tessellation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tessellation</strong> (<em>GeoDataFrame</em>) – the spatial tessellation containing a geometry column with points or polygons.</p></li>
 <li><p><strong>remove_na</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, remove points that do not have a corresponding tile in the spatial tessellation. The default is <cite>False</cite>.</p></li>
-<li><p><strong>inside</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, remove all the trajecories that have at least one point outside the tessellation.
-Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ignored. The default is <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -238,12 +242,12 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.tessellation</span> <span class="kn">import</span> <span class="n">tilers</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -267,9 +271,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_diary">
-<code class="sig-name descname">plot_diary</code><span class="sig-paren">(</span><em class="sig-param">user</em>, <em class="sig-param">start_datetime=None</em>, <em class="sig-param">end_datetime=None</em>, <em class="sig-param">ax=None</em>, <em class="sig-param">legend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">plot_diary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of <cite>preprocessing.clustering.cluster</cite>. The column <cite>constants.CLUSTER</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,11 +293,11 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -331,53 +335,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_diary_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_diary_example.png" />
 </dd></dl>
 
-<dl class="method">
-<dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_points_heatmap">
-<code class="sig-name descname">plot_points_heatmap</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_points=1000</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=2</em>, <em class="sig-param">min_opacity=0.5</em>, <em class="sig-param">radius=25</em>, <em class="sig-param">blur=15</em>, <em class="sig-param">gradient=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_points_heatmap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the points in a trajectories on a Folium map.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>map_f</strong> (<em>folium.Map, optional</em>) – a <cite>folium.Map</cite> object where the trajectory will be plotted. If <cite>None</cite>, a new map will be created. The default is <cite>None</cite>.</p></li>
-<li><p><strong>max_points</strong> (<em>int, optional</em>) – maximum number of points per individual to plot. The default is <cite>1000</cite>. If necessary, an individual’s trajectory will be down-sampled to have at most <cite>max_points</cite> points.</p></li>
-<li><p><strong>tiles</strong> (<em>str, optional</em>) – folium’s <cite>tiles</cite> parameter. The default is ‘cartodbpositron’.</p></li>
-<li><p><strong>zoom</strong> (<em>int, optional</em>) – the initial zoom on the map. The default is <cite>2</cite>.</p></li>
-<li><p><strong>min_opacity</strong> (<em>float, optional</em>) – the minimum opacity (alpha level) the heat will start at. The default is <cite>0.5</cite>.</p></li>
-<li><p><strong>radius</strong> (<em>int, optional</em>) – radius of each “point” of the heatmap. The default is <cite>25</cite>.</p></li>
-<li><p><strong>blur</strong> (<em>int, optional</em>) – amount of blur. The default is blur 15.</p></li>
-<li><p><strong>gradient</strong> (<em>dict, optional</em>) – color gradient configuration, e.g. {0.4: ‘blue’, 0.65: ‘lime’, 1: ‘red’}. The default is <cite>None</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a <cite>folium.Map</cite> object with the plotted trajectories.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>folium.Map</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-<span class="go">         lat         lng            datetime  uid</span>
-<span class="go">0  39.984094  116.319236 2008-10-23 05:53:05    1</span>
-<span class="go">1  39.984198  116.319322 2008-10-23 05:53:06    1</span>
-<span class="go">2  39.984224  116.319402 2008-10-23 05:53:11    1</span>
-<span class="go">3  39.984211  116.319389 2008-10-23 05:53:16    1</span>
-<span class="go">4  39.984217  116.319422 2008-10-23 05:53:21    1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span><span class="o">.</span><span class="n">plot_points_heatmap</span><span class="p">(</span><span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;Stamen Toner&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_points_heatmap_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_points_heatmap_example.png" />
-</dd></dl>
-
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_stops">
-<code class="sig-name descname">plot_stops</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">opacity=0.3</em>, <em class="sig-param">radius=12</em>, <em class="sig-param">number_of_sides=4</em>, <em class="sig-param">popup=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">plot_stops</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cartodbpositron'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of <cite>preprocessing.detection.stops</cite> or <cite>preprocessing.clustering.cluster</cite> functions. The column <cite>constants.LEAVING_DATETIME</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -390,6 +350,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <li><p><strong>opacity</strong> (<em>float, optional</em>) – opacity (alpha level) of the trajectory line. The default is <cite>0.75</cite>.</p></li>
 <li><p><strong>radius</strong> (<em>float, optional</em>) – size of the markers. The defeault is <cite>12</cite>.</p></li>
 <li><p><strong>popup</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, when clicking on a marker a popup window displaying information on the stop will appear. The default is <cite>True</cite>.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -400,11 +361,11 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -429,9 +390,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png" />
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory">
-<code class="sig-name descname">plot_trajectory</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">max_users=10</em>, <em class="sig-param">max_points=1000</em>, <em class="sig-param">style_function=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">tiles='cartodbpositron'</em>, <em class="sig-param">zoom=12</em>, <em class="sig-param">hex_color=-1</em>, <em class="sig-param">weight=2</em>, <em class="sig-param">opacity=0.75</em>, <em class="sig-param">dashArray='0</em>, <em class="sig-param">0'</em>, <em class="sig-param">start_end_markers=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">plot_trajectory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">max_users=10</span></em>, <em class="sig-param"><span class="pre">max_points=1000</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">tiles='cartodbpositron'</span></em>, <em class="sig-param"><span class="pre">zoom=12</span></em>, <em class="sig-param"><span class="pre">hex_color=-1</span></em>, <em class="sig-param"><span class="pre">weight=2</span></em>, <em class="sig-param"><span class="pre">opacity=0.75</span></em>, <em class="sig-param"><span class="pre">start_end_markers=True</span></em>, <em class="sig-param"><span class="pre">control_scale=True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the trajectories on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -446,6 +407,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <li><p><strong>weight</strong> (<em>float, optional</em>) – thickness of the trajectory line. The default is <cite>2</cite>.</p></li>
 <li><p><strong>opacity</strong> (<em>float, optional</em>) – opacity (alpha level) of the trajectory line. The default is <cite>0.75</cite>.</p></li>
 <li><p><strong>start_end_markers</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, add markers on the start and end points of the trajectory. The default is <cite>True</cite>.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -456,10 +418,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -476,9 +438,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_trajectory_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_trajectory_example.png" />
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.settings_from">
-<code class="sig-name descname">settings_from</code><span class="sig-paren">(</span><em class="sig-param">trajdataframe</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">settings_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy the attributes from another TrajDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -486,10 +448,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf1</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf1</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
@@ -505,9 +467,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion">
-<code class="sig-name descname">timezone_conversion</code><span class="sig-paren">(</span><em class="sig-param">from_timezone</em>, <em class="sig-param">to_timezone</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">timezone_conversion</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_timezone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_timezone</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the timezone of the datetime in the TrajDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -518,10 +480,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -543,16 +505,16 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe">
-<code class="sig-name descname">to_flowdataframe</code><span class="sig-paren">(</span><em class="sig-param">tessellation</em>, <em class="sig-param">remove_na=False</em>, <em class="sig-param">self_loops=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregate a TrajDataFrame into a FlowDataFrame.</p>
+<code class="sig-name descname"><span class="pre">to_flowdataframe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate a TrajDataFrame into a FlowDataFrame.
+The points that do not have a corresponding tile in the spatial tessellation are removed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tessellation</strong> (<em>GeoDataFrame</em>) – the spatial tessellation to use to aggregate the points.</p></li>
-<li><p><strong>remove_na</strong> (<em>boolean</em>) – if True, remove the points that do not have a corresponding tile in the spatial tessellation. The default is <cite>False</cite>.</p></li>
-<li><p><strong>self_loop</strong> (<em>boolean</em>) – if True, it counts movements that start and end in the same tile. The default is <cite>True</cite>.</p></li>
+<li><p><strong>self_loops</strong> (<em>boolean</em>) – if True, it counts movements that start and end in the same tile. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -563,12 +525,12 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.tessellation</span> <span class="kn">import</span> <span class="n">tilers</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife, Beijing, China)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -580,8 +542,8 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">4  39.984217  116.319422 2008-10-23 05:53:21    1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># build a tessellation over the city</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">tilers</span><span class="o">.</span><span class="n">tiler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;squared&quot;</span><span class="p">,</span> <span class="n">base_shape</span><span class="o">=</span><span class="s2">&quot;Beijing, China&quot;</span><span class="p">,</span> <span class="n">meters</span><span class="o">=</span><span class="mi">15000</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove_na enable removing points that are not contained in the tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">to_flowdataframe</span><span class="p">(</span><span class="n">tessellation</span><span class="o">=</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">self_loops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">remove_na</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># counting movements that start and end in the same tile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">tdf</span><span class="o">.</span><span class="n">to_flowdataframe</span><span class="p">(</span><span class="n">tessellation</span><span class="o">=</span><span class="n">tessellation</span><span class="p">,</span> <span class="n">self_loops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">fdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  origin destination  flow</span>
 <span class="go">0     49          49   788</span>
@@ -593,23 +555,23 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">FlowDataFrame()</span></code></p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowDataFrame</span></code></p>
 </div>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="skmob.core.trajectorydataframe.TrajSeries">
-<em class="property">class </em><code class="sig-prename descclassname">skmob.core.trajectorydataframe.</code><code class="sig-name descname">TrajSeries</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">index=None</em>, <em class="sig-param">dtype=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">copy=False</em>, <em class="sig-param">fastpath=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajSeries" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></code><code class="sig-name descname"><span class="pre">TrajSeries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajSeries" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-skmob.core.flowdataframe">
 <span id="flowdataframe"></span><h2>FlowDataframe<a class="headerlink" href="#module-skmob.core.flowdataframe" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="skmob.core.flowdataframe.FlowDataFrame">
-<em class="property">class </em><code class="sig-prename descclassname">skmob.core.flowdataframe.</code><code class="sig-name descname">FlowDataFrame</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">origin='origin'</em>, <em class="sig-param">destination='destination'</em>, <em class="sig-param">flow='flow'</em>, <em class="sig-param">datetime='datetime'</em>, <em class="sig-param">tile_id='tile_ID'</em>, <em class="sig-param">timestamp=False</em>, <em class="sig-param">tessellation=None</em>, <em class="sig-param">parameters={}</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></code><code class="sig-name descname"><span class="pre">FlowDataFrame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'origin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'destination'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tile_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>A FlowDataFrame object is a pandas.DataFrame that has three columns origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -627,10 +589,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">NY_COUNTIES_2011</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -640,7 +602,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -654,9 +616,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">4      30  36001       36019</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.flowdataframe.FlowDataFrame.get_flow">
-<code class="sig-name descname">get_flow</code><span class="sig-paren">(</span><em class="sig-param">origin_id</em>, <em class="sig-param">destination_id</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.get_flow" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_flow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.get_flow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the flow between two locations. If there is no flow between two locations it returns 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -673,10 +635,10 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">NY_COUNTIES_2011</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tessellation</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">  tile_ID  population                                           geometry</span>
@@ -686,7 +648,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <span class="go">3   36059     1346176  POLYGON ((-73.707662 40.727831, -73.700272 40....</span>
 <span class="go">4   36011       79693  POLYGON ((-76.279067 42.785866, -76.2753479999...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -705,9 +667,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.flowdataframe.FlowDataFrame.plot_flows">
-<code class="sig-name descname">plot_flows</code><span class="sig-paren">(</span><em class="sig-param">map_f=None</em>, <em class="sig-param">min_flow=0</em>, <em class="sig-param">tiles='Stamen Toner'</em>, <em class="sig-param">zoom=6</em>, <em class="sig-param">flow_color='red'</em>, <em class="sig-param">opacity=0.5</em>, <em class="sig-param">flow_weight=5</em>, <em class="sig-param">flow_exp=0.5</em>, <em class="sig-param">style_function=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">flow_popup=False</em>, <em class="sig-param">num_od_popup=5</em>, <em class="sig-param">tile_popup=True</em>, <em class="sig-param">radius_origin_point=5</em>, <em class="sig-param">color_origin_point='#3186cc'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_flows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">plot_flows</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">min_flow=0</span></em>, <em class="sig-param"><span class="pre">tiles='Stamen</span> <span class="pre">Toner'</span></em>, <em class="sig-param"><span class="pre">zoom=6</span></em>, <em class="sig-param"><span class="pre">flow_color='red'</span></em>, <em class="sig-param"><span class="pre">opacity=0.5</span></em>, <em class="sig-param"><span class="pre">flow_weight=5</span></em>, <em class="sig-param"><span class="pre">flow_exp=0.5</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">flow_popup=False</span></em>, <em class="sig-param"><span class="pre">num_od_popup=5</span></em>, <em class="sig-param"><span class="pre">tile_popup=True</span></em>, <em class="sig-param"><span class="pre">radius_origin_point=5</span></em>, <em class="sig-param"><span class="pre">color_origin_point='#3186cc'</span></em>, <em class="sig-param"><span class="pre">control_scale=True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_flows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the flows of a FlowDataFrame on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -726,6 +688,7 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <li><p><strong>tile_popup</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, when clicking on a location marker a popup window displaying information on the flows departing from that location will appear. The default is <cite>True</cite>.</p></li>
 <li><p><strong>radius_origin_point</strong> (<em>float, optional</em>) – the size of the location markers. The default is <cite>5</cite>.</p></li>
 <li><p><strong>color_origin_point</strong> (<em>str, optional</em>) – the color of the location markers. The default is ‘#3186cc’.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -736,13 +699,13 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">NY_COUNTIES_2011</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -761,9 +724,9 @@ Note that if <cite>inside=True</cite> then argument <cite>remove_na</cite> is ig
 <img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_flows_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_flows_example.png" />
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.flowdataframe.FlowDataFrame.plot_tessellation">
-<code class="sig-name descname">plot_tessellation</code><span class="sig-paren">(</span><em class="sig-param">map_f=None, maxitems=-1, style_func_args={}, popup_features=['tile_ID'], tiles='Stamen Toner', zoom=6, geom_col='geometry'</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">plot_tessellation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_osm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxitems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style_func_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['tile_ID']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Stamen</span> <span class="pre">Toner'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geometry'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the spatial tessellation on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -776,6 +739,7 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 <li><p><strong>tiles</strong> (<em>str, optional</em>) – folium’s <cite>tiles</cite> parameter. The default is ‘Stamen Toner’.</p></li>
 <li><p><strong>zoom</strong> (<em>int, optional</em>) – the initial zoom of the map. The default is <cite>6</cite>.</p></li>
 <li><p><strong>geom_col</strong> (<em>str, optional</em>) – the name of the geometry column of the GeoDataFrame representing the spatial tessellation. The default is ‘geometry’.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -786,13 +750,13 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load a spatial tessellation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_counties_2011.geojson&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url_tess</span> <span class="o">=</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">NY_COUNTIES_2011</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tessellation</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">url_tess</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tile_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tile_ID&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># load real flows into a FlowDataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/NY_commuting_flows_2011.csv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># download the file with the real fluxes from: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/NY_commuting_flows_2011.csv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">FlowDataFrame</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;NY_commuting_flows_2011.csv&quot;</span><span class="p">,</span>
 <span class="go">                                        tessellation=tessellation,</span>
 <span class="go">                                        tile_id=&#39;tile_ID&#39;,</span>
@@ -804,9 +768,9 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 <img alt="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png" src="https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_tessellation_example.png" />
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="skmob.core.flowdataframe.FlowDataFrame.settings_from">
-<code class="sig-name descname">settings_from</code><span class="sig-paren">(</span><em class="sig-param">flowdataframe</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">settings_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy the attributes from another FlowDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -817,9 +781,9 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="skmob.core.flowdataframe.FlowSeries">
-<em class="property">class </em><code class="sig-prename descclassname">skmob.core.flowdataframe.</code><code class="sig-name descname">FlowSeries</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">index=None</em>, <em class="sig-param">dtype=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">copy=False</em>, <em class="sig-param">fastpath=False</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowSeries" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></code><code class="sig-name descname"><span class="pre">FlowSeries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowSeries" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -830,29 +794,29 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../index.html" class="btn btn-neutral float-left" title="Scikit-mobility Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Scikit-mobility Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, skmob devs
+        &#169; Copyright 2019, skmob devs.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -860,7 +824,6 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -879,6 +842,7 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 

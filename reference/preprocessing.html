@@ -1,40 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Preprocessing &mdash; scikit-mobility  documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script type="text/javascript" src="../_static/copybutton.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/copybutton.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Measures" href="measures.html" />
@@ -78,6 +80,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -132,18 +136,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Preprocessing</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/preprocessing.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -177,14 +183,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, …])</p></td>
 <td><p>Clustering of locations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">routing.route</span></code></p></td>
-<td><p></p></td>
-</tr>
 </tbody>
 </table>
-<dl class="function">
+<dl class="py function">
 <dt id="skmob.preprocessing.filtering.filter">
-<code class="sig-prename descclassname">skmob.preprocessing.filtering.</code><code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">max_speed_kmh=500.0</em>, <em class="sig-param">include_loops=False</em>, <em class="sig-param">speed_kmh=5.0</em>, <em class="sig-param">max_loop=6</em>, <em class="sig-param">ratio_max=0.25</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.filtering.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">skmob.preprocessing.filtering.</span></code><code class="sig-name descname"><span class="pre">filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.filtering.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trajectory filtering.</p>
 <p>For each individual in a TrajDataFrame, filter out the trajectory points that are considered noise or outliers <a class="reference internal" href="#id6" id="id1"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
@@ -210,11 +213,11 @@
 <p>if <cite>include_loops</cite> is <cite>True</cite>, the filter is very slow. Use only if raw data is really noisy.</p>
 </div>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">filtering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -241,16 +244,16 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="skmob.preprocessing.compression.compress">
-<code class="sig-prename descclassname">skmob.preprocessing.compression.</code><code class="sig-name descname">compress</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">spatial_radius_km=0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.compression.compress" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">skmob.preprocessing.compression.</span></code><code class="sig-name descname"><span class="pre">compress</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.compression.compress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trajectory compression.</p>
 <p>Reduce the number of points in a trajectory for each individual in a TrajDataFrame. All points within a radius of <cite>spatial_radius_km</cite> kilometers from a given initial point are compressed into a single point that has the median coordinates of all points and the time of the initial point <a class="reference internal" href="#id6" id="id2"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input trajectories of the individuals.</p></li>
-<li><p><strong>spatial_radius_km</strong> (<em>float, optional</em>) – the minimum distance (in km) between points of the compressed trajectory. The default is <cite>0.2</cite>.</p></li>
+<li><p><strong>spatial_radius_km</strong> (<em>float, optional</em>) – the minimum distance (in km) between consecutive points of the compressed trajectory. The default is <cite>0.2</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -261,11 +264,11 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">compression</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -291,18 +294,18 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="skmob.preprocessing.detection.stops">
-<code class="sig-prename descclassname">skmob.preprocessing.detection.</code><code class="sig-name descname">stops</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">stop_radius_factor=0.5</em>, <em class="sig-param">minutes_for_a_stop=20.0</em>, <em class="sig-param">spatial_radius_km=0.2</em>, <em class="sig-param">leaving_time=True</em>, <em class="sig-param">no_data_for_minutes=1000000000000.0</em>, <em class="sig-param">min_speed_kmh=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stops" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">skmob.preprocessing.detection.</span></code><code class="sig-name descname"><span class="pre">stops</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_radius_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes_for_a_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaving_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_data_for_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops detection.</p>
 <p>Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least <cite>minutes_for_a_stop</cite> minutes within a distance <cite>stop_radius_factor * spatial_radius</cite> km from a given trajectory point. The stop’s coordinates are the median latitude and longitude values of the points found within the specified distance <a class="reference internal" href="#id9" id="id4"><span>[RT2004]</span></a> <a class="reference internal" href="#id6" id="id5"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input trajectories of the individuals.</p></li>
-<li><p><strong>stop_radius_factor</strong> (<em>float, optional</em>) – the radius of the ball enclosing all trajectory points within the stop location. The default is <cite>0.5</cite>.</p></li>
+<li><p><strong>stop_radius_factor</strong> (<em>float, optional</em>) – if argument <cite>spatial_radius_km</cite> is <cite>None</cite>, the spatial_radius used is the value specified in the TrajDataFrame properties (“spatial_radius_km” assigned by a <cite>preprocessing.compression</cite> function) multiplied by this argument, <cite>stop_radius_factor</cite>. The default is <cite>0.5</cite>.</p></li>
 <li><p><strong>minutes_for_a_stop</strong> (<em>float, optional</em>) – the minimum stop duration, in minutes. The default is <cite>20.0</cite>.</p></li>
-<li><p><strong>spatial_radius_km</strong> (<em>float or None, optional</em>) – if <cite>None</cite>, use the spatial_radius specified in the TrajDataFrame properties (assigned by a <cite>preprocessing.compression</cite> function). The default is <cite>0.2</cite>.</p></li>
+<li><p><strong>spatial_radius_km</strong> (<em>float or None, optional</em>) – the radius of the ball enclosing all trajectory points within the stop location. The default is <cite>0.2</cite>.</p></li>
 <li><p><strong>leaving_time</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, a new column ‘leaving_datetime’ is added with the departure time from the stop location. The default is <cite>True</cite>.</p></li>
 <li><p><strong>no_data_for_minutes</strong> (<em>float, optional</em>) – if the number of minutes between two consecutive points is larger than <cite>no_data_for_minutes</cite>,
 then this is interpreted as missing data and does not count as a stop. The default is <cite>1e12</cite>.</p></li>
@@ -317,11 +320,11 @@ then this is interpreted as missing data and does not count as a stop. The defau
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -358,9 +361,9 @@ then this is interpreted as missing data and does not count as a stop. The defau
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="skmob.preprocessing.clustering.cluster">
-<code class="sig-prename descclassname">skmob.preprocessing.clustering.</code><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">tdf</em>, <em class="sig-param">cluster_radius_km=0.1</em>, <em class="sig-param">min_samples=1</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">skmob.preprocessing.clustering.</span></code><code class="sig-name descname"><span class="pre">cluster</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clustering of locations.</p>
 <p>Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity <a class="reference internal" href="#id9" id="id7"><span>[RT2004]</span></a>. The clustering algorithm used is DBSCAN (by sklearn <a class="reference internal" href="#dbscan" id="id8"><span>[DBSCAN]</span></a>).</p>
 <dl class="field-list simple">
@@ -379,11 +382,11 @@ then this is interpreted as missing data and does not count as a stop. The defau
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/scikit-mobility/tutorials/blob/master/mda_masterbd2020/data/geolife_sample.txt.gz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -426,29 +429,29 @@ then this is interpreted as missing data and does not count as a stop. The defau
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="measures.html" class="btn btn-neutral float-right" title="Measures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="data_structures.html" class="btn btn-neutral float-left" title="Data Structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="measures.html" class="btn btn-neutral float-right" title="Measures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="data_structures.html" class="btn btn-neutral float-left" title="Data Structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, skmob devs
+        &#169; Copyright 2019, skmob devs.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -456,7 +459,6 @@ then this is interpreted as missing data and does not count as a stop. The defau
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -475,6 +477,7 @@ then this is interpreted as missing data and does not count as a stop. The defau
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 
