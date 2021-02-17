@@ -1,5 +1,5 @@
 ===================
-Prepocessing
+Preprocessing
 ===================
 .. currentmodule:: skmob.preprocessing
 
