@@ -1,5 +1,5 @@
 ===================
-Scikit-mobility Installation
+Scikit-mobility
 ===================
 
 scikit-mobility is a library for human mobility analysis in Python. The library allows to:
@@ -16,8 +16,10 @@ scikit-mobility is a library for human mobility analysis in Python. The library 
 
 * assess the privacy risk associated with a mobility dataset
 
+
+
 .. note::
-   To install the library, please follow the guide in the `scikit-mobilty repository <https://github.com/scikit-mobility/scikit-mobility>`_. 
+   Full instructions to install the library are available in the `scikit-mobilty repository <https://github.com/scikit-mobility/scikit-mobility>`_. 
 
 .. warning::
   scikit-mobility is an ongoing open-source project created by the research community. The library is in its first BETA release, as well as the documentation. In the case you find errors, or you simply have suggestions, please open an issue in the repository. We would love to hear from you!
