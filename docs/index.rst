@@ -36,35 +36,41 @@ Installation with pip (python >= 3.7 required)
 
 #. Activate
 
-.. code-block:: console
-        source skmob/bin/activate
+   .. code-block:: console
+   
+     source skmob/bin/activate
 
-3. Install skmob
+#. Install skmob
 
-.. code-block:: console
-        pip install scikit-mobility
+   .. code-block:: console
+        
+     pip install scikit-mobility
 
-4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
+#. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
 Activate the virutalenv:
 
-.. code-block:: console
-    source skmob/bin/activate
+   .. code-block:: console
+    
+     source skmob/bin/activate
 
 Install jupyter notebook:
 
-.. code-block:: console
-			pip install jupyter
+   .. code-block:: console
+   
+     pip install jupyter
 
 Run jupyter notebook
 
-.. code-block:: console
-			jupyter notebook
+   .. code-block:: console
+	 
+     jupyter notebook
 
 (Optional) install the kernel with a specific name
 
-.. code-block:: console
-		ipython kernel install --user --name=skmob
+   .. code-block:: console
+	 
+     ipython kernel install --user --name=skmob
 
 
 Installation with conda - miniconda
@@ -72,44 +78,50 @@ Installation with conda - miniconda
 
 1. Create an environment `skmob` and install pip
 
-.. code-block:: console
-        conda create -n skmob pip python=3.7 rtree
+   .. code-block:: console
+   
+     conda create -n skmob pip python=3.7 rtree
 
 2. Activate
 
-.. code-block:: console
-        conda activate skmob
+   .. code-block:: console
+ 
+     conda activate skmob
 
 3. Install skmob
 
-.. code-block:: console
-        conda install -c conda-forge scikit-mobility
+    .. code-block:: console
+  
+      conda install -c conda-forge scikit-mobility
 
 4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
-- Install the kernel
+Install the kernel
 
-.. code-block:: console
-          conda install jupyter -c conda-forge
+   .. code-block:: console
+     
+     conda install jupyter -c conda-forge
 
-- Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
+Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
 
 On Mac and Linux
 
-.. code-block:: console
-          	  env=$(basename `echo $CONDA_PREFIX`)
-          	  python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
+   .. code-block:: console
+     
+     env=$(basename `echo $CONDA_PREFIX`)
+     python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
 
 On Windows
 
-.. code-block:: console
-             python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
+   .. code-block:: console
+     python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
 
 
 You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
 
 .. code-block:: console
-    conda install -n skmob pyproj urllib3 chardet markupsafe
+  
+  conda install -n skmob pyproj urllib3 chardet markupsafe
 
 
 Known Issues
@@ -118,12 +130,14 @@ Known Issues
 the installation of package rtree could not work with pip within a conda environment. If so, try
 
 .. code-block:: console
-    pip install "rtree>=0.8,<0.9"
+  
+  pip install "rtree>=0.8,<0.9"
 
 or install rtree with conda
 
 .. code-block:: console
-    conda install rtree
+  
+  conda install rtree
 
 
 .. warning::
