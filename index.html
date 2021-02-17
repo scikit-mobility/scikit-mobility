@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Scikit-mobility Installation &mdash; scikit-mobility  documentation</title>
+  <title>Scikit-mobility &mdash; scikit-mobility  documentation</title>
   
 
   
@@ -143,7 +143,7 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Scikit-mobility Installation</li>
+      <li>Scikit-mobility</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,8 +162,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scikit-mobility-installation">
-<h1>Scikit-mobility Installation<a class="headerlink" href="#scikit-mobility-installation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scikit-mobility">
+<h1>Scikit-mobility<a class="headerlink" href="#scikit-mobility" title="Permalink to this headline">¶</a></h1>
 <p>scikit-mobility is a library for human mobility analysis in Python. The library allows to:</p>
 <ul class="simple">
 <li><p>represent trajectories and mobility flows with proper data structures, TrajDataFrame and FlowDataFrame.</p></li>
@@ -175,8 +175,54 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To install the library, please follow the guide in the <a class="reference external" href="https://github.com/scikit-mobility/scikit-mobility">scikit-mobilty repository</a>.</p>
+<p>Full instructions to install the library are available int the <a class="reference external" href="https://github.com/scikit-mobility/scikit-mobility">scikit-mobilty repository</a>.</p>
 </div>
+<div class="section" id="installation-with-pip-python-3-7-required">
+<h2>Installation with pip (python &gt;= 3.7 required)<a class="headerlink" href="#installation-with-pip-python-3-7-required" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Create an environment <cite>skmob</cite></p></li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>Activate</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Install skmob</p></li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p>OPTIONAL to use <cite>scikit-mobility</cite> on the jupyter notebook</p></li>
+</ol>
+<p>Activate the virutalenv:</p>
+<p>Install jupyter notebook:</p>
+<p>Run jupyter notebook</p>
+<p>(Optional) install the kernel with a specific name</p>
+</div>
+<div class="section" id="installation-with-conda-miniconda">
+<h2>Installation with conda - miniconda<a class="headerlink" href="#installation-with-conda-miniconda" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Create an environment <cite>skmob</cite> and install pip</p></li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>Activate</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Install skmob</p></li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p>OPTIONAL to use <cite>scikit-mobility</cite> on the jupyter notebook</p></li>
+</ol>
+<ul class="simple">
+<li><p>Install the kernel</p></li>
+</ul>
+<ul class="simple">
+<li><p>Open a notebook and check if the kernel <cite>skmob</cite> is on the kernel list. If not, run the following:</p></li>
+</ul>
+<p>On Mac and Linux</p>
+<p>On Windows</p>
+<p>You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.</p>
+<div class="section" id="known-issues">
+<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<p>the installation of package rtree could not work with pip within a conda environment. If so, try</p>
+<p>or install rtree with conda</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>scikit-mobility is an ongoing open-source project created by the research community. The library is in its first BETA release, as well as the documentation. In the case you find errors, or you simply have suggestions, please open an issue in the repository. We would love to hear from you!</p>
@@ -206,6 +252,8 @@
 <li class="toctree-l1"><a class="reference internal" href="reference/io.html">Input/Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/privacy.html">Privacy</a></li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 
