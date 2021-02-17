@@ -22,7 +22,7 @@ Installation
 ============
 
 .. note::
-  Full instructions to install the library are available int the `scikit-mobilty repository <https://github.com/scikit-mobility/scikit-mobility>`_.
+  Full instructions to install the library are available in the `scikit-mobilty repository <https://github.com/scikit-mobility/scikit-mobility>`_.
 
 
 Installation with pip (python >= 3.7 required)
