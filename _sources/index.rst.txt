@@ -76,25 +76,25 @@ Run jupyter notebook
 Installation with conda - miniconda
 -----------------------------------------------
 
-1. Create an environment `skmob` and install pip
+#. Create an environment `skmob` and install pip
 
    .. code-block:: console
    
      conda create -n skmob pip python=3.7 rtree
 
-2. Activate
+#. Activate
 
    .. code-block:: console
  
      conda activate skmob
 
-3. Install skmob
+#. Install skmob
 
-    .. code-block:: console
+   .. code-block:: console
   
-      conda install -c conda-forge scikit-mobility
+     conda install -c conda-forge scikit-mobility
 
-4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
+#. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
 Install the kernel
 
