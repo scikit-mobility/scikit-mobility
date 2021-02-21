@@ -1,15 +1,18 @@
 from setuptools import setup
+from setuptool import find_packages
 
 long_description = open('README.md').read()
 
-DEPENDENCIES = ['numpy', 'scipy', 'pandas', 'geopandas', 'powerlaw', 'tqdm', 'requests',
-                'scikit-learn', 'statsmodels', 'folium', 'matplotlib', 'geojson', 'shapely']
+REQUIRED_PKGS = ['numpy', 'scipy', 'pandas', 'geopandas', 'powerlaw', 'tqdm', 'requests', 'scikit-learn', 'statsmodels',
+                 'folium', 'matplotlib', 'geojson', 'shapely', 'h3']
+TESTS_REQUIRES = ['pytest']
+EXTRAS_REQUIRE = {'test': TESTS_REQUIRES}
 setup(
     name='scikit-mobility',
+    package_dir={'','skmob'},
+    packages=find_packages('skmob'),
     version='1.0',
-    packages=['skmob', 'skmob.core', 'skmob.utils', 'skmob.io', 'skmob.measures', 'skmob.models',
-              'skmob.preprocessing', 'skmob.privacy', 'skmob.tessellation' ],
-    #TODO: fix it with find_packages(include=["skmob", "skmob.*"])
+    extras_require=EXTRAS_REQUIRE,
     license='MIT',
     python_requires='>=3.6',
     description='A toolbox for analyzing and processing mobility data.',
@@ -29,5 +32,5 @@ setup(
                  'Programming Language :: Python :: 3.7',
                  'Programming Language :: Python :: 3.8',
                  ],
-    install_requires=DEPENDENCIES
+    install_requires=REQUIRED_PKGS
     )
