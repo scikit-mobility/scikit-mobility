@@ -1,0 +1,3 @@
+# include in sdist
+include README.rst
+include LICENSE
