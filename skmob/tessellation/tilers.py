@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import math
 import geopandas as gpd
-from shapely.geometry import MultiPolygon, Polygon, Point, box
+from shapely.geometry import MultiPolygon, Polygon, Point
 from shapely.ops import cascaded_union
 from ..utils import constants, utils
 import numpy as np
@@ -264,9 +264,6 @@ class H3TessellationTiler(TessellationTiler):
         return self._build(base_shape, meters, crs)
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
-
-        # We work with the universal crs epsg:3857
-        tmp_crs = constants.DEFAULT_CRS
 
         #  translate input meters to appropriate h3 resolution 
         res = self._get_appropriate_res(base_shape, meters)
