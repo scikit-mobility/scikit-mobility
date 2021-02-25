@@ -49,8 +49,11 @@ venv.bak/
 # celery beat schedule file
 celerybeat-schedule
 
+# vim temp files
+*.swp
+
 # pycharm files
-.idea/*
+.idea/
 __pycache__
 
 # Byte-compiled / optimized / DLL files
