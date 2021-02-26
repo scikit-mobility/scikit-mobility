@@ -80,7 +80,7 @@ traj_style_function = lambda weight, color, opacity, dashArray: \
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=-2, weight=2, opacity=0.75, dashArray='0, 0',
-                    start_end_markers=True):
+                    start_end_markers=True, control_scale=True):
     """
     :param tdf: TrajDataFrame
          TrajDataFrame to be plotted.
@@ -120,6 +120,9 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :param start_end_markers: bool
         add markers on the start and end points of the trajectory.
 
+    :param control_scale: bool
+        if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
     :return: `folium.Map` object with the plotted trajectories.
 
     """
@@ -156,7 +159,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         if nu == 1 and map_f is None:
             # initialise map
             center = list(np.median(traj, axis=0)[::-1])
-            map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles)
+            map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles, control_scale=control_scale)
 
         trajlist = traj.values.tolist()
         line = LineString(trajlist)
@@ -267,7 +270,7 @@ def plot_points_heatmap(tdf, map_f=None, max_points=1000,
     return map_f
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True):
+               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
     """
     :param stdf: TrajDataFrame
          Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
@@ -300,6 +303,9 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     :param popup: bool
         if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
 
+    :param control_scale: bool
+        if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
     :return: `folium.Map` object with the plotted stops.
 
     """
@@ -309,7 +315,7 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
         # initialise map
         lo_la = stdf[['lng', 'lat']].values
         center = list(np.median(lo_la, axis=0)[::-1])
-        map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles)
+        map_f = folium.Map(location=center, zoom_start=zoom, tiles=tiles, control_scale=control_scale)
 
     # group by user and keep only the first `max_users`
     nu = 0
@@ -460,7 +466,7 @@ flow_style_function = lambda weight, color, opacity, weight_factor, flow_exp: \
 def plot_flows(fdf, map_f=None, min_flow=0, tiles='cartodbpositron', zoom=6, flow_color='red', opacity=0.5,
                flow_weight=5, flow_exp=0.5, style_function=flow_style_function,
                flow_popup=False, num_od_popup=5, tile_popup=True, radius_origin_point=5,
-               color_origin_point='#3186cc'):
+               color_origin_point='#3186cc', control_scale=True):
     """
     :param fdf: FlowDataFrame
         `FlowDataFrame` to visualize.
@@ -508,13 +514,16 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='cartodbpositron', zoom=6, flo
     :param color_origin_point: str
         color of the location markers.
 
+    :param control_scale: bool
+        if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
     :return: `folium.Map` object with the plotted flows.
 
     """
     if map_f is None:
         # initialise map
         lon, lat = np.mean(np.array(list(fdf.tessellation.geometry.apply(utils.get_geom_centroid).values)), axis=0)
-        map_f = folium.Map(location=[lat,lon], tiles=tiles, zoom_start=zoom)
+        map_f = folium.Map(location=[lat,lon], tiles=tiles, zoom_start=zoom, control_scale=control_scale)
 
     mean_flows = fdf[constants.FLOW].mean()
 
@@ -673,7 +682,7 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
 
 
 def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[],
-            tiles='cartodbpositron', zoom=6, geom_col='geometry'):
+            tiles='cartodbpositron', zoom=6, geom_col='geometry', control_scale=True):
     """
     :param gdf: GeoDataFrame
         GeoDataFrame to visualize.
@@ -701,13 +710,16 @@ def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[]
     :param geom_col: str
          name of the geometry column of `gdf`.
 
+    :param control_scale: bool
+        if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
+
     :return: `folium.Map` object with the plotted GeoDataFrame.
 
     """
     if map_f is None:
         # initialise map
         lon, lat = np.mean(np.array(list(gdf[geom_col].apply(utils.get_geom_centroid).values)), axis=0)
-        map_f = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom)
+        map_f = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom, control_scale=control_scale)
 
     count = 0
     for k in gdf.index:
