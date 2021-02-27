@@ -28,9 +28,11 @@
 2. [Citing](#citing)
 3. [Collaborate with us](#collaborate)
 4. [Installation](#installation)
+	- [with pip](#installation_pip)
 	- [with conda](#installation_conda)
-	- [without conda](#installation_no_conda)
+	- [known issues](#known_conda)
 	- [test installation](#test_installation)
+	- [Google Colab](#google_colab)
 5. [Tutorials](#tutorials)
 6. [Examples](#examples)
 	- [TrajDataFrame](#trajdataframe)
@@ -74,53 +76,14 @@ Bibtex:
 If you would like to include your algorithm in `scikit-mobility`, feel free to fork the project, open an issue and contact us.
 
 <a id='installation'></a>
-## Install
-First, clone the repository - this creates a new directory `./scikit_mobility`. 
+## Installation
+scikit-mobility for Python >= 3.7 and all it's dependencies are available from conda-forge and can be installed using 
+`conda install -c conda-forge scikit-mobility`.
 
-        git clone https://github.com/scikit-mobility/scikit-mobility scikit_mobility
+Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you're on Windows or Mac, many GeoPandas / scikit-mobility dependencies cannot be pip installed (for details see the corresponding notes in the GeoPandas documentation).
 
-<a id='installation_conda'></a>
-### with conda - miniconda
-
-1. Create an environment `skmob` and install pip
-
-        conda create -n skmob pip python=3.7
-
-2. Activate
-    
-        source activate skmob
-
-3. Install skmob
-
-        cd scikit-mobility
-        python setup.py install
-
-    If the installation of a required library fails, reinstall it with `conda install`.      
-
-4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
-
-    - Install the kernel
-    
-          conda install ipykernel
-          
-    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following: 
-    	- On Mac and Linux
-	    
-          	  env=$(basename `echo $CONDA_PREFIX`)
-          	  python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
-		
-       - On Windows
-       
-             python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
-	       
-:exclamation: You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
-
-```
-conda install -n skmob pyproj urllib3 chardet markupsafe
-```
-<a id='installation_no_conda'></a>          
-### without conda (python >= 3.6 required)
-
+<a id='installation_pip'></a>
+### installation with pip (python >= 3.7 required)
 
 1. Create an environment `skmob`
 
@@ -132,9 +95,7 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 
 3. Install skmob
 
-        cd scikit-mobility
-        python setup.py install
-
+        pip install scikit-mobility
 
 4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
 
@@ -153,7 +114,58 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 	- (Optional) install the kernel with a specific name
 			
 			ipython kernel install --user --name=skmob
-			
+		
+
+<a id='installation_conda'></a>
+### installation with conda - miniconda
+
+1. Create an environment `skmob` and install pip
+
+        conda create -n skmob pip python=3.7 rtree
+
+2. Activate
+    
+        conda activate skmob
+
+3. Install skmob
+
+        conda install -c conda-forge scikit-mobility
+
+4. OPTIONAL to use `scikit-mobility` on the jupyter notebook
+
+    - Install the kernel
+    
+          conda install jupyter -c conda-forge
+          
+    - Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following: 
+    	- On Mac and Linux
+	    
+          	  env=$(basename `echo $CONDA_PREFIX`)
+          	  python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
+		
+       - On Windows
+       
+             python -m ipykernel install --user --name skmob --display-name "Python [conda env: skmob]"
+	       
+:exclamation: You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
+
+```
+conda install -n skmob pyproj urllib3 chardet markupsafe
+```
+
+<a id='known_conda'></a>
+### Known Issues
+the installation of package rtree could not work with pip within a conda environment. If so, try 
+```
+pip install "rtree>=0.8,<0.9" 
+```
+or install rtree with conda
+```
+conda install rtree
+```
+https://github.com/Toblerity/rtree/issues/120
+
+	
 <a id='test_installation'></a>    
 ### Test the installation
 
@@ -162,6 +174,22 @@ conda install -n skmob pyproj urllib3 chardet markupsafe
 (skmob)> python
 >>> import skmob
 >>>
+```
+
+<a id='google_colab'></a>
+## Google Colab
+scikit-mobility can be installed on <a href="https://colab.research.google.com/notebooks/intro.ipynb#recent=true">Google Colab</a> using the following commands:
+```
+!apt-get install -qq curl g++ make
+!curl -L http://download.osgeo.org/libspatialindex/spatialindex-src-1.8.5.tar.gz | tar xz
+import os
+os.chdir('spatialindex-src-1.8.5')
+!./configure
+!make
+!make install
+!pip install rtree
+!ldconfig
+!pip install scikit-mobility
 ```
 
 <a id='tutorials'></a>
@@ -278,7 +306,7 @@ Create a spatial tessellation from a file describing counties in New York state:
 >>> import skmob
 >>> import geopandas as gpd
 >>> # load a spatial tessellation
->>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+>>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
 >>> # print a portion of the spatial tessellation
 >>> print(tessellation.head())
