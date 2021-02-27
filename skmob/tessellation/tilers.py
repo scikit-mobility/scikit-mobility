@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import math
 import geopandas as gpd
-from shapely.geometry import MultiPolygon, Polygon, Point, box
+from shapely.geometry import MultiPolygon, Polygon, Point
 from shapely.ops import cascaded_union
 from ..utils import constants, utils
 import numpy as np
@@ -122,15 +122,8 @@ class SquaredTessellationTiler(TessellationTiler):
 
         # We work with the universal crs epsg:3857
         tmp_crs = constants.UNIVERSAL_CRS
-        tmp_crs['units'] = 'm'
 
         area = base_shape.to_crs(tmp_crs)
-
-        # bb = [base_shape.iloc[0].bbox_west,
-        #       base_shape.iloc[0].bbox_south,
-        #       base_shape.iloc[0].bbox_east,
-        #       base_shape.iloc[0].bbox_north]
-        # area = gpd.GeoDataFrame(geometry=[box(*bb, ccw=True)], crs=constants.DEFAULT_CRS).to_crs(tmp_crs)
 
         # Obtain the boundaries of the geometry
         boundaries = dict({'min_x': area.total_bounds[0],
@@ -271,10 +264,6 @@ class H3TessellationTiler(TessellationTiler):
         return self._build(base_shape, meters, crs)
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
-
-        # We work with the universal crs epsg:3857
-        tmp_crs = constants.DEFAULT_CRS
-        tmp_crs['units'] = 'm'
 
         #  translate input meters to appropriate h3 resolution 
         res = self._get_appropriate_res(base_shape, meters)
