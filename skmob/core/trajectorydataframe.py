@@ -569,7 +569,7 @@ class TrajDataFrame(pd.DataFrame):
                     start_end_markers=start_end_markers, control_scale=control_scale)
 
     def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
+                   hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
 
         """
         Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
