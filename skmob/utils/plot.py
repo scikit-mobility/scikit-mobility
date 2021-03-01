@@ -59,7 +59,7 @@ COLOR = {
 
 def get_color(k=-2, color_dict=COLOR):
     """
-    Return a color (gray if k == 1, random if k < -1)
+    Return a color (gray if k == -1, random if k < -1)
     """
     if k < -1:
         return np.random.choice(list(color_dict.values()))  # color_dict[random.randint(0,20)]
@@ -79,7 +79,7 @@ traj_style_function = lambda weight, color, opacity, dashArray: \
 
 
 def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
-                    tiles='cartodbpositron', zoom=12, hex_color=-2, weight=2, opacity=0.75, dashArray='0, 0',
+                    tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True, control_scale=True):
     """
     :param tdf: TrajDataFrame
@@ -104,8 +104,8 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :param zoom: int
         initial zoom.
 
-    :param hex_color: str or int
-        hex color of the trajectory line. If less than `-1` a random color will be generated for each trajectory.
+    :param hex_color: str
+        hex color of the trajectory line. If `None` a random color will be generated for each trajectory.
 
     :param weight: float
         thickness of the trajectory line.
@@ -123,7 +123,9 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
     :param control_scale: bool
         if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-    :return: `folium.Map` object with the plotted trajectories.
+    Returns
+    -------
+        `folium.Map` object with the plotted trajectories.
 
     """
     warnings.warn("Only the trajectories of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
@@ -164,8 +166,8 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         trajlist = traj.values.tolist()
         line = LineString(trajlist)
 
-        if hex_color < -1:
-            color = get_color(hex_color)
+        if hex_color is None:
+            color = get_color(-2)
         else:
             color = hex_color
 
@@ -270,7 +272,7 @@ def plot_points_heatmap(tdf, map_f=None, max_points=1000,
     return map_f
 
 def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-               hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
+               hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
     """
     :param stdf: TrajDataFrame
          Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
@@ -288,8 +290,8 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     :param zoom: int
         initial zoom.
 
-    :param hex_color: str or int
-        hex color of the stop markers. If less than `-1` a random color will be generated for each user.
+    :param hex_color: str
+        hex color of the stop markers. If `None` a random color will be generated for each user.
 
     :param opacity: float
         opacity (alpha level) of the stop makers.
@@ -306,7 +308,9 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
     :param control_scale: bool
         if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-    :return: `folium.Map` object with the plotted stops.
+    Returns
+    -------
+        `folium.Map` object with the plotted stops.
 
     """
     warnings.warn("Only the stops of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
@@ -332,8 +336,8 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
             break
         nu += 1
 
-        if hex_color < -1:
-            color = get_color(hex_color)
+        if hex_color is None:
+            color = get_color(-2)
         else:
             color = hex_color
 
@@ -517,7 +521,9 @@ def plot_flows(fdf, map_f=None, min_flow=0, tiles='cartodbpositron', zoom=6, flo
     :param control_scale: bool
         if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-    :return: `folium.Map` object with the plotted flows.
+    Returns
+    -------
+        `folium.Map` object with the plotted flows.
 
     """
     if map_f is None:
@@ -713,7 +719,9 @@ def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[]
     :param control_scale: bool
         if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-    :return: `folium.Map` object with the plotted GeoDataFrame.
+    Returns
+    -------
+        `folium.Map` object with the plotted GeoDataFrame.
 
     """
     if map_f is None:
