@@ -25,6 +25,7 @@ setup(
     python_requires='>=3.6',
     description='A toolbox for analyzing and processing mobility data.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     maintainer='skmob Developers',
     maintainer_email='gianni.barlacchi@gmail.com',
     classifiers=['Intended Audience :: Science/Research',

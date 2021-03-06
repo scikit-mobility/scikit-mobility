@@ -494,7 +494,7 @@ class TrajDataFrame(pd.DataFrame):
 
     # Plot methods
     def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
-                        tiles='cartodbpositron', zoom=12, hex_color=-2, weight=2, opacity=0.75, dashArray='0, 0',
+                        tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                         start_end_markers=True, control_scale=True):
 
         """
@@ -521,8 +521,8 @@ class TrajDataFrame(pd.DataFrame):
         :param zoom: int
             initial zoom.
     
-        :param hex_color: str or int
-            hex color of the trajectory line. If less than `-1` a random color will be generated for each trajectory.
+        :param hex_color: str
+            hex color of the trajectory line. If `None` a random color will be generated for each trajectory.
     
         :param weight: float
             thickness of the trajectory line.
@@ -540,7 +540,9 @@ class TrajDataFrame(pd.DataFrame):
         :param control_scale: bool
             if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-        :return: `folium.Map` object with the plotted trajectories.
+        Returns
+        -------
+            `folium.Map` object with the plotted trajectories.
 
 
         Examples
@@ -568,8 +570,8 @@ class TrajDataFrame(pd.DataFrame):
                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity, dashArray=dashArray,
                     start_end_markers=start_end_markers, control_scale=control_scale)
 
-    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
-                   hex_color=-2, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
+    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=None, opacity=0.3,
+                   radius=12, number_of_sides=4, popup=True, control_scale=True):
 
         """
         Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
@@ -588,8 +590,8 @@ class TrajDataFrame(pd.DataFrame):
         :param zoom: int
             initial zoom.
     
-        :param hex_color: str or int
-            hex color of the stop markers. If less than `-1` a random color will be generated for each user.
+        :param hex_color: str
+            hex color of the stop markers. If `None` a random color will be generated for each user.
     
         :param opacity: float
             opacity (alpha level) of the stop makers.
@@ -607,7 +609,9 @@ class TrajDataFrame(pd.DataFrame):
         :param control_scale: bool
             if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
 
-        :return: `folium.Map` object with the plotted stops.
+        Returns
+        -------
+            `folium.Map` object with the plotted stops.
 
         Examples
         --------
@@ -633,8 +637,8 @@ class TrajDataFrame(pd.DataFrame):
         2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30
         3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
         4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35 
-        >>> map_f = tdf.plot_trajectory(max_points=1000, hex_color=-1, start_end_markers=False)
-        >>> stdf.plot_stops(map_f=map_f, hex_color=-1)
+        >>> map_f = tdf.plot_trajectory(max_points=1000, start_end_markers=False)
+        >>> stdf.plot_stops(map_f=map_f)
         
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png
         """
