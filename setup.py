@@ -19,7 +19,7 @@ EXTRAS_REQUIRE = {'test': TESTS_REQUIRES}
 setup(
     name='scikit-mobility',
     packages=find_packages(include=["skmob", "skmob.*"]),
-    version='1.2.1',
+    version='1.2.2',
     extras_require=EXTRAS_REQUIRE,
     license='new BSD',
     python_requires='>=3.6',
