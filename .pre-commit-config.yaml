@@ -22,4 +22,4 @@ repos:
     rev: stable
     hooks:
     - id: flake8
-      
+
