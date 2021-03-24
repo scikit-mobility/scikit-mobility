@@ -1,25 +1,29 @@
 repos:
-
--   repo: https://github.com/asottile/seed-isort-config
-    rev: stable
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
     hooks:
-    - id: seed-isort-config
-      ["--application-directories", "src"]
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
 
--   repo: https://github.com/pre-commit/mirrors-isort
-    rev: stable
-    hooks:
-    - id: isort
-      args: ["--profile", "black"]
-
--   repo: https://github.com/python/black
-    rev: stable
-    hooks:
-    - id: black
-      language_version: python3.6
-
--   repo: https://gitlab.com/pycqa/flake8
-    rev: stable
-    hooks:
-    - id: flake8
-
+#repos:
+#-   repo: https://github.com/asottile/seed-isort-config
+#    rev: stable
+#    hooks:
+#    - id: seed-isort-config
+#      ["--application-directories", "src"]
+#-   repo: https://github.com/pre-commit/mirrors-isort
+#    rev: stable
+#    hooks:
+#    - id: isort
+#      args: ["--profile", "black"]
+#-   repo: https://github.com/python/black
+#    rev: stable
+#    hooks:
+#    - id: black
+#      language_version: python3.6
+#-   repo: https://gitlab.com/pycqa/flake8
+#    rev: stable
+#    hooks:
+#    - id: flake8
+#
