@@ -5,25 +5,22 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
-
-#repos:
-#-   repo: https://github.com/asottile/seed-isort-config
-#    rev: stable
-#    hooks:
-#    - id: seed-isort-config
-#      ["--application-directories", "src"]
-#-   repo: https://github.com/pre-commit/mirrors-isort
-#    rev: stable
-#    hooks:
-#    - id: isort
-#      args: ["--profile", "black"]
-#-   repo: https://github.com/python/black
-#    rev: stable
-#    hooks:
-#    - id: black
-#      language_version: python3.6
-#-   repo: https://gitlab.com/pycqa/flake8
-#    rev: stable
-#    hooks:
-#    - id: flake8
-#
+-   repo: https://github.com/asottile/seed-isort-config
+    rev: v2.2.0
+    hooks:
+    - id: seed-isort-config
+      args: ["--application-directories","src"]
+-   repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.5.4
+    hooks:
+    - id: isort
+      args: ["--profile", "black"]
+-   repo: https://github.com/python/black
+    rev: 20.8b1
+    hooks:
+    - id: black
+      language_version: python3.6
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+    - id: flake8
