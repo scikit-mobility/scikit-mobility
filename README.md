@@ -2,10 +2,6 @@
 
 [![HitCount](http://hits.dwyl.io/scikit-mobility/scikit-mobility.svg)](http://hits.dwyl.io/scikit-mobility/scikit-mobility)
 
-.. image:: https://www.repostatus.org/badges/latest/active.svg
-   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
-   :target: https://www.repostatus.org/#active
-
 # scikit-mobility - mobility analysis in Python
 
 <img src="logo_skmob.png" width=300/>
