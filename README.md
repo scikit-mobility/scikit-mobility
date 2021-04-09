@@ -1,7 +1,8 @@
 [![DOI](https://zenodo.org/badge/184337448.svg)](https://zenodo.org/badge/latestdoi/184337448)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/scikit-mobility/scikit-mobility)
 ![GitHub milestones](https://img.shields.io/github/milestones/open/scikit-mobility/scikit-mobility)
-[![HitCount](http://hits.dwyl.io/scikit-mobility/scikit-mobility.svg)](http://hits.dwyl.io/scikit-mobility/scikit-mobility)
+![GitHub](https://img.shields.io/github/license/scikit-mobility/scikit-mobility)
+![GitHub contributors](https://img.shields.io/github/contributors/scikit-mobility/scikit-mobility)
 
 # scikit-mobility - mobility analysis in Python
 
