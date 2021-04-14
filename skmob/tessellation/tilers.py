@@ -197,12 +197,15 @@ class H3TessellationTiler(TessellationTiler):
 
     def _get_appropriate_res(self, base_shape, meters):
 
-        # translate meters to h3 resolution
         res = self._meters_to_res(meters)
 
-        # find the minimum resolution level which will cover the base_shape 
+        base_shape = base_shape.to_crs(constants.UNIVERSAL_CRS)
+
+        # find the minimum resolution level which will cover the base_shape
+        # divide base_shape_area by 1000000 to convert meters in km2
         min_res_cover = np.where(
-            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > base_shape.area.values[0])[0][-1]
+            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] / 1000000)
+        )[0][-1]
 
         # are the hexagons enough to fill the base_shape?
         # if not suggest the largest of the smallest resolutions/meters which fit in base_shape
@@ -237,7 +240,6 @@ class H3TessellationTiler(TessellationTiler):
         if not self._instance:
 
             if isinstance(base_shape, str):
-                # Try to obtain the base shape from OSM
                 base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
                 i = 0
                 base_shape = base_shapes.loc[[i]]
@@ -249,9 +251,8 @@ class H3TessellationTiler(TessellationTiler):
             elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
 
                 if all(isinstance(x, Point) for x in base_shape.geometry):
-                    # Build a base shape that contains all the points in the
-                    # given geodataframe
                     base_shape = utils.bbox_from_points(base_shape)
+
             else:
                 raise ValueError(
                     "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
@@ -267,6 +268,9 @@ class H3TessellationTiler(TessellationTiler):
 
         #  translate input meters to appropriate h3 resolution 
         res = self._get_appropriate_res(base_shape, meters)
+
+        # H3 requires epsg=4326
+        base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
 
         # cover the base_shape with h3 hexagonal polygons
         hexs = self._handle_polyfill(base_shape, res)
