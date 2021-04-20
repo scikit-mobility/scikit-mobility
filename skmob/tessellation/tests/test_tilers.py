@@ -1,6 +1,6 @@
 import re
 import geopandas as gpd
-from ...tessellation import tilers
+from skmob.tessellation import tilers
 import shapely
 import pytest
 
@@ -30,16 +30,16 @@ def test__meters_to_res(h3_tess, input_meters, expected_res):
     assert h3_tess._meters_to_res(input_meters) == expected_res
 
 def test__get_appropriate_res(h3_tess):
-    assert h3_tess._get_appropriate_res(bbox, 5000) == 8
+    assert h3_tess._get_appropriate_res(bbox, 5000) == 6
 
 # test UserWarning is triggered for input hexs
 # that are larger than the base_shape
 def test_warning(h3_tess):
-    with pytest.warns(UserWarning) as uws:
+    with pytest.warns(UserWarning) as user_warnings:
         pattern=r".*Try something smaller.*"
         h3_tess._get_appropriate_res(bbox, 50000)
 
         # check that 2 warnings were raised
-        assert len(uws) == 2
+        assert len(user_warnings) == 1
         # check that the message matches
-        assert re.match(pattern, uws[1].message.args[0])
+        assert re.match(pattern, user_warnings[1].message.args[0])
