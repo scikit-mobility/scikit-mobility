@@ -286,9 +286,9 @@ class H3TessellationTiler(TessellationTiler):
         )
 
         # add TileID
-        all_polys['TILE_ID'] = all_polys.index
+        all_polys[constants.TILE_ID] = all_polys.index
         # Convert TILE_ID to have str type
-        all_polys['TILE_ID'] = all_polys['TILE_ID'].astype('str')
+        all_polys[constants.TILE_ID] = all_polys[constants.TILE_ID].astype('str')
 
         return all_polys
 
@@ -296,7 +296,7 @@ class H3TessellationTiler(TessellationTiler):
         return Polygon(
             h3.h3_to_geo_boundary(
                 hex_id), geo_json=True)
-        )
+
 
 
 
