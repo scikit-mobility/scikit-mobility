@@ -3,10 +3,11 @@ import math
 import geopandas as gpd
 from shapely.geometry import MultiPolygon, Polygon, Point
 from shapely.ops import cascaded_union
-from ..utils import constants, utils
+from skmob.utils import constants, utils
 import numpy as np
 import h3.api.numpy_int as h3
 import warnings
+
 
 
 class TessellationTilers:
