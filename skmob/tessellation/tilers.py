@@ -276,11 +276,11 @@ class H3TessellationTiler(TessellationTiler):
         # cover the base_shape with h3 hexagonal polygons
         hexs = self._handle_polyfill(base_shape, res)
 
-        # get actual geoms out of H3 hexagons
+
         # from https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
-        # prepare a geodf with all the H3 geoms
+        # prepare a geodf with the H3 geoms from H3 id
         all_polys = gpd.GeoDataFrame(
-            {'geometry': [self.polygonise(hex) for hex in hexs],
+            {'geometry': [self._get_h3_geom_from(hex_id) for hex_id in hexs],
              'H3_INDEX': hexs},
             crs=constants.DEFAULT_CRS
         )
@@ -292,10 +292,10 @@ class H3TessellationTiler(TessellationTiler):
 
         return all_polys
 
-    def polygonise(self, hex):
+    def _get_h3_geom_from(self, hex_id):
         return Polygon(
             h3.h3_to_geo_boundary(
-                hex, geo_json=True)
+                hex_id), geo_json=True)
         )
 
 
