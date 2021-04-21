@@ -196,7 +196,7 @@ class H3TessellationTiler(TessellationTiler):
         res = (np.abs(array - hex_side_len_km)).argmin()
         return res
 
-    def _get_appropriate_res(self, base_shape, meters):
+    def _meters_to_h3_resolution(self, base_shape, meters):
 
         res = self._meters_to_res(meters)
 
@@ -268,7 +268,7 @@ class H3TessellationTiler(TessellationTiler):
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
 
         #  translate input meters to appropriate h3 resolution 
-        res = self._get_appropriate_res(base_shape, meters)
+        res = self._meters_to_h3_resolution(base_shape, meters)
 
         # H3 requires epsg=4326
         base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
