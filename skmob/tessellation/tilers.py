@@ -293,21 +293,18 @@ class H3TessellationTiler(TessellationTiler):
 
     def _handle_polyfill(self, base_shape, res):
 
-        def get_hex(x):
-            h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
-            if len(h) > 0:
-                return h
-            else:
-                return None
-
         if base_shape.type[0] == "MultiPolygon":
-            tmp_hexs = base_shape.explode().apply(lambda x: get_hex(x))
+            tmp_hexs = base_shape.explode().apply(lambda x: self._get_hex(x, res))
             hexs = list(set(np.concatenate(tmp_hexs[tmp_hexs.notna()].to_list())))
         else:
             hexs = h3.polyfill(
                 base_shape.geometry.__geo_interface__['features'][0]['geometry'], res, geo_json_conformant=True)
-
         return hexs
+
+    def _get_hex(self, x, res):
+        h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
+        if not h:
+            return h
 
     def _get_h3_geom_from(self, hex_id):
         return Polygon(
