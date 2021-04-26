@@ -218,16 +218,22 @@ class H3TessellationTiler(TessellationTiler):
         return polygon_shape
 
     def _find_first_polygon_in(self, base_shapes):
-        return_shape = base_shapes[0]
-        for current_shape in base_shapes:
-            if self._isinstance_poly_multypoly(current_shape):
-                return_shape = current_shape
+        return_shape = base_shapes.iloc[[0]]
+
+        for i, current_shape in enumerate(base_shapes["geometry"].values):
+            if self._isinstance_poly_multipoly(current_shape):
+                return_shape = base_shapes.iloc[[i]]
                 break
+        else:
+            print(1)
+
         return return_shape
 
-    def _isinstance_poly_multypoly(self, shape):
+
+
+    def _isinstance_poly_multipoly(self, shape):
         return True if (
-                isinstance(shape.geometry.iloc[0], Polygon) or  isinstance(shape.geometry.iloc[0], MultiPolygon)
+                isinstance(shape, Polygon) or isinstance(shape, MultiPolygon)
         ) else False
 
 
