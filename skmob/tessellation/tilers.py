@@ -270,29 +270,28 @@ class H3TessellationTiler(TessellationTiler):
 
     def _meters_to_h3_resolution(self, base_shape, meters):
 
+        base_shape_proj = base_shape.to_crs(constants.UNIVERSAL_CRS)
+
         res = self._meters_to_res(meters)
 
-        base_shape = base_shape.to_crs(constants.UNIVERSAL_CRS)
-
-        # find the minimum resolution level which will cover the base_shape
-        # divide base_shape_area by 1000000 to convert meters in km2
-        min_res_cover = np.where(
-            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] / 1000000)
-        )[0][-1]
+        min_res_cover = self._find_min_resolution(base_shape_proj)
 
         # are the hexagons enough to fill the base_shape?
         # if not suggest the largest of the smallest resolutions/meters which fit in base_shape
-        if res >= min_res_cover:
-            pass
-        else:
+        if res <= min_res_cover:
             warnings.warn(f' The cell side-length you provided is too large to cover the input area.'
                           f' Try something smaller, e.g. :'
                           f' Side-Length {constants.H3_UTILS["avg_hex_edge_len_km"][str(min_res_cover - 1)] / 1000} Km')
             res = min_res_cover - 1
         return res
 
-    def _handle_polyfill(self, base_shape, res):
+    def _find_min_resolution(self, base_shape):
+        min_res_cover = np.where(
+            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] * 1000000)
+        )[0][-1]
+        return min_res_cover
 
+    def _handle_polyfill(self, base_shape, res):
         if base_shape.type[0] == "MultiPolygon":
             tmp_hexs = base_shape.explode().apply(lambda x: self._get_hex(x, res))
             hexs = list(set(np.concatenate(tmp_hexs[tmp_hexs.notna()].to_list())))
@@ -303,14 +302,13 @@ class H3TessellationTiler(TessellationTiler):
 
     def _get_hex(self, x, res):
         h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
-        if not h:
+        if h:
             return h
 
     def _get_h3_geom_from(self, hex_id):
         return Polygon(
             h3.h3_to_geo_boundary(
                 hex_id), geo_json=True)
-
 
 
 
