@@ -178,7 +178,6 @@ class SquaredTessellationTiler(TessellationTiler):
 
         return gdf.to_crs(crs)
 
-
 # Register the builder
 tiler.register_tiler('squared', SquaredTessellationTiler())
 
@@ -203,18 +202,16 @@ class H3TessellationTiler(TessellationTiler):
             if isinstance(base_shape, str):
                 base_shape = self._str_to_geometry(base_shape, which_osm_result)
 
-            elif self._isinstance_geopandas_or_point(base_shape):
+            elif self._isinstance_geodataframe_or_geoseries(base_shape) or all(isinstance(x, Point) for x in base_shape.geometry):
                 base_shape = utils.bbox_from_points(base_shape)
             else:
                 raise ValueError(
                     "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
         return base_shape
 
-    def _isinstance_geopandas_or_point(self, base_shape):
+    def _isinstance_geodataframe_or_geoseries(self, base_shape):
         return True if (
                 isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries)
-                or
-                all(isinstance(x, Point) for x in base_shape.geometry)
         ) else False
 
     def _str_to_geometry(self, base_shape, which_osm_result):
@@ -269,13 +266,13 @@ class H3TessellationTiler(TessellationTiler):
 
     def _meters_to_resolution(self, meters):
         hexagon_side_length = self._meters_to_kilometers(meters)
-        average_hexagon_edge_lengths = self._load_average_hexagon_edge_lengths()
+        average_hexagon_edge_lengths = self._load_h3_utils('average_hexagon_edge_length')
         resolution = (np.abs(average_hexagon_edge_lengths - hexagon_side_length)).argmin()
         return resolution
 
-    def _load_average_hexagon_edge_lengths(self):
-        average_hexagon_edge_lengths = np.asarray(list(constants.H3_UTILS['average_hexagon_edge_length'].values()))
-        return average_hexagon_edge_lengths
+    def _load_h3_utils(self, util):
+        loaded_util = np.asarray(list(constants.H3_UTILS[util].values()))
+        return loaded_util
 
     def _meters_to_kilometers(self, meters):
         kilometers = meters / 1000
@@ -283,11 +280,11 @@ class H3TessellationTiler(TessellationTiler):
 
     def _get_resolution(self, base_shape, meters):
 
-        base_shape_proj = base_shape.to_crs(constants.UNIVERSAL_CRS)
+        base_shape_projected = base_shape.to_crs(constants.UNIVERSAL_CRS)
 
         resolution = self._meters_to_resolution(meters)
 
-        min_resolution_coverage = self._find_min_resolution(base_shape_proj)
+        min_resolution_coverage = self._find_min_resolution(base_shape_projected)
 
         # are the hexagons enough to fill the base_shape?
         # if not suggest the largest of the smallest resolutions/meters which fit in base_shape
@@ -299,19 +296,28 @@ class H3TessellationTiler(TessellationTiler):
         return resolution
 
     def _find_min_resolution(self, base_shape):
-        min_resolution_coverage = np.where(
-            np.array(list(constants.H3_UTILS['average_hexagon_area'].values())) > (base_shape.area.values[0] / 1000000)
-        )[0][-1]
-        return min_resolution_coverage
+        try:
+            min_resolution_coverage = np.where(
+                self._load_h3_utils('average_hexagon_area') > self._squared_meters_to_squared_kilometers(base_shape)
+            )[0][-1]
+            return min_resolution_coverage
+        except Exception as e:
+            print(f"Error '{e.message}' occured. Arguments {e.args}.")
+
+    def _squared_meters_to_squared_kilometers(self, squared_meters):
+        squared_kilometers = squared_meters.area.values[0] / 1000000
+        return squared_kilometers
 
     def _handle_polyfill(self, base_shape, resolution):
-        if base_shape.type[0] == "MultiPolygon":
+        if isinstance(base_shape, MultiPolygon):
             temporary_hexagons = base_shape.explode().apply(lambda x: self._get_hexagons(x, resolution))
             hexagons = list(set(np.concatenate(temporary_hexagons[temporary_hexagons.notna()].to_list())))
         else:
-            hexagons = h3.polyfill(
-                base_shape.geometry.__geo_interface__['features'][0]['geometry'], resolution, geo_json_conformant=True)
+            hexagons = h3.polyfill(self._extract_geometry(base_shape), resolution, geo_json_conformant=True)
         return hexagons
+
+    def _extract_geometry(self, base_shape):
+        return base_shape.geometry.__geo_interface__['features'][0]['geometry']
 
     def _get_hexagons(self, x, resolution):
         hexagons = h3.polyfill(x.__geo_interface__, resolution, geo_json_conformant=True)
