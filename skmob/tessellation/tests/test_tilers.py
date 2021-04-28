@@ -1,7 +1,7 @@
-import re
 import geopandas as gpd
 from skmob.tessellation import tilers
 import shapely
+from shapely.geometry import Point, Polygon
 import pytest
 
 poly = [[[116.1440758191, 39.8846396072],
@@ -26,24 +26,84 @@ def h3_tess():
     return tilers.H3TessellationTiler()
 
 @pytest.mark.parametrize("input_meters, expected_res", [(500, 8), (1500, 7), (5000, 6)])
-def test__meters_to_res(h3_tess, input_meters, expected_res):
-    assert h3_tess._meters_to_res(input_meters) == expected_res
+def test__meters_to_resolution(h3_tess, input_meters, expected_res):
+    assert h3_tess._meters_to_resolution(input_meters) == expected_res
 
-def test__meters_to_h3_resolution(h3_tess):
-    assert h3_tess._meters_to_h3_resolution(bbox, 5000) == 6
 
-# test UserWarning is triggered for input hexs
-# that are larger than the base_shape
-def test_warning(h3_tess):
+def test__isinstance_geodataframe_or_geoseries(h3_tess):
+    assert h3_tess._isinstance_geodataframe_or_geoseries(bbox) == True
+
+def test__str_to_geometry(h3_tess):
+    assert isinstance(h3_tess._str_to_geometry("Milan, Italy", 1), gpd.GeoDataFrame)
+
+
+def test__find_first_polygon_expected_length(h3_tess):
+    base_shapes = bbox.append({"geometry": Point(9, 45)},ignore_index=True)
+    first_polygon = h3_tess._find_first_polygon(base_shapes)
+    assert isinstance(first_polygon.values.tolist()[0][0], Polygon)
+
+
+def test__find_first_polygon_expected_type(h3_tess):
+    base_shapes = bbox.append({"geometry": Point(9, 45)},ignore_index=True)
+    first_polygon = h3_tess._find_first_polygon(base_shapes)
+    assert isinstance(first_polygon.values.tolist()[0][0], Polygon)
+
+
+def test__isinstance_poly_or_multipolygon(h3_tess):
+    assert h3_tess._isinstance_poly_or_multipolygon(Polygon( [[1,0], [1,1], [0,1], [0,0]])) == True
+
+
+def test__merge_all_polygons(h3_tess):
+    assert h3_tess._merge_all_polygons(bbox).shape[0] == 1
+
+
+def test__get_resolution(h3_tess):
+    assert h3_tess._get_resolution(base_shape=bbox, meters=5000) == 6
+    assert h3_tess._get_resolution(base_shape=bbox, meters=50000) == 3
+
+
+def test__suggest_minimum_resolution_which_still_fits(h3_tess):
     with pytest.warns(UserWarning) as user_warnings:
-        pattern=r".*Try something smaller.*"
-        a = h3_tess._meters_to_h3_resolution(bbox, 5000000000000000000000000000000000)
+        h3_tess._suggest_minimum_resolution_which_still_fits(4)
 
-        print("---------------------------------------------")
-        print(a)
-        print(user_warnings)
-        print("---------------------------------------------")
-        # # check that 2 warnings were raised
-        # assert len(user_warnings) == 1
-        # # check that the message matches
-        # assert re.match(pattern, user_warnings[1].message.args[0])
+
+def test__handle_polyfill():
+    assert False
+
+
+def test__extract_geometry():
+    assert False
+
+
+def test__get_hexagons():
+    assert False
+
+
+def test__create_hexagon_polygons():
+    assert False
+
+
+def test__add_tile_id():
+    assert False
+
+
+def test__meters_to_resolution():
+    assert False
+
+
+def test__meters_to_kilometers():
+    assert False
+
+
+def test__load_h3_utils():
+    assert False
+
+
+def test__find_min_resolution():
+    assert False
+
+
+def test__squared_meters_to_squared_kilometers():
+    assert False
+
+
