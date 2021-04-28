@@ -203,35 +203,35 @@ class H3TessellationTiler(TessellationTiler):
             if isinstance(base_shape, str):
                 base_shape = self._str_to_geometry(base_shape, which_osm_result)
 
-            elif ((isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries)) and
-                    all(isinstance(x, Point) for x in base_shape.geometry)):
+            elif self._isinstance_geopandas_or_point(base_shape):
                 base_shape = utils.bbox_from_points(base_shape)
-
             else:
                 raise ValueError(
                     "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
         return base_shape
 
+    def _isinstance_geopandas_or_point(self, base_shape):
+        return True if (
+                isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries)
+                or
+                all(isinstance(x, Point) for x in base_shape.geometry)
+        ) else False
+
     def _str_to_geometry(self, base_shape, which_osm_result):
         base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
-        polygon_shape = self._find_first_polygon_in(base_shapes)
+        polygon_shape = self._find_first_polygon(base_shapes)
         return polygon_shape
 
-    def _find_first_polygon_in(self, base_shapes):
+    def _find_first_polygon(self, base_shapes):
         return_shape = base_shapes.iloc[[0]]
 
         for i, current_shape in enumerate(base_shapes["geometry"].values):
-            if self._isinstance_poly_multipoly(current_shape):
+            if self._isinstance_poly_or_multipolygon(current_shape):
                 return_shape = base_shapes.iloc[[i]]
                 break
-        else:
-            print(1)
-
         return return_shape
 
-
-
-    def _isinstance_poly_multipoly(self, shape):
+    def _isinstance_poly_or_multipolygon(self, shape):
         return True if (
                 isinstance(shape, Polygon) or isinstance(shape, MultiPolygon)
         ) else False
@@ -244,7 +244,7 @@ class H3TessellationTiler(TessellationTiler):
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
 
-        res = self._meters_to_h3_resolution(base_shape, meters)
+        res = self._get_resolution(base_shape, meters)
 
         # H3 requires epsg=4326
         base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
@@ -252,33 +252,33 @@ class H3TessellationTiler(TessellationTiler):
         # cover the base_shape with h3 hexagonal polygons
         hexs = self._handle_polyfill(base_shape, res)
 
-
         # from https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
         # prepare a geodf with the H3 geoms from H3 id
         all_polys = gpd.GeoDataFrame(
-            {'geometry': [self._get_h3_geom_from(hex_id) for hex_id in hexs],
+            {'geometry': [Polygon( h3.h3_to_geo_boundary(hex_id, geo_json=True)) for hex_id in hexs],
              'H3_INDEX': hexs},
             crs=constants.DEFAULT_CRS
         )
 
-        # add TileID
-        all_polys[constants.TILE_ID] = all_polys.index
-        # Convert TILE_ID to have str type
-        all_polys[constants.TILE_ID] = all_polys[constants.TILE_ID].astype('str')
+        self._create_tiles_indexes(all_polys)
 
         return all_polys
 
-    def _meters_to_res(self, meters):
+    def _create_tiles_indexes(self, all_polys):
+        all_polys[constants.TILE_ID] = all_polys.index
+        all_polys[constants.TILE_ID] = all_polys[constants.TILE_ID].astype('str')
+
+    def _meters_to_resolution(self, meters):
         hex_side_len_km = meters / 1000
         array = np.asarray(list(constants.H3_UTILS['avg_hex_edge_len_km'].values()))
         res = (np.abs(array - hex_side_len_km)).argmin()
         return res
 
-    def _meters_to_h3_resolution(self, base_shape, meters):
+    def _get_resolution(self, base_shape, meters):
 
         base_shape_proj = base_shape.to_crs(constants.UNIVERSAL_CRS)
 
-        res = self._meters_to_res(meters)
+        res = self._meters_to_resolution(meters)
 
         min_res_cover = self._find_min_resolution(base_shape_proj)
 
@@ -293,7 +293,7 @@ class H3TessellationTiler(TessellationTiler):
 
     def _find_min_resolution(self, base_shape):
         min_res_cover = np.where(
-            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] * 1000000)
+            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] / 1000000)
         )[0][-1]
         return min_res_cover
 
@@ -308,14 +308,8 @@ class H3TessellationTiler(TessellationTiler):
 
     def _get_hex(self, x, res):
         h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
-        if h:
+        if h.all():
             return h
-
-    def _get_h3_geom_from(self, hex_id):
-        return Polygon(
-            h3.h3_to_geo_boundary(
-                hex_id), geo_json=True)
-
 
 
 # Register the builder
