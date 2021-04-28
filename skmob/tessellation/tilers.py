@@ -244,72 +244,79 @@ class H3TessellationTiler(TessellationTiler):
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
 
-        res = self._get_resolution(base_shape, meters)
+        resolution = self._get_resolution(base_shape, meters)
 
         # H3 requires epsg=4326
         base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
-
-        # cover the base_shape with h3 hexagonal polygons
-        hexs = self._handle_polyfill(base_shape, res)
+        
+        hexagon_ids = self._handle_polyfill(base_shape, resolution)
 
         # from https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
         # prepare a geodf with the H3 geoms from H3 id
-        all_polys = gpd.GeoDataFrame(
-            {'geometry': [Polygon( h3.h3_to_geo_boundary(hex_id, geo_json=True)) for hex_id in hexs],
-             'H3_INDEX': hexs},
+        hexagon_polygons = gpd.GeoDataFrame(
+            {'geometry': [Polygon( h3.h3_to_geo_boundary(hexagon_id, geo_json=True)) for hexagon_id in hexagon_ids],
+             'H3_INDEX': hexagon_ids},
             crs=constants.DEFAULT_CRS
         )
 
-        self._create_tiles_indexes(all_polys)
+        self._add_tile_id(hexagon_polygons)
 
-        return all_polys
+        return hexagon_polygons
 
-    def _create_tiles_indexes(self, all_polys):
-        all_polys[constants.TILE_ID] = all_polys.index
-        all_polys[constants.TILE_ID] = all_polys[constants.TILE_ID].astype('str')
+    def _add_tile_id(self, hexagon_polygons):
+        hexagon_polygons[constants.TILE_ID] = hexagon_polygons.index
+        hexagon_polygons[constants.TILE_ID] = hexagon_polygons[constants.TILE_ID].astype('str')
 
     def _meters_to_resolution(self, meters):
-        hex_side_len_km = meters / 1000
-        array = np.asarray(list(constants.H3_UTILS['avg_hex_edge_len_km'].values()))
-        res = (np.abs(array - hex_side_len_km)).argmin()
-        return res
+        hexagon_side_length = self._meters_to_kilometers(meters)
+        average_hexagon_edge_lengths = self._load_average_hexagon_edge_lengths()
+        resolution = (np.abs(average_hexagon_edge_lengths - hexagon_side_length)).argmin()
+        return resolution
+
+    def _load_average_hexagon_edge_lengths(self):
+        average_hexagon_edge_lengths = np.asarray(list(constants.H3_UTILS['average_hexagon_edge_length'].values()))
+        return average_hexagon_edge_lengths
+
+    def _meters_to_kilometers(self, meters):
+        kilometers = meters / 1000
+        return kilometers
 
     def _get_resolution(self, base_shape, meters):
 
         base_shape_proj = base_shape.to_crs(constants.UNIVERSAL_CRS)
 
-        res = self._meters_to_resolution(meters)
+        resolution = self._meters_to_resolution(meters)
 
-        min_res_cover = self._find_min_resolution(base_shape_proj)
+        min_resolution_coverage = self._find_min_resolution(base_shape_proj)
 
         # are the hexagons enough to fill the base_shape?
         # if not suggest the largest of the smallest resolutions/meters which fit in base_shape
-        if res <= min_res_cover:
+        if resolution <= min_resolution_coverage:
             warnings.warn(f' The cell side-length you provided is too large to cover the input area.'
                           f' Try something smaller, e.g. :'
-                          f' Side-Length {constants.H3_UTILS["avg_hex_edge_len_km"][str(min_res_cover - 1)] / 1000} Km')
-            res = min_res_cover - 1
-        return res
+                          f' Side-Length {constants.H3_UTILS["average_hexagon_edge_length"][str(min_resolution_coverage - 1)] / 1000} Km')
+            resolution = min_resolution_coverage - 1
+        return resolution
 
     def _find_min_resolution(self, base_shape):
-        min_res_cover = np.where(
-            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > (base_shape.area.values[0] / 1000000)
+        min_resolution_coverage = np.where(
+            np.array(list(constants.H3_UTILS['average_hexagon_area'].values())) > (base_shape.area.values[0] / 1000000)
         )[0][-1]
-        return min_res_cover
+        return min_resolution_coverage
 
-    def _handle_polyfill(self, base_shape, res):
+    def _handle_polyfill(self, base_shape, resolution):
         if base_shape.type[0] == "MultiPolygon":
-            tmp_hexs = base_shape.explode().apply(lambda x: self._get_hex(x, res))
-            hexs = list(set(np.concatenate(tmp_hexs[tmp_hexs.notna()].to_list())))
+            temporary_hexagons = base_shape.explode().apply(lambda x: self._get_hexagons(x, resolution))
+            hexagons = list(set(np.concatenate(temporary_hexagons[temporary_hexagons.notna()].to_list())))
         else:
-            hexs = h3.polyfill(
-                base_shape.geometry.__geo_interface__['features'][0]['geometry'], res, geo_json_conformant=True)
-        return hexs
+            hexagons = h3.polyfill(
+                base_shape.geometry.__geo_interface__['features'][0]['geometry'], resolution, geo_json_conformant=True)
+        return hexagons
 
-    def _get_hex(self, x, res):
-        h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
-        if h.all():
-            return h
+    def _get_hexagons(self, x, resolution):
+        hexagons = h3.polyfill(x.__geo_interface__, resolution, geo_json_conformant=True)
+        if hexagons.all():
+            return hexagons
 
 
 # Register the builder
