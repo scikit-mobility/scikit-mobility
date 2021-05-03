@@ -238,7 +238,7 @@ class H3TessellationTiler(TessellationTiler):
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
         if base_shape.crs != constants.DEFAULT_CRS:
-            base_shape.to_crs(constants.DEFAULT_CRS)
+            base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
         resolution = self._get_resolution(base_shape, meters)
         hexagon_ids = self._handle_polyfill(base_shape, resolution)
         hexagon_polygons = self._create_hexagon_polygons(hexagon_ids)
@@ -269,11 +269,11 @@ class H3TessellationTiler(TessellationTiler):
         return hexagons
 
     def _extract_geometry(self, base_shape):
-        try:
-            extracted_geometry = base_shape.geometry.__geo_interface__['features'][0]['geometry']
-            return extracted_geometry
-        except Exception as e:
-            print(f"Error '{e}' occured.")
+
+        extracted_geometry = base_shape.geometry.__geo_interface__['features'][0]['geometry']
+        return extracted_geometry
+        # except Exception as e:
+        #     print(f"Error '{e}' occured.")
 
     def _get_hexagons(self, x, resolution):
         hexagons = h3.polyfill(x.__geo_interface__, resolution, geo_json_conformant=True)
