@@ -25,7 +25,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade pre-commit
-#          python -m pip install -e skmob
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/tilers.py
