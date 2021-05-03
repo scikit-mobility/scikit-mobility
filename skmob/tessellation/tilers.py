@@ -269,11 +269,11 @@ class H3TessellationTiler(TessellationTiler):
         return hexagons
 
     def _extract_geometry(self, base_shape):
-
-        extracted_geometry = base_shape.geometry.__geo_interface__['features'][0]['geometry']
-        return extracted_geometry
-        # except Exception as e:
-        #     print(f"Error '{e}' occured.")
+        try:
+            extracted_geometry = base_shape.geometry.__geo_interface__['features'][0]['geometry']
+            return extracted_geometry
+        except Exception as e:
+            print(f"Error '{e}' occured.")
 
     def _get_hexagons(self, x, resolution):
         hexagons = h3.polyfill(x.__geo_interface__, resolution, geo_json_conformant=True)
