@@ -5,14 +5,10 @@ on:
     paths:
       - "docs/**"
       - "README.md"
-      - "CHANGES.md"
-      - "CONTRIBUTING.md"
   pull_request:
     paths:
       - "docs/**"
       - "README.md"
-      - "CHANGES.md"
-      - "CONTRIBUTING.md"
 
 jobs:
   build:
@@ -39,3 +35,9 @@ jobs:
 
       - name: Build documentation
         run: sphinx-build -a -b html --keep-going docs/ static
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
