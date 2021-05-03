@@ -1,7 +1,8 @@
+from pandas import DataFrame
 import geopandas as gpd
 from skmob.tessellation import tilers
 import shapely
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, MultiPolygon
 import pytest
 
 poly = [[[116.1440758191, 39.8846396072],
@@ -13,6 +14,10 @@ geom = [shapely.geometry.Polygon(p) for p in poly]
 bbox = gpd.GeoDataFrame(geometry=geom, crs="EPSG:4326")
 
 
+@pytest.fixture()
+def h3_tess():
+    return tilers.H3TessellationTiler()
+
 @pytest.mark.parametrize('tiler_type', ["squared", "h3_tessellation"])
 @pytest.mark.parametrize('base_shape', ['Beijing, China', bbox])
 @pytest.mark.parametrize('meters', [15000])
@@ -20,14 +25,10 @@ def test_tiler_get(tiler_type, base_shape, meters):
     tessellation = tilers.tiler.get(tiler_type, base_shape=base_shape, meters=meters)
     assert isinstance(tessellation, gpd.GeoDataFrame)
 
-# Arrange
-@pytest.fixture()
-def h3_tess():
-    return tilers.H3TessellationTiler()
 
-@pytest.mark.parametrize("input_meters, expected_res", [(500, 8), (1500, 7), (5000, 6)])
-def test__meters_to_resolution(h3_tess, input_meters, expected_res):
-    assert h3_tess._meters_to_resolution(input_meters) == expected_res
+@pytest.mark.parametrize("input_meters, expected_resolution", [(500, 8), (1500, 7), (5000, 6)])
+def test__meters_to_resolution(h3_tess, input_meters, expected_resolution):
+    assert h3_tess._meters_to_resolution(input_meters) == expected_resolution
 
 
 def test__isinstance_geodataframe_or_geoseries(h3_tess):
@@ -56,54 +57,59 @@ def test__isinstance_poly_or_multipolygon(h3_tess):
 def test__merge_all_polygons(h3_tess):
     assert h3_tess._merge_all_polygons(bbox).shape[0] == 1
 
-
-def test__get_resolution(h3_tess):
-    assert h3_tess._get_resolution(base_shape=bbox, meters=5000) == 6
-    assert h3_tess._get_resolution(base_shape=bbox, meters=50000) == 3
+@pytest.mark.parametrize("input_meters, expected_resolution", [(5000, 6), (50000, 3)])
+def test__get_resolution(h3_tess, input_meters, expected_resolution):
+    assert h3_tess._get_resolution(base_shape=bbox, meters=input_meters) == expected_resolution
 
 
 def test__suggest_minimum_resolution_which_still_fits(h3_tess):
     with pytest.warns(UserWarning) as user_warnings:
         h3_tess._suggest_minimum_resolution_which_still_fits(4)
 
-
-def test__handle_polyfill():
-    assert False
-
-
-def test__extract_geometry():
-    assert False
+def test__handle_polyfill(h3_tess):
+    hexagons = h3_tess._handle_polyfill(bbox, 5)
+    assert hexagons[0] == 599852472416075775
 
 
-def test__get_hexagons():
-    assert False
+def test__extract_geometry(h3_tess):
+    extracted_geometry = h3_tess._extract_geometry(bbox)
+    assert extracted_geometry["type"] == "Polygon"
 
 
-def test__create_hexagon_polygons():
-    assert False
+def test__get_hexagons(h3_tess):
+    hexagon = h3_tess._get_hexagons(Polygon(geom[0]),5)
+    assert hexagon == 599852472416075775
 
 
-def test__add_tile_id():
-    assert False
+def test__create_hexagon_polygons(h3_tess):
+    hexagon_polygons = h3_tess._create_hexagon_polygons([599852472416075775])
+    assert isinstance(hexagon_polygons, DataFrame)
 
 
-def test__meters_to_resolution():
-    assert False
+def test__add_tile_id(h3_tess):
+    hexagon_polygons_without_id = h3_tess._create_hexagon_polygons([599852472416075775])
+    hexagon_polygons_with_id = h3_tess._add_tile_id(hexagon_polygons_without_id)
+    assert "tile_ID" in hexagon_polygons_without_id.columns
+
+@pytest.mark.parametrize("input_meters, expected_resolution", [(50, 10), (500, 8), (5000, 6)])
+def test__meters_to_resolution(h3_tess, input_meters, expected_resolution):
+    assert h3_tess._meters_to_resolution(input_meters) == expected_resolution
+
+@pytest.mark.parametrize("input_meters, expected_kilometers", [(1000,1), (10000, 10) ])
+def test__meters_to_kilometers(h3_tess, input_meters, expected_kilometers):
+    assert h3_tess._meters_to_kilometers(input_meters) == expected_kilometers
 
 
-def test__meters_to_kilometers():
-    assert False
+def test__load_h3_utils(h3_tess):
+    assert len( h3_tess._load_h3_utils('average_hexagon_area')) == 16
+    assert len( h3_tess._load_h3_utils('average_hexagon_edge_length')) == 16
 
 
-def test__load_h3_utils():
-    assert False
+def test__find_min_resolution(h3_tess):
+    assert h3_tess._find_min_resolution(bbox) == 15
 
 
-def test__find_min_resolution():
-    assert False
-
-
-def test__squared_meters_to_squared_kilometers():
-    assert False
+def test__squared_meters_to_squared_kilometers(h3_tess, input_squared_meters, expected_squared_kilometers):
+    assert h3_tess._squared_meters_to_squared_kilometers(bbox) == 3.18287052446638e-08
 
 
