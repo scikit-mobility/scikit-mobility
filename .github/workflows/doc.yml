@@ -38,9 +38,12 @@ jobs:
 
       - name: Build documentation
         working-directory: docs
+        run:  make html
+
+      - name: Copy static files
         run: |
-          make html
-          mv ../.nojekyll ../static
+          mv .nojekyll static
+          mv .logo_skmob static
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
