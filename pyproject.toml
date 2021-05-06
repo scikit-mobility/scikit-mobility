@@ -84,6 +84,6 @@ isolated_build = True
 whitelist_externals = poetry
 commands =
     poetry install -v
-    coverage run -m pytest --verbose skmob/tessellation
-    coverage html -d coverage
+    poetry run coverage run -m pytest --verbose skmob/tessellation
+    poetry run coverage html -d coverage
 """
