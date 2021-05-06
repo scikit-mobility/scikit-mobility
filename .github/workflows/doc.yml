@@ -42,9 +42,9 @@ jobs:
 
       - name: Copy static files
         run: |
-          mv .nojekyll static
-          mv logo_skmob.png static
-
+          mv .nojekyll static/html
+          mv logo_skmob.png static/html
+          ls static/html
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
