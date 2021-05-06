@@ -48,7 +48,7 @@ pre-commit = "^2.12.1"
 
 
 [tool.black]
-line-length = 88
+line-length = 120
 include = '\.pyi?$'
 exclude = '''
 /(
