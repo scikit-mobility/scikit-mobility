@@ -72,6 +72,7 @@ static/
 
 # Coverage
 .coverage
+htmlcov
 
 # Poetry
 poetry.lock
