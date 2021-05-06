@@ -38,7 +38,9 @@ jobs:
 
       - name: Build documentation
         working-directory: docs
-        run: make html
+        run: |
+          make html
+          mv ../.nojekyll ../static
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
