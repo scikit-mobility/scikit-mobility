@@ -25,10 +25,27 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade pre-commit tox poetry
+          python -m pip install sphinx sphinx_rtd_theme sphinx-copybutton
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
 
-#      - name: Test and coverage
-#        run:  |
-#          python3 -m tox -e py36
+      - name: Test and coverage
+        run:  |
+          python3 -m tox -e py36
+
+      - name: Build documentation
+        working-directory: docs
+        run:  make html
+
+      - name: Copy static files
+        run: |
+          mv .nojekyll static/html
+          mv logo_skmob.png static/html
+          mv coverage static/html
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: static/html # The folder the action should deploy.
