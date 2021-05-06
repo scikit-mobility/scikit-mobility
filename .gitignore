@@ -68,11 +68,11 @@ __pycache__/
 .vscode
 
 # HTML Docs
-static/
+static/*
 
 # Coverage
-.coverage/
-coverage/
+.coverage/*
+coverage/*
 htmlcov
 
 # Poetry
