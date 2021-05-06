@@ -112,7 +112,8 @@ class SquaredTessellationTiler(TessellationTiler):
             ):
 
                 if all(isinstance(x, Point) for x in base_shape.geometry):
-                    # Build a base shape that contains all the points in the given geodataframe
+                    # Build a base shape that contains all the points
+                    # in the given geodataframe
                     base_shape = utils.bbox_from_points(base_shape)
 
                 elif (
@@ -126,11 +127,11 @@ class SquaredTessellationTiler(TessellationTiler):
                         cascaded_union(polygons), crs=base_shape.crs
                     )
 
-                # elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
-                #    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
+
             else:
                 raise ValueError(
-                    "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries."
+                    "Not valid base_shape object. "
+                    "Accepted types are str, GeoDataFrame or GeoSeries."
                 )
 
         return self._build(base_shape, meters, crs)
@@ -154,14 +155,10 @@ class SquaredTessellationTiler(TessellationTiler):
 
         # Find number of square for each side
         x_squares = int(
-            math.ceil(
-                math.fabs(boundaries["max_x"] - boundaries["min_x"]) / meters
-            )
+            math.ceil(math.fabs(boundaries["max_x"] - boundaries["min_x"]) / meters)
         )
         y_squares = int(
-            math.ceil(
-                math.fabs(boundaries["min_y"] - boundaries["max_y"]) / meters
-            )
+            math.ceil(math.fabs(boundaries["min_y"] - boundaries["max_y"]) / meters)
         )
 
         # Placeholder for the polygon
@@ -192,7 +189,8 @@ class SquaredTessellationTiler(TessellationTiler):
 
                 # if(s.area>0):
                 if s:
-                    # shape.intersection(p) ATTENTION! If you use the intersection than the crawler fails!
+                    # shape.intersection(p)
+                    # ATTENTION! If you use the intersection than the crawler fails!
                     polygon_desc["geometry"] = p
                     polygons.append(polygon_desc)
 
@@ -226,29 +224,22 @@ class H3TessellationTiler(TessellationTiler):
         base_shape_geometry = self._create_geometry_if_does_not_exists(
             base_shape, which_osm_result
         )
-        base_shape_geometry_merged = self._merge_all_polygons(
-            base_shape_geometry
-        )
+        base_shape_geometry_merged = self._merge_all_polygons(base_shape_geometry)
         return self._build(base_shape_geometry_merged, meters, crs)
 
-    def _create_geometry_if_does_not_exists(
-        self, base_shape, which_osm_result
-    ):
+    def _create_geometry_if_does_not_exists(self, base_shape, which_osm_result):
         if not self._instance:
 
             if isinstance(base_shape, str):
-                base_shape = self._str_to_geometry(
-                    base_shape, which_osm_result
-                )
+                base_shape = self._str_to_geometry(base_shape, which_osm_result)
 
             elif self._isinstance_geodataframe_or_geoseries(base_shape):
                 if all(isinstance(x, Point) for x in base_shape.geometry):
-                    base_shape = utils.bbox_from_points(
-                        base_shape, base_shape.crs
-                    )
+                    base_shape = utils.bbox_from_points(base_shape, base_shape.crs)
             else:
                 raise ValueError(
-                    "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries."
+                    "Not valid base_shape object."
+                    " Accepted types are str, GeoDataFrame or GeoSeries."
                 )
         return base_shape
 
@@ -286,9 +277,7 @@ class H3TessellationTiler(TessellationTiler):
 
     def _merge_all_polygons(self, base_shape):
         polygons = base_shape.geometry.values
-        base_shape = gpd.GeoSeries(
-            cascaded_union(polygons), crs=base_shape.crs
-        )
+        base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
         return base_shape
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
@@ -305,9 +294,7 @@ class H3TessellationTiler(TessellationTiler):
         base_shape_projected = base_shape.to_crs(constants.UNIVERSAL_CRS)
         minimum_resolution = self._find_min_resolution(base_shape_projected)
         if resolution <= minimum_resolution:
-            self._suggest_minimum_resolution_which_still_fits(
-                minimum_resolution
-            )
+            self._suggest_minimum_resolution_which_still_fits(minimum_resolution)
             resolution = minimum_resolution - 1
         return resolution
 
@@ -326,9 +313,7 @@ class H3TessellationTiler(TessellationTiler):
             hexagons = list(
                 set(
                     np.concatenate(
-                        temporary_hexagons[
-                            temporary_hexagons.notna()
-                        ].to_list()
+                        temporary_hexagons[temporary_hexagons.notna()].to_list()
                     )
                 )
             )
@@ -342,9 +327,9 @@ class H3TessellationTiler(TessellationTiler):
 
     def _extract_geometry(self, base_shape):
         try:
-            extracted_geometry = base_shape.geometry.__geo_interface__[
-                "features"
-            ][0]["geometry"]
+            extracted_geometry = base_shape.geometry.__geo_interface__["features"][0][
+                "geometry"
+            ]
             return extracted_geometry
         except Exception as e:
             print(f"Error '{e}' occured.")
