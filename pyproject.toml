@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=41.0", "setuptools-scm", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [tool.black]
 line-length = 88
 include = '\.pyi?$'
@@ -23,6 +27,16 @@ use_parentheses = "True"
 ensure_newline_before_comments = "True"
 line_length = 100
 
-[build-system]
-requires = ["setuptools>=41.0", "setuptools-scm", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py36
+
+[testenv]
+deps =
+    pytest >= 3.0.0, <4
+    coverage
+commands =
+    test: coverage run -m pytest --verbose skmob/tessellation
+    test: coverage html -d coverage
+"""
