@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade pre-commit pytest coverage tox
+          python -m pip install --upgrade pre-commit tox poetry
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation
