@@ -28,7 +28,7 @@ jobs:
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
-#
+
 #      - name: Test and coverage
 #        run:  |
 #          python3 -m tox -e py36
