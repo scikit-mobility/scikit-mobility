@@ -27,7 +27,7 @@ jobs:
           python -m pip install --upgrade pre-commit tox poetry
 
       - name: Lint
-        run: pre-commit run --show-diff-on-failure --files  skmob/tessellation
+        run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
 
       - name: Test and coverage
         run:  |
