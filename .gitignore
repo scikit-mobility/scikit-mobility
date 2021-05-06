@@ -71,8 +71,12 @@ __pycache__/
 static/
 
 # Coverage
-.coverage
+.coverage/
+coverage/
 htmlcov
 
 # Poetry
 poetry.lock
+
+# Tox
+.tox
