@@ -1,16 +1,17 @@
 name: Documentation Build
 
-on:
-  push:
-    paths:
-      - "docs/**"
-      - "README.md"
-      - "skmob/**"
-  pull_request:
-    paths:
-      - "docs/**"
-      - "README.md"
-      - "skmob/**"
+on: [push, pull_request]
+#on:
+#  push:
+#    paths:
+#      - "docs/**"
+#      - "README.md"
+#      - "skmob/**"
+#  pull_request:
+#    paths:
+#      - "docs/**"
+#      - "README.md"
+#      - "skmob/**"
 
 jobs:
   build:
