@@ -127,7 +127,6 @@ class SquaredTessellationTiler(TessellationTiler):
                         cascaded_union(polygons), crs=base_shape.crs
                     )
 
-
             else:
                 raise ValueError(
                     "Not valid base_shape object. "
@@ -299,10 +298,13 @@ class H3TessellationTiler(TessellationTiler):
         return resolution
 
     def _suggest_minimum_resolution_which_still_fits(self, minimum_resolution):
+        minimum_resolution_which_still_fits = str(minimum_resolution - 1)
+        hexagon_edges = constants.H3_UTILS["average_hexagon_edge_length"]
+        suggestion = hexagon_edges[minimum_resolution_which_still_fits] / 100
         warnings.warn(
             f" The cell side-length you provided is too large to cover the input area."
             f" Try something smaller, e.g. :"
-            f' Side-Length {constants.H3_UTILS["average_hexagon_edge_length"][str(minimum_resolution - 1)] / 1000} Km'
+            f" Side-Length {suggestion} Km"
         )
 
     def _handle_polyfill(self, base_shape, resolution):
