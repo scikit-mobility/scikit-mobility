@@ -285,8 +285,8 @@ class H3TessellationTiler(TessellationTiler):
         resolution = self._get_resolution(base_shape, meters)
         hexagon_ids = self._handle_polyfill(base_shape, resolution)
         hexagon_polygons = self._create_hexagon_polygons(hexagon_ids)
-        self._add_tile_id(hexagon_polygons)
-        return hexagon_polygons
+        hexagon_polygons_with_id = self._add_tile_id(hexagon_polygons)
+        return hexagon_polygons_with_id
 
     def _get_resolution(self, base_shape, meters):
         resolution = self._meters_to_resolution(meters)
@@ -361,6 +361,7 @@ class H3TessellationTiler(TessellationTiler):
         hexagon_polygons[constants.TILE_ID] = hexagon_polygons[
             constants.TILE_ID
         ].astype("str")
+        return hexagon_polygons
 
     def _meters_to_resolution(self, meters):
         hexagon_side_length = self._meters_to_kilometers(meters)
