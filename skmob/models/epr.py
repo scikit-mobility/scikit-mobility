@@ -914,9 +914,10 @@ class Ditras(EPR):
         # infer the time_steps (in hours) from the start_date and the end_date
         delta_t = (end_date - start_date).total_seconds()
         n_hours = int((delta_t / 60.0) / 60.0)
-
+        
         # generate a mobility diary for the agent
-        diary_df = self._diary_generator.generate(n_hours, start_date)
+        rand_seed_diary = np.random.randint(0,10**6)
+        diary_df = self._diary_generator.generate(n_hours, start_date, random_state=rand_seed_diary)
 
         for i, row in diary_df.iterrows():
             if row.abstract_location == 0:  # the agent is at home
