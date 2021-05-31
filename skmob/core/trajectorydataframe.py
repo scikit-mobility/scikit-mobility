@@ -493,7 +493,7 @@ class TrajDataFrame(pd.DataFrame):
             return self.sort_values(by=[constants.DATETIME], ascending=[True])
 
     # Plot methods
-    def plot_trajectory(self, map_f=None, max_users=10, max_points=1000, style_function=plot.traj_style_function,
+    def plot_trajectory(self, map_f=None, max_users=None, max_points=1000, style_function=plot.traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True, control_scale=True):
         """
@@ -568,7 +568,7 @@ class TrajDataFrame(pd.DataFrame):
                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity, dashArray=dashArray,
                     start_end_markers=start_end_markers, control_scale=control_scale)
 
-    def plot_stops(self, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
+    def plot_stops(self, map_f=None, max_users=None, tiles='cartodbpositron', zoom=12,
                hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
         """
         Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.

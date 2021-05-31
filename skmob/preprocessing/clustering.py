@@ -153,4 +153,5 @@ def _cluster_array(lat_lng_dtime_other, cluster_radius_km, min_samples, verbose=
     except KeyError:
         pass
 
-    return l2x, [c2mfl[k] for k in labels]
+    return l2x, [c2mfl[k] for k in labels if k > -0.5]
+
