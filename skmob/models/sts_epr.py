@@ -501,11 +501,13 @@ class STS_epr():
         
     def init_mobility_diaries(self, hours, start_date):
         #For each agent generate a mobility diary
-        for i in range(self.n_agents):          
-            diary = self.diary_generator.generate(hours, start_date)            
+        for i in range(self.n_agents):
+            rand_seed_diary = numpy.random.randint(0,10**6)
+            diary = self.diary_generator.generate(hours, start_date, random_state=rand_seed_diary)            
             #ensure mobility (at least two checkins)
             while len(diary) < 2:
-                diary = self.diary_generator.generate(hours, start_date)
+                rand_seed_diary = numpy.random.randint(0,10**6)
+                diary = self.diary_generator.generate(hours, start_date, random_state=rand_seed_diary) 
                              
             self.agents[i]['mobility_diary'] = diary
          
