@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <title>Coverage for skmob/utils/constants.py: 100%</title>
+    <link rel="icon" sizes="32x32" href="favicon_32.png">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="jquery.isonscreen.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.pyfile_ready);
+    </script>
+</head>
+<body class="pyfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage for <b>skmob/utils/constants.py</b> :
+            <span class="pc_cov">100%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <h2 class="stats">
+            40 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">40 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
+        </h2>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">r</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">p</span> &nbsp; toggle line displays
+    </p>
+    <p class="keyhelp">
+        <span class="key">j</span>
+        <span class="key">k</span> &nbsp; next/prev highlighted chunk
+    </p>
+    <p class="keyhelp">
+        <span class="key">0</span> &nbsp; (zero) top of page
+    </p>
+    <p class="keyhelp">
+        <span class="key">1</span> &nbsp; (one) first highlighted chunk
+    </p>
+    </div>
+</div>
+<div id="source">
+    <p id="t1" class="pln"><span class="n"><a href="#t1">1</a></span><span class="t"><span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t2" class="pln"><span class="n"><a href="#t2">2</a></span><span class="t"><span class="str">Useful constants</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t3" class="pln"><span class="n"><a href="#t3">3</a></span><span class="t"><span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t4" class="run"><span class="n"><a href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">pyproj</span> <span class="key">import</span> <span class="nam">CRS</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t5" class="pln"><span class="n"><a href="#t5">5</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t6" class="run"><span class="n"><a href="#t6">6</a></span><span class="t"><span class="nam">UNIVERSAL_CRS</span> <span class="op">=</span> <span class="nam">CRS</span><span class="op">.</span><span class="nam">from_epsg</span><span class="op">(</span><span class="num">3857</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t7" class="run"><span class="n"><a href="#t7">7</a></span><span class="t"><span class="nam">DEFAULT_CRS</span> <span class="op">=</span> <span class="nam">CRS</span><span class="op">.</span><span class="nam">from_epsg</span><span class="op">(</span><span class="num">4326</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t8" class="pln"><span class="n"><a href="#t8">8</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t9" class="run"><span class="n"><a href="#t9">9</a></span><span class="t"><span class="nam">UID</span> <span class="op">=</span> <span class="str">'uid'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t10" class="run"><span class="n"><a href="#t10">10</a></span><span class="t"><span class="nam">TID</span> <span class="op">=</span> <span class="str">'tid'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t11" class="run"><span class="n"><a href="#t11">11</a></span><span class="t"><span class="nam">LATITUDE</span> <span class="op">=</span> <span class="str">'lat'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t12" class="run"><span class="n"><a href="#t12">12</a></span><span class="t"><span class="nam">LONGITUDE</span> <span class="op">=</span> <span class="str">'lng'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t"><span class="nam">ORIGIN</span> <span class="op">=</span> <span class="str">'origin'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="nam">DESTINATION</span> <span class="op">=</span> <span class="str">'destination'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t"><span class="nam">ORIGIN_LAT</span> <span class="op">=</span> <span class="str">'origin_lat'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t16" class="run"><span class="n"><a href="#t16">16</a></span><span class="t"><span class="nam">ORIGIN_LNG</span> <span class="op">=</span> <span class="str">'origin_lng'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="nam">DESTINATION_LAT</span> <span class="op">=</span> <span class="str">'destination_lat'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t"><span class="nam">DESTINATION_LNG</span> <span class="op">=</span> <span class="str">'destination_lng'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t19" class="run"><span class="n"><a href="#t19">19</a></span><span class="t"><span class="nam">DATETIME</span> <span class="op">=</span> <span class="str">'datetime'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="run"><span class="n"><a href="#t20">20</a></span><span class="t"><span class="nam">FLOW</span> <span class="op">=</span> <span class="str">'flow'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="nam">TILE_ID</span> <span class="op">=</span> <span class="str">'tile_ID'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t22" class="run"><span class="n"><a href="#t22">22</a></span><span class="t"><span class="nam">CLUSTER</span> <span class="op">=</span> <span class="str">'cluster'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t23" class="run"><span class="n"><a href="#t23">23</a></span><span class="t"><span class="nam">LEAVING_DATETIME</span> <span class="op">=</span> <span class="str">'leaving_datetime'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t24" class="run"><span class="n"><a href="#t24">24</a></span><span class="t"><span class="nam">FREQUENCY</span> <span class="op">=</span> <span class="str">"freq"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t25" class="run"><span class="n"><a href="#t25">25</a></span><span class="t"><span class="nam">PROBABILITY</span> <span class="op">=</span> <span class="str">"prob"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t26" class="run"><span class="n"><a href="#t26">26</a></span><span class="t"><span class="nam">TOTAL_FREQ</span> <span class="op">=</span> <span class="str">"T_freq"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t"><span class="nam">COUNT</span> <span class="op">=</span> <span class="str">"count"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t28" class="run"><span class="n"><a href="#t28">28</a></span><span class="t"><span class="nam">TEMP</span> <span class="op">=</span> <span class="str">"tmp"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t29" class="run"><span class="n"><a href="#t29">29</a></span><span class="t"><span class="nam">PROPORTION</span> <span class="op">=</span> <span class="str">"prop"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t30" class="run"><span class="n"><a href="#t30">30</a></span><span class="t"><span class="nam">TOT_OUTFLOW</span> <span class="op">=</span> <span class="str">"tot_outflow"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t"><span class="nam">PRECISION_LEVELS</span> <span class="op">=</span> <span class="op">[</span><span class="str">"Year"</span><span class="op">,</span> <span class="str">"Month"</span><span class="op">,</span> <span class="str">"Day"</span><span class="op">,</span> <span class="str">"Hour"</span><span class="op">,</span> <span class="str">"Minute"</span><span class="op">,</span> <span class="str">"Second"</span><span class="op">,</span> <span class="str">"year"</span><span class="op">,</span> <span class="str">"month"</span><span class="op">,</span> <span class="str">"day"</span><span class="op">,</span> <span class="str">"hour"</span><span class="op">,</span> <span class="str">"minute"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="pln"><span class="n"><a href="#t32">32</a></span><span class="t">                    <span class="str">"second"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t34" class="run"><span class="n"><a href="#t34">34</a></span><span class="t"><span class="nam">PRIVACY_RISK</span> <span class="op">=</span> <span class="str">"risk"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t35" class="run"><span class="n"><a href="#t35">35</a></span><span class="t"><span class="nam">INSTANCE</span> <span class="op">=</span> <span class="str">"instance"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t36" class="run"><span class="n"><a href="#t36">36</a></span><span class="t"><span class="nam">INSTANCE_ELEMENT</span> <span class="op">=</span> <span class="str">"instance_elem"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t37" class="run"><span class="n"><a href="#t37">37</a></span><span class="t"><span class="nam">REIDENTIFICATION_PROBABILITY</span> <span class="op">=</span> <span class="str">"reid_prob"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t38" class="run"><span class="n"><a href="#t38">38</a></span><span class="t"><span class="nam">RELEVANCE</span> <span class="op">=</span> <span class="str">'relevance'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t"><span class="com"># PROPERTIES KEY</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t41" class="run"><span class="n"><a href="#t41">41</a></span><span class="t"><span class="nam">CRS</span> <span class="op">=</span> <span class="str">'crs'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t42" class="run"><span class="n"><a href="#t42">42</a></span><span class="t"><span class="nam">FILTERING_PARAMS</span> <span class="op">=</span> <span class="str">'filter'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t43" class="run"><span class="n"><a href="#t43">43</a></span><span class="t"><span class="nam">COMPRESSION_PARAMS</span> <span class="op">=</span> <span class="str">'compress'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t44" class="run"><span class="n"><a href="#t44">44</a></span><span class="t"><span class="nam">CLUSTERING_PARAMS</span> <span class="op">=</span> <span class="str">'cluster'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t45" class="run"><span class="n"><a href="#t45">45</a></span><span class="t"><span class="nam">DETECTION_PARAMS</span> <span class="op">=</span> <span class="str">'detect'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t"><span class="com"># Data files</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t48" class="run"><span class="n"><a href="#t48">48</a></span><span class="t"><span class="nam">GEOLIFE_SAMPLE</span> <span class="op">=</span> <span class="str">'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/geolife_sample.txt.gz'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t49" class="run"><span class="n"><a href="#t49">49</a></span><span class="t"><span class="nam">NY_COUNTIES_2011</span> <span class="op">=</span> <span class="str">'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/NY_counties_2011.geojson'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t50" class="run"><span class="n"><a href="#t50">50</a></span><span class="t"><span class="nam">NY_FLOWS_2011</span> <span class="op">=</span> <span class="str">'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/NY_commuting_flows_2011.csv'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t52" class="pln"><span class="n"><a href="#t52">52</a></span><span class="t"><span class="com"># https://github.com/uber/h3/blob/master/docs/core-library/restable.md</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="run"><span class="n"><a href="#t53">53</a></span><span class="t"><span class="nam">H3_UTILS</span> <span class="op">=</span><span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t54" class="pln"><span class="n"><a href="#t54">54</a></span><span class="t">  <span class="str">"average_hexagon_area"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t55" class="pln"><span class="n"><a href="#t55">55</a></span><span class="t">    <span class="str">"0"</span><span class="op">:</span> <span class="num">4250546.8477</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t56" class="pln"><span class="n"><a href="#t56">56</a></span><span class="t">    <span class="str">"1"</span><span class="op">:</span> <span class="num">607220.9782429</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t">    <span class="str">"2"</span><span class="op">:</span> <span class="num">86745.8540347</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">    <span class="str">"3"</span><span class="op">:</span> <span class="num">12392.2648621</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t">    <span class="str">"4"</span><span class="op">:</span> <span class="num">1770.3235517</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t">    <span class="str">"5"</span><span class="op">:</span> <span class="num">252.9033645</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="pln"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="str">"6"</span><span class="op">:</span> <span class="num">36.1290521</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t">    <span class="str">"7"</span><span class="op">:</span> <span class="num">5.1612932</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="str">"8"</span><span class="op">:</span> <span class="num">0.7373276</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="pln"><span class="n"><a href="#t64">64</a></span><span class="t">    <span class="str">"9"</span><span class="op">:</span> <span class="num">0.1053325</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="pln"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="str">"10"</span><span class="op">:</span> <span class="num">0.0150475</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="pln"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="str">"11"</span><span class="op">:</span> <span class="num">0.0021496</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">    <span class="str">"12"</span><span class="op">:</span> <span class="num">0.0003071</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="pln"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="str">"13"</span><span class="op">:</span> <span class="num">0.0000439</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="pln"><span class="n"><a href="#t69">69</a></span><span class="t">    <span class="str">"14"</span><span class="op">:</span> <span class="num">0.0000063</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">    <span class="str">"15"</span><span class="op">:</span> <span class="num">9e-7</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t71" class="pln"><span class="n"><a href="#t71">71</a></span><span class="t">  <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t72" class="pln"><span class="n"><a href="#t72">72</a></span><span class="t">  <span class="str">"average_hexagon_edge_length"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t73" class="pln"><span class="n"><a href="#t73">73</a></span><span class="t">    <span class="str">"0"</span><span class="op">:</span> <span class="num">1107.712591</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t74" class="pln"><span class="n"><a href="#t74">74</a></span><span class="t">    <span class="str">"1"</span><span class="op">:</span> <span class="num">418.6760055</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t75" class="pln"><span class="n"><a href="#t75">75</a></span><span class="t">    <span class="str">"2"</span><span class="op">:</span> <span class="num">158.2446558</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t76" class="pln"><span class="n"><a href="#t76">76</a></span><span class="t">    <span class="str">"3"</span><span class="op">:</span> <span class="num">59.81085794</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t77" class="pln"><span class="n"><a href="#t77">77</a></span><span class="t">    <span class="str">"4"</span><span class="op">:</span> <span class="num">22.6063794</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t78" class="pln"><span class="n"><a href="#t78">78</a></span><span class="t">    <span class="str">"5"</span><span class="op">:</span> <span class="num">8.544408276</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">    <span class="str">"6"</span><span class="op">:</span> <span class="num">3.229482772</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="pln"><span class="n"><a href="#t80">80</a></span><span class="t">    <span class="str">"7"</span><span class="op">:</span> <span class="num">1.220629759</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t81" class="pln"><span class="n"><a href="#t81">81</a></span><span class="t">    <span class="str">"8"</span><span class="op">:</span> <span class="num">0.461354684</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t82" class="pln"><span class="n"><a href="#t82">82</a></span><span class="t">    <span class="str">"9"</span><span class="op">:</span> <span class="num">0.174375668</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">    <span class="str">"10"</span><span class="op">:</span> <span class="num">0.065907807</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t84" class="pln"><span class="n"><a href="#t84">84</a></span><span class="t">    <span class="str">"11"</span><span class="op">:</span> <span class="num">0.024910561</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">    <span class="str">"12"</span><span class="op">:</span> <span class="num">0.009415526</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t86" class="pln"><span class="n"><a href="#t86">86</a></span><span class="t">    <span class="str">"13"</span><span class="op">:</span> <span class="num">0.003559893</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">    <span class="str">"14"</span><span class="op">:</span> <span class="num">0.001348575</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t88" class="pln"><span class="n"><a href="#t88">88</a></span><span class="t">    <span class="str">"15"</span><span class="op">:</span> <span class="num">0.000509713</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="pln"><span class="n"><a href="#t89">89</a></span><span class="t">  <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t90" class="pln"><span class="n"><a href="#t90">90</a></span><span class="t">  <span class="str">"num_uniq_idxs"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t91" class="pln"><span class="n"><a href="#t91">91</a></span><span class="t">    <span class="str">"0"</span><span class="op">:</span> <span class="num">122</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t92" class="pln"><span class="n"><a href="#t92">92</a></span><span class="t">    <span class="str">"1"</span><span class="op">:</span> <span class="num">842</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t93" class="pln"><span class="n"><a href="#t93">93</a></span><span class="t">    <span class="str">"2"</span><span class="op">:</span> <span class="num">5882</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t94" class="pln"><span class="n"><a href="#t94">94</a></span><span class="t">    <span class="str">"3"</span><span class="op">:</span> <span class="num">41162</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">    <span class="str">"4"</span><span class="op">:</span> <span class="num">288122</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t96" class="pln"><span class="n"><a href="#t96">96</a></span><span class="t">    <span class="str">"5"</span><span class="op">:</span> <span class="num">2016842</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t97" class="pln"><span class="n"><a href="#t97">97</a></span><span class="t">    <span class="str">"6"</span><span class="op">:</span> <span class="num">14117882</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t98" class="pln"><span class="n"><a href="#t98">98</a></span><span class="t">    <span class="str">"7"</span><span class="op">:</span> <span class="num">98825162</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t99" class="pln"><span class="n"><a href="#t99">99</a></span><span class="t">    <span class="str">"8"</span><span class="op">:</span> <span class="num">691776122</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t100" class="pln"><span class="n"><a href="#t100">100</a></span><span class="t">    <span class="str">"9"</span><span class="op">:</span> <span class="num">4842432842</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t101" class="pln"><span class="n"><a href="#t101">101</a></span><span class="t">    <span class="str">"10"</span><span class="op">:</span> <span class="num">33897029882</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t102" class="pln"><span class="n"><a href="#t102">102</a></span><span class="t">    <span class="str">"11"</span><span class="op">:</span> <span class="num">237279209162</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t103" class="pln"><span class="n"><a href="#t103">103</a></span><span class="t">    <span class="str">"12"</span><span class="op">:</span> <span class="num">1660954464122</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t104" class="pln"><span class="n"><a href="#t104">104</a></span><span class="t">    <span class="str">"13"</span><span class="op">:</span> <span class="num">11626681248842</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t105" class="pln"><span class="n"><a href="#t105">105</a></span><span class="t">    <span class="str">"14"</span><span class="op">:</span> <span class="num">81386768741882</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t106" class="pln"><span class="n"><a href="#t106">106</a></span><span class="t">    <span class="str">"15"</span><span class="op">:</span> <span class="num">569707381193162</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t107" class="pln"><span class="n"><a href="#t107">107</a></span><span class="t">  <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t108" class="pln"><span class="n"><a href="#t108">108</a></span><span class="t"><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
+            created at 2021-06-07 14:31 +0000
+        </p>
+    </div>
+</div>
+</body>
+</html>
