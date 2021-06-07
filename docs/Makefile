@@ -3,10 +3,10 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
+SPHINXOPTS    ?=-a -b html --keep-going
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
-BUILDDIR      = ../../scikit-mobility-docs
+BUILDDIR      = ../static
 
 # Put it first so that "make" without argument is like "make help".
 help:

@@ -1,16 +1,17 @@
-from abc import ABC, abstractmethod
 import math
-import geopandas as gpd
-from shapely.geometry import MultiPolygon, Polygon, Point
-from shapely.ops import cascaded_union
-from ..utils import constants, utils
-import numpy as np
-import h3.api.numpy_int as h3
 import warnings
+from abc import ABC, abstractmethod
+
+import geopandas as gpd
+import h3.api.numpy_int as h3
+import numpy as np
+from shapely.geometry import MultiPolygon, Point, Polygon
+from shapely.ops import cascaded_union
+
+from skmob.utils import constants, utils
 
 
 class TessellationTilers:
-
     def __init__(self):
         self._tilers = {}
 
@@ -33,7 +34,6 @@ tiler = TessellationTilers()
 
 
 class TessellationTiler(ABC):
-
     @abstractmethod
     def __call__(self, **kwargs):
         pass
@@ -44,7 +44,6 @@ class TessellationTiler(ABC):
 
 
 class VoronoiTessellationTiler(TessellationTiler):
-
     def __init__(self):
 
         super().__init__()
@@ -57,8 +56,7 @@ class VoronoiTessellationTiler(TessellationTiler):
             if isinstance(points, gpd.GeoDataFrame):
 
                 if not all(isinstance(x, Point) for x in points.geometry):
-                    raise ValueError(
-                        "Not valid points object. Accepted type is GeoDataFrame.")
+                    raise ValueError("Not valid points object. Accepted type is GeoDataFrame.")
 
         return self._build(points, crs)
 
@@ -68,23 +66,29 @@ class VoronoiTessellationTiler(TessellationTiler):
         gdf.loc[:, constants.TILE_ID] = list(np.arange(0, len(gdf)))
 
         # Convert TILE_ID to have str type
-        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype('str')
+        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype("str")
 
-        return gdf[[constants.TILE_ID, 'geometry']]
+        return gdf[[constants.TILE_ID, "geometry"]]
 
 
 # Register the builder
-tiler.register_tiler('voronoi', VoronoiTessellationTiler())
+tiler.register_tiler("voronoi", VoronoiTessellationTiler())
 
 
 class SquaredTessellationTiler(TessellationTiler):
-
     def __init__(self):
 
         super().__init__()
         self._instance = None
 
-    def __call__(self, base_shape, meters=50, which_osm_result=-1, crs=constants.DEFAULT_CRS, window_size=None):
+    def __call__(
+        self,
+        base_shape,
+        meters=50,
+        which_osm_result=-1,
+        crs=constants.DEFAULT_CRS,
+        window_size=None,
+    ):
         if not self._instance:
 
             if isinstance(base_shape, str):
@@ -92,29 +96,28 @@ class SquaredTessellationTiler(TessellationTiler):
                 base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
                 i = 0
                 base_shape = base_shapes.loc[[i]]
-                while not (isinstance(base_shape.geometry.iloc[0], Polygon) or
-                           isinstance(base_shape.geometry.iloc[0], MultiPolygon)):
+                while not (
+                    isinstance(base_shape.geometry.iloc[0], Polygon)
+                    or isinstance(base_shape.geometry.iloc[0], MultiPolygon)
+                ):
                     i += 1
                     base_shape = base_shapes.loc[[i]]
 
             elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
 
                 if all(isinstance(x, Point) for x in base_shape.geometry):
-                    # Build a base shape that contains all the points in the given geodataframe
+                    # Build a base shape that contains all the points
+                    # in the given geodataframe
                     base_shape = utils.bbox_from_points(base_shape)
 
                 elif all(isinstance(x, Polygon) for x in base_shape.geometry) and len(base_shape) >= 1:
 
                     # Merge all the polygons
                     polygons = base_shape.geometry.values
-                    base_shape = gpd.GeoSeries(
-                        cascaded_union(polygons), crs=base_shape.crs)
+                    base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
 
-                # elif not all(isinstance(x, Polygon) for x in base_shape.geometry):
-                #    raise ValueError("Not valid geometry object. Accepted types are Point and Polygon.")
             else:
-                raise ValueError(
-                    "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
+                raise ValueError("Not valid base_shape object. " "Accepted types are str, GeoDataFrame or GeoSeries.")
 
         return self._build(base_shape, meters, crs)
 
@@ -126,16 +129,18 @@ class SquaredTessellationTiler(TessellationTiler):
         area = base_shape.to_crs(tmp_crs)
 
         # Obtain the boundaries of the geometry
-        boundaries = dict({'min_x': area.total_bounds[0],
-                           'min_y': area.total_bounds[1],
-                           'max_x': area.total_bounds[2],
-                           'max_y': area.total_bounds[3]})
+        boundaries = dict(
+            {
+                "min_x": area.total_bounds[0],
+                "min_y": area.total_bounds[1],
+                "max_x": area.total_bounds[2],
+                "max_y": area.total_bounds[3],
+            }
+        )
 
         # Find number of square for each side
-        x_squares = int(
-            math.ceil(math.fabs(boundaries['max_x'] - boundaries['min_x']) / meters))
-        y_squares = int(
-            math.ceil(math.fabs(boundaries['min_y'] - boundaries['max_y']) / meters))
+        x_squares = int(math.ceil(math.fabs(boundaries["max_x"] - boundaries["min_x"]) / meters))
+        y_squares = int(math.ceil(math.fabs(boundaries["min_y"] - boundaries["max_y"]) / meters))
 
         # Placeholder for the polygon
         polygons = []
@@ -146,15 +151,15 @@ class SquaredTessellationTiler(TessellationTiler):
         for i in range(0, x_squares):
 
             # Increment x
-            x1 = boundaries['min_x'] + (meters * i)
-            x2 = boundaries['min_x'] + (meters * (i + 1))
+            x1 = boundaries["min_x"] + (meters * i)
+            x2 = boundaries["min_x"] + (meters * (i + 1))
 
             # Iterate on y
             for j in range(0, y_squares):
 
                 # Increment y
-                y1 = boundaries['min_y'] + (meters * j)
-                y2 = boundaries['min_y'] + (meters * (j + 1))
+                y1 = boundaries["min_y"] + (meters * j)
+                y2 = boundaries["min_y"] + (meters * (j + 1))
                 polygon_desc = {}
 
                 # Create shape (polygon)
@@ -165,132 +170,173 @@ class SquaredTessellationTiler(TessellationTiler):
 
                 # if(s.area>0):
                 if s:
-                    # shape.intersection(p) ATTENTION! If you use the intersection than the crawler fails!
-                    polygon_desc['geometry'] = p
+                    # shape.intersection(p)
+                    # ATTENTION! If you use the intersection than the crawler fails!
+                    polygon_desc["geometry"] = p
                     polygons.append(polygon_desc)
 
         gdf = gpd.GeoDataFrame(polygons, crs=tmp_crs)
         gdf = gdf.reset_index().rename(columns={"index": constants.TILE_ID})
 
         # Convert TILE_ID to have str type
-        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype('str')
+        gdf[constants.TILE_ID] = gdf[constants.TILE_ID].astype("str")
 
         return gdf.to_crs(crs)
 
 
 # Register the builder
-tiler.register_tiler('squared', SquaredTessellationTiler())
+tiler.register_tiler("squared", SquaredTessellationTiler())
 
 
 class H3TessellationTiler(TessellationTiler):
-
     def __init__(self):
 
         super().__init__()
         self._instance = None
 
-    def _meters_to_res(self, meters):
-        hex_side_len_km = meters / 1000
-        array = np.asarray(list(constants.H3_UTILS['avg_hex_edge_len_km'].values()))
-        res = (np.abs(array - hex_side_len_km)).argmin()
-        return res
+    def __call__(
+        self,
+        base_shape,
+        meters=50,
+        which_osm_result=-1,
+        crs=constants.DEFAULT_CRS,
+        window_size=None,
+    ):
+        base_shape_geometry = self._create_geometry_if_does_not_exists(base_shape, which_osm_result)
+        base_shape_geometry_merged = self._merge_all_polygons(base_shape_geometry)
+        return self._build(base_shape_geometry_merged, meters, crs)
 
-    def _get_appropriate_res(self, base_shape, meters):
-
-        # translate meters to h3 resolution
-        res = self._meters_to_res(meters)
-
-        # find the minimum resolution level which will cover the base_shape 
-        min_res_cover = np.where(
-            np.array(list(constants.H3_UTILS['avg_hex_area_km2'].values())) > base_shape.area.values[0])[0][-1]
-
-        # are the hexagons enough to fill the base_shape?
-        # if not suggest the largest of the smallest resolutions/meters which fit in base_shape
-        if res >= min_res_cover:
-            pass
-        else:
-            warnings.warn(f' The cell side-length you provided is too large to cover the input area.'
-                          f' Try something smaller, e.g. :'
-                          f' Side-Length {constants.H3_UTILS["avg_hex_edge_len_km"][str(min_res_cover - 1)] / 1000} Km')
-            res = min_res_cover - 1
-        return res
-
-    def _handle_polyfill(self, base_shape, res):
-
-        def get_hex(x):
-            h = h3.polyfill(x.__geo_interface__, res, geo_json_conformant=True)
-            if len(h) > 0:
-                return h
-            else:
-                return None
-
-        if base_shape.type[0] == "MultiPolygon":
-            tmp_hexs = base_shape.explode().apply(lambda x: get_hex(x))
-            hexs = list(set(np.concatenate(tmp_hexs[tmp_hexs.notna()].to_list())))
-        else:
-            hexs = h3.polyfill(
-                base_shape.geometry.__geo_interface__['features'][0]['geometry'], res, geo_json_conformant=True)
-
-        return hexs
-
-    def __call__(self, base_shape, meters=50, which_osm_result=-1, crs=constants.DEFAULT_CRS, window_size=None):
+    def _create_geometry_if_does_not_exists(self, base_shape, which_osm_result):
         if not self._instance:
 
             if isinstance(base_shape, str):
-                # Try to obtain the base shape from OSM
-                base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
-                i = 0
-                base_shape = base_shapes.loc[[i]]
-                while not (isinstance(base_shape.geometry.iloc[0], Polygon) or
-                           isinstance(base_shape.geometry.iloc[0], MultiPolygon)):
-                    i += 1
-                    base_shape = base_shapes.loc[[i]]
+                base_shape = self._str_to_geometry(base_shape, which_osm_result)
 
-            elif isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries):
-
+            elif self._isinstance_geodataframe_or_geoseries(base_shape):
                 if all(isinstance(x, Point) for x in base_shape.geometry):
-                    # Build a base shape that contains all the points in the
-                    # given geodataframe
-                    base_shape = utils.bbox_from_points(base_shape)
+                    base_shape = utils.bbox_from_points(base_shape, base_shape.crs)
             else:
-                raise ValueError(
-                    "Not valid base_shape object. Accepted types are str, GeoDataFrame or GeoSeries.")
+                raise ValueError("Not valid base_shape object." " Accepted types are str, GeoDataFrame or GeoSeries.")
+        return base_shape
 
-        # Merge all the polygons
+    def _isinstance_geodataframe_or_geoseries(self, base_shape):
+        return True if (isinstance(base_shape, gpd.GeoDataFrame) or isinstance(base_shape, gpd.GeoSeries)) else False
+
+    def _str_to_geometry(self, base_shape, which_osm_result):
+        base_shapes = utils.bbox_from_name(base_shape, which_osm_result=which_osm_result)
+        polygon_shape = self._find_first_polygon(base_shapes)
+        return polygon_shape
+
+    def _find_first_polygon(self, base_shapes):
+        return_shape = base_shapes.iloc[[0]]
+        for i, current_shape in enumerate(base_shapes["geometry"].values):
+            if self._isinstance_poly_or_multipolygon(current_shape):
+                return_shape = base_shapes.iloc[[i]]
+                break
+        return return_shape
+
+    def _isinstance_poly_or_multipolygon(self, shape):
+        return True if (isinstance(shape, Polygon) or isinstance(shape, MultiPolygon)) else False
+
+    def _merge_all_polygons(self, base_shape):
         polygons = base_shape.geometry.values
-        base_shape = gpd.GeoSeries(
-            cascaded_union(polygons), crs=base_shape.crs)
-
-        return self._build(base_shape, meters, crs)
+        base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
+        return base_shape
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
+        if base_shape.crs != constants.DEFAULT_CRS:
+            base_shape = base_shape.to_crs(constants.DEFAULT_CRS)
+        resolution = self._get_resolution(base_shape, meters)
+        hexagon_ids = self._handle_polyfill(base_shape, resolution)
+        hexagon_polygons = self._create_hexagon_polygons(hexagon_ids)
+        hexagon_polygons_with_id = self._add_tile_id(hexagon_polygons)
+        return hexagon_polygons_with_id
 
-        #  translate input meters to appropriate h3 resolution 
-        res = self._get_appropriate_res(base_shape, meters)
+    def _get_resolution(self, base_shape, meters):
+        resolution = self._meters_to_resolution(meters)
+        base_shape_projected = base_shape.to_crs(constants.UNIVERSAL_CRS)
+        minimum_resolution = self._find_min_resolution(base_shape_projected)
+        if resolution <= minimum_resolution:
+            self._suggest_minimum_resolution_which_still_fits(minimum_resolution)
+            resolution = minimum_resolution - 1
+        return resolution
 
-        # cover the base_shape with h3 hexagonal polygons
-        hexs = self._handle_polyfill(base_shape, res)
+    def _suggest_minimum_resolution_which_still_fits(self, minimum_resolution):
+        minimum_resolution_which_still_fits = str(minimum_resolution - 1)
+        hexagon_edges = constants.H3_UTILS["average_hexagon_edge_length"]
+        suggestion = hexagon_edges[minimum_resolution_which_still_fits] / 100
+        warnings.warn(
+            f" The cell side-length you provided is too large to cover the input area."
+            f" Try something smaller, e.g. :"
+            f" Side-Length {suggestion} Km"
+        )
 
-        # get actual geoms out of H3 hexagons
+    def _handle_polyfill(self, base_shape, resolution):
+        if isinstance(base_shape, MultiPolygon):
+            temporary_hexagons = base_shape.explode().apply(lambda x: self._get_hexagons(x, resolution))
+            hexagons = list(set(np.concatenate(temporary_hexagons[temporary_hexagons.notna()].to_list())))
+        else:
+            hexagons = h3.polyfill(
+                self._extract_geometry(base_shape),
+                resolution,
+                geo_json_conformant=True,
+            )
+        return hexagons
+
+    def _extract_geometry(self, base_shape):
+        try:
+            extracted_geometry = base_shape.geometry.__geo_interface__["features"][0]["geometry"]
+            return extracted_geometry
+        except Exception as e:
+            print(f"Error '{e}' occured.")
+
+    def _get_hexagons(self, x, resolution):
+        hexagons = h3.polyfill(x.__geo_interface__, resolution, geo_json_conformant=True)
+        if hexagons.all():
+            return hexagons
+
+    def _create_hexagon_polygons(self, hexagon_ids):
         # from https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
-        polygonise = lambda hex_id: Polygon(
-            h3.h3_to_geo_boundary(
-                hex_id, geo_json=True)
-        )
-        # prepare a geodf with all the H3 geoms
-        all_polys = gpd.GeoDataFrame(
-            {'geometry': list(map(polygonise, hexs)),
-             'H3_INDEX': hexs},
-            crs=constants.DEFAULT_CRS
+        return gpd.GeoDataFrame(
+            {
+                "geometry": [Polygon(h3.h3_to_geo_boundary(hexagon_id, geo_json=True)) for hexagon_id in hexagon_ids],
+                "H3_INDEX": hexagon_ids,
+            },
+            crs=constants.DEFAULT_CRS,
         )
 
-        # add TileID
-        all_polys['TILE_ID'] = all_polys.index
-        # Convert TILE_ID to have str type
-        all_polys['TILE_ID'] = all_polys['TILE_ID'].astype('str')
+    def _add_tile_id(self, hexagon_polygons):
+        hexagon_polygons[constants.TILE_ID] = hexagon_polygons.index
+        hexagon_polygons[constants.TILE_ID] = hexagon_polygons[constants.TILE_ID].astype("str")
+        return hexagon_polygons
 
-        return all_polys
+    def _meters_to_resolution(self, meters):
+        hexagon_side_length = self._meters_to_kilometers(meters)
+        average_hexagon_edge_lengths = self._load_h3_utils("average_hexagon_edge_length")
+        resolution = (np.abs(average_hexagon_edge_lengths - hexagon_side_length)).argmin()
+        return resolution
+
+    def _meters_to_kilometers(self, meters):
+        kilometers = meters / 1000
+        return kilometers
+
+    def _load_h3_utils(self, util):
+        loaded_util = np.asarray(list(constants.H3_UTILS[util].values()))
+        return loaded_util
+
+    def _find_min_resolution(self, base_shape):
+        try:
+            minimum_resolution = np.where(
+                self._load_h3_utils("average_hexagon_area") > self._squared_meters_to_squared_kilometers(base_shape)
+            )[0][-1]
+            return minimum_resolution
+        except Exception as e:
+            print(f"Error '{e}' occured.")
+
+    def _squared_meters_to_squared_kilometers(self, squared_meters):
+        squared_kilometers = squared_meters.area.values[0] / 1000000
+        return squared_kilometers
 
 
 # Register the builder
-tiler.register_tiler('h3_tessellation', H3TessellationTiler())
+tiler.register_tiler("h3_tessellation", H3TessellationTiler())
