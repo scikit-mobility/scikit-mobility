@@ -1,40 +1,48 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Input/Output &mdash; scikit-mobility  documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script type="text/javascript" src="../_static/copybutton.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/copybutton.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Privacy" href="privacy.html" />
@@ -78,6 +86,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,6 +107,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -132,18 +142,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Input/Output</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/io.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -165,78 +177,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.io.file.write" title="skmob.io.file.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(skmob_df, file)</p></td>
-<td><p>Write a TrajDataFrame to a json file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skmob.io.file.read" title="skmob.io.file.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(file)</p></td>
-<td><p>Read a TrajDataFrame from a json file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.io.file.load_geolife_trajectories" title="skmob.io.file.load_geolife_trajectories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_geolife_trajectories</span></code></a>(…[, user_ids, …])</p></td>
-<td><p>Load the Geolife trajectories in a TrajDataFrame</p></td>
-</tr>
 </tbody>
 </table>
-<span class="target" id="module-skmob.io.file"></span><dl class="function">
-<dt id="skmob.io.file.write">
-<code class="sig-prename descclassname">skmob.io.file.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">skmob_df</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.io.file.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a TrajDataFrame to a json file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>skmob_df</strong> – TrajDataFrame
-object that will be saved.</p></li>
-<li><p><strong>file</strong> – str
-path and name of the <cite>json</cite> output file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skmob.io.file.read">
-<code class="sig-prename descclassname">skmob.io.file.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.io.file.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a TrajDataFrame from a json file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> – str
-path and name of the <cite>json</cite> file to read.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>object loaded from file.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skmob.io.file.load_geolife_trajectories">
-<code class="sig-prename descclassname">skmob.io.file.</code><code class="sig-name descname">load_geolife_trajectories</code><span class="sig-paren">(</span><em class="sig-param">path_to_geolife_data_dir</em>, <em class="sig-param">user_ids=[]</em>, <em class="sig-param">filter_kwargs={'max_speed_kmh': 400}</em>, <em class="sig-param">compress_kwargs={'spatial_radius_km': 0.2}</em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.io.file.load_geolife_trajectories" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the Geolife trajectories in a TrajDataFrame</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path_to_geolife_data_dir</strong> – str
-local path of the directory ‘Geolife Trajectories 1.3/’</p></li>
-<li><p><strong>user_ids</strong> – list
-list of user IDs to load. If empty all users are loaded.</p></li>
-<li><p><strong>filter_kwargs</strong> – dict
-arguments of <cite>preprocessing.filtering.filter()</cite>. If empty, data is not filtered.</p></li>
-<li><p><strong>compress_kwargs</strong> – dict
-arguments of <cite>preprocessing.compression.compress()</cite>. If empty, data is not compressed.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>TrajDataFrame
-a TrajDataFrame containing all trajectories</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 
 
@@ -244,29 +186,29 @@ a TrajDataFrame containing all trajectories</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="privacy.html" class="btn btn-neutral float-right" title="Privacy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="privacy.html" class="btn btn-neutral float-right" title="Privacy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, skmob devs
+        &#169; Copyright 2019, skmob devs.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -274,7 +216,6 @@ a TrajDataFrame containing all trajectories</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -293,6 +234,7 @@ a TrajDataFrame containing all trajectories</p>
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 

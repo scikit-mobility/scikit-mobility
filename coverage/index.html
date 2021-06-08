@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coverage report</title>
+    <link rel="icon" sizes="32x32" href="favicon_32.png">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.index_ready);
+    </script>
+</head>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage report:
+            <span class="pc_cov">78%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
+    </p>
+    </div>
+</div>
+<div id="index">
+    <table class="index">
+        <thead>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>3353</td>
+                <td>725</td>
+                <td>0</td>
+                <td class="right" data-ratio="2628 3353">78%</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr class="file">
+                <td class="name left"><a href="skmob___init___py.html">skmob/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_core___init___py.html">skmob/core/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_core_flowdataframe_py.html">skmob/core/flowdataframe.py</a></td>
+                <td>188</td>
+                <td>65</td>
+                <td>0</td>
+                <td class="right" data-ratio="123 188">65%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_core_trajectorydataframe_py.html">skmob/core/trajectorydataframe.py</a></td>
+                <td>188</td>
+                <td>29</td>
+                <td>0</td>
+                <td class="right" data-ratio="159 188">85%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_measures___init___py.html">skmob/measures/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_measures_collective_py.html">skmob/measures/collective.py</a></td>
+                <td>73</td>
+                <td>14</td>
+                <td>0</td>
+                <td class="right" data-ratio="59 73">81%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_measures_evaluation_py.html">skmob/measures/evaluation.py</a></td>
+                <td>48</td>
+                <td>12</td>
+                <td>0</td>
+                <td class="right" data-ratio="36 48">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_measures_individual_py.html">skmob/measures/individual.py</a></td>
+                <td>276</td>
+                <td>110</td>
+                <td>0</td>
+                <td class="right" data-ratio="166 276">60%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models___init___py.html">skmob/models/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_epr_py.html">skmob/models/epr.py</a></td>
+                <td>237</td>
+                <td>23</td>
+                <td>0</td>
+                <td class="right" data-ratio="214 237">90%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_geosim_py.html">skmob/models/geosim.py</a></td>
+                <td>354</td>
+                <td>57</td>
+                <td>0</td>
+                <td class="right" data-ratio="297 354">84%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_gravity_py.html">skmob/models/gravity.py</a></td>
+                <td>144</td>
+                <td>22</td>
+                <td>0</td>
+                <td class="right" data-ratio="122 144">85%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_markov_diary_generator_py.html">skmob/models/markov_diary_generator.py</a></td>
+                <td>166</td>
+                <td>7</td>
+                <td>0</td>
+                <td class="right" data-ratio="159 166">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_radiation_py.html">skmob/models/radiation.py</a></td>
+                <td>65</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="63 65">97%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_models_sts_epr_py.html">skmob/models/sts_epr.py</a></td>
+                <td>432</td>
+                <td>67</td>
+                <td>0</td>
+                <td class="right" data-ratio="365 432">84%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_preprocessing___init___py.html">skmob/preprocessing/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_preprocessing_clustering_py.html">skmob/preprocessing/clustering.py</a></td>
+                <td>52</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="50 52">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_preprocessing_compression_py.html">skmob/preprocessing/compression.py</a></td>
+                <td>57</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="54 57">95%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_preprocessing_detection_py.html">skmob/preprocessing/detection.py</a></td>
+                <td>89</td>
+                <td>16</td>
+                <td>0</td>
+                <td class="right" data-ratio="73 89">82%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_preprocessing_filtering_py.html">skmob/preprocessing/filtering.py</a></td>
+                <td>63</td>
+                <td>22</td>
+                <td>0</td>
+                <td class="right" data-ratio="41 63">65%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_privacy___init___py.html">skmob/privacy/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_privacy_attacks_py.html">skmob/privacy/attacks.py</a></td>
+                <td>234</td>
+                <td>116</td>
+                <td>0</td>
+                <td class="right" data-ratio="118 234">50%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_tessellation___init___py.html">skmob/tessellation/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_tessellation_tilers_py.html">skmob/tessellation/tilers.py</a></td>
+                <td>189</td>
+                <td>23</td>
+                <td>0</td>
+                <td class="right" data-ratio="166 189">88%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_utils___init___py.html">skmob/utils/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_utils_constants_py.html">skmob/utils/constants.py</a></td>
+                <td>40</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="40 40">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_utils_gislib_py.html">skmob/utils/gislib.py</a></td>
+                <td>41</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="37 41">90%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_utils_plot_py.html">skmob/utils/plot.py</a></td>
+                <td>264</td>
+                <td>52</td>
+                <td>0</td>
+                <td class="right" data-ratio="212 264">80%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="skmob_utils_utils_py.html">skmob/utils/utils.py</a></td>
+                <td>153</td>
+                <td>79</td>
+                <td>0</td>
+                <td class="right" data-ratio="74 153">48%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
+            created at 2021-06-07 14:31 +0000
+        </p>
+    </div>
+</div>
+</body>
+</html>
