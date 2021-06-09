@@ -3,8 +3,8 @@ name: Docs
 on:
   workflow_run:
     workflows: ["Lint"]
-#    branches:
-#      - main
+    branches:
+      - 1.2.x
     types:
       - completed
 #      - closed # https://github.community/t/depend-on-another-workflow/16311/3
