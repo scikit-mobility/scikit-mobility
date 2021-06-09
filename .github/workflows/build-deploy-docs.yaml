@@ -2,15 +2,16 @@ name: Docs
 
 on:
   workflow_run:
-    workflows: ["Lint"]
+    workflows:
+      - "Lint"
     branches:
-      - 1.2.x
+      - main
     types:
       - completed
-#      - closed # https://github.community/t/depend-on-another-workflow/16311/3
+      - closed # https://github.community/t/depend-on-another-workflow/16311/3
 
 jobs:
-  on-success:
+  docs:
     if:
       ${{ github.event.workflow_run.conclusion == 'success' }} || github.event.pull_request.merged
     runs-on: ubuntu-latest
