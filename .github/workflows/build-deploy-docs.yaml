@@ -10,7 +10,7 @@ on:
 #      - closed # https://github.community/t/depend-on-another-workflow/16311/3
 
 jobs:
-  docs:
+  on-success:
     if:
       ${{ github.event.workflow_run.conclusion == 'success' }} || github.event.pull_request.merged
     runs-on: ubuntu-latest
