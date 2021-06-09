@@ -2,8 +2,7 @@ name: Docs
 
 on:
   workflow_run:
-    workflows:
-      - "Lint"
+    workflows: ["Lint"]
 #    branches:
 #      - main
     types:
