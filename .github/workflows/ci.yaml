@@ -9,7 +9,7 @@ jobs:
     # internal PRs match both the push and pull_request events.
     if:
       github.event_name == 'push' || github.event.pull_request.head.repo.full_name !=
-      github.repository || github.branch == 'gh-pages'
+      github.repository
 
     runs-on: ubuntu-latest
 
@@ -34,18 +34,3 @@ jobs:
         run:  |
           python3 -m tox -e py36
 
-      - name: Build documentation
-        working-directory: docs
-        run:  make html
-
-      - name: Copy static files
-        run: |
-          mv .nojekyll static/html
-          mv logo_skmob.png static/html
-          mv coverage static/html
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: static/html # The folder the action should deploy.
