@@ -28,6 +28,7 @@ jobs:
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
 
+
   test:
     # runs only when lint step succeeds
     needs: lint
@@ -49,6 +50,13 @@ jobs:
       - name: Test and coverage
         run:  |
           python3 -m tox -e py36
+
+      - name: Deploy Coverage 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: coverage # The folder the action should deploy.
+
 
   build-docs:
     needs: test # runs only when lint lint and test steps succeed, and only on master branch
@@ -73,7 +81,7 @@ jobs:
           mv logo_skmob.png static/html
           mv coverage static/html
 
-      - name: Deploy 🚀
+      - name: Deploy Docs 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
