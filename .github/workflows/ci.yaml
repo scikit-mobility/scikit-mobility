@@ -9,7 +9,7 @@ jobs:
     # internal PRs match both the push and pull_request events.
     if:
       github.event_name == 'push' || github.event.pull_request.head.repo.full_name !=
-      github.repository || github.branch == 'gh-pages'
+      github.repository 
 
     runs-on: ubuntu-latest
 
