@@ -56,6 +56,7 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: coverage # The folder the action should deploy.
+          target-folder: coverage # The folder the action should deploy to.
 
 
   build-docs:
@@ -79,7 +80,6 @@ jobs:
         run: |
           mv .nojekyll static/html
           mv logo_skmob.png static/html
-          mv coverage static/html
 
       - name: Deploy Docs 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
