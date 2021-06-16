@@ -66,15 +66,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # we need nojekyll or github will ignore folders starting with "_"
-      - name: 'Copy static files'
-        run: |
-          mv .nojekyll static/html
-          mv logo_skmob.png static/html
-          ls .
-          echo "-------------"
-          ls /home/runner/work/scikit-mobility/scikit-mobility/
-          mv /home/runner/work/scikit-mobility/scikit-mobility/code-coverage static/html
 
       - name: 'Install dependencies'
         run: |
@@ -90,7 +81,15 @@ jobs:
         with:
           name: code-coverage
 
-
+      # we need nojekyll or github will ignore folders starting with "_"
+      - name: 'Copy static files'
+        run: |
+          mv .nojekyll static/html
+          mv logo_skmob.png static/html
+          ls .
+          echo "-------------"
+          ls /home/runner/work/scikit-mobility/scikit-mobility/
+          mv /home/runner/work/scikit-mobility/scikit-mobility/code-coverage static/html
 
       - name: 'Deploy Docs 🚀'
         uses: JamesIves/github-pages-deploy-action@4.1.1
