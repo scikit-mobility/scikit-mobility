@@ -66,6 +66,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: 'Set up Python'
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
 
       - name: 'Install dependencies'
         run: |
@@ -73,8 +77,10 @@ jobs:
           python -m pip install --upgrade poetry sphinx sphinx_rtd_theme sphinx-copybutton
 
       - name: 'Build documentation'
-        working-directory: docs
-        run:  make html
+#        working-directory: docs
+        run: |
+          cd docs
+          make html
 
 
       # we need nojekyll or github will ignore folders starting with "_"
