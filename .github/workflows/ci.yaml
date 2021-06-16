@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade pre-commit poetry tox
+          python -m pip install --upgrade poetry tox
 
       - name: Test and coverage
         run:  |
@@ -69,13 +69,12 @@ jobs:
 
       - name: Install dependencies
         run: python -m pip install sphinx sphinx_rtd_theme sphinx-copybutton
-        #              python -m pip install --upgrade pip
-        #              python -m pip install --upgrade pre-commit tox poetry
 
       - name: Build documentation
         working-directory: docs
         run:  make html
 
+      # we need nojekyll or github will ignore folders starting with "_"
       - name: Copy static files
         run: |
           mv .nojekyll static/html
