@@ -78,9 +78,7 @@ jobs:
 
       - name: 'Build documentation'
         working-directory: docs
-        run: |
-          cd docs
-          make html
+        run:  make html
 
 
       # we need nojekyll or github will ignore folders starting with "_"
