@@ -13,8 +13,11 @@
 import os
 import sys
 
+sys.path.insert(0, os.path.abspath("../skmob"))
 sys.path.insert(0, os.path.abspath(".."))
 
+print(sys.path)
+import skmob  # noqa: E402 F401
 
 # -- Project information -----------------------------------------------------
 
