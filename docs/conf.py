@@ -17,6 +17,8 @@ sys.path.insert(0, os.path.abspath("../skmob"))
 print("------PATH---------------")
 print(sys.path)
 print(os.getcwd())
+print(os.listdir("/home/runner/work/scikit-mobility/scikit-mobility"))
+print(os.listdir("/home/runner/work/scikit-mobility/scikit-mobility/skmob"))
 
 # -- Project information -----------------------------------------------------
 
