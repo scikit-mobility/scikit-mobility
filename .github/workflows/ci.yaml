@@ -75,7 +75,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade numpy pandas scipy pyproj fiona geopandas powerlaw tqdm sphinx sphinx_rtd_theme sphinx-copybutton
-#          python -m pip install -e skmob
+          poetry build --format sdist
+          tar -xvf dist/*-`poetry version -s`.tar.gz -O '*/setup.py' > setup.py
+          python -m pip install -e .
 
       - name: 'Build documentation'
 #        working-directory: docs
