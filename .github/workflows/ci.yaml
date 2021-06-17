@@ -76,8 +76,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade poetry sphinx sphinx_rtd_theme sphinx-copybutton
           poetry install
-          poetry export --dev -f requirements.txt > requirements.txt
-          pip install -r requirements.txt
+#          poetry export --dev -f requirements.txt > requirements.txt
+#          pip install -r requirements.txt
 
       - name: 'Build documentation'
         working-directory: docs
