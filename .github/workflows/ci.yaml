@@ -74,15 +74,10 @@ jobs:
       - name: 'Install dependencies'
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade numpy pandas scipy pyproj fiona geopandas powerlaw tqdm sphinx sphinx_rtd_theme sphinx-copybutton
-          pip install poetry
-          poetry build --format sdist
-          tar -xvf dist/*-`poetry version -s`.tar.gz -O '*/setup.py' > setup.py
-          python -m pip install -e .
+          python -m pip install --upgrade sphinx sphinx_rtd_theme sphinx-copybutton
 
       - name: 'Build documentation'
-#        working-directory: docs
+        working-directory: docs
         run: |
           cd docs
           make html
