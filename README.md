@@ -8,8 +8,10 @@
 
 <img src="logo_skmob.png" width=300/>
 
-###### Try `scikit-mobility` without installing it in a MyBinder notebook:  
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/scikit-mobility/scikit-mobility/master)
+###### Try `scikit-mobility` without installing it 
+- in a MyBinder notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/scikit-mobility/scikit-mobility/master)
+- on [Jovian](https://jovian.ai/jonpappalord/collections/scikit-mobility-tutorial)
+
 
 `scikit-mobility` is a library for human mobility analysis in Python. The library allows to: 
 
