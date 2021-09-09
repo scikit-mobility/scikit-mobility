@@ -234,8 +234,8 @@ class EPR:
             the trajectories of the agent.
         """
         df = pd.DataFrame(self._trajectories_, columns=[user_id, date_time, 'location'])
-        df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self.lats_lngs[s][0],
-                                                                           longitude: self.lats_lngs[s][1]}))
+        
+        df[[latitude, longitude]] = pd.DataFrame(self.lats_lngs[df.location].tolist(), index=df.index).astype('float32')
         df = df.sort_values(by=[user_id, date_time]).drop('location', axis=1)
         return TrajDataFrame(df, parameters=parameters)
 
