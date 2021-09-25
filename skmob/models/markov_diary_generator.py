@@ -313,6 +313,7 @@ class MarkovDiaryGenerator:
         lid : string, optional
             the name of the column containing the identifier of the location. The default is "location".
         """
+        
         self._create_empty_markov_chain()  # initialize the markov chain
 
         individuals = traj.uid.unique()  # list of individuals' identifiers
@@ -361,7 +362,7 @@ class MarkovDiaryGenerator:
         return np.searchsorted(np.cumsum(weights), random.random())
 
 
-    def generate(self, diary_length, start_date):
+    def generate(self, diary_length, start_date, random_state=None):
         """
         Start the generation of the mobility diary.
         
@@ -382,6 +383,9 @@ class MarkovDiaryGenerator:
         V, i = [], 0
         prev_state = (i, 1)  # it starts from the typical location at midnight
         V.append(prev_state)
+        
+        if random_state is not None:
+            random.seed(random_state)
 
         while i < diary_length:
 

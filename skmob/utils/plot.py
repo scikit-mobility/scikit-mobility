@@ -9,7 +9,7 @@ from geojson import LineString
 import geopandas as gpd
 import json
 import warnings
-
+STACKLEVEL = 2
 
 # COLOR = {
 #     0: '#FF0000',  # Red
@@ -78,7 +78,7 @@ traj_style_function = lambda weight, color, opacity, dashArray: \
     (lambda feature: dict(color=color, weight=weight, opacity=opacity, dashArray=dashArray))
 
 
-def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_function=traj_style_function,
+def plot_trajectory(tdf, map_f=None, max_users=None, max_points=1000, style_function=traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True, control_scale=True):
 
@@ -130,7 +130,9 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
         `folium.Map` object with the plotted trajectories.
 
     """
-    warnings.warn("Only the trajectories of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
+    if max_users is None:
+        max_users = 10
+        warnings.warn("Only the trajectories of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.", stacklevel=STACKLEVEL)
 
     # group by user and keep only the first `max_users`
     nu = 0
@@ -155,7 +157,7 @@ def plot_trajectory(tdf, map_f=None, max_users=10, max_points=1000, style_functi
             di = 1
         else:
             if not warned: 
-                warnings.warn("If necessary, trajectories will be down-sampled to have at most `max_points` points. To avoid this, sepecify `max_points=None`.")
+                warnings.warn("If necessary, trajectories will be down-sampled to have at most `max_points` points. To avoid this, specify `max_points=None`.", stacklevel=STACKLEVEL)
                 warned = True
             di = max(1, len(traj) // max_points)
         traj = traj[::di]
@@ -273,8 +275,9 @@ def plot_points_heatmap(tdf, map_f=None, max_points=1000,
     
     return map_f
 
-def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12, hex_color=None, opacity=0.3,
-               radius=12, number_of_sides=4, popup=True, control_scale=True):
+
+def plot_stops(stdf, map_f=None, max_users=None, tiles='cartodbpositron', zoom=12,
+               hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
 
     """
     :param stdf: TrajDataFrame
@@ -316,7 +319,9 @@ def plot_stops(stdf, map_f=None, max_users=10, tiles='cartodbpositron', zoom=12,
         `folium.Map` object with the plotted stops.
 
     """
-    warnings.warn("Only the stops of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.")
+    if max_users is None:
+        max_users = 10
+        warnings.warn("Only the stops of the first 10 users will be plotted. Use the argument `max_users` to specify the desired number of users, or filter the TrajDataFrame.", stacklevel=STACKLEVEL)
 
     if map_f is None:
         # initialise map

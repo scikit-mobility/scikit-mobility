@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=54.1.2", "poetry_core>=1.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry]
+name = "skmob"
+description = "A toolbox for analyzing and processing mobility data."
+version="1.2.2"
+authors = ["skmob Developers"]
+maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
+documentation= "https://scikit-mobility.github.io/scikit-mobility"
+license='new BSD'
+readme='README.md'
+classifiers=['Intended Audience :: Science/Research',
+                 'Intended Audience :: Developers',
+                 'License :: OSI Approved',
+                 'Programming Language :: Python',
+                 'Topic :: Software Development',
+                 'Topic :: Scientific/Engineering',
+                 'Operating System :: Microsoft :: Windows',
+                 'Operating System :: Unix',
+                 'Operating System :: MacOS',
+                 'Programming Language :: Python :: 3.6',
+                 'Programming Language :: Python :: 3.7',
+                 'Programming Language :: Python :: 3.8',
+                 ]
+
+[tool.poetry.dependencies]
+python = ">=3.6.1,<4"
+pandas = "1.1.5"
+python-igraph = "^0.9.1"
+geopandas = "^0.9.0"
+powerlaw = "^1.4.6"
+tqdm = "^4.60.0"
+requests = "^2.25.1"
+scikit-learn = "^0.24.2"
+statsmodels = "^0.12.2"
+folium = "^0.12.1"
+geojson = "^2.5.0"
+h3 = "^3.7.2"
+
+[tool.poetry.dev-dependencies]
+tox = "^3.23.1"
+pytest = "^6.2.4"
+coverage = "^5.5"
+pre-commit = "^2.12.1"
+poetry = "^1.1.6"
+Rtree = "^0.9.7"
+
+
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = "True"
+force_grid_wrap = 0
+use_parentheses = "True"
+ensure_newline_before_comments = "True"
+line_length = 100
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py36
+isolated_build = True
+
+[testenv]
+whitelist_externals = poetry
+commands =
+    poetry install -v
+    poetry run coverage run -m pytest --verbose  skmob
+    poetry run coverage html -d coverage --omit='.tox/*,**/tests/*,**/.virtualenvs/*'
+"""

@@ -183,8 +183,8 @@ class EPR:
         """
         next_location = self._weighted_random_selection(current_location)
         if self._log_file is not None:
-            logging.info('RETURN to %s (%s, %s)' % (next_location, self.lats_lngs[next_location]))
-            logging.info('\t frequency = %s' % self._location2visits[next_location])
+            logging.info(f'RETURN to {next_location} ({self.lats_lngs[next_location]})')
+            logging.info(f'\t frequency = {self._location2visits[next_location]}')
         return next_location
 
     def _preferential_exploration(self, current_location):
@@ -220,7 +220,7 @@ class EPR:
             location = np.random.choice(locations, size=1, p=weights)[0]
 
         if self._log_file is not None:
-            logging.info('EXPLORATION to %s (%s, %s)' % (location, self.lats_lngs[location]))
+            logging.info(f'EXPLORATION to {location} ({self.lats_lngs[location]})')
 
         return location
 
@@ -406,7 +406,6 @@ class EPR:
         return tdf
 
     def _epr_generate_one_agent(self, agent_id, start_date, end_date):
-
         current_date = start_date
         self._trajectories_.append((agent_id, current_date, self._starting_loc))
         self._location2visits[self._starting_loc] += 1
@@ -511,7 +510,7 @@ class DensityEPR(EPR):
 
     def __init__(self, name='Density EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
 
-        super().__init__()
+        super().__init__(rho=rho, gamma=gamma, beta=beta, tau=tau, min_wait_time_minutes=min_wait_time_minutes)
         self._name = name
         
     def generate(self, start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1,
@@ -648,7 +647,7 @@ class SpatialEPR(EPR):
 
     def __init__(self, name='Spatial EPR model', rho=0.6, gamma=0.21, beta=0.8, tau=17, min_wait_time_minutes=20):
 
-        super().__init__()
+        super().__init__(rho=rho, gamma=gamma, beta=beta, tau=tau, min_wait_time_minutes=min_wait_time_minutes)
         self._name = name
 
     def generate(self, start_date, end_date, spatial_tessellation, gravity_singly={}, n_agents=1,
@@ -788,7 +787,7 @@ class Ditras(EPR):
 
     def __init__(self, diary_generator, name='Ditras model', rho=0.3, gamma=0.21):
 
-        super().__init__()
+        super().__init__(rho=rho, gamma=gamma)
         self._diary_generator = diary_generator
         self._name = name
         self._rho = rho
@@ -914,9 +913,10 @@ class Ditras(EPR):
         # infer the time_steps (in hours) from the start_date and the end_date
         delta_t = (end_date - start_date).total_seconds()
         n_hours = int((delta_t / 60.0) / 60.0)
-
+        
         # generate a mobility diary for the agent
-        diary_df = self._diary_generator.generate(n_hours, start_date)
+        rand_seed_diary = np.random.randint(0,10**6)
+        diary_df = self._diary_generator.generate(n_hours, start_date, random_state=rand_seed_diary)
 
         for i, row in diary_df.iterrows():
             if row.abstract_location == 0:  # the agent is at home

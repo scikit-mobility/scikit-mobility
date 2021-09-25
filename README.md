@@ -527,15 +527,15 @@ Load the spatial tessellation and a data set of real flows in a `FlowDataFrame`:
 					tile_id='tile_ID',
 					sep=",")
 >>> # compute the total outflows from each location of the tessellation (excluding self loops)
->>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
->>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+>>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)[['flow']].sum().fillna(0)
+>>> tessellation = tessellation.merge(tot_outflows, left_on='tile_ID', right_on='origin').rename(columns={'flow': 'tot_outflow'})
 ```
 
 Instantiate a Gravity model object and generate synthetic flows:
 
 ```python
 >>> # instantiate a singly constrained Gravity model
->>> gravity_singly = Gravity(gravity_type='singly constrained')
+>>> gravity_singly = Gravity(gravity_type='singly cons/tetrained')
 >>> print(gravity_singly)
 ```
 	Gravity(name="Gravity model", deterrence_func_type="power_law", deterrence_func_args=[-2.0], origin_exp=1.0, destination_exp=1.0, gravity_type="singly constrained")

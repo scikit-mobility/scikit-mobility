@@ -1,10 +1,11 @@
-from ...core.flowdataframe import FlowDataFrame
-from ...utils import constants, gislib
 import geopandas as gpd
-from ...models import Radiation
 import numpy as np
-import shapely
 import pytest
+import shapely
+
+from skmob.core.flowdataframe import FlowDataFrame
+from skmob.models.radiation import Radiation
+from skmob.utils import constants, gislib
 
 distfunc = gislib.getDistance
 
@@ -15,31 +16,17 @@ np.random.seed(2)
 
 
 def all_equal(a, b):
-    return np.allclose(a, b, rtol=0., atol=atol)
+    return np.allclose(a, b, rtol=0.0, atol=atol)
 
 
 # tessellation
 
-tess_polygons = [[[7.481, 45.184],
-                  [7.481, 45.216],
-                  [7.526, 45.216],
-                  [7.526, 45.184],
-                  [7.481, 45.184]],
-                 [[7.481, 45.216],
-                  [7.481, 45.247],
-                  [7.526, 45.247],
-                  [7.526, 45.216],
-                  [7.481, 45.216]],
-                 [[7.526, 45.184],
-                  [7.526, 45.216],
-                  [7.571, 45.216],
-                  [7.571, 45.184],
-                  [7.526, 45.184]],
-                 [[7.526, 45.216],
-                  [7.526, 45.247],
-                  [7.571, 45.247],
-                  [7.571, 45.216],
-                  [7.526, 45.216]]]
+tess_polygons = [
+    [[7.481, 45.184], [7.481, 45.216], [7.526, 45.216], [7.526, 45.184], [7.481, 45.184]],
+    [[7.481, 45.216], [7.481, 45.247], [7.526, 45.247], [7.526, 45.216], [7.481, 45.216]],
+    [[7.526, 45.184], [7.526, 45.216], [7.571, 45.216], [7.571, 45.184], [7.526, 45.184]],
+    [[7.526, 45.216], [7.526, 45.247], [7.571, 45.247], [7.571, 45.216], [7.526, 45.216]],
+]
 
 geom = [shapely.geometry.Polygon(p) for p in tess_polygons]
 tessellation = gpd.GeoDataFrame(geometry=geom, crs="EPSG:4326")
@@ -62,6 +49,7 @@ tessellation[constants.RELEVANCE] = relevance
 
 # compute expected flows and probabilities
 
+
 def correct_radiation():
     # TODO
     return 0
@@ -69,7 +57,8 @@ def correct_radiation():
 
 # generate
 
-@pytest.mark.parametrize('out_format', ['flows', 'flows_sample', 'probabilities'])
+
+@pytest.mark.parametrize("out_format", ["flows", "flows_sample", "probabilities"])
 def test_radiation_generate(out_format):
 
     # TODO: check correctness of results
@@ -78,5 +67,3 @@ def test_radiation_generate(out_format):
     rad_fdf = radiation.generate(tessellation, out_format=out_format)
 
     assert isinstance(rad_fdf, FlowDataFrame)
-
-

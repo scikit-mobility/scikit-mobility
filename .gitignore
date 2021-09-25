@@ -69,3 +69,15 @@ __pycache__/
 
 # VSCode
 .vscode
+
+# HTML Docs
+static/*
+
+# Coverage
+.coverage/*
+coverage/*
+htmlcov
+
+
+# Tox
+.tox
