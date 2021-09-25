@@ -227,8 +227,8 @@
     <p id="t173" class="mis show_mis"><span class="n"><a href="#t173">173</a></span><span class="t">        <span class="key">except</span> <span class="nam">ZeroDivisionError</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t174" class="mis show_mis"><span class="n"><a href="#t174">174</a></span><span class="t">            <span class="nam">speeds_kmh</span> <span class="op">+=</span> <span class="op">[</span><span class="num">0.</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t175" class="pln"><span class="n"><a href="#t175">175</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t176" class="run"><span class="n"><a href="#t176">176</a></span><span class="t">        <span class="key">if</span> <span class="nam">Dr</span> <span class="op">></span> <span class="nam">stop_radius</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t177" class="run"><span class="n"><a href="#t177">177</a></span><span class="t">            <span class="key">if</span> <span class="nam">Dt</span> <span class="op">></span> <span class="nam">minutes_for_a_stop</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t176" class="run"><span class="n"><a href="#t176">176</a></span><span class="t">        <span class="key">if</span> <span class="nam">Dr</span> <span class="op">></span> <span class="nam">stop_radius</span> <span class="key">or</span> <span class="nam">i</span> <span class="op">==</span> <span class="nam">lendata</span> <span class="op">-</span> <span class="num">1</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t177" class="run"><span class="n"><a href="#t177">177</a></span><span class="t">            <span class="key">if</span> <span class="nam">Dt</span> <span class="op">></span> <span class="nam">minutes_for_a_stop</span> <span class="key">or</span> <span class="nam">i</span> <span class="op">==</span> <span class="nam">lendata</span> <span class="op">-</span> <span class="num">1</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t178" class="run"><span class="n"><a href="#t178">178</a></span><span class="t">                <span class="nam">extra_cols</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="nam">lat_lng_dtime_other</span><span class="op">[</span><span class="nam">i</span><span class="op">]</span><span class="op">[</span><span class="num">3</span><span class="op">:</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t179" class="pln"><span class="n"><a href="#t179">179</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t180" class="pln"><span class="n"><a href="#t180">180</a></span><span class="t">                <span class="com"># estimate the leaving time</span>&nbsp;</span><span class="r"></span></p>
@@ -274,7 +274,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-06-07 14:31 +0000
+            created at 2021-09-25 15:42 +0000
         </p>
     </div>
 </div>

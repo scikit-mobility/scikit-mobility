@@ -1,37 +1,17 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Preprocessing &mdash; scikit-mobility  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
@@ -39,42 +19,21 @@
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Measures" href="measures.html" />
     <link rel="prev" title="Data Structures" href="data_structures.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> scikit-mobility
-          
-
-          
-            
             <img src="../_static/logo_skmob.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,19 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">API Reference</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a></li>
@@ -104,96 +52,55 @@
 <li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">scikit-mobility</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Preprocessing</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/reference/preprocessing.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="preprocessing">
-<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="preprocessing">
+<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline"></a></h1>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.filtering.filter" title="skmob.preprocessing.filtering.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filtering.filter</span></code></a>(tdf[, max_speed_kmh, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.filtering.filter" title="skmob.preprocessing.filtering.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filtering.filter</span></code></a>(tdf[, max_speed_kmh, ...])</p></td>
 <td><p>Trajectory filtering.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.compression.compress" title="skmob.preprocessing.compression.compress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compression.compress</span></code></a>(tdf[, spatial_radius_km])</p></td>
 <td><p>Trajectory compression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.detection.stops" title="skmob.preprocessing.detection.stops"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detection.stops</span></code></a>(tdf[, stop_radius_factor, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.preprocessing.detection.stops" title="skmob.preprocessing.detection.stops"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detection.stops</span></code></a>(tdf[, stop_radius_factor, ...])</p></td>
 <td><p>Stops detection.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, ...])</p></td>
 <td><p>Clustering of locations.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
 <dt class="sig sig-object py" id="skmob.preprocessing.filtering.filter">
-<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.filtering.</span></span><span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.filtering.filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.filtering.</span></span><span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.filtering.filter" title="Permalink to this definition"></a></dt>
 <dd><p>Trajectory filtering.</p>
 <p>For each individual in a TrajDataFrame, filter out the trajectory points that are considered noise or outliers <a class="reference internal" href="#id6" id="id1"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
@@ -252,7 +159,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="skmob.preprocessing.compression.compress">
-<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.compression.</span></span><span class="sig-name descname"><span class="pre">compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.compression.compress" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.compression.</span></span><span class="sig-name descname"><span class="pre">compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.compression.compress" title="Permalink to this definition"></a></dt>
 <dd><p>Trajectory compression.</p>
 <p>Reduce the number of points in a trajectory for each individual in a TrajDataFrame. All points within a radius of <cite>spatial_radius_km</cite> kilometers from a given initial point are compressed into a single point that has the median coordinates of all points and the time of the initial point <a class="reference internal" href="#id6" id="id2"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
@@ -302,7 +209,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="skmob.preprocessing.detection.stops">
-<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.detection.</span></span><span class="sig-name descname"><span class="pre">stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_radius_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes_for_a_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaving_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_data_for_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stops" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.detection.</span></span><span class="sig-name descname"><span class="pre">stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_radius_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes_for_a_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaving_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_data_for_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stops" title="Permalink to this definition"></a></dt>
 <dd><p>Stops detection.</p>
 <p>Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least <cite>minutes_for_a_stop</cite> minutes within a distance <cite>stop_radius_factor * spatial_radius</cite> km from a given trajectory point. The stop’s coordinates are the median latitude and longitude values of the points found within the specified distance <a class="reference internal" href="#id9" id="id4"><span>[RT2004]</span></a> <a class="reference internal" href="#id6" id="id5"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
@@ -369,7 +276,7 @@ then this is interpreted as missing data and does not count as a stop. The defau
 
 <dl class="py function">
 <dt class="sig sig-object py" id="skmob.preprocessing.clustering.cluster">
-<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.clustering.</span></span><span class="sig-name descname"><span class="pre">cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.clustering.</span></span><span class="sig-name descname"><span class="pre">cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition"></a></dt>
 <dd><p>Clustering of locations.</p>
 <p>Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity <a class="reference internal" href="#id9" id="id7"><span>[RT2004]</span></a>. The clustering algorithm used is DBSCAN (by sklearn <a class="reference internal" href="#dbscan" id="id8"><span>[DBSCAN]</span></a>).</p>
 <dl class="field-list simple">
@@ -428,67 +335,48 @@ then this is interpreted as missing data and does not count as a stop. The defau
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="measures.html" class="btn btn-neutral float-right" title="Measures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="data_structures.html" class="btn btn-neutral float-left" title="Data Structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="measures.html" class="btn btn-neutral float-right" title="Measures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2019, skmob devs.
-
-    </p>
+    <p>&#169; Copyright 2019, skmob devs.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

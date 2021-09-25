@@ -1,37 +1,17 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Data Structures &mdash; scikit-mobility  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
@@ -39,42 +19,21 @@
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Preprocessing" href="preprocessing.html" />
-    <link rel="prev" title="Scikit-mobility Installation" href="../index.html" /> 
+    <link rel="prev" title="Scikit-mobility" href="../index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> scikit-mobility
-          
-
-          
-            
             <img src="../_static/logo_skmob.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,19 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">API Reference</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data Structures</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-skmob.core.trajectorydataframe">TrajDataframe</a></li>
@@ -108,79 +56,38 @@
 <li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">scikit-mobility</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Data Structures</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/reference/data_structures.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="data-structures">
-<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="data-structures">
+<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline"></a></h1>
 <p>scikit-mobility provides two different data structures, both extending the Pandas dataframe: TrajDataframe is designed to deal with trajectories, i.e., data in form of GPS points; FlowDataFrame allows to manage fluxes between places.</p>
-<div class="section" id="module-skmob.core.trajectorydataframe">
-<span id="trajdataframe"></span><h2>TrajDataframe<a class="headerlink" href="#module-skmob.core.trajectorydataframe" title="Permalink to this headline">¶</a></h2>
+<section id="module-skmob.core.trajectorydataframe">
+<span id="trajdataframe"></span><h2>TrajDataframe<a class="headerlink" href="#module-skmob.core.trajectorydataframe" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></span><span class="sig-name descname"><span class="pre">TrajDataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lng'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'init':</span> <span class="pre">'epsg:4326'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></span><span class="sig-name descname"><span class="pre">TrajDataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lng'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'init':</span> <span class="pre">'epsg:4326'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame" title="Permalink to this definition"></a></dt>
 <dd><p>TrajDataFrame.</p>
 <p>A TrajDataFrame object is a pandas.DataFrame that has three columns latitude, longitude and datetime. TrajDataFrame accepts the following keyword arguments:</p>
 <dl class="field-list simple">
@@ -231,7 +138,7 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.mapping">
-<span class="sig-name descname"><span class="pre">mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.mapping" title="Permalink to this definition"></a></dt>
 <dd><p>Assign each point of the TrajDataFrame to the corresponding tile of a spatial tessellation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -279,7 +186,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.plot_diary">
-<span class="sig-name descname"><span class="pre">plot_diary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_diary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_diary" title="Permalink to this definition"></a></dt>
 <dd><p>Plot a mobility diary of an individual in a TrajDataFrame. It requires a TrajDataFrame with clusters, output of <cite>preprocessing.clustering.cluster</cite>. The column <cite>constants.CLUSTER</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -343,7 +250,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.plot_stops">
-<span class="sig-name descname"><span class="pre">plot_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cartodbpositron'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_sides</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cartodbpositron'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_sides</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_stops" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of <cite>preprocessing.detection.stops</cite> or <cite>preprocessing.clustering.cluster</cite> functions. The column <cite>constants.LEAVING_DATETIME</cite> must be present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -356,7 +263,8 @@
 <li><p><em>param opacity: float</em> – opacity (alpha level) of the stop makers.</p></li>
 <li><p><em>param radius: float</em> – size of the markers.</p></li>
 <li><p><em>param number_of_sides: int</em> – number of sides of the markers.</p></li>
-<li><p><em>param popup: bool</em> – if <cite>True</cite>, when clicking on a marker a popup window displaying information on the stop will appear.</p></li>
+<li><p><em>param popup: bool</em> – if <cite>True</cite>, when clicking on a marker a popup window displaying information on the stop will appear.
+The default is <cite>True</cite>.</p></li>
 <li><p><em>param control_scale: bool</em> – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
@@ -399,7 +307,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory">
-<span class="sig-name descname"><span class="pre">plot_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">max_users=None</span></em>, <em class="sig-param"><span class="pre">max_points=1000</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">tiles='cartodbpositron'</span></em>, <em class="sig-param"><span class="pre">zoom=12</span></em>, <em class="sig-param"><span class="pre">hex_color=None</span></em>, <em class="sig-param"><span class="pre">weight=2</span></em>, <em class="sig-param"><span class="pre">opacity=0.75</span></em>, <em class="sig-param"><span class="pre">dashArray='0</span></em>, <em class="sig-param"><span class="pre">0'</span></em>, <em class="sig-param"><span class="pre">start_end_markers=True</span></em>, <em class="sig-param"><span class="pre">control_scale=True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">max_users=None</span></em>, <em class="sig-param"><span class="pre">max_points=1000</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">tiles='cartodbpositron'</span></em>, <em class="sig-param"><span class="pre">zoom=12</span></em>, <em class="sig-param"><span class="pre">hex_color=None</span></em>, <em class="sig-param"><span class="pre">weight=2</span></em>, <em class="sig-param"><span class="pre">opacity=0.75</span></em>, <em class="sig-param"><span class="pre">dashArray='0</span></em>, <em class="sig-param"><span class="pre">0'</span></em>, <em class="sig-param"><span class="pre">start_end_markers=True</span></em>, <em class="sig-param"><span class="pre">control_scale=True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.plot_trajectory" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the trajectories on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -450,7 +358,7 @@ If necessary, a user’s trajectory will be down-sampled to have at most <cite>m
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.settings_from">
-<span class="sig-name descname"><span class="pre">settings_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">settings_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.settings_from" title="Permalink to this definition"></a></dt>
 <dd><p>Copy the attributes from another TrajDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -479,7 +387,7 @@ If necessary, a user’s trajectory will be down-sampled to have at most <cite>m
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion">
-<span class="sig-name descname"><span class="pre">timezone_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_timezone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_timezone</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">timezone_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_timezone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_timezone</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.timezone_conversion" title="Permalink to this definition"></a></dt>
 <dd><p>Convert the timezone of the datetime in the TrajDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -517,7 +425,7 @@ If necessary, a user’s trajectory will be down-sampled to have at most <cite>m
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe">
-<span class="sig-name descname"><span class="pre">to_flowdataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_flowdataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tessellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajDataFrame.to_flowdataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Aggregate a TrajDataFrame into a FlowDataFrame.
 The points that do not have a corresponding tile in the spatial tessellation are removed.</p>
 <dl class="field-list simple">
@@ -573,15 +481,15 @@ The points that do not have a corresponding tile in the spatial tessellation are
 
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.core.trajectorydataframe.TrajSeries">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></span><span class="sig-name descname"><span class="pre">TrajSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajSeries" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.trajectorydataframe.</span></span><span class="sig-name descname"><span class="pre">TrajSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.trajectorydataframe.TrajSeries" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-skmob.core.flowdataframe">
-<span id="flowdataframe"></span><h2>FlowDataframe<a class="headerlink" href="#module-skmob.core.flowdataframe" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-skmob.core.flowdataframe">
+<span id="flowdataframe"></span><h2>FlowDataframe<a class="headerlink" href="#module-skmob.core.flowdataframe" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowDataFrame">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></span><span class="sig-name descname"><span class="pre">FlowDataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'origin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'destination'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tile_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></span><span class="sig-name descname"><span class="pre">FlowDataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'origin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'destination'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'datetime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tile_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame" title="Permalink to this definition"></a></dt>
 <dd><p>A FlowDataFrame object is a pandas.DataFrame that has three columns origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -628,7 +536,7 @@ The points that do not have a corresponding tile in the spatial tessellation are
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowDataFrame.get_flow">
-<span class="sig-name descname"><span class="pre">get_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.get_flow" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.get_flow" title="Permalink to this definition"></a></dt>
 <dd><p>Get the flow between two locations. If there is no flow between two locations it returns 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -679,7 +587,7 @@ The points that do not have a corresponding tile in the spatial tessellation are
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowDataFrame.plot_flows">
-<span class="sig-name descname"><span class="pre">plot_flows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">min_flow=0</span></em>, <em class="sig-param"><span class="pre">tiles='Stamen</span> <span class="pre">Toner'</span></em>, <em class="sig-param"><span class="pre">zoom=6</span></em>, <em class="sig-param"><span class="pre">flow_color='red'</span></em>, <em class="sig-param"><span class="pre">opacity=0.5</span></em>, <em class="sig-param"><span class="pre">flow_weight=5</span></em>, <em class="sig-param"><span class="pre">flow_exp=0.5</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">flow_popup=False</span></em>, <em class="sig-param"><span class="pre">num_od_popup=5</span></em>, <em class="sig-param"><span class="pre">tile_popup=True</span></em>, <em class="sig-param"><span class="pre">radius_origin_point=5</span></em>, <em class="sig-param"><span class="pre">color_origin_point='#3186cc'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_flows" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_flows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">map_f=None</span></em>, <em class="sig-param"><span class="pre">min_flow=0</span></em>, <em class="sig-param"><span class="pre">tiles='Stamen</span> <span class="pre">Toner'</span></em>, <em class="sig-param"><span class="pre">zoom=6</span></em>, <em class="sig-param"><span class="pre">flow_color='red'</span></em>, <em class="sig-param"><span class="pre">opacity=0.5</span></em>, <em class="sig-param"><span class="pre">flow_weight=5</span></em>, <em class="sig-param"><span class="pre">flow_exp=0.5</span></em>, <em class="sig-param"><span class="pre">style_function=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em>, <em class="sig-param"><span class="pre">flow_popup=False</span></em>, <em class="sig-param"><span class="pre">num_od_popup=5</span></em>, <em class="sig-param"><span class="pre">tile_popup=True</span></em>, <em class="sig-param"><span class="pre">radius_origin_point=5</span></em>, <em class="sig-param"><span class="pre">color_origin_point='#3186cc'</span></em>, <em class="sig-param"><span class="pre">control_scale=True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_flows" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the flows of a FlowDataFrame on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -698,6 +606,7 @@ The points that do not have a corresponding tile in the spatial tessellation are
 <li><p><strong>tile_popup</strong> (<em>boolean, optional</em>) – if <cite>True</cite>, when clicking on a location marker a popup window displaying information on the flows departing from that location will appear. The default is <cite>True</cite>.</p></li>
 <li><p><strong>radius_origin_point</strong> (<em>float, optional</em>) – the size of the location markers. The default is <cite>5</cite>.</p></li>
 <li><p><strong>color_origin_point</strong> (<em>str, optional</em>) – the color of the location markers. The default is ‘#3186cc’.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -735,7 +644,7 @@ The points that do not have a corresponding tile in the spatial tessellation are
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowDataFrame.plot_tessellation">
-<span class="sig-name descname"><span class="pre">plot_tessellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxitems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style_func_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['tile_ID']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Stamen</span> <span class="pre">Toner'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geometry'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_tessellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxitems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style_func_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popup_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['tile_ID']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Stamen</span> <span class="pre">Toner'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geometry'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.plot_tessellation" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the spatial tessellation on a Folium map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -748,6 +657,7 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 <li><p><strong>tiles</strong> (<em>str, optional</em>) – folium’s <cite>tiles</cite> parameter. The default is ‘Stamen Toner’.</p></li>
 <li><p><strong>zoom</strong> (<em>int, optional</em>) – the initial zoom of the map. The default is <cite>6</cite>.</p></li>
 <li><p><strong>geom_col</strong> (<em>str, optional</em>) – the name of the geometry column of the GeoDataFrame representing the spatial tessellation. The default is ‘geometry’.</p></li>
+<li><p><strong>control_scale</strong> (<em>boolean; optional</em>) – if <cite>True</cite>, add scale information in the bottom left corner of the visualization. The default is <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -778,7 +688,7 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 
 <dl class="py method">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowDataFrame.settings_from">
-<span class="sig-name descname"><span class="pre">settings_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.settings_from" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">settings_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowdataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowDataFrame.settings_from" title="Permalink to this definition"></a></dt>
 <dd><p>Copy the attributes from another FlowDataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -791,71 +701,52 @@ columns of <cite>gdf</cite> listed in <cite>popup_features</cite> will appear. T
 
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.core.flowdataframe.FlowSeries">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></span><span class="sig-name descname"><span class="pre">FlowSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowSeries" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skmob.core.flowdataframe.</span></span><span class="sig-name descname"><span class="pre">FlowSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.core.flowdataframe.FlowSeries" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Scikit-mobility" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../index.html" class="btn btn-neutral float-left" title="Scikit-mobility Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2019, skmob devs.
-
-    </p>
+    <p>&#169; Copyright 2019, skmob devs.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>
