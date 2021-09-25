@@ -173,8 +173,8 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
         except ZeroDivisionError:
             speeds_kmh += [0.]
 
-        if Dr > stop_radius:
-            if Dt > minutes_for_a_stop:
+        if Dr > stop_radius or i == lendata - 1:
+            if Dt > minutes_for_a_stop or i == lendata - 1:                
                 extra_cols = list(lat_lng_dtime_other[i][3:])
 
                 # estimate the leaving time
