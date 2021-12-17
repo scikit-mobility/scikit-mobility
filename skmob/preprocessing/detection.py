@@ -4,7 +4,7 @@ import numpy as np
 import inspect
 
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
+def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None, mediod=False):
     """Stops detection.
     
     Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
@@ -105,7 +105,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     else:
         stdf = _stops_trajectory(tdf, stop_radius=stop_radius, minutes_for_a_stop=minutes_for_a_stop,
                             leaving_time=leaving_time, no_data_for_minutes=no_data_for_minutes,
-                            min_speed_kmh=min_speed_kmh).reset_index(drop=True)
+                            min_speed_kmh=min_speed_kmh, mediod=mediod).reset_index(drop=True)
 
     # TODO: remove the following line when issue #71 (Preserve the TrajDataFrame index during preprocessing operations) is solved.
     stdf.reset_index(inplace=True, drop=True)
@@ -115,14 +115,14 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     return stdf
 
 
-def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh, mediod=False):
 
     # From dataframe convert to numpy matrix
     lat_lng_dtime_other = list(utils.to_matrix(tdf))
     columns_order = list(tdf.columns)
 
     stops, leaving_times = _stops_array(lat_lng_dtime_other, stop_radius,
-                                        minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh)
+                                        minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh, mediod)
 
     #print(utils.get_columns(data))
     # stops = utils.to_dataframe(stops, utils.get_columns(data))
@@ -137,7 +137,7 @@ def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_dat
     return stops
 
 
-def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh, mediod):
     """
     Create a stop if the user spend at least `minutes_for_a_stop` minutes
     within a distance `stop_radius` from a given point.
@@ -196,7 +196,14 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
                     if leaving_time:
                         leaving_times.append(estimated_final_t)
 
-                    stops += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
+                    if mediod:
+                        z = np.array([complex(x, y) for y,x in zip(sum_lat, sum_lon)])
+                        m, n = np.meshgrid(z, z)
+                        out = abs(m-n)
+                        ix = np.argmin(out.sum(axis=0))
+                        stops += [[sum_lat[ix], sum_lon[ix], t_0] + extra_cols]
+                    else:
+                        stops += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
 
                 count = 0
                 lat_0, lon_0, t_0 = lat, lon, t
