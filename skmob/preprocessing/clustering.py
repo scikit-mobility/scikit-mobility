@@ -155,3 +155,69 @@ def _cluster_array(lat_lng_dtime_other, cluster_radius_km, min_samples, verbose=
 
     return l2x, [c2mfl[k] for k in labels if k > -0.5]
 
+
+def split_trajectories_in_tdf(tdf, stop_tdf):
+    """Cluster the points of a TrajDataFrame into trajectories by using stop locations.
+    Parameters
+    ----------
+    tdf : TrajDataFrame
+        original trajectories
+    stop_tdf : TrajDataFrame
+        the output of skmob.preprocessing.detection.stops, containing the stop locations of the users in the tdf
+    Returns
+    -------
+    TrajDataFrame
+        the TrajDataFrame with a new column 'tid' collecting the unique identifier of the trajectory to which the point
+        belongs.
+
+    Examples
+    --------
+    >>> import skmob
+    >>> import pandas as pd
+    >>> from skmob.preprocessing import detection, clustering
+    >>> # read the trajectory data (GeoLife)
+    >>> url = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/tutorial/data/geolife_sample.txt.gz'
+    >>> df = pd.read_csv(url, sep=',', compression='gzip')
+    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
+    >>> print(tdf.head())
+             lat         lng            datetime  uid
+    0  39.984094  116.319236 2008-10-23 05:53:05    1
+    1  39.984198  116.319322 2008-10-23 05:53:06    1
+    2  39.984224  116.319402 2008-10-23 05:53:11    1
+    3  39.984211  116.319389 2008-10-23 05:53:16    1
+    4  39.984217  116.319422 2008-10-23 05:53:21    1
+    >>> # detect the stops first
+    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> # cluster the trajectories based on the stops
+    >>> tdf_splitted = split_trajectories_in_tdf(tdf, stdf)
+    >>> print(tdf_splitted.head())
+              lat         lng            datetime  uid  tid
+    0   39.984094  116.319236 2008-10-23 05:53:05    1    1
+    1   39.984198  116.319322 2008-10-23 05:53:06    1    1
+    2   39.984224  116.319402 2008-10-23 05:53:11    1    1
+    3   39.984211  116.319389 2008-10-23 05:53:16    1    1
+    4   39.984217  116.319422 2008-10-23 05:53:21    1    1
+    """
+
+    tdf_with_tid = tdf.groupby('uid').apply(_split_trajectories, stop_tdf)
+    return tdf_with_tid.reset_index(drop=True)
+
+
+def _split_trajectories(tdf, stop_tdf):
+
+    c_uid = tdf.uid[:1].item()
+    stop_tdf_current_user = stop_tdf[stop_tdf.uid == c_uid]
+
+    if stop_tdf_current_user.empty:
+        return
+    else:
+        first_traj = [tdf[tdf.datetime <= stop_tdf_current_user.datetime[:1].item()]]
+        last_traj = [tdf[tdf.datetime >= stop_tdf_current_user.leaving_datetime[-1:].item()]]
+        all_other_traj = [tdf[(tdf.datetime >= start_traj_time) & (tdf.datetime <= end_traj_time)] for end_traj_time, start_traj_time in zip(stop_tdf_current_user['datetime'][1:], stop_tdf_current_user['leaving_datetime'][:-1])]
+        all_traj = first_traj + all_other_traj + last_traj
+        tdf_with_tid = pd.concat(all_traj)
+        list_tids = [list(np.repeat(i, len(df))) for i, df in zip(range(1,len(all_traj)+1), all_traj)]
+        list_tids_ravel = [item for sublist in list_tids for item in sublist]
+        tdf_with_tid['tid'] = list_tids_ravel
+        return tdf_with_tid
+
