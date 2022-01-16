@@ -6,8 +6,6 @@ build-kend = "flit_core.buildapi"
 name = "skmob"
 authors = [{name = "skmob Developers", email = "gianni.barlacchi@gmail.com"}]
 readme="README.md"
-description ="A toolbox for analyzing and processing mobility data."
-version="1.2.3"
 maintainers = [{name="Gianni Barlacchi", email =" gianni.barlacchi@gmail.com"}]
 
 classifiers = [
