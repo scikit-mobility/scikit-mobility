@@ -9,7 +9,6 @@ readme="README.md"
 description ="A toolbox for analyzing and processing mobility data."
 version="1.2.3"
 maintainers = [{name="Gianni Barlacchi", email =" gianni.barlacchi@gmail.com"}]
-documentation= "https://scikit-mobility.github.io/scikit-mobility"
 classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
                  'License :: OSI Approved',
@@ -52,6 +51,6 @@ test = [
 doc = ["sphinx"]
 
 
-
-[metadata]
+[tool.flit.metadata.urls]
+Documentation = "https://scikit-mobility.github.io/scikit-mobility"
 dist-name = "scikit-mobility"
