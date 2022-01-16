@@ -50,7 +50,6 @@ test = [
 ]
 doc = ["sphinx"]
 
-
-[tool.flit.metadata.urls]
+[metadata]
 Documentation = "https://scikit-mobility.github.io/scikit-mobility"
 dist-name = "scikit-mobility"
