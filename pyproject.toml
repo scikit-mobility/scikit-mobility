@@ -54,4 +54,4 @@ doc = ["sphinx"]
 
 
 [metadata]
-"dist-name = "scikit-mobility"
+dist-name = "scikit-mobility"
