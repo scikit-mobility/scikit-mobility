@@ -9,20 +9,23 @@ readme="README.md"
 description ="A toolbox for analyzing and processing mobility data."
 version="1.2.3"
 maintainers = [{name="Gianni Barlacchi", email =" gianni.barlacchi@gmail.com"}]
-classifiers=['Intended Audience :: Science/Research',
-                 'Intended Audience :: Developers',
-                 'License :: OSI Approved',
-                 'Programming Language :: Python',
-                 'Topic :: Software Development',
-                 'Topic :: Scientific/Engineering',
-                 'Operating System :: Microsoft :: Windows',
-                 'Operating System :: Unix',
-                 'Operating System :: MacOS',
-                'License :: OSI Approved :: new BSD',
-                 'Programming Language :: Python :: 3.6',
-                 'Programming Language :: Python :: 3.7',
-                 'Programming Language :: Python :: 3.8',
-                 ]
+
+classifiers = [
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved',
+    'Programming Language :: Python',
+    'Topic :: Software Development',
+    'Topic :: Scientific/Engineering',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    "License :: OSI Approved :: BSD License",
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+]
+
 dependencies = [
 "python>=3.6.1,<4",
 "pandas=^1.2.5",
