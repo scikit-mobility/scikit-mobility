@@ -10,7 +10,6 @@ description ="A toolbox for analyzing and processing mobility data."
 version="1.2.3"
 maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
 documentation= "https://scikit-mobility.github.io/scikit-mobility"
-license=['new BSD']
 classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
                  'License :: OSI Approved',
@@ -20,6 +19,7 @@ classifiers=['Intended Audience :: Science/Research',
                  'Operating System :: Microsoft :: Windows',
                  'Operating System :: Unix',
                  'Operating System :: MacOS',
+                'License :: OSI Approved :: new BSD',
                  'Programming Language :: Python :: 3.6',
                  'Programming Language :: Python :: 3.7',
                  'Programming Language :: Python :: 3.8',
