@@ -1,6 +1,6 @@
 [build-system]
 requires = ["flit_core >=3.2,<4"]
-"build-kend = "flit_core.buildapi"
+build-kend = "flit_core.buildapi"
 
 [project]
 name = "skmob"
