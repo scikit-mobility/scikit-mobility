@@ -8,7 +8,7 @@ authors = [{name = "skmob Developers", email = "gianni.barlacchi@gmail.com"}]
 readme="README.md"
 description ="A toolbox for analyzing and processing mobility data."
 version="1.2.3"
-maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
+maintainers = [{name="Gianni Barlacchi", email =" gianni.barlacchi@gmail.com"}]
 documentation= "https://scikit-mobility.github.io/scikit-mobility"
 classifiers=['Intended Audience :: Science/Research',
                  'Intended Audience :: Developers',
