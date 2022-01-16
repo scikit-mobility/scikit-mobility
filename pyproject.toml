@@ -4,9 +4,9 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry]
-name = "skmob"
+name = "scikit-mobility"
 description = "A toolbox for analyzing and processing mobility data."
-version="1.2.2"
+version="1.2.3"
 authors = ["skmob Developers"]
 maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
 documentation= "https://scikit-mobility.github.io/scikit-mobility"
@@ -28,7 +28,7 @@ classifiers=['Intended Audience :: Science/Research',
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<4"
-pandas = "1.1.5"
+pandas = "^1.2.5"
 python-igraph = "^0.9.1"
 geopandas = "^0.9.0"
 powerlaw = "^1.4.6"
@@ -47,6 +47,7 @@ coverage = "^5.5"
 pre-commit = "^2.12.1"
 poetry = "^1.1.6"
 Rtree = "^0.9.7"
+coverage-badge = "^1.0.1"
 
 
 
