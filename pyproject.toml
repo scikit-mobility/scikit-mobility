@@ -30,7 +30,7 @@ classifiers=['Intended Audience :: Science/Research',
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<4"
-pandas = "^1.1.5"
+pandas = "*"
 python-igraph = "^0.9.1"
 geopandas = "*"
 powerlaw = "^1.4.6"
