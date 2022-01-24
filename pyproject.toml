@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "scikit-mobility"
 description = "A toolbox for analyzing and processing mobility data."
-version = "1.2.3-alpha.2"
+version = "1.2.3-alpha.3"
 packages = [ { include = "skmob"}]
 authors = ["skmob Developers"]
 maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
@@ -30,17 +30,17 @@ classifiers=['Intended Audience :: Science/Research',
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<4"
-pandas = "*"
-python-igraph = "*"
+pandas = "^1.1.5"
+python-igraph = "^0.9.1"
 geopandas = "*"
-powerlaw = "*"
-tqdm = "*"
-requests = "*"
+powerlaw = "^1.4.6"
+tqdm = "^4.60.0"
+requests = "^2.25.1"
 scikit-learn = "*"
 statsmodels = "*"
 folium = "*"
-geojson = "*"
-h3 = "*"
+geojson = "^2.5.0"
+h3 = "^3.7.2"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.23.1"
