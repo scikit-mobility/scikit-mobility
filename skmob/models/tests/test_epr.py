@@ -80,7 +80,7 @@ def global_variables():
         '20130101 4:34:55', '20130105 5:29:12', '20130115 00:29:12'])
     traj[constants.UID] = [1 for _ in range(5)] + [2 for _ in range(3)] + [3]
     tdf = TrajDataFrame(traj)
-    stdf = detection.stops(tdf)
+    stdf = detection.stay_locations(tdf)
     cstdf = clustering.cluster(stdf)
     return tessellation, gm, gmfdf, gcgm, odM, cstdf
 

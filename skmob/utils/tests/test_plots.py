@@ -124,7 +124,7 @@ def test_plot_stops(tdf):
     map_f = plot.plot_trajectory(tdf)
     # map_f = plot.plot_stops(tdf, map_f=map_f)
 
-    stdf = detection.stops(tdf)
+    stdf = detection.stay_locations(tdf)
     map_f = plot.plot_stops(stdf, map_f=map_f)
 
     assert isinstance(map_f, folium.folium.Map)
@@ -135,7 +135,7 @@ def test_plot_stops_tdf(tdf):
     map_f = tdf.plot_trajectory()
     # map_f = tdf.plot_stops(map_f=map_f)
 
-    stdf = detection.stops(tdf)
+    stdf = detection.stay_locations(tdf)
     map_f = stdf.plot_stops(map_f=map_f)
 
     assert isinstance(map_f, folium.folium.Map)
@@ -147,7 +147,7 @@ def test_plot_stops_tdf(tdf):
 @pytest.mark.parametrize('user', [1, 2])
 @pytest.mark.parametrize('start_datetime', [None, '2013/01/01 00:00:00'])
 def test_plot_diary(tdf, user, start_datetime):
-    stdf = detection.stops(tdf)
+    stdf = detection.stay_locations(tdf)
     cstdf = clustering.cluster(stdf)
     ax = plot.plot_diary(cstdf, user, start_datetime=start_datetime)
 
@@ -158,7 +158,7 @@ def test_plot_diary(tdf, user, start_datetime):
 @pytest.mark.parametrize('user', [1, 2])
 @pytest.mark.parametrize('start_datetime', [None, '2013/01/01 00:00:00'])
 def test_plot_diary(tdf, user, start_datetime):
-    stdf = detection.stops(tdf)
+    stdf = detection.stay_locations(tdf)
     cstdf = clustering.cluster(stdf)
     ax = cstdf.plot_diary(user, start_datetime=start_datetime)
 

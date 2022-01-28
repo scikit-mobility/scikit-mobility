@@ -92,7 +92,7 @@ class TestDetection:
         self.trjdat = TrajDataFrame(traj, user_id=user_id)
 
     def test_stops(self):
-        output = detection.stops(self.trjdat)
+        output = detection.stay_locations(self.trjdat)
 
         expected = self.trjdat.drop([3, 7, 11, 14, 17, 19, 21, 22])
         stamps = [
@@ -124,7 +124,7 @@ class TestDetection:
         # assert
         pd.testing.assert_frame_equal(output, expected, check_dtype=False)
 
-        output = detection.stops(self.trjdat, minutes_for_a_stop=60.0, leaving_time=False)
+        output = detection.stay_locations(self.trjdat, minutes_for_a_stop=60.0, leaving_time=False)
 
         expected = self.trjdat.drop([0, 1, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 21, 22])
 
