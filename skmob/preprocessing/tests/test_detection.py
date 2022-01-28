@@ -91,7 +91,7 @@ class TestDetection:
         self.traj = traj.sort_values([user_id, date_time])
         self.trjdat = TrajDataFrame(traj, user_id=user_id)
 
-    def test_stops(self):
+    def test_stay_locations(self):
         output = detection.stay_locations(self.trjdat)
 
         expected = self.trjdat.drop([3, 7, 11, 14, 17, 19, 21, 22])

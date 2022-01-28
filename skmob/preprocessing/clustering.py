@@ -57,7 +57,7 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
     3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29       42
     4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35       41    
     >>> print(cstdf.parameters)
-    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}, 'cluster': {'function': 'cluster', 'cluster_radius_km': 0.1, 'min_samples': 1}}
+    {'detect': {'function': 'stay_locations', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}, 'cluster': {'function': 'cluster', 'cluster_radius_km': 0.1, 'min_samples': 1}}
 
     References
     ----------
@@ -80,7 +80,7 @@ def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
     #     groupby.append(constants.TID)
 
     stops_df = tdf
-    # stops_df = detection.stops(data, stop_radius_factor=0.5, \
+    # stops_df = detection.stay_locations(data, stop_radius_factor=0.5, \
     #         minutes_for_a_stop=20.0, spatial_radius=0.2, leaving_time=True)
 
     if len(groupby) > 0:

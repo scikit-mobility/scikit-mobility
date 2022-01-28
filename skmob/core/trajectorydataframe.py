@@ -575,7 +575,7 @@ class TrajDataFrame(pd.DataFrame):
                hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
 
         """
-        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
+        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stay_locations` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
         
         Parameters
         ----------
@@ -630,7 +630,7 @@ class TrajDataFrame(pd.DataFrame):
         2  39.984224  116.319402 2008-10-23 05:53:11    1
         3  39.984211  116.319389 2008-10-23 05:53:16    1
         4  39.984217  116.319422 2008-10-23 05:53:21    1
-        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
         >>> print(stdf.head())
                  lat         lng            datetime  uid    leaving_datetime
         0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
@@ -691,7 +691,7 @@ class TrajDataFrame(pd.DataFrame):
         3  39.984211  116.319389 2008-10-23 05:53:16    1
         4  39.984217  116.319422 2008-10-23 05:53:21    1
         >>> # detect stops
-        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
         >>> print(stdf.head())
                  lat         lng            datetime  uid    leaving_datetime
         0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53

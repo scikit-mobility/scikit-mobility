@@ -7,7 +7,7 @@ import inspect
 def stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
     """Stops detection.
     
-    Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
+    Detect the stay locations (or stops) for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
     
     Parameters
     ----------
@@ -54,7 +54,7 @@ def stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial
     2  39.984224  116.319402 2008-10-23 05:53:11    1
     3  39.984211  116.319389 2008-10-23 05:53:16    1
     4  39.984217  116.319422 2008-10-23 05:53:21    1
-    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
     >>> print(stdf.head())
              lat         lng            datetime  uid    leaving_datetime
     0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
@@ -63,7 +63,7 @@ def stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial
     3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
     4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
     >>> print(stdf.parameters)
-    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
+    {'detect': {'function': 'stay_locations', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
     >>> print('Points of the original trajectory:\\t%s'%len(tdf))
     >>> print('Points of stops:\\t\\t\\t%s'%len(stdf))
     Points of the original trajectory:	217653
