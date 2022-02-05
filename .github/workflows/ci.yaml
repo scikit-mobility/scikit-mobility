@@ -58,7 +58,7 @@ jobs:
   build-docs:
     needs: test # runs only when lint lint and test steps succeed, and only on master branch
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v2
