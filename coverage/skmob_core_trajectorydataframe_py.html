@@ -629,7 +629,7 @@
     <p id="t575" class="pln"><span class="n"><a href="#t575">575</a></span><span class="t">               <span class="nam">hex_color</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">opacity</span><span class="op">=</span><span class="num">0.3</span><span class="op">,</span> <span class="nam">radius</span><span class="op">=</span><span class="num">12</span><span class="op">,</span> <span class="nam">number_of_sides</span><span class="op">=</span><span class="num">4</span><span class="op">,</span> <span class="nam">popup</span><span class="op">=</span><span class="key">True</span><span class="op">,</span> <span class="nam">control_scale</span><span class="op">=</span><span class="key">True</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t576" class="pln"><span class="n"><a href="#t576">576</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t577" class="pln"><span class="n"><a href="#t577">577</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t578" class="pln"><span class="n"><a href="#t578">578</a></span><span class="t"><span class="str">        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t578" class="pln"><span class="n"><a href="#t578">578</a></span><span class="t"><span class="str">        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stay_locations` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t579" class="pln"><span class="n"><a href="#t579">579</a></span><span class="t"><span class="str">        </span>&nbsp;</span><span class="r"></span></p>
     <p id="t580" class="pln"><span class="n"><a href="#t580">580</a></span><span class="t"><span class="str">        Parameters</span>&nbsp;</span><span class="r"></span></p>
     <p id="t581" class="pln"><span class="n"><a href="#t581">581</a></span><span class="t"><span class="str">        ----------</span>&nbsp;</span><span class="r"></span></p>
@@ -684,7 +684,7 @@
     <p id="t630" class="pln"><span class="n"><a href="#t630">630</a></span><span class="t"><span class="str">        2  39.984224  116.319402 2008-10-23 05:53:11    1</span>&nbsp;</span><span class="r"></span></p>
     <p id="t631" class="pln"><span class="n"><a href="#t631">631</a></span><span class="t"><span class="str">        3  39.984211  116.319389 2008-10-23 05:53:16    1</span>&nbsp;</span><span class="r"></span></p>
     <p id="t632" class="pln"><span class="n"><a href="#t632">632</a></span><span class="t"><span class="str">        4  39.984217  116.319422 2008-10-23 05:53:21    1</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t633" class="pln"><span class="n"><a href="#t633">633</a></span><span class="t"><span class="str">        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t633" class="pln"><span class="n"><a href="#t633">633</a></span><span class="t"><span class="str">        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t634" class="pln"><span class="n"><a href="#t634">634</a></span><span class="t"><span class="str">        >>> print(stdf.head())</span>&nbsp;</span><span class="r"></span></p>
     <p id="t635" class="pln"><span class="n"><a href="#t635">635</a></span><span class="t"><span class="str">                 lat         lng            datetime  uid    leaving_datetime</span>&nbsp;</span><span class="r"></span></p>
     <p id="t636" class="pln"><span class="n"><a href="#t636">636</a></span><span class="t"><span class="str">        0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53</span>&nbsp;</span><span class="r"></span></p>
@@ -745,7 +745,7 @@
     <p id="t691" class="pln"><span class="n"><a href="#t691">691</a></span><span class="t"><span class="str">        3  39.984211  116.319389 2008-10-23 05:53:16    1</span>&nbsp;</span><span class="r"></span></p>
     <p id="t692" class="pln"><span class="n"><a href="#t692">692</a></span><span class="t"><span class="str">        4  39.984217  116.319422 2008-10-23 05:53:21    1</span>&nbsp;</span><span class="r"></span></p>
     <p id="t693" class="pln"><span class="n"><a href="#t693">693</a></span><span class="t"><span class="str">        >>> # detect stops</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t694" class="pln"><span class="n"><a href="#t694">694</a></span><span class="t"><span class="str">        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t694" class="pln"><span class="n"><a href="#t694">694</a></span><span class="t"><span class="str">        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t695" class="pln"><span class="n"><a href="#t695">695</a></span><span class="t"><span class="str">        >>> print(stdf.head())</span>&nbsp;</span><span class="r"></span></p>
     <p id="t696" class="pln"><span class="n"><a href="#t696">696</a></span><span class="t"><span class="str">                 lat         lng            datetime  uid    leaving_datetime</span>&nbsp;</span><span class="r"></span></p>
     <p id="t697" class="pln"><span class="n"><a href="#t697">697</a></span><span class="t"><span class="str">        0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53</span>&nbsp;</span><span class="r"></span></p>
@@ -839,7 +839,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-25 16:50 +0000
+            created at 2022-02-05 16:50 +0000
         </p>
     </div>
 </div>

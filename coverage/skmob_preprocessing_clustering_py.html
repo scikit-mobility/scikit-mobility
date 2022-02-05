@@ -111,7 +111,7 @@
     <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t"><span class="str">    3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29       42</span>&nbsp;</span><span class="r"></span></p>
     <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t"><span class="str">    4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35       41    </span>&nbsp;</span><span class="r"></span></p>
     <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t"><span class="str">    >>> print(cstdf.parameters)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t"><span class="str">    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}, 'cluster': {'function': 'cluster', 'cluster_radius_km': 0.1, 'min_samples': 1}}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t"><span class="str">    {'detect': {'function': 'stay_locations', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}, 'cluster': {'function': 'cluster', 'cluster_radius_km': 0.1, 'min_samples': 1}}</span>&nbsp;</span><span class="r"></span></p>
     <p id="t61" class="pln"><span class="n"><a href="#t61">61</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t"><span class="str">    References</span>&nbsp;</span><span class="r"></span></p>
     <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t"><span class="str">    ----------</span>&nbsp;</span><span class="r"></span></p>
@@ -134,7 +134,7 @@
     <p id="t80" class="pln"><span class="n"><a href="#t80">80</a></span><span class="t">    <span class="com">#     groupby.append(constants.TID)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t81" class="pln"><span class="n"><a href="#t81">81</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t82" class="run"><span class="n"><a href="#t82">82</a></span><span class="t">    <span class="nam">stops_df</span> <span class="op">=</span> <span class="nam">tdf</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">    <span class="com"># stops_df = detection.stops(data, stop_radius_factor=0.5, \</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">    <span class="com"># stops_df = detection.stay_locations(data, stop_radius_factor=0.5, \</span>&nbsp;</span><span class="r"></span></p>
     <p id="t84" class="pln"><span class="n"><a href="#t84">84</a></span><span class="t">    <span class="com">#         minutes_for_a_stop=20.0, spatial_radius=0.2, leaving_time=True)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t86" class="run"><span class="n"><a href="#t86">86</a></span><span class="t">    <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">groupby</span><span class="op">)</span> <span class="op">></span> <span class="num">0</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -214,7 +214,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-25 16:50 +0000
+            created at 2022-02-05 16:50 +0000
         </p>
     </div>
 </div>

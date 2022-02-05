@@ -802,7 +802,7 @@
     <p id="t748" class="pln"><span class="n"><a href="#t748">748</a></span><span class="t"><span class="str">    >>> df = pd.read_csv(url, sep=',', compression='gzip')</span>&nbsp;</span><span class="r"></span></p>
     <p id="t749" class="pln"><span class="n"><a href="#t749">749</a></span><span class="t"><span class="str">    >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')</span>&nbsp;</span><span class="r"></span></p>
     <p id="t750" class="pln"><span class="n"><a href="#t750">750</a></span><span class="t"><span class="str">    >>> ctdf = compression.compress(tdf)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t751" class="pln"><span class="n"><a href="#t751">751</a></span><span class="t"><span class="str">    >>> stdf = detection.stops(ctdf)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t751" class="pln"><span class="n"><a href="#t751">751</a></span><span class="t"><span class="str">    >>> stdf = detection.stay_locations(ctdf)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t752" class="pln"><span class="n"><a href="#t752">752</a></span><span class="t"><span class="str">    >>> cstdf = clustering.cluster(stdf)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t753" class="pln"><span class="n"><a href="#t753">753</a></span><span class="t"><span class="str">    >>> </span>&nbsp;</span><span class="r"></span></p>
     <p id="t754" class="pln"><span class="n"><a href="#t754">754</a></span><span class="t"><span class="str">    >>> # instantiate and train the MarkovDiaryGenerator</span>&nbsp;</span><span class="r"></span></p>
@@ -986,7 +986,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-25 16:50 +0000
+            created at 2022-02-05 16:50 +0000
         </p>
     </div>
 </div>
