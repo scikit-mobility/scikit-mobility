@@ -81,6 +81,8 @@ traj_style_function = lambda weight, color, opacity, dashArray: \
 def plot_trajectory(tdf, map_f=None, max_users=None, max_points=1000, style_function=traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True, control_scale=True):
+
+
     """
     :param tdf: TrajDataFrame
          TrajDataFrame to be plotted.
@@ -273,8 +275,10 @@ def plot_points_heatmap(tdf, map_f=None, max_points=1000,
     
     return map_f
 
+
 def plot_stops(stdf, map_f=None, max_users=None, tiles='cartodbpositron', zoom=12,
                hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
+
     """
     :param stdf: TrajDataFrame
          Requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops`
@@ -692,7 +696,8 @@ def add_to_map(gway, g, map_f, style_func_args, popup_features=[]):
 
 
 def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[],
-            tiles='cartodbpositron', zoom=6, geom_col='geometry', control_scale=True):
+             tiles='cartodbpositron', zoom=6, geom_col='geometry', control_scale=True):
+
     """
     :param gdf: GeoDataFrame
         GeoDataFrame to visualize.
@@ -732,6 +737,8 @@ def plot_gdf(gdf, map_f=None, maxitems=-1, style_func_args={}, popup_features=[]
         # initialise map
         lon, lat = np.mean(np.array(list(gdf[geom_col].apply(utils.get_geom_centroid).values)), axis=0)
         map_f = folium.Map(location=[lat, lon], tiles=tiles, zoom_start=zoom, control_scale=control_scale)
+
+
 
     count = 0
     for k in gdf.index:

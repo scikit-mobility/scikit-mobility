@@ -12,6 +12,8 @@ Models
 	markov_diary_generator.MarkovDiaryGenerator
 	gravity.Gravity
 	radiation.Radiation
+	geosim.GeoSim
+	sts_epr.STS_epr
     
 EPR
 ~~~~~~~~~~~~~~~~~~~
@@ -33,3 +35,13 @@ Radiation
 ~~~~~~~~~
 .. automodule:: skmob.models.radiation
 	:members: Radiation
+	
+GeoSim
+~~~~~~~~~
+.. automodule:: skmob.models.geosim
+	:members: GeoSim
+	
+STS-EPR
+~~~~~~~~~
+.. automodule:: skmob.models.sts_epr
+	:members: STS_epr

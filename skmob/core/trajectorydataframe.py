@@ -496,6 +496,7 @@ class TrajDataFrame(pd.DataFrame):
     def plot_trajectory(self, map_f=None, max_users=None, max_points=1000, style_function=plot.traj_style_function,
                     tiles='cartodbpositron', zoom=12, hex_color=None, weight=2, opacity=0.75, dashArray='0, 0',
                     start_end_markers=True, control_scale=True):
+
         """
         Plot the trajectories on a Folium map.
         
@@ -543,7 +544,7 @@ class TrajDataFrame(pd.DataFrame):
         -------
             `folium.Map` object with the plotted trajectories.
 
-       
+
         Examples
         --------
         >>> import skmob
@@ -564,14 +565,17 @@ class TrajDataFrame(pd.DataFrame):
         
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_trajectory_example.png
         """
+
         return plot.plot_trajectory(self, map_f=map_f, max_users=max_users, max_points=max_points, style_function=style_function,
                     tiles=tiles, zoom=zoom, hex_color=hex_color, weight=weight, opacity=opacity, dashArray=dashArray,
                     start_end_markers=start_end_markers, control_scale=control_scale)
 
+
     def plot_stops(self, map_f=None, max_users=None, tiles='cartodbpositron', zoom=12,
                hex_color=None, opacity=0.3, radius=12, number_of_sides=4, popup=True, control_scale=True):
+
         """
-        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stops` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
+        Plot the stops in the TrajDataFrame on a Folium map. This function requires a TrajDataFrame with stops or clusters, output of `preprocessing.detection.stay_locations` or `preprocessing.clustering.cluster` functions. The column `constants.LEAVING_DATETIME` must be present.
         
         Parameters
         ----------
@@ -601,6 +605,7 @@ class TrajDataFrame(pd.DataFrame):
     
         :param popup: bool
             if `True`, when clicking on a marker a popup window displaying information on the stop will appear.
+            The default is `True`.
         
         :param control_scale: bool
             if `True`, add scale information in the bottom left corner of the visualization. The default is `True`.
@@ -609,7 +614,6 @@ class TrajDataFrame(pd.DataFrame):
         -------
             `folium.Map` object with the plotted stops.
 
-       
         Examples
         --------
         >>> import skmob
@@ -626,7 +630,7 @@ class TrajDataFrame(pd.DataFrame):
         2  39.984224  116.319402 2008-10-23 05:53:11    1
         3  39.984211  116.319389 2008-10-23 05:53:16    1
         4  39.984217  116.319422 2008-10-23 05:53:21    1
-        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
         >>> print(stdf.head())
                  lat         lng            datetime  uid    leaving_datetime
         0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
@@ -640,7 +644,9 @@ class TrajDataFrame(pd.DataFrame):
         .. image:: https://raw.githubusercontent.com/scikit-mobility/scikit-mobility/master/examples/plot_stops_example.png
         """
         return plot.plot_stops(self, map_f=map_f, max_users=max_users, tiles=tiles, zoom=zoom,
-               hex_color=hex_color, opacity=opacity, radius=radius, number_of_sides=number_of_sides, popup=popup, control_scale=control_scale)
+                               hex_color=hex_color, opacity=opacity, radius=radius, number_of_sides=number_of_sides,
+                               popup=popup, control_scale=control_scale)
+
 
     def plot_diary(self, user, start_datetime=None, end_datetime=None, ax=None, legend=False):
         """
@@ -685,7 +691,7 @@ class TrajDataFrame(pd.DataFrame):
         3  39.984211  116.319389 2008-10-23 05:53:16    1
         4  39.984217  116.319422 2008-10-23 05:53:21    1
         >>> # detect stops
-        >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+        >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
         >>> print(stdf.head())
                  lat         lng            datetime  uid    leaving_datetime
         0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
