@@ -91,7 +91,7 @@ class Radiation:
     References
     ----------
     .. [SGMB2012] Simini, F., Gonzàlez, M. C., Maritan, A. & Barabasi, A.-L. (2012) A universal model for mobility and migration patterns. Nature 484(7392), 96-100, https://www.nature.com/articles/nature10856
-
+    .. [MSJB2013] Masucci, A. P., Serras, J., Johansson, A., & Batty, M. (2013). Gravity versus radiation models: On the importance of scale and heterogeneity in commuting flows. Physical Review E, 88(2), 022812.
     """
 
     def __init__(self, name='Radiation model'):
