@@ -748,7 +748,7 @@ class Ditras(EPR):
     >>> df = pd.read_csv(url, sep=',', compression='gzip')
     >>> tdf = skmob.TrajDataFrame(df, latitude='lat', longitude='lon', user_id='user', datetime='datetime')
     >>> ctdf = compression.compress(tdf)
-    >>> stdf = detection.stops(ctdf)
+    >>> stdf = detection.stay_locations(ctdf)
     >>> cstdf = clustering.cluster(stdf)
     >>> 
     >>> # instantiate and train the MarkovDiaryGenerator

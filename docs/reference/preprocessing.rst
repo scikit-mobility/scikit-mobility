@@ -7,12 +7,10 @@ Preprocessing
 	
 	filtering.filter
 	compression.compress
-	detection.stops
+	detection.stay_locations
 	clustering.cluster
-	routing.route
 
 .. autofunction:: skmob.preprocessing.filtering.filter
 .. autofunction:: skmob.preprocessing.compression.compress
-.. autofunction:: skmob.preprocessing.detection.stops
+.. autofunction:: skmob.preprocessing.detection.stay_locations
 .. autofunction:: skmob.preprocessing.clustering.cluster
-.. autofunction:: skmob.preprocessing.routing.route

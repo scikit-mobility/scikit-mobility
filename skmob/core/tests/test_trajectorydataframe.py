@@ -44,7 +44,7 @@ class TestTrajectoryDataFrame:
             '20130101 4:34:55', '20130105 5:29:12', '20130115 00:29:12'])
         traj[constants.UID] = [1 for _ in range(5)] + [2 for _ in range(3)] + [3]
         self.tdf0 = TrajDataFrame(traj)
-        self.stdf = detection.stops(self.tdf0)
+        self.stdf = detection.stay_locations(self.tdf0)
         self.cstdf = clustering.cluster(self.stdf)
 
         # tessellation

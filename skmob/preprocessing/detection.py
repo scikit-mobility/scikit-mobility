@@ -4,10 +4,10 @@ import numpy as np
 import inspect
 
 
-def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
+def stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True, no_data_for_minutes=1e12, min_speed_kmh=None):
     """Stops detection.
     
-    Detect the stops for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
+    Detect the stay locations (or stops) for each individual in a TrajDataFrame. A stop is detected when the individual spends at least `minutes_for_a_stop` minutes within a distance `stop_radius_factor * spatial_radius` km from a given trajectory point. The stop's coordinates are the median latitude and longitude values of the points found within the specified distance [RT2004]_ [Z2015]_.
     
     Parameters
     ----------
@@ -54,7 +54,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     2  39.984224  116.319402 2008-10-23 05:53:11    1
     3  39.984211  116.319389 2008-10-23 05:53:16    1
     4  39.984217  116.319422 2008-10-23 05:53:21    1
-    >>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+    >>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
     >>> print(stdf.head())
              lat         lng            datetime  uid    leaving_datetime
     0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53
@@ -63,7 +63,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29
     4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35
     >>> print(stdf.parameters)
-    {'detect': {'function': 'stops', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
+    {'detect': {'function': 'stay_locations', 'stop_radius_factor': 0.5, 'minutes_for_a_stop': 20.0, 'spatial_radius_km': 0.2, 'leaving_time': True, 'no_data_for_minutes': 1000000000000.0, 'min_speed_kmh': None}}
     >>> print('Points of the original trajectory:\\t%s'%len(tdf))
     >>> print('Points of stops:\\t\\t\\t%s'%len(stdf))
     Points of the original trajectory:	217653
@@ -80,7 +80,7 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     # Save function arguments and values in a dictionary
     frame = inspect.currentframe()
     args, _, _, arg_values = inspect.getargvalues(frame)
-    arguments = dict([('function', stops.__name__)]+[(i, arg_values[i]) for i in args[1:]])
+    arguments = dict([('function', stay_locations.__name__)]+[(i, arg_values[i]) for i in args[1:]])
 
     groupby = []
 
@@ -99,11 +99,11 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
 
     if len(groupby) > 0:
         # Apply simplify trajectory to each group of points
-        stdf = tdf.groupby(groupby, group_keys=False, as_index=False).apply(_stops_trajectory, stop_radius=stop_radius,
+        stdf = tdf.groupby(groupby, group_keys=False, as_index=False).apply(_stay_locations_trajectory, stop_radius=stop_radius,
                            minutes_for_a_stop=minutes_for_a_stop, leaving_time=leaving_time,
                            no_data_for_minutes=no_data_for_minutes, min_speed_kmh=min_speed_kmh).reset_index(drop=True)
     else:
-        stdf = _stops_trajectory(tdf, stop_radius=stop_radius, minutes_for_a_stop=minutes_for_a_stop,
+        stdf = _stay_locations_trajectory(tdf, stop_radius=stop_radius, minutes_for_a_stop=minutes_for_a_stop,
                             leaving_time=leaving_time, no_data_for_minutes=no_data_for_minutes,
                             min_speed_kmh=min_speed_kmh).reset_index(drop=True)
 
@@ -115,29 +115,29 @@ def stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_k
     return stdf
 
 
-def _stops_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stay_locations_trajectory(tdf, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
 
     # From dataframe convert to numpy matrix
     lat_lng_dtime_other = list(utils.to_matrix(tdf))
     columns_order = list(tdf.columns)
 
-    stops, leaving_times = _stops_array(lat_lng_dtime_other, stop_radius,
+    stay_locations, leaving_times = _stay_locations_array(lat_lng_dtime_other, stop_radius,
                                         minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh)
 
     #print(utils.get_columns(data))
-    # stops = utils.to_dataframe(stops, utils.get_columns(data))
-    stops = nparray_to_trajdataframe(stops, utils.get_columns(tdf), {})
+    # stay_locations = utils.to_dataframe(stay_locations, utils.get_columns(data))
+    stay_locations = nparray_to_trajdataframe(stay_locations, utils.get_columns(tdf), {})
 
     # Put back to the original order
-    stops = stops[columns_order]
+    stay_locations = stay_locations[columns_order]
 
     if leaving_time:
-        stops.loc[:, constants.LEAVING_DATETIME] = pd.to_datetime(leaving_times)
+        stay_locations.loc[:, constants.LEAVING_DATETIME] = pd.to_datetime(leaving_times)
 
-    return stops
+    return stay_locations
 
 
-def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
+def _stay_locations_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_time, no_data_for_minutes, min_speed_kmh):
     """
     Create a stop if the user spend at least `minutes_for_a_stop` minutes
     within a distance `stop_radius` from a given point.
@@ -145,7 +145,7 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
     # Define the distance function to use
     measure_distance = gislib.getDistance
 
-    stops = []
+    stay_locations = []
     leaving_times = []
 
     lat_0, lon_0, t_0 = lat_lng_dtime_other[0][:3]
@@ -196,7 +196,7 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
                     if leaving_time:
                         leaving_times.append(estimated_final_t)
 
-                    stops += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
+                    stay_locations += [[np.median(sum_lat), np.median(sum_lon), t_0] + extra_cols]
 
                 count = 0
                 lat_0, lon_0, t_0 = lat, lon, t
@@ -214,4 +214,4 @@ def _stops_array(lat_lng_dtime_other, stop_radius, minutes_for_a_stop, leaving_t
         sum_lon += [lon]
         sum_t += [t]
 
-    return stops, leaving_times
+    return stay_locations, leaving_times
