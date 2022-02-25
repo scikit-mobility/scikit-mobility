@@ -125,7 +125,7 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 
 1. Create an environment `skmob` and install pip
 
-        conda create -n skmob pip python=3.7 rtree
+        conda create -n skmob pip python=3.9 rtree
 
 2. Activate
     
