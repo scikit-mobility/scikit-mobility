@@ -1,0 +1,11 @@
+{
+   "name":"Flow_nyc",
+   "description":"FlowDataFrame describing the movements of individual (from FourSquare) between tiles of size 4km in New York City.",
+   "url":"http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip",
+   "hash":"",
+   "data_type":"flow",
+   "auth":"no",
+   "download_format":"zip",
+   "sep":"\t",
+   "encoding":"ISO-8859-1"
+}
