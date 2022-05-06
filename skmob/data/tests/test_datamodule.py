@@ -1,17 +1,19 @@
 import pytest
-import numpy as np
-from skmob.data.load import load_dataset, list_datasets
+from geopandas import GeoDataFrame
+from pandas import DataFrame
 
-# fix a random seed
-np.random.seed(2)
+from skmob.core.flowdataframe import FlowDataFrame
+from skmob.core.trajectorydataframe import TrajDataFrame
+from skmob.data.load import load_dataset
+
 
 # generate
-@pytest.mark.parametrize('dataset_names', ['flow_foursquare_nyc', 'foursquare_nyc', 
-                                           'nyc_boundaries', 'parking_san_francisco', 
-                                           'taxi_san_francisco'])
+@pytest.mark.parametrize(
+    "dataset_names", ["flow_foursquare_nyc", "foursquare_nyc", "nyc_boundaries", "parking_san_francisco"]
+)
+@pytest.mark.parametrize("dataset_types", ["trajectory", "flow", "shape", "auxiliar"])
+def test_loading_existing_datasets(dataset_names):
 
-@pytest.mark.parametrize('dataset_types', ['trajectory', 'flow', 'shape', 'auxiliar'])
+    data = load_dataset(dataset_names)
 
-def test_foo(dataset_names, dataset_types):
-    print(dataset_names, dataset_types)
-    assert 1==1
+    assert type(data) in [TrajDataFrame, FlowDataFrame, GeoDataFrame, DataFrame]
