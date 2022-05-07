@@ -41,6 +41,7 @@ statsmodels = "*"
 folium = "0.12.1.post1"
 geojson = "^2.5.0"
 h3 = "^3.7.3"
+pooch = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.23.1"
