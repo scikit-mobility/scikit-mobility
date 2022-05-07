@@ -33,7 +33,7 @@ class DatasetBuilder(ABC):
         pass
 
 
-def skmob_downloader(url, known_hash, download_format=None, auth=(), show_progress=False):
+def _skmob_downloader(url, known_hash, download_format=None, auth=(), show_progress=False):
 
     if download_format == "zip":
         processor = Unzip()
@@ -95,6 +95,21 @@ Examples
 
 def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
 
+    # check parameters correctness
+
+    if type(name) is not str:
+        raise ValueError("The argument `name` must be a string.")
+    if type(drop_columns) is not bool:
+        raise ValueError("The argument `drop_columns` must be a boolean.")
+    if auth is not None:
+        if len(auth) != 2:
+            raise ValueError("The argument `auth` must have length 2.")
+        else:
+            if type(auth[0]) != str or type(auth[1]) != str:
+                raise ValueError("The argument `auth` must be a pair of strings.")
+    if type(show_progress) is not bool:
+        raise ValueError("The argument `show_progress` must be a boolean.")
+
     if not name.endswith(".py"):
         name = name + ".py"
     short_name = name[:-3]
@@ -122,7 +137,7 @@ def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
         auth = ()
 
     # download the dataset (if not in the cache)
-    full_path_files = skmob_downloader(
+    full_path_files = _skmob_downloader(
         dataset_info["url"],
         hash_value,
         auth=auth,
@@ -136,7 +151,7 @@ def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
     if type(dataset) is TrajDataFrame and drop_columns:
         dataset = dataset[["uid", "lat", "lng", "datetime"]]
 
-    # insert the dataset information in the _metadata variable _info
+    # insert the dataset information in the metadata variable _info
     if type(dataset) is TrajDataFrame:
         dataset._info = dataset_info
     elif type(dataset) is GeoDataFrame:
@@ -185,6 +200,12 @@ Examples
 
 
 def list_datasets(details=False, data_types=None):
+
+    if type(details) is not bool:
+        raise ValueError("The argument `details` must be a boolean.")
+    if data_types is not None:
+        if not all(isinstance(item, str) for item in data_types):
+            raise ValueError("The argument `data_types` must be a list of strings.")
 
     path_datasets = os.path.dirname(skmob.__file__) + "\\data\\datasets"
 
