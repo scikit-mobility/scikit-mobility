@@ -1,0 +1,11 @@
+{
+   "name":"Taxi_SanFrancisco",
+   "description":"This traceset contains mobility traces of taxi cabs in San Francisco, USA. It contains GPS coordinates of approximately 500 taxis collected over 30 days in the San Francisco Bay Area.",
+   "url":"https://crawdad.org//download/epfl/mobility/cabspottingdata.tar.gz",
+   "hash":"",
+   "data_type":"trajectory",
+   "auth":"yes",
+   "download_format":"tar",
+   "sep":" ",
+   "encoding":"ISO-8859-1"
+}

@@ -125,7 +125,7 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 
 1. Create an environment `skmob` and install pip
 
-        conda create -n skmob pip python=3.7 rtree
+        conda create -n skmob pip python=3.9 rtree
 
 2. Activate
     
@@ -394,12 +394,12 @@ In scikit-mobility, the function `filter` filters out a point if the speed from 
 Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
 
 #### Stop detection
-Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by a moving object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
+Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stay_locations` function, contained in the `detection` module, finds the stay points visited by a moving object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
 
 ```python
 >>> from skmob.preprocessing import detection
 >>> # compute the stops for each individual in the TrajDataFrame
->>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+>>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
 >>> # print a portion of the detected stops
 >>> print(stdf.head())
 ```
