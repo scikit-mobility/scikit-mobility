@@ -29,7 +29,7 @@ classifiers=['Intended Audience :: Science/Research',
                  ]
 
 [tool.poetry.dependencies]
-python = ">=3.6.1,<4"
+python = ">=3.8,<4"
 pandas = "^1.1.5"
 python-igraph = "^0.9.1"
 geopandas ="^0.9.0"
@@ -80,9 +80,14 @@ line_length = 100
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py36
+envlist = py38, py39
 isolated_build = True
 
+[gh-actions]
+python =
+  3.8: py38
+  3.9: py39
+  
 [testenv]
 whitelist_externals = poetry
 commands =
