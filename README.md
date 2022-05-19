@@ -81,13 +81,13 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 
 <a id='installation'></a>
 ## Installation
-scikit-mobility for Python >= 3.7 and all it's dependencies are available from conda-forge and can be installed using 
+scikit-mobility for Python >= 3.8 and all it's dependencies are available from conda-forge and can be installed using 
 `conda install -c conda-forge scikit-mobility`.
 
 Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you're on Windows or Mac, many GeoPandas / scikit-mobility dependencies cannot be pip installed (for details see the corresponding notes in the GeoPandas documentation).
 
 <a id='installation_pip'></a>
-### installation with pip (python >= 3.7 required)
+### installation with pip (python >= 3.8 required)
 
 1. Create an environment `skmob`
 
@@ -156,19 +156,6 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 ```
 conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
-
-<a id='known_conda'></a>
-### Known Issues
-the installation of package rtree could not work with pip within a conda environment. If so, try 
-```
-pip install "rtree>=0.8,<0.9" 
-```
-or install rtree with conda
-```
-conda install rtree
-```
-https://github.com/Toblerity/rtree/issues/120
-
 	
 <a id='test_installation'></a>    
 ### Test the installation
