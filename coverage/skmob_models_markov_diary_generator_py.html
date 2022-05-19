@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            166 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">159 run</button>
+            170 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">163 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">7 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -136,15 +136,15 @@
     <p id="t82" class="run"><span class="n"><a href="#t82">82</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_name</span> <span class="op">=</span> <span class="nam">name</span>&nbsp;</span><span class="r"></span></p>
     <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t84" class="run"><span class="n"><a href="#t84">84</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">    <span class="key">def</span> <span class="nam">markov_chain_</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t85" class="run"><span class="n"><a href="#t85">85</a></span><span class="t">    <span class="key">def</span> <span class="nam">markov_chain_</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t86" class="mis show_mis"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_markov_chain_</span>&nbsp;</span><span class="r"></span></p>
     <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t88" class="run"><span class="n"><a href="#t88">88</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t89" class="pln"><span class="n"><a href="#t89">89</a></span><span class="t">    <span class="key">def</span> <span class="nam">time_slot_length</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="run"><span class="n"><a href="#t89">89</a></span><span class="t">    <span class="key">def</span> <span class="nam">time_slot_length</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t90" class="mis show_mis"><span class="n"><a href="#t90">90</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_time_slot_length</span>&nbsp;</span><span class="r"></span></p>
     <p id="t91" class="pln"><span class="n"><a href="#t91">91</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t92" class="run"><span class="n"><a href="#t92">92</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t93" class="pln"><span class="n"><a href="#t93">93</a></span><span class="t">    <span class="key">def</span> <span class="nam">name</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t93" class="run"><span class="n"><a href="#t93">93</a></span><span class="t">    <span class="key">def</span> <span class="nam">name</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t94" class="mis show_mis"><span class="n"><a href="#t94">94</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_name</span>&nbsp;</span><span class="r"></span></p>
     <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t96" class="run"><span class="n"><a href="#t96">96</a></span><span class="t">    <span class="key">def</span> <span class="nam">_create_empty_markov_chain</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -387,7 +387,7 @@
     <p id="t333" class="run"><span class="n"><a href="#t333">333</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_normalize_markov_chain</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t334" class="pln"><span class="n"><a href="#t334">334</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t335" class="run"><span class="n"><a href="#t335">335</a></span><span class="t">    <span class="op">@</span><span class="nam">staticmethod</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t336" class="pln"><span class="n"><a href="#t336">336</a></span><span class="t">    <span class="key">def</span> <span class="nam">_weighted_random_selection</span><span class="op">(</span><span class="nam">weights</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t336" class="run"><span class="n"><a href="#t336">336</a></span><span class="t">    <span class="key">def</span> <span class="nam">_weighted_random_selection</span><span class="op">(</span><span class="nam">weights</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t337" class="pln"><span class="n"><a href="#t337">337</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t338" class="pln"><span class="n"><a href="#t338">338</a></span><span class="t"><span class="str">        Choose an index from the list of weights according to the numbers in the list</span>&nbsp;</span><span class="r"></span></p>
     <p id="t339" class="pln"><span class="n"><a href="#t339">339</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -503,7 +503,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-02-05 16:50 +0000
+            created at 2022-05-19 13:16 +0000
         </p>
     </div>
 </div>

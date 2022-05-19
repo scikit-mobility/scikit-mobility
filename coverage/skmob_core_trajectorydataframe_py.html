@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for skmob/core/trajectorydataframe.py: 85%</title>
+    <title>Coverage for skmob/core/trajectorydataframe.py: 86%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,12 +18,12 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>skmob/core/trajectorydataframe.py</b> :
-            <span class="pc_cov">85%</span>
+            <span class="pc_cov">86%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            188 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">159 run</button>
+            201 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">172 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">29 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -65,11 +65,11 @@
     <p id="t11" class="run"><span class="n"><a href="#t11">11</a></span><span class="t"><span class="key">class</span> <span class="nam">TrajSeries</span><span class="op">(</span><span class="nam">pd</span><span class="op">.</span><span class="nam">Series</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t14" class="pln"><span class="n"><a href="#t14">14</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrajSeries</span>&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t18" class="pln"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_expanddim</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_expanddim</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t19" class="run"><span class="n"><a href="#t19">19</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrajDataFrame</span>&nbsp;</span><span class="r"></span></p>
     <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t21" class="pln"><span class="n"><a href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -447,37 +447,37 @@
     <p id="t393" class="pln"><span class="n"><a href="#t393">393</a></span><span class="t">                   <span class="nam">trajectory_id</span><span class="op">=</span><span class="nam">trajectory_id</span><span class="op">,</span> <span class="nam">parameters</span><span class="op">=</span><span class="nam">parameters</span><span class="op">,</span> <span class="nam">crs</span><span class="op">=</span><span class="nam">crs</span><span class="op">,</span> <span class="nam">timestamp</span><span class="op">=</span><span class="nam">timestamp</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t394" class="pln"><span class="n"><a href="#t394">394</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t395" class="run"><span class="n"><a href="#t395">395</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t396" class="pln"><span class="n"><a href="#t396">396</a></span><span class="t">    <span class="key">def</span> <span class="nam">lat</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t396" class="run"><span class="n"><a href="#t396">396</a></span><span class="t">    <span class="key">def</span> <span class="nam">lat</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t397" class="mis show_mis"><span class="n"><a href="#t397">397</a></span><span class="t">        <span class="key">if</span> <span class="nam">constants</span><span class="op">.</span><span class="nam">LATITUDE</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">self</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t398" class="mis show_mis"><span class="n"><a href="#t398">398</a></span><span class="t">            <span class="key">raise</span> <span class="nam">AttributeError</span><span class="op">(</span><span class="str">"The TrajDataFrame does not contain the column '%s.'"</span> <span class="op">%</span> <span class="nam">constants</span><span class="op">.</span><span class="nam">LATITUDE</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t399" class="mis show_mis"><span class="n"><a href="#t399">399</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">[</span><span class="nam">constants</span><span class="op">.</span><span class="nam">LATITUDE</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t400" class="pln"><span class="n"><a href="#t400">400</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t401" class="run"><span class="n"><a href="#t401">401</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t402" class="pln"><span class="n"><a href="#t402">402</a></span><span class="t">    <span class="key">def</span> <span class="nam">lng</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t402" class="run"><span class="n"><a href="#t402">402</a></span><span class="t">    <span class="key">def</span> <span class="nam">lng</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t403" class="mis show_mis"><span class="n"><a href="#t403">403</a></span><span class="t">        <span class="key">if</span> <span class="nam">constants</span><span class="op">.</span><span class="nam">LONGITUDE</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">self</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t404" class="mis show_mis"><span class="n"><a href="#t404">404</a></span><span class="t">            <span class="key">raise</span> <span class="nam">AttributeError</span><span class="op">(</span><span class="str">"The TrajDataFrame does not contain the column '%s.'"</span><span class="op">%</span><span class="nam">constants</span><span class="op">.</span><span class="nam">LONGITUDE</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t405" class="mis show_mis"><span class="n"><a href="#t405">405</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">[</span><span class="nam">constants</span><span class="op">.</span><span class="nam">LONGITUDE</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t406" class="pln"><span class="n"><a href="#t406">406</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t407" class="run"><span class="n"><a href="#t407">407</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t408" class="pln"><span class="n"><a href="#t408">408</a></span><span class="t">    <span class="key">def</span> <span class="nam">datetime</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t408" class="run"><span class="n"><a href="#t408">408</a></span><span class="t">    <span class="key">def</span> <span class="nam">datetime</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t409" class="run"><span class="n"><a href="#t409">409</a></span><span class="t">        <span class="key">if</span> <span class="nam">constants</span><span class="op">.</span><span class="nam">DATETIME</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">self</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t410" class="mis show_mis"><span class="n"><a href="#t410">410</a></span><span class="t">            <span class="key">raise</span> <span class="nam">AttributeError</span><span class="op">(</span><span class="str">"The TrajDataFrame does not contain the column '%s.'"</span><span class="op">%</span><span class="nam">constants</span><span class="op">.</span><span class="nam">DATETIME</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t411" class="run"><span class="n"><a href="#t411">411</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">[</span><span class="nam">constants</span><span class="op">.</span><span class="nam">DATETIME</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t412" class="pln"><span class="n"><a href="#t412">412</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t413" class="run"><span class="n"><a href="#t413">413</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t414" class="pln"><span class="n"><a href="#t414">414</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t414" class="run"><span class="n"><a href="#t414">414</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t415" class="run"><span class="n"><a href="#t415">415</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrajDataFrame</span>&nbsp;</span><span class="r"></span></p>
     <p id="t416" class="pln"><span class="n"><a href="#t416">416</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t417" class="run"><span class="n"><a href="#t417">417</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t418" class="pln"><span class="n"><a href="#t418">418</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_sliced</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t418" class="run"><span class="n"><a href="#t418">418</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_sliced</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t419" class="run"><span class="n"><a href="#t419">419</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrajSeries</span>&nbsp;</span><span class="r"></span></p>
     <p id="t420" class="pln"><span class="n"><a href="#t420">420</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t421" class="run"><span class="n"><a href="#t421">421</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t422" class="pln"><span class="n"><a href="#t422">422</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_expanddim</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t422" class="run"><span class="n"><a href="#t422">422</a></span><span class="t">    <span class="key">def</span> <span class="nam">_constructor_expanddim</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t423" class="mis show_mis"><span class="n"><a href="#t423">423</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrajDataFrame</span>&nbsp;</span><span class="r"></span></p>
     <p id="t424" class="pln"><span class="n"><a href="#t424">424</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t425" class="run"><span class="n"><a href="#t425">425</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t426" class="pln"><span class="n"><a href="#t426">426</a></span><span class="t">    <span class="key">def</span> <span class="nam">metadata</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t426" class="run"><span class="n"><a href="#t426">426</a></span><span class="t">    <span class="key">def</span> <span class="nam">metadata</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t427" class="pln"><span class="n"><a href="#t427">427</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t428" class="mis show_mis"><span class="n"><a href="#t428">428</a></span><span class="t">        <span class="nam">md</span> <span class="op">=</span> <span class="op">[</span><span class="str">'crs'</span><span class="op">,</span> <span class="str">'parameters'</span><span class="op">]</span>    <span class="com"># Add here all the metadata that are accessible from the object</span>&nbsp;</span><span class="r"></span></p>
     <p id="t429" class="mis show_mis"><span class="n"><a href="#t429">429</a></span><span class="t">        <span class="key">return</span> <span class="nam">md</span>&nbsp;</span><span class="r"></span></p>
@@ -505,19 +505,19 @@
     <p id="t451" class="run"><span class="n"><a href="#t451">451</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_parameters</span><span class="op">[</span><span class="nam">key</span><span class="op">]</span> <span class="op">=</span> <span class="nam">param</span>&nbsp;</span><span class="r"></span></p>
     <p id="t452" class="pln"><span class="n"><a href="#t452">452</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t453" class="run"><span class="n"><a href="#t453">453</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t454" class="pln"><span class="n"><a href="#t454">454</a></span><span class="t">    <span class="key">def</span> <span class="nam">crs</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t454" class="run"><span class="n"><a href="#t454">454</a></span><span class="t">    <span class="key">def</span> <span class="nam">crs</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t455" class="run"><span class="n"><a href="#t455">455</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_crs</span>&nbsp;</span><span class="r"></span></p>
     <p id="t456" class="pln"><span class="n"><a href="#t456">456</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t457" class="run"><span class="n"><a href="#t457">457</a></span><span class="t">    <span class="op">@</span><span class="nam">crs</span><span class="op">.</span><span class="nam">setter</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t458" class="pln"><span class="n"><a href="#t458">458</a></span><span class="t">    <span class="key">def</span> <span class="nam">crs</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">crs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t458" class="run"><span class="n"><a href="#t458">458</a></span><span class="t">    <span class="key">def</span> <span class="nam">crs</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">crs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t459" class="run"><span class="n"><a href="#t459">459</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_crs</span> <span class="op">=</span> <span class="nam">crs</span>&nbsp;</span><span class="r"></span></p>
     <p id="t460" class="pln"><span class="n"><a href="#t460">460</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t461" class="run"><span class="n"><a href="#t461">461</a></span><span class="t">    <span class="op">@</span><span class="nam">property</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t462" class="pln"><span class="n"><a href="#t462">462</a></span><span class="t">    <span class="key">def</span> <span class="nam">parameters</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t462" class="run"><span class="n"><a href="#t462">462</a></span><span class="t">    <span class="key">def</span> <span class="nam">parameters</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t463" class="run"><span class="n"><a href="#t463">463</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_parameters</span>&nbsp;</span><span class="r"></span></p>
     <p id="t464" class="pln"><span class="n"><a href="#t464">464</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t465" class="run"><span class="n"><a href="#t465">465</a></span><span class="t">    <span class="op">@</span><span class="nam">parameters</span><span class="op">.</span><span class="nam">setter</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t466" class="pln"><span class="n"><a href="#t466">466</a></span><span class="t">    <span class="key">def</span> <span class="nam">parameters</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">parameters</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t466" class="run"><span class="n"><a href="#t466">466</a></span><span class="t">    <span class="key">def</span> <span class="nam">parameters</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">parameters</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t467" class="pln"><span class="n"><a href="#t467">467</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t468" class="run"><span class="n"><a href="#t468">468</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_parameters</span> <span class="op">=</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">parameters</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t469" class="pln"><span class="n"><a href="#t469">469</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -839,7 +839,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-02-05 16:50 +0000
+            created at 2022-05-19 13:16 +0000
         </p>
     </div>
 </div>
