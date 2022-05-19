@@ -1,0 +1,11 @@
+{
+   "name":"NewYorkCity_boundaries",
+   "description":"This Shapefile containts the Borough Boundaries of NYC (Water Areas Included)",
+   "url":"https://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/nybbwi_22a.zip",
+   "hash":"",
+   "data_type":"shape",
+   "auth":"no",
+   "download_format":"zip",
+   "sep":" ",
+   "encoding":"ISO-8859-1"
+}

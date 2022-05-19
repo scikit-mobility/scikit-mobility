@@ -81,13 +81,13 @@ If you would like to include your algorithm in `scikit-mobility`, feel free to f
 
 <a id='installation'></a>
 ## Installation
-scikit-mobility for Python >= 3.7 and all it's dependencies are available from conda-forge and can be installed using 
+scikit-mobility for Python >= 3.8 and all it's dependencies are available from conda-forge and can be installed using 
 `conda install -c conda-forge scikit-mobility`.
 
 Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you're on Windows or Mac, many GeoPandas / scikit-mobility dependencies cannot be pip installed (for details see the corresponding notes in the GeoPandas documentation).
 
 <a id='installation_pip'></a>
-### installation with pip (python >= 3.7 required)
+### installation with pip (python >= 3.8 required)
 
 1. Create an environment `skmob`
 
@@ -125,7 +125,7 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 
 1. Create an environment `skmob` and install pip
 
-        conda create -n skmob pip python=3.7 rtree
+        conda create -n skmob pip python=3.9 rtree
 
 2. Activate
     
@@ -156,19 +156,6 @@ Note that it is **NOT recommended** to install scikit-mobility from PyPI! If you
 ```
 conda install -n skmob pyproj urllib3 chardet markupsafe
 ```
-
-<a id='known_conda'></a>
-### Known Issues
-the installation of package rtree could not work with pip within a conda environment. If so, try 
-```
-pip install "rtree>=0.8,<0.9" 
-```
-or install rtree with conda
-```
-conda install rtree
-```
-https://github.com/Toblerity/rtree/issues/120
-
 	
 <a id='test_installation'></a>    
 ### Test the installation
@@ -394,12 +381,12 @@ In scikit-mobility, the function `filter` filters out a point if the speed from 
 Note that the `TrajDataFrame` structure as the `parameters` attribute, which indicates the operations that have been applied to the `TrajDataFrame`. This attribute is a dictionary the key of which is the signature of the function applied.
 
 #### Stop detection
-Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stops` function, contained in the `detection` module, finds the stay points visited by a moving object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
+Some points in a trajectory can represent Point-Of-Interests (POIs) such as schools, restaurants, and bars, or they can represent user-specific places such as home and work locations. These points are usually called Stay Points or Stops, and they can be detected in different ways. A common approach is to apply spatial clustering algorithms to cluster trajectory points by looking at their spatial proximity. In scikit-mobility, the `stay_locations` function, contained in the `detection` module, finds the stay points visited by a moving object. For instance, to identify the stops where the object spent at least `minutes_for_a_stop` minutes within a distance `spatial_radius_km \time stop_radius_factor`, from a given point, we can use the following code:
 
 ```python
 >>> from skmob.preprocessing import detection
 >>> # compute the stops for each individual in the TrajDataFrame
->>> stdf = detection.stops(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
+>>> stdf = detection.stay_locations(tdf, stop_radius_factor=0.5, minutes_for_a_stop=20.0, spatial_radius_km=0.2, leaving_time=True)
 >>> # print a portion of the detected stops
 >>> print(stdf.head())
 ```

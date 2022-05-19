@@ -1,0 +1,11 @@
+{
+   "name":"ParkingMeteres_SanFrancisco",
+   "description":"Parking meters in San Francisco.",
+   "url":"https://data.sfgov.org/api/views/8vzz-qzz9/rows.csv?accessType=DOWNLOAD",
+   "hash":"",
+   "data_type":"auxiliar",
+   "auth":"no",
+   "download_format":"",
+   "sep":",",
+   "encoding":"ISO-8859-1"
+}
