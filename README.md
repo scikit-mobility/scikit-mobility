@@ -503,10 +503,10 @@ Load the spatial tessellation and a data set of real flows in a `FlowDataFrame`:
 ```python
 >>> from skmob.utils import utils, constants
 >>> import geopandas as gpd
->>> from skmob.models import Gravity
+>>> from skmob.models.gravity import Gravity
 >>> import numpy as np
 >>> # load a spatial tessellation
->>> url_tess = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+>>> url_tess = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url_tess).rename(columns={'tile_id': 'tile_ID'})
 >>> # load the file with the real fluxes
 >>> fdf = skmob.FlowDataFrame.from_file(skmob.utils.constants.NY_FLOWS_2011,
@@ -589,7 +589,7 @@ Plot the real flows and the synthetic flows:
 The Radiation model is parameter-free and has only one method: `generate`. Given a spatial tessellation, the synthetic flows can be generated using the `Radiation` class as follows:
 
 ```python
->>> from skmob.models import Radiation
+>>> from skmob.models.radiation import Radiation
 >>> # instantiate a Radiation object
 >>> radiation = Radiation()
 >>> # start the simulation
@@ -620,7 +620,7 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 ```python
 >>> from skmob.models.epr import DensityEPR
 >>> # load a spatial tesellation on which to perform the simulation
->>> url = >>> url = skmob.utils.constants.NY_COUNTIES_2011
+>>> url = skmob.utils.constants.NY_COUNTIES_2011
 >>> tessellation = gpd.read_file(url)
 >>> # starting and end times of the simulation
 >>> start_time = pd.to_datetime('2019/01/01 08:00:00')
@@ -628,7 +628,7 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 >>> # instantiate a DensityEPR object
 >>> depr = DensityEPR()
 >>> # start the simulation
->>> tdf = depr.generate(start_time, end_time, tessellation, relevance_column='population', n_agents=100, verbose=True)
+>>> tdf = depr.generate(start_time, end_time, tessellation, relevance_column='population', n_agents=100)
 >>> print(tdf.head())
 ```
 	   uid                   datetime        lat        lng
