@@ -8,6 +8,8 @@
 
 <img src="logo_skmob.png" width=300/>
 
+[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/scikitmobility.svg?style=social&label=Follow%20%40scikitmobility)](https://twitter.com/scikitmobility)
+
 ###### Try `scikit-mobility` without installing it 
 - in a MyBinder notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/scikit-mobility/scikit-mobility/master)
 - on [Jovian](https://jovian.ai/jonpappalord/collections/scikit-mobility-tutorial)
