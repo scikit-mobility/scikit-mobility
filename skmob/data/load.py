@@ -13,14 +13,6 @@ import skmob
 from skmob.core.flowdataframe import FlowDataFrame
 from skmob.core.trajectorydataframe import TrajDataFrame
 
-"""
-Data types:
-- trajectory
-- flow
-- tessellation
-- auxiliar
-"""
-
 
 class DatasetBuilder(ABC):
     def __init__(self):
@@ -54,46 +46,45 @@ def _skmob_downloader(url, known_hash, download_format=None, auth=(), show_progr
     return full_path_files
 
 
-""" Load dataset
-
-Load one of the datasets that are present in the repository of scikit-mobility.
-
-Parameters
-----------
-name: str
-    the name of the dataset to load (e.g., foursquare_nyc)
-
-drop_columns: boolean, optional
-    whether to keep additional columns when returning TrajDataFrame or FlowDataFrame object. The default is False.
-
-auth: (str, str), optional
-    pair of strings (username, password) used when the dataset loading requires an authentication. The default is None.
-
-show_progress: boolean, optional
-    if True, show a progress bar. The default is False.
-
-Returns
-----------
-TrajDataFrame/FlowDataFrame/GeoDataFrame/DataFrame
-    an object containing the desired dataset
-
-Examples
---------
->>> import skmob
->>> from skmob.data.load import load_dataset, list_datasets
->>>
->>> tdf_nyc = load_dataset("foursquare_nyc", drop_columns=True)
->>> print(tdf_nyc.head())
-   uid        lat        lng                  datetime
-0  470  40.719810 -74.002581 2012-04-03 18:00:09+00:00
-1  979  40.606800 -74.044170 2012-04-03 18:00:25+00:00
-2   69  40.716162 -73.883070 2012-04-03 18:02:24+00:00
-3  395  40.745164 -73.982519 2012-04-03 18:02:41+00:00
-4   87  40.740104 -73.989658 2012-04-03 18:03:00+00:00
-"""
-
-
 def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
+
+    """Load dataset
+
+    Load one of the datasets that are present in the repository of scikit-mobility.
+
+    Parameters
+    ----------
+    name: str
+        the name of the dataset to load (e.g., foursquare_nyc)
+
+    drop_columns: boolean, optional
+        whether to keep additional columns when returning TrajDataFrame or FlowDataFrame object. The default is False.
+
+    auth: (str, str), optional
+        pair of strings (user, psw) used when the dataset loading requires an authentication. The default is None.
+
+    show_progress: boolean, optional
+        if True, show a progress bar. The default is False.
+
+    Returns
+    ----------
+    TrajDataFrame/FlowDataFrame/GeoDataFrame/DataFrame
+        an object containing the desired dataset
+
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.data.load import load_dataset, list_datasets
+    >>>
+    >>> tdf_nyc = load_dataset("foursquare_nyc", drop_columns=True)
+    >>> print(tdf_nyc.head())
+       uid        lat        lng                  datetime
+    0  470  40.719810 -74.002581 2012-04-03 18:00:09+00:00
+    1  979  40.606800 -74.044170 2012-04-03 18:00:25+00:00
+    2   69  40.716162 -73.883070 2012-04-03 18:02:24+00:00
+    3  395  40.745164 -73.982519 2012-04-03 18:02:41+00:00
+    4   87  40.740104 -73.989658 2012-04-03 18:03:00+00:00
+    """
 
     # check parameters correctness
 
@@ -167,39 +158,38 @@ def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
     return dataset
 
 
-""" List dataset
-
-List all the names of the datasets available in the data module of scikit-mobility.
-
-Parameters
-----------
-details: boolean
-    whether to return the full details of the dataset instead of the name only. The default is False.
-
-data_types: list of string, optional
-    specify which dataset types to show. The default is None.
-
-
-Returns
-----------
-an object listing the available dataset
-
-Examples
---------
->>> import skmob
->>> from skmob.data.load import list_datasets
->>>
->>> list_datasets()
-
-['flow_foursquare_nyc',
- 'foursquare_nyc',
- 'nyc_boundaries',
- 'parking_san_francisco',
- 'taxi_san_francisco']
-"""
-
-
 def list_datasets(details=False, data_types=None):
+
+    """List dataset
+
+    List all the names of the datasets available in the data module of scikit-mobility.
+
+    Parameters
+    ----------
+    details: boolean
+        whether to return the full details of the dataset instead of the name only. The default is False.
+
+    data_types: list of string, optional
+        specify which dataset types to show. The default is None.
+
+
+    Returns
+    ----------
+    an object listing the available dataset
+
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.data.load import list_datasets
+    >>>
+    >>> list_datasets()
+
+    ['flow_foursquare_nyc',
+     'foursquare_nyc',
+     'nyc_boundaries',
+     'parking_san_francisco',
+     'taxi_san_francisco']
+    """
 
     if type(details) is not bool:
         raise ValueError("The argument `details` must be a boolean.")
@@ -207,15 +197,15 @@ def list_datasets(details=False, data_types=None):
         if not all(isinstance(item, str) for item in data_types):
             raise ValueError("The argument `data_types` must be a list of strings.")
 
-    path_datasets = os.path.dirname(skmob.__file__) + "\\data\\datasets"
+    path_datasets = os.path.join(os.path.dirname(skmob.__file__), "data", "datasets")
 
-    directories = glob.glob(path_datasets + "\\*")
+    directories = glob.glob(os.path.join(path_datasets, "*"))
     name_datasets = []
 
     for d in directories:
         if "__pycache__" not in d and "__init__" not in d:
             if os.path.isdir(d):
-                name_datasets.append(d.split(path_datasets)[1].replace("\\", ""))
+                name_datasets.append(d.split(path_datasets)[1].replace("\\", "").replace("/", ""))
 
     if not details and data_types is None:
         return name_datasets
@@ -249,42 +239,41 @@ def list_datasets(details=False, data_types=None):
             return list(dict_datasets)
 
 
-""" Get dataset info
-
-It return the dataset information stored in the JSON file associated with the dataset.
-
-Parameters
-----------
-name: str
-    the name of the dataset of which to return the information
-
-Returns
-----------
-dict
-    the information stored in the JSON file associated with the dataset
-
-Examples
---------
->>> import skmob
->>> from skmob.data.load import get_dataset_info
->>>
->>> get_dataset_info("foursquare_nyc")
-
-{'name': 'Foursquare_NYC',
- 'description': 'Dataset containing the Foursquare checkins of individuals moving in the urban Area of New York City',
- 'url': 'http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip',
- 'hash': 'cbe3fdab373d24b09b5fc53509c8958c77ff72b6c1a68589ce337d4f9a80235b',
- 'auth': 'no',
- 'data_type': 'trajectory',
- 'download_format': 'zip',
- 'sep': '\t',
- 'encoding': 'ISO-8859-1'}
-"""
-
-
 def get_dataset_info(name):
 
-    path_info = os.path.dirname(skmob.__file__) + "\\data\\datasets\\" + name + "\\" + name + ".json"
+    """Get dataset info
+
+    It return the dataset information stored in the JSON file associated with the dataset.
+
+    Parameters
+    ----------
+    name: str
+        the name of the dataset of which to return the information
+
+    Returns
+    ----------
+    dict
+        the information stored in the JSON file associated with the dataset
+
+    Examples
+    --------
+    >>> import skmob
+    >>> from skmob.data.load import get_dataset_info
+    >>>
+    >>> get_dataset_info("foursquare_nyc")
+
+    {'name': 'Foursquare_NYC',
+     'description': 'Dataset containing the Foursquare checkins of individuals moving in New York City',
+     'url': 'http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip',
+     'hash': 'cbe3fdab373d24b09b5fc53509c8958c77ff72b6c1a68589ce337d4f9a80235b',
+     'auth': 'no',
+     'data_type': 'trajectory',
+     'download_format': 'zip',
+     'sep': '\t',
+     'encoding': 'ISO-8859-1'}
+    """
+
+    path_info = os.path.join(os.path.dirname(skmob.__file__), "data", "datasets", name, name + ".json")
 
     try:
         f = open(path_info)
