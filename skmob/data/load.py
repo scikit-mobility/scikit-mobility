@@ -242,7 +242,7 @@ def get_dataset_info(name):
 
     """Get dataset info
 
-    It return the dataset information stored in the JSON file associated with the dataset.
+    It returns the dataset information stored in the JSON file associated with the dataset.
 
     Parameters
     ----------
