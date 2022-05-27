@@ -160,7 +160,7 @@ def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
 
 def list_datasets(details=False, data_types=None):
 
-    """List dataset
+    """List datasets
 
     List all the names of the datasets available in the data module of scikit-mobility.
 
