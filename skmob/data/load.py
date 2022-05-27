@@ -183,7 +183,6 @@ def list_datasets(details=False, data_types=None):
     >>> from skmob.data.load import list_datasets
     >>>
     >>> list_datasets()
-
     ['flow_foursquare_nyc',
      'foursquare_nyc',
      'nyc_boundaries',
@@ -252,7 +251,7 @@ def get_dataset_info(name):
 
     Returns
     ----------
-    dict
+    dict:
         the information stored in the JSON file associated with the dataset
 
     Examples
@@ -261,7 +260,6 @@ def get_dataset_info(name):
     >>> from skmob.data.load import get_dataset_info
     >>>
     >>> get_dataset_info("foursquare_nyc")
-
     {'name': 'Foursquare_NYC',
      'description': 'Dataset containing the Foursquare checkins of individuals moving in New York City',
      'url': 'http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip',
