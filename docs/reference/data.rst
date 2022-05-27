@@ -3,8 +3,7 @@ Data
 ============
 
 
-The data module of scikit-mobility provides users an easy way to download mobility data ready-to-use (e.g., trajectories, flows, spatial tessellations, and auxiliary data); to load and transform the downloaded dataset into standard structures of scikit-mobility (TrajDataFrame, GeoDataFrame, FlowDataFrame, DataFrame); the developers and contributors to add new datasets to the library.
-
+The data module of scikit-mobility provides users with an easy way to: 1) Download ready-to-use mobility data (e.g., trajectories, flows, spatial tessellations, and auxiliary data); 2) Load and transform the downloaded dataset into standard skmob structures (TrajDataFrame, GeoDataFrame, FlowDataFrame, DataFrame); 3) Allow developers and contributors to add new datasets to the library.
 
 .. currentmodule:: skmob.data
 
