@@ -81,6 +81,3 @@ htmlcov
 
 # Tox
 .tox
-docs/reference/data.rst
-docs/index.rst
-Untitled.ipynb
