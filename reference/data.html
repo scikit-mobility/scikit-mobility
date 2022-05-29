@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data &mdash; scikit-mobility  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Privacy" href="privacy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+            <a href="../index.html" class="icon icon-home"> scikit-mobility
+            <img src="../_static/logo_skmob.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">scikit-mobility</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data">
+<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline"></a></h1>
+<p>The data module of scikit-mobility provides users with an easy way to: 1) Download ready-to-use mobility data (e.g., trajectories, flows, spatial tessellations, and auxiliary data); 2) Load and transform the downloaded dataset into standard skmob structures (TrajDataFrame, GeoDataFrame, FlowDataFrame, DataFrame); 3) Allow developers and contributors to add new datasets to the library.</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.data.load.list_datasets" title="skmob.data.load.list_datasets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skmob.data.load.list_datasets</span></code></a>([details, ...])</p></td>
+<td><p>List datasets</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skmob.data.load.load_dataset" title="skmob.data.load.load_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skmob.data.load.load_dataset</span></code></a>(name[, ...])</p></td>
+<td><p>Load dataset</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skmob.data.load.get_dataset_info" title="skmob.data.load.get_dataset_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skmob.data.load.get_dataset_info</span></code></a>(name)</p></td>
+<td><p>Get dataset info</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-skmob.data.load"></span><dl class="py function">
+<dt class="sig sig-object py" id="skmob.data.load.get_dataset_info">
+<span class="sig-prename descclassname"><span class="pre">skmob.data.load.</span></span><span class="sig-name descname"><span class="pre">get_dataset_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.data.load.get_dataset_info" title="Permalink to this definition"></a></dt>
+<dd><p>Get dataset info</p>
+<p>It returns the dataset information stored in the JSON file associated with the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – the name of the dataset of which to return the information</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information stored in the JSON file associated with the dataset</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.data.load</span> <span class="kn">import</span> <span class="n">get_dataset_info</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_dataset_info</span><span class="p">(</span><span class="s2">&quot;foursquare_nyc&quot;</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;Foursquare_NYC&#39;,</span>
+<span class="go"> &#39;description&#39;: &#39;Dataset containing the Foursquare checkins of individuals moving in New York City&#39;,</span>
+<span class="go"> &#39;url&#39;: &#39;http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip&#39;,</span>
+<span class="go"> &#39;hash&#39;: &#39;cbe3fdab373d24b09b5fc53509c8958c77ff72b6c1a68589ce337d4f9a80235b&#39;,</span>
+<span class="go"> &#39;auth&#39;: &#39;no&#39;,</span>
+<span class="go"> &#39;data_type&#39;: &#39;trajectory&#39;,</span>
+<span class="go"> &#39;download_format&#39;: &#39;zip&#39;,</span>
+<span class="go"> &#39;sep&#39;: &#39;   &#39;,</span>
+<span class="go"> &#39;encoding&#39;: &#39;ISO-8859-1&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="skmob.data.load.list_datasets">
+<span class="sig-prename descclassname"><span class="pre">skmob.data.load.</span></span><span class="sig-name descname"><span class="pre">list_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.data.load.list_datasets" title="Permalink to this definition"></a></dt>
+<dd><p>List datasets</p>
+<p>List all the names of the datasets available in the data module of scikit-mobility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>details</strong> (<em>boolean</em>) – whether to return the full details of the dataset instead of the name only. The default is False.</p></li>
+<li><p><strong>data_types</strong> (<em>list of string, optional</em>) – specify which dataset types to show. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>an object listing the available dataset</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.data.load</span> <span class="kn">import</span> <span class="n">list_datasets</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_datasets</span><span class="p">()</span>
+<span class="go">[&#39;flow_foursquare_nyc&#39;,</span>
+<span class="go"> &#39;foursquare_nyc&#39;,</span>
+<span class="go"> &#39;nyc_boundaries&#39;,</span>
+<span class="go"> &#39;parking_san_francisco&#39;,</span>
+<span class="go"> &#39;taxi_san_francisco&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="skmob.data.load.load_dataset">
+<span class="sig-prename descclassname"><span class="pre">skmob.data.load.</span></span><span class="sig-name descname"><span class="pre">load_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.data.load.load_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Load dataset</p>
+<p>Load one of the datasets that are present in the repository of scikit-mobility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – the name of the dataset to load (e.g., foursquare_nyc)</p></li>
+<li><p><strong>drop_columns</strong> (<em>boolean, optional</em>) – whether to keep additional columns when returning TrajDataFrame or FlowDataFrame object. The default is False.</p></li>
+<li><p><strong>auth</strong> (<em>(str, str), optional</em>) – pair of strings (user, psw) used when the dataset loading requires an authentication. The default is None.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean, optional</em>) – if True, show a progress bar. The default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an object containing the desired dataset</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>TrajDataFrame/FlowDataFrame/GeoDataFrame/DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.data.load</span> <span class="kn">import</span> <span class="n">load_dataset</span><span class="p">,</span> <span class="n">list_datasets</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf_nyc</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;foursquare_nyc&quot;</span><span class="p">,</span> <span class="n">drop_columns</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf_nyc</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">   uid        lat        lng                  datetime</span>
+<span class="go">0  470  40.719810 -74.002581 2012-04-03 18:00:09+00:00</span>
+<span class="go">1  979  40.606800 -74.044170 2012-04-03 18:00:25+00:00</span>
+<span class="go">2   69  40.716162 -73.883070 2012-04-03 18:02:24+00:00</span>
+<span class="go">3  395  40.745164 -73.982519 2012-04-03 18:02:41+00:00</span>
+<span class="go">4   87  40.740104 -73.989658 2012-04-03 18:03:00+00:00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="privacy.html" class="btn btn-neutral float-left" title="Privacy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, skmob devs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>
