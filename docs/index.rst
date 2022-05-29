@@ -31,19 +31,19 @@ Installation with pip (python >= 3.7 required)
 #. Create an environment `skmob`
 
    .. code-block:: console
-     
+
      python3 -m venv skmob
 
 #. Activate
 
    .. code-block:: console
-   
+
      source skmob/bin/activate
 
 #. Install skmob
 
    .. code-block:: console
-        
+
      pip install scikit-mobility
 
 #. OPTIONAL to use `scikit-mobility` on the jupyter notebook
@@ -51,25 +51,25 @@ Installation with pip (python >= 3.7 required)
 Activate the virutalenv:
 
    .. code-block:: console
-    
+
      source skmob/bin/activate
 
 Install jupyter notebook:
 
    .. code-block:: console
-   
+
      pip install jupyter
 
 Run jupyter notebook
 
    .. code-block:: console
-	 
+
      jupyter notebook
 
 (Optional) install the kernel with a specific name
 
    .. code-block:: console
-	 
+
      ipython kernel install --user --name=skmob
 
 
@@ -79,19 +79,19 @@ Installation with conda - miniconda
 #. Create an environment `skmob` and install pip
 
    .. code-block:: console
-   
+
      conda create -n skmob pip python=3.7 rtree
 
 #. Activate
 
    .. code-block:: console
- 
+
      conda activate skmob
 
 #. Install skmob
 
    .. code-block:: console
-  
+
      conda install -c conda-forge scikit-mobility
 
 #. OPTIONAL to use `scikit-mobility` on the jupyter notebook
@@ -99,7 +99,7 @@ Installation with conda - miniconda
 Install the kernel
 
    .. code-block:: console
-     
+
      conda install jupyter -c conda-forge
 
 Open a notebook and check if the kernel `skmob` is on the kernel list. If not, run the following:
@@ -107,7 +107,7 @@ Open a notebook and check if the kernel `skmob` is on the kernel list. If not, r
 On Mac and Linux
 
    .. code-block:: console
-     
+
      env=$(basename `echo $CONDA_PREFIX`)
      python -m ipykernel install --user --name "$env" --display-name "Python [conda env:"$env"]"
 
@@ -120,7 +120,7 @@ On Windows
 You may run into dependency issues if you try to import the package in Python. If so, try installing the following packages as followed.
 
 .. code-block:: console
-  
+
   conda install -n skmob pyproj urllib3 chardet markupsafe
 
 
@@ -130,13 +130,13 @@ Known Issues
 the installation of package rtree could not work with pip within a conda environment. If so, try
 
 .. code-block:: console
-  
+
   pip install "rtree>=0.8,<0.9"
 
 or install rtree with conda
 
 .. code-block:: console
-  
+
   conda install rtree
 
 
@@ -153,4 +153,4 @@ or install rtree with conda
    reference/models
    reference/io
    reference/privacy
-
+   reference/data
