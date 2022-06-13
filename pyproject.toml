@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "scikit-mobility"
 description = "A toolbox for analyzing and processing mobility data."
-version = "1.3.0-alpha.5"
+version = "1.3.0"
 packages = [ { include = "skmob"}]
 authors = ["skmob Developers"]
 maintainers = ["Gianni Barlacchi <gianni.barlacchi@gmail.com>"]
