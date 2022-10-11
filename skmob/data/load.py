@@ -14,8 +14,6 @@ from skmob.core.flowdataframe import FlowDataFrame
 from skmob.core.trajectorydataframe import TrajDataFrame
 
 from requests.exceptions import SSLError
-from requests.packages.urllib3 import disable_warnings
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 class DatasetBuilder(ABC):
     def __init__(self):
@@ -28,9 +26,6 @@ class DatasetBuilder(ABC):
         pass
 
 def _download_manager(url, known_hash, processor, auth, show_progress, verify_SSL = True):
-
-    if verify_SSL == False:
-        disable_warnings(InsecureRequestWarning)
 
     download_auth = HTTPDownloader(auth=auth, progressbar=show_progress, verify = verify_SSL)
 
