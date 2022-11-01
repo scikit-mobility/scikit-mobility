@@ -52,7 +52,7 @@ def _skmob_downloader(url, known_hash, download_format=None, auth=(), show_progr
     except SSLError:
         error_message = f'SSLError was raised, the file hash provided is "{known_hash}"'
         
-        if known_hash == None:
+        if known_hash is None:
             error_message += '\nThere is no hash to check. Downloading may not be safe.'
         
         check_SSL = input(f'{error_message}\nDo you want to try to bypass the error (y/n)? ')
