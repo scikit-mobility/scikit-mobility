@@ -396,7 +396,7 @@ class EPR:
         for agent_id in loop:
             self._location2visits = defaultdict(int)
             if starting_locations is None:
-                self._starting_loc = np.random.choice(np.fromiter(range(num_locs), dtype=int), size=1)[0]
+                self._starting_loc = np.random.randint(0, num_locs, dtype=int)
             else:
                 self._starting_loc = starting_locations.pop()
 
