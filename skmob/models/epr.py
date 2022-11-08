@@ -223,6 +223,7 @@ class EPR:
             locations = np.arange(len(self._od_matrix[current_location]))
             weights = self._od_matrix[current_location]
 
+        # excludes all already visited locations
         weights[list(self._location2visits.keys())] = 0
 
         s = weights.sum()
