@@ -186,6 +186,7 @@ class EPR:
         if self._log_file is not None:
             logging.info(f'RETURN to {next_location} ({self.lats_lngs[next_location]})')
             logging.info(f'\t frequency = {self._location2visits[next_location]}')
+        return next_location
 
     def _preferential_exploration(self, current_location):
         """
