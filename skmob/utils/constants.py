@@ -51,7 +51,7 @@ NY_FLOWS_2011 = 'https://raw.githubusercontent.com/scikit-mobility/scikit-mobili
 
 # https://github.com/uber/h3/blob/master/docs/core-library/restable.md
 H3_UTILS ={
-  "avg_hex_area_km2": {
+  "average_hexagon_area": {
     "0": 4250546.8477,
     "1": 607220.9782429,
     "2": 86745.8540347,
@@ -69,7 +69,7 @@ H3_UTILS ={
     "14": 0.0000063,
     "15": 9e-7
   },
-  "avg_hex_edge_len_km": {
+  "average_hexagon_edge_length": {
     "0": 1107.712591,
     "1": 418.6760055,
     "2": 158.2446558,

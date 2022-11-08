@@ -176,8 +176,8 @@ class Gravity:
     3      11  36001       36017
     4      30  36001       36019    
     >>> # compute the total outflows from each location of the tessellation (excluding self loops)
-    >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)['flow'].sum().fillna(0).values
-    >>> tessellation[constants.TOT_OUTFLOW] = tot_outflows
+    >>> tot_outflows = fdf[fdf['origin'] != fdf['destination']].groupby(by='origin', axis=0)[['flow']].sum().fillna(0)
+    >>> tessellation = tessellation.merge(tot_outflows, left_on='tile_ID', right_on='origin').rename(columns={'flow': constants.TOT_OUTFLOW})
     >>> print(tessellation.head())
       tile_id  population                                           geometry  \
     0   36019       81716  POLYGON ((-74.006668 44.886017, -74.027389 44....   
@@ -471,7 +471,7 @@ class Gravity:
         flow_df.apply(lambda flow_example: self._update_training_set(flow_example), axis=1)
 
         # Perform GLM fit
-        poisson_model = GLM(self.y, self.X, family=sm.genmod.families.family.Poisson(link=sm.genmod.families.links.log))
+        poisson_model = GLM(self.y, self.X, family=sm.genmod.families.family.Poisson(link=sm.genmod.families.links.log()))
         poisson_results = poisson_model.fit()
 
         # Set best fit parameters

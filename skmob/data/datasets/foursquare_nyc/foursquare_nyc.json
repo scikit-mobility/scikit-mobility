@@ -1,0 +1,11 @@
+{
+   "name":"Foursquare_NYC",
+   "description":"Dataset containing the Foursquare checkins of individuals moving in New York City",
+   "url":"http://www-public.it-sudparis.eu/~zhang_da/pub/dataset_tsmc2014.zip",
+   "hash":"cbe3fdab373d24b09b5fc53509c8958c77ff72b6c1a68589ce337d4f9a80235b",
+   "auth":"no",
+   "data_type":"trajectory",
+   "download_format":"zip",
+   "sep":"\t",
+   "encoding":"ISO-8859-1"
+}
