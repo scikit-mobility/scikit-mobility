@@ -213,9 +213,10 @@ class EPR:
                 # if the row has been not populated
                 weights = populate_od_matrix(current_location, self.lats_lngs, self.relevances, self.gravity_singly)
                 self._od_matrix[current_location, :] = weights
-                # Converts the lil matrix to a csr matrix for performance reasons
-                if len(self._location2visits) == len(self.relevances):
-                    self._od_matrix = self._od_matrix.tocsr()
+                # Converts a "full" lil matrix to a dense matrix for performance reasons
+                if len(self._location2visits) == len(self.relevances)-1:
+                    self._od_matrix = self._od_matrix.todense()
+                    self._is_sparse = False
             else:
                 weights = prob_array.toarray()[0]
             locations = np.arange(len(self.lats_lngs))
