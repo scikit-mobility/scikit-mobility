@@ -78,7 +78,7 @@ def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
     ll_origin = lats_lngs[location]
     distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs], dtype='float32')
 
-    scores = gravity_singly.compute_gravity_score(distances, relevances[location, None], relevances)[0].astype('float32')
+    scores = gravity_singly.compute_gravity_score(distances, relevances[location, None], relevances, zero_diagonal=False)[0].astype('float32')
     scores = scores / sum(scores)
     scores[-1] = max(0, 1 - np.sum(scores[0:-1]))
     return scores
@@ -225,14 +225,9 @@ class EPR:
             weights = self._od_matrix[current_location]
 
         # excludes all already visited locations
+        weights = weights.copy()
         weights[list(self._location2visits.keys())] = 0
-
         s = weights.sum()
-        # sometimes weights are zero. We set to all the non visited locations equal probability to ensure exploration
-        if s == 0:
-            non_visited_locations = set(range(self._od_matrix.shape[0])).difference(self._location2visits.keys())
-            weights[list(non_visited_locations)] = 1
-            s = len(non_visited_locations)
 
         weights /= s
         location = np.random.choice(locations, size=1, p=weights)[0]
@@ -391,6 +386,12 @@ class EPR:
             self.relevances = np.ones(num_locs)
         else:
             self.relevances = spatial_tessellation[relevance_column].fillna(0).values
+
+            # exclude some places were relevance = 0. They will not be visited
+            mask = self.relevances > 0
+            self.lats_lngs = self.lats_lngs[mask]
+            self.relevances = self.relevances[mask]
+            num_locs = len(self.relevances)
 
         # initialization of od matrix
         if od_matrix is None:
