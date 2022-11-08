@@ -291,7 +291,7 @@ class Gravity:
                (self._name, self._deterrence_func_type, self._deterrence_func_args, self._origin_exp,
                 self._destination_exp, self._gravity_type)
 
-    def _compute_gravity_score(self, distance_matrix, relevances_orig, relevances_dest):
+    def compute_gravity_score(self, distance_matrix, relevances_orig, relevances_dest):
         trip_probs_matrix = self._deterrence_func(distance_matrix, *self._deterrence_func_args)
         # trip_probs_matrix = np.transpose(
         #     trip_probs_matrix * relevances ** self.destination_exp) * relevances ** self._origin_exp
@@ -304,7 +304,7 @@ class Gravity:
         # put diagonal elements to zero: i.e. exclude intra-location trips (self flows)
         np.fill_diagonal(trip_probs_matrix, 0.)
 
-        return trip_probs_matrix
+        return trip_probs_matrix.astype('float32')
 
     def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
                  tot_outflows_column=constants.TOT_OUTFLOW, relevance_column=constants.RELEVANCE, out_format='flows'):
@@ -355,7 +355,7 @@ class Gravity:
         distance_matrix = compute_distance_matrix(spatial_tessellation, origins)
 
         # compute scores
-        trip_probs_matrix = self._compute_gravity_score(distance_matrix, relevances, relevances)
+        trip_probs_matrix = self.compute_gravity_score(distance_matrix, relevances, relevances)
 
         if self._gravity_type == 'globally constrained':  # globally constrained gravity model
             trip_probs_matrix /= np.sum(trip_probs_matrix)

@@ -76,10 +76,12 @@ def populate_od_matrix(location, lats_lngs, relevances, gravity_singly):
         a numpy array of trip probabilities between the origin location and each destination.
     """
     ll_origin = lats_lngs[location]
-    distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs])
+    distances = np.array([earth_distance_km(ll_origin, l) for l in lats_lngs], dtype='float32')
 
-    scores = gravity_singly._compute_gravity_score(distances, relevances[location, None], relevances)[0]
-    return scores / sum(scores)
+    scores = gravity_singly.compute_gravity_score(distances, relevances[location, None], relevances)[0].astype('float32')
+    scores = scores / sum(scores)
+    scores[-1] = max(0, 1 - np.sum(scores[0:-1]))
+    return scores
 
 
 class EPR:
@@ -154,17 +156,16 @@ class EPR:
         int
             a location randomly chosen according to its relevance.
         """
-        locations = np.fromiter(self._location2visits.keys(), dtype=int)
-        weights = np.fromiter(self._location2visits.values(), dtype=float)
-
+        d = {k: v for k, v in self._location2visits.items()}
         # remove the current location
-        currloc_idx = np.where(locations == current_location)[0][0]
-        locations = np.delete(locations, currloc_idx)
-        weights = np.delete(weights, currloc_idx)
+        d[current_location] = 0
+
+        locations = np.fromiter(d.keys(), dtype=int)
+        weights = np.fromiter(d.values(), dtype=float)
 
         weights = weights / np.sum(weights)
-        location = np.random.choice(locations, size=1, p=weights)
-        return int(location[0])
+        location = np.random.choice(locations, p=weights)
+        return int(location)
 
     def _preferential_return(self, current_location):
         """
@@ -183,7 +184,7 @@ class EPR:
         """
         next_location = self._weighted_random_selection(current_location)
         if self._log_file is not None:
-            logging.info('RETURN to %s (%s, %s)' % (next_location, self.lats_lngs[next_location]))
+            logging.info('RETURN to %s (%s, %s)' % (next_location, self.lats_lngs[next_location][0], self.lats_lngs[next_location][1]))
             logging.info('\t frequency = %s' % self._location2visits[next_location])
         return next_location
 
@@ -204,23 +205,39 @@ class EPR:
         """
 
         if self._is_sparse:
-            prob_array = self._od_matrix.getrowview(current_location)
+            if isinstance(self._od_matrix, lil_matrix):
+                prob_array = self._od_matrix.getrowview(current_location)
+            else:
+                prob_array = self._od_matrix[current_location]
             if prob_array.nnz == 0:
                 # if the row has been not populated
                 weights = populate_od_matrix(current_location, self.lats_lngs, self.relevances, self.gravity_singly)
                 self._od_matrix[current_location, :] = weights
+                # Converts the lil matrix to a csr matrix for performance reasons
+                if len(self._location2visits) == len(self.relevances):
+                    self._od_matrix = self._od_matrix.tocsr()
             else:
                 weights = prob_array.toarray()[0]
             locations = np.arange(len(self.lats_lngs))
-            location = np.random.choice(locations, size=1, p=weights)[0]
 
         else:  # if the matrix is precomputed
             locations = np.arange(len(self._od_matrix[current_location]))
             weights = self._od_matrix[current_location]
-            location = np.random.choice(locations, size=1, p=weights)[0]
+
+        weights[list(self._location2visits.keys())] = 0
+
+        s = weights.sum()
+        # sometimes weights are zero. We set to all the non visited locations equal probability to ensure exploration
+        if s == 0:
+            non_visited_locations = set(range(self._od_matrix.shape[0])).difference(self._location2visits.keys())
+            weights[list(non_visited_locations)] = 1
+            s = len(non_visited_locations)
+
+        weights /= s
+        location = np.random.choice(locations, size=1, p=weights)[0]
 
         if self._log_file is not None:
-            logging.info('EXPLORATION to %s (%s, %s)' % (location, self.lats_lngs[location]))
+            logging.info('EXPLORATION to %s (%s, %s)' % (location, self.lats_lngs[location][0], self.lats_lngs[location][1]))
 
         return location
 
@@ -234,8 +251,7 @@ class EPR:
             the trajectories of the agent.
         """
         df = pd.DataFrame(self._trajectories_, columns=[user_id, date_time, 'location'])
-        df[[latitude, longitude]] = df.location.apply(lambda s: pd.Series({latitude: self.lats_lngs[s][0],
-                                                                           longitude: self.lats_lngs[s][1]}))
+        df[[latitude, longitude]] = pd.DataFrame(self.lats_lngs[df.location].tolist(), index=df.index).astype('float32')
         df = df.sort_values(by=[user_id, date_time]).drop('location', axis=1)
         return TrajDataFrame(df, parameters=parameters)
 
@@ -259,20 +275,15 @@ class EPR:
         # choose a probability to return or explore
         p_new = np.random.uniform(0, 1)
 
-        if (p_new <= self._rho * math.pow(n_visited_locations, -self._gamma) and n_visited_locations != \
-                self._od_matrix.shape[0]) or n_visited_locations == 1:  # choose to return or explore
+        if (p_new <= self._rho * math.pow(n_visited_locations, -self._gamma) or n_visited_locations == 1) and \
+                n_visited_locations != self._od_matrix.shape[0]:  # choose to return or explore
             # PREFERENTIAL EXPLORATION
             next_location = self._preferential_exploration(current_location)
-            # TODO: remove the part below and exclude visited locations
-            #  from the list of potential destinations in _preferential_exploration
-            # while next_location in self._location2visits:
-            #     next_location = self._preferential_exploration(current_location)
-            return next_location
-
         else:
             # PREFERENTIAL RETURN
             next_location = self._preferential_return(current_location)
-            return next_location
+
+        return next_location
 
     def _time_generator(self):
         return powerlaw.Truncated_Power_Law(xmin=self.min_wait_time,
@@ -346,7 +357,8 @@ class EPR:
             if gravity_singly.gravity_type == 'singly constrained':
                 self.gravity_singly = gravity_singly
             else:
-                raise AttributeError("Argument `gravity_singly` should be a skmob.models.gravity.Gravity object with argument `gravity_type` equal to 'singly constrained'.")
+                raise AttributeError("Argument `gravity_singly` should be a skmob.models.gravity.Gravity object with "
+                                     "argument `gravity_type` equal to 'singly constrained'.")
         else:
             raise TypeError("Argument `gravity_singly` should be of type skmob.models.gravity.Gravity.")
 
@@ -381,7 +393,7 @@ class EPR:
 
         # initialization of od matrix
         if od_matrix is None:
-            self._od_matrix = lil_matrix((num_locs, num_locs))
+            self._od_matrix = lil_matrix((num_locs, num_locs), dtype='float32')
             self._is_sparse = True
         else:
             # TODO: check it is a properly formatted stochastic matrix
@@ -396,7 +408,7 @@ class EPR:
         for agent_id in loop:
             self._location2visits = defaultdict(int)
             if starting_locations is None:
-                self._starting_loc = np.random.choice(np.fromiter(range(num_locs), dtype=int), size=1)[0]
+                self._starting_loc = np.random.randint(num_locs)
             else:
                 self._starting_loc = starting_locations.pop()
 
