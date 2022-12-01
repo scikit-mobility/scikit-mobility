@@ -106,3 +106,16 @@ H3_UTILS ={
     "15": 569707381193162
   }
 }
+
+# Home Location Detection
+TIME_GAP = '_time_gap'
+ACTIVITY = '_activity'
+RADIUS_ACTIVITY = '_radius_activity'
+
+# Week periods
+WEEK_DAYS = 'WK'
+WEEKEND_DAYS = 'WE'
+MONDAY = 0
+FRIDAY = 4
+SATURDAY = 5
+SUNDAY = 6
