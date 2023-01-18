@@ -69,7 +69,7 @@ def load_dataset(name, drop_columns=False, auth=None, show_progress=False):
     Returns
     ----------
     TrajDataFrame/FlowDataFrame/GeoDataFrame/DataFrame
-        an object containing the downloaded dataset
+        an object containing the desired dataset
 
     Examples
     --------
@@ -175,7 +175,7 @@ def list_datasets(details=False, data_types=None):
 
     Returns
     ----------
-    an object listing the available datasets
+    an object listing the available dataset
 
     Examples
     --------
