@@ -272,7 +272,7 @@ class H3TessellationTiler(TessellationTiler):
         )
 
     def _handle_polyfill(self, base_shape, resolution):
-        if isinstance(base_shape, MultiPolygon):
+        if isinstance(base_shape.values[0], MultiPolygon):
             temporary_hexagons = base_shape.explode().apply(lambda x: self._get_hexagons(x, resolution))
             hexagons = list(set(np.concatenate(temporary_hexagons[temporary_hexagons.notna()].to_list())))
         else:
