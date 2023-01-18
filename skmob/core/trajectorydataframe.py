@@ -142,6 +142,9 @@ class TrajDataFrame(pd.DataFrame):
 
         if self._has_traj_columns():
             self._set_traj(timestamp=timestamp, inplace=True)
+        else:
+            raise AttributeError("The trajectory dataframe must be create with minimal set of columns with latitude, "
+                                 "longitude and datatime.")
 
     def _has_traj_columns(self):
 
