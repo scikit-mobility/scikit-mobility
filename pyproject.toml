@@ -42,6 +42,8 @@ h3 = "^3.7.3"
 pooch = "^1.6.0"
 statsmodels = "^0.13.0"
 geopandas = "^0.10.2"
+jupyter = "^1.0.0"
+ipykernel = "^6.20.2"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.23.1"
@@ -87,7 +89,7 @@ isolated_build = True
 python =
   3.8: py38
   3.9: py39
-  
+
 [testenv]
 whitelist_externals = poetry
 commands =
