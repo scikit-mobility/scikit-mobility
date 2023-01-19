@@ -29,7 +29,7 @@ classifiers=['Intended Audience :: Science/Research',
                  ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4"
+python = ">=3.8.0, <4"
 pandas = "^1.1.5"
 python-igraph = "^0.9.1"
 powerlaw = "^1.4.6"
@@ -54,8 +54,15 @@ poetry = "^1.1.6"
 Rtree = "^0.9.7"
 coverage-badge = "^1.0.1"
 
+[tool.poetry.group.dev.dependencies]
+black = "^22.12.0"
+ruff = "^0.0.226"
+
+[tool.ruff]
+line-length = 88
+
 [tool.black]
-line-length = 120
+line-length = 88
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -77,7 +84,6 @@ include_trailing_comma = "True"
 force_grid_wrap = 0
 use_parentheses = "True"
 ensure_newline_before_comments = "True"
-line_length = 100
 
 [tool.tox]
 legacy_tox_ini = """

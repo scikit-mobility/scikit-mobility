@@ -21,7 +21,7 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          python -m pip install --upgrade pre-commit poetry
+          python -m pip install --upgrade pre-commit
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
@@ -30,10 +30,10 @@ jobs:
     # runs only when lint step succeeds
     needs: lint
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
-        python-version: ['3.8', '3.9']
+        python-version: ["3.8", "3.9"]
 
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
 
       - name: "Test and coverage"
         run: |
-          python3 -m poetry run tox 
+          python3 -m poetry run tox
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v2
