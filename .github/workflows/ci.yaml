@@ -75,13 +75,11 @@ jobs:
       - name: "Install dependencies"
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade poetry sphinx sphinx_rtd_theme sphinx-copybutton
-          poetry export --dev -f requirements.txt > requirements.txt
-          pip install -r requirements.txt
+          python -m pip install --upgrade poetry
+          poetry install
 
       - name: "Build documentation"
-        working-directory: docs
-        run: make html
+        run: poetry run sphinx-build docs public
 
       # we need nojekyll or github will ignore folders starting with "_"
       - name: "Copy static files"
