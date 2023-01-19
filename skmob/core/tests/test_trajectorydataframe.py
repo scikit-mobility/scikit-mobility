@@ -43,6 +43,7 @@ class TestTrajectoryDataFrame:
             '20130110 12:34:15', '20130101 1:34:28', '20130101 3:34:54',
             '20130101 4:34:55', '20130105 5:29:12', '20130115 00:29:12'])
         traj[constants.UID] = [1 for _ in range(5)] + [2 for _ in range(3)] + [3]
+
         self.tdf0 = TrajDataFrame(traj)
         self.stdf = detection.stay_locations(self.tdf0)
         self.cstdf = clustering.cluster(self.stdf)
@@ -101,6 +102,12 @@ class TestTrajectoryDataFrame:
         self.perform_default_asserts(tdf)
         print(tdf.head())  # raised TypeError: 'BlockManager' object is not iterable
 
+    @pytest.mark.xfail
+    def test_tdf_from_list_no_param(self):
+        tdf = TrajDataFrame(self.default_data_list)
+        self.perform_default_asserts(tdf)
+        print(tdf.head())  # raised AttributeError: missing columns.
+
     def test_tdf_from_df(self):
         tdf = TrajDataFrame(self.default_data_df, latitude='latitude', datetime='hour', user_id='user')
         self.perform_default_asserts(tdf)
@@ -127,6 +134,7 @@ class TestTrajectoryDataFrame:
     def test_sort_by_uid_and_datetime(self):
         # shuffle the TrajDataFrame rows
         tdf1 = self.tdf0.sample(frac=1)
+
         tdf = tdf1.sort_by_uid_and_datetime()
         assert isinstance(tdf, TrajDataFrame)
         assert np.all(tdf[[UID, DATETIME]].values == sorted(tdf1[[UID, DATETIME]].values, key=itemgetter(0, 1)))

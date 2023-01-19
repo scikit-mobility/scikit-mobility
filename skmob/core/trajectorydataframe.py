@@ -5,8 +5,24 @@ from warnings import warn
 from shapely.geometry import Polygon, Point
 import geopandas as gpd
 from .flowdataframe import FlowDataFrame
-# from skmob.preprocessing import routing
 
+
+def _trajdataframe_constructor_with_fallback(*args, **kwargs):
+    """
+    A flexible constructor for TrajDataFrame._constructor, which falls back to returning a DataFrame
+    (if a certain operation does not preserve the lat, lng and datatime columns)
+    """
+    df = TrajDataFrame(*args, **kwargs)
+
+    lat_col_mask = df.dtypes == "lat"
+    lng_cols_mask = df.dtypes == "lng"
+    datatime_cols_mask = df.dtypes == "datetime"
+    cols_mask = [lat_col_mask, lng_cols_mask, datatime_cols_mask]
+
+    if len(cols_mask) == 0 or cols_mask.sum() != 3:
+        df = pd.DataFrame(df)
+
+    return df
 
 class TrajSeries(pd.Series):
 
@@ -117,7 +133,7 @@ class TrajDataFrame(pd.DataFrame):
                     columns += [original2default[i]]
                 except KeyError:
                     columns += [i]
-
+            print(columns)
         elif isinstance(data, pd.core.internals.BlockManager):
             tdf = data
 
@@ -142,9 +158,6 @@ class TrajDataFrame(pd.DataFrame):
 
         if self._has_traj_columns():
             self._set_traj(timestamp=timestamp, inplace=True)
-        else:
-            raise AttributeError("The trajectory dataframe must be create with minimal set of columns with latitude, "
-                                 "longitude and datatime.")
 
     def _has_traj_columns(self):
 
@@ -394,6 +407,10 @@ class TrajDataFrame(pd.DataFrame):
 
         return cls(df, latitude=latitude, longitude=longitude, datetime=datetime, user_id=user_id,
                    trajectory_id=trajectory_id, parameters=parameters, crs=crs, timestamp=timestamp)
+
+    @property
+    def _constructor(self):
+        return _trajdataframe_constructor_with_fallback
 
     @property
     def lat(self):
