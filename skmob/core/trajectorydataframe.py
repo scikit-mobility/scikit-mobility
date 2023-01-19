@@ -5,8 +5,22 @@ from warnings import warn
 from shapely.geometry import Polygon, Point
 import geopandas as gpd
 from .flowdataframe import FlowDataFrame
-# from skmob.preprocessing import routing
 
+
+def _trajdataframe_constructor_with_fallback(*args, **kwargs):
+    """
+    A flexible constructor for TrajDataFrame._constructor, which falls back to returning a DataFrame
+    (if a certain operation does not preserve the lat, lng and datatime columns)
+    """
+    df = TrajDataFrame(*args, **kwargs)
+
+    mask = (constants.DATETIME in df.columns) and (constants.LATITUDE in df.columns) and \
+           (constants.LONGITUDE in df.columns)
+
+    if not mask:
+        df = pd.DataFrame(df)
+
+    return df
 
 class TrajSeries(pd.Series):
 
@@ -117,7 +131,7 @@ class TrajDataFrame(pd.DataFrame):
                     columns += [original2default[i]]
                 except KeyError:
                     columns += [i]
-
+            print(columns)
         elif isinstance(data, pd.core.internals.BlockManager):
             tdf = data
 
@@ -391,6 +405,10 @@ class TrajDataFrame(pd.DataFrame):
 
         return cls(df, latitude=latitude, longitude=longitude, datetime=datetime, user_id=user_id,
                    trajectory_id=trajectory_id, parameters=parameters, crs=crs, timestamp=timestamp)
+
+    @property
+    def _constructor(self):
+        return _trajdataframe_constructor_with_fallback
 
     @property
     def lat(self):
