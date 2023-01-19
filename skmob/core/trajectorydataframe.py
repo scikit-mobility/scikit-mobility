@@ -14,12 +14,10 @@ def _trajdataframe_constructor_with_fallback(*args, **kwargs):
     """
     df = TrajDataFrame(*args, **kwargs)
 
-    lat_col_mask = df.dtypes == "lat"
-    lng_cols_mask = df.dtypes == "lng"
-    datatime_cols_mask = df.dtypes == "datetime"
-    cols_mask = [lat_col_mask, lng_cols_mask, datatime_cols_mask]
+    mask = (constants.DATETIME in df.columns) and (constants.LATITUDE in df.columns) and \
+           (constants.LONGITUDE in df.columns)
 
-    if len(cols_mask) == 0 or cols_mask.sum() != 3:
+    if not mask:
         df = pd.DataFrame(df)
 
     return df
