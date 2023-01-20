@@ -84,9 +84,11 @@ jobs:
       # we need nojekyll or github will ignore folders starting with "_"
       - name: "Copy static files"
         run: |
+
           mv .nojekyll static
           mv logo_skmob.png static
           mkdir static/coverage
+
 
       - name: "Download Artifact"
         uses: actions/download-artifact@v2
