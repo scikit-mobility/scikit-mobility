@@ -79,23 +79,25 @@ jobs:
           poetry install
 
       - name: "Build documentation"
-        run: poetry run sphinx-build docs public
+        run: poetry run sphinx-build docs static
 
       # we need nojekyll or github will ignore folders starting with "_"
       - name: "Copy static files"
         run: |
-          mv .nojekyll public/static/html
-          mv logo_skmob.png public/static/html
-          mkdir public/static/html/coverage
+
+          mv .nojekyll static
+          mv logo_skmob.png static
+          mkdir static/coverage
+
 
       - name: "Download Artifact"
         uses: actions/download-artifact@v2
         with:
           name: code-coverage
-          path: public/static/html/coverage
+          path: static/coverage
 
       - name: "Deploy Docs 🚀"
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: public/static/html # The folder the action should deploy.
+          folder: static # The folder the action should deploy.
