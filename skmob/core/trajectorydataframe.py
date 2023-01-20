@@ -5,22 +5,8 @@ from warnings import warn
 from shapely.geometry import Polygon, Point
 import geopandas as gpd
 from .flowdataframe import FlowDataFrame
+# from skmob.preprocessing import routing
 
-
-def _trajdataframe_constructor_with_fallback(*args, **kwargs):
-    """
-    A flexible constructor for TrajDataFrame._constructor, which falls back to returning a DataFrame
-    (if a certain operation does not preserve the lat, lng and datatime columns)
-    """
-    df = TrajDataFrame(*args, **kwargs)
-
-    mask = (constants.DATETIME in df.columns) and (constants.LATITUDE in df.columns) and \
-           (constants.LONGITUDE in df.columns)
-
-    if not mask:
-        df = pd.DataFrame(df)
-
-    return df
 
 class TrajSeries(pd.Series):
 
@@ -131,7 +117,7 @@ class TrajDataFrame(pd.DataFrame):
                     columns += [original2default[i]]
                 except KeyError:
                     columns += [i]
-            print(columns)
+
         elif isinstance(data, pd.core.internals.BlockManager):
             tdf = data
 
@@ -397,6 +383,44 @@ class TrajDataFrame(pd.DataFrame):
                   user_id=constants.UID, trajectory_id=constants.TID, encoding=None,
                   usecols=None, header='infer', timestamp=False, crs={"init": "epsg:4326"}, sep=",", parameters=None):
 
+        """
+        Read a trajectory file and return a TrajDataFrame.
+
+        Parameters
+        ----------
+        filename : str
+            the path to the file
+        latitude : str, optional
+            the name of the column containing the latitude values
+        longitude : str, optional
+            the name of the column containing the longitude values
+        datetime : str, optional    
+            the name of the column containing the datetime values
+        user_id : str, optional 
+            the name of the column containing the user id values
+        trajectory_id : str, optional   
+            the name of the column containing the trajectory id values
+        encoding : str, optional
+            the encoding of the file
+        usecols : list, optional
+            the columns to read
+        header : int, optional
+            the row number of the header
+        timestamp : bool, optional
+            if True, the datetime column contains timestamps
+        crs : dict, optional
+            the coordinate reference system of the TrajDataFrame
+        sep : str, optional
+            the separator of the file
+        parameters : dict, optional
+            the parameters of the TrajDataFrame
+
+        Returns
+        -------
+        TrajDataFrame
+            The loaded TrajDataFrame
+
+        """
         df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=encoding)
 
         if parameters is None:
@@ -405,10 +429,6 @@ class TrajDataFrame(pd.DataFrame):
 
         return cls(df, latitude=latitude, longitude=longitude, datetime=datetime, user_id=user_id,
                    trajectory_id=trajectory_id, parameters=parameters, crs=crs, timestamp=timestamp)
-
-    @property
-    def _constructor(self):
-        return _trajdataframe_constructor_with_fallback
 
     @property
     def lat(self):
