@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -48,7 +50,15 @@
 <li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="measures.html">Measures</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Collective measures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Collective measures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.homes_per_location"><code class="docutils literal notranslate"><span class="pre">homes_per_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.mean_square_displacement"><code class="docutils literal notranslate"><span class="pre">mean_square_displacement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.random_location_entropy"><code class="docutils literal notranslate"><span class="pre">random_location_entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.uncorrelated_location_entropy"><code class="docutils literal notranslate"><span class="pre">uncorrelated_location_entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.visits_per_location"><code class="docutils literal notranslate"><span class="pre">visits_per_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.collective.visits_per_time_unit"><code class="docutils literal notranslate"><span class="pre">visits_per_time_unit()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="individual_measures.html">Individual measures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html">Evaluation measures</a></li>
 </ul>
@@ -72,9 +82,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="measures.html">Measures</a> &raquo;</li>
-      <li>Collective measures</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="measures.html">Measures</a></li>
+      <li class="breadcrumb-item active">Collective measures</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/collective_measures.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,7 +95,7 @@
            <div itemprop="articleBody">
              
   <section id="collective-measures">
-<h1>Collective measures<a class="headerlink" href="#collective-measures" title="Permalink to this headline"></a></h1>
+<h1>Collective measures<a class="headerlink" href="#collective-measures" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />

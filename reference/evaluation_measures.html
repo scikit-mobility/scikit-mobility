@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -49,7 +51,20 @@
 <li class="toctree-l1 current"><a class="reference internal" href="measures.html">Measures</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="collective_measures.html">Collective measures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="individual_measures.html">Individual measures</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluation measures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluation measures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.common_part_of_commuters"><code class="docutils literal notranslate"><span class="pre">common_part_of_commuters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.common_part_of_commuters_distance"><code class="docutils literal notranslate"><span class="pre">common_part_of_commuters_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.common_part_of_links"><code class="docutils literal notranslate"><span class="pre">common_part_of_links()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.information_gain"><code class="docutils literal notranslate"><span class="pre">information_gain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.kullback_leibler_divergence"><code class="docutils literal notranslate"><span class="pre">kullback_leibler_divergence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.max_error"><code class="docutils literal notranslate"><span class="pre">max_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.nrmse"><code class="docutils literal notranslate"><span class="pre">nrmse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.pearson_correlation"><code class="docutils literal notranslate"><span class="pre">pearson_correlation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.r_squared"><code class="docutils literal notranslate"><span class="pre">r_squared()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.rmse"><code class="docutils literal notranslate"><span class="pre">rmse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.evaluation.spearman_correlation"><code class="docutils literal notranslate"><span class="pre">spearman_correlation()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
@@ -71,9 +86,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="measures.html">Measures</a> &raquo;</li>
-      <li>Evaluation measures</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="measures.html">Measures</a></li>
+      <li class="breadcrumb-item active">Evaluation measures</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/evaluation_measures.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -84,7 +99,7 @@
            <div itemprop="articleBody">
              
   <section id="evaluation-measures">
-<h1>Evaluation measures<a class="headerlink" href="#evaluation-measures" title="Permalink to this headline"></a></h1>
+<h1>Evaluation measures<a class="headerlink" href="#evaluation-measures" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -187,8 +202,8 @@ the common part of commuters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -205,8 +220,8 @@ A non-negative floating point value (the best value is 0.0)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -223,8 +238,8 @@ the calculated Kullback-Leibler divergence</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -241,8 +256,8 @@ max error between the two samples</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -263,8 +278,8 @@ The p-value roughly indicates the probability of an uncorrelated system producin
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -285,8 +300,8 @@ disregarding the input features, would get a R^2 score of 0.0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -302,8 +317,8 @@ disregarding the input features, would get a R^2 score of 0.0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -327,8 +342,8 @@ The p-values are not entirely reliable but are probably reasonable for datasets 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>true</strong> (<em>numpy array array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
-<li><p><strong>pred</strong> (<em>numpy array-like of shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
+<li><p><strong>true</strong> (<em>numpy array array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Ground truth (correct) target values.</p></li>
+<li><p><strong>pred</strong> (<em>numpy array-like</em><em> of </em><em>shape =</em><em> (</em><em>n_samples</em><em>) or </em><em>(</em><em>n_samples</em><em>, </em><em>n_outputs</em><em>)</em>) – Estimated target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

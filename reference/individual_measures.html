@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -49,7 +51,26 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="measures.html">Measures</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="collective_measures.html">Collective measures</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Individual measures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Individual measures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.distance_straight_line"><code class="docutils literal notranslate"><span class="pre">distance_straight_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.frequency_rank"><code class="docutils literal notranslate"><span class="pre">frequency_rank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.home_location"><code class="docutils literal notranslate"><span class="pre">home_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.individual_mobility_network"><code class="docutils literal notranslate"><span class="pre">individual_mobility_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.jump_lengths"><code class="docutils literal notranslate"><span class="pre">jump_lengths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.k_radius_of_gyration"><code class="docutils literal notranslate"><span class="pre">k_radius_of_gyration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.location_frequency"><code class="docutils literal notranslate"><span class="pre">location_frequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.max_distance_from_home"><code class="docutils literal notranslate"><span class="pre">max_distance_from_home()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.maximum_distance"><code class="docutils literal notranslate"><span class="pre">maximum_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.number_of_locations"><code class="docutils literal notranslate"><span class="pre">number_of_locations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.number_of_visits"><code class="docutils literal notranslate"><span class="pre">number_of_visits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.radius_of_gyration"><code class="docutils literal notranslate"><span class="pre">radius_of_gyration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.random_entropy"><code class="docutils literal notranslate"><span class="pre">random_entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.real_entropy"><code class="docutils literal notranslate"><span class="pre">real_entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.recency_rank"><code class="docutils literal notranslate"><span class="pre">recency_rank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.uncorrelated_entropy"><code class="docutils literal notranslate"><span class="pre">uncorrelated_entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.measures.individual.waiting_times"><code class="docutils literal notranslate"><span class="pre">waiting_times()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html">Evaluation measures</a></li>
 </ul>
 </li>
@@ -72,9 +93,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="measures.html">Measures</a> &raquo;</li>
-      <li>Individual measures</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="measures.html">Measures</a></li>
+      <li class="breadcrumb-item active">Individual measures</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/individual_measures.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,7 +106,7 @@
            <div itemprop="articleBody">
              
   <section id="individual-measures">
-<h1>Individual measures<a class="headerlink" href="#individual-measures" title="Permalink to this headline"></a></h1>
+<h1>Individual measures<a class="headerlink" href="#individual-measures" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />

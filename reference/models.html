@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -49,12 +51,68 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.epr">EPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.markov_diary_generator">Markov Diary Generator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.gravity">Gravity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.radiation">Radiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.geosim">GeoSim</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.sts_epr">STS-EPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.epr">EPR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.epr.DensityEPR"><code class="docutils literal notranslate"><span class="pre">DensityEPR</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.epr.DensityEPR.generate"><code class="docutils literal notranslate"><span class="pre">DensityEPR.generate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.epr.Ditras"><code class="docutils literal notranslate"><span class="pre">Ditras</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.epr.Ditras.generate"><code class="docutils literal notranslate"><span class="pre">Ditras.generate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.epr.SpatialEPR"><code class="docutils literal notranslate"><span class="pre">SpatialEPR</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.epr.SpatialEPR.generate"><code class="docutils literal notranslate"><span class="pre">SpatialEPR.generate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.markov_diary_generator">Markov Diary Generator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator"><code class="docutils literal notranslate"><span class="pre">MarkovDiaryGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator.fit"><code class="docutils literal notranslate"><span class="pre">MarkovDiaryGenerator.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator.generate"><code class="docutils literal notranslate"><span class="pre">MarkovDiaryGenerator.generate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.gravity">Gravity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.gravity.Gravity"><code class="docutils literal notranslate"><span class="pre">Gravity</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.gravity.Gravity.fit"><code class="docutils literal notranslate"><span class="pre">Gravity.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.gravity.Gravity.generate"><code class="docutils literal notranslate"><span class="pre">Gravity.generate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.radiation">Radiation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.radiation.Radiation"><code class="docutils literal notranslate"><span class="pre">Radiation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.radiation.Radiation.generate"><code class="docutils literal notranslate"><span class="pre">Radiation.generate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.geosim">GeoSim</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.geosim.GeoSim"><code class="docutils literal notranslate"><span class="pre">GeoSim</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.action_correction"><code class="docutils literal notranslate"><span class="pre">GeoSim.action_correction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.cosine_similarity"><code class="docutils literal notranslate"><span class="pre">GeoSim.cosine_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.generate"><code class="docutils literal notranslate"><span class="pre">GeoSim.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.make_individual_exploration_action"><code class="docutils literal notranslate"><span class="pre">GeoSim.make_individual_exploration_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.make_individual_return_action"><code class="docutils literal notranslate"><span class="pre">GeoSim.make_individual_return_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.geosim.GeoSim.make_social_action"><code class="docutils literal notranslate"><span class="pre">GeoSim.make_social_action()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skmob.models.sts_epr">STS-EPR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr"><code class="docutils literal notranslate"><span class="pre">STS_epr</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.action_correction_diary"><code class="docutils literal notranslate"><span class="pre">STS_epr.action_correction_diary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.cosine_similarity"><code class="docutils literal notranslate"><span class="pre">STS_epr.cosine_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.generate"><code class="docutils literal notranslate"><span class="pre">STS_epr.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.make_individual_exploration_action"><code class="docutils literal notranslate"><span class="pre">STS_epr.make_individual_exploration_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.make_individual_return_action"><code class="docutils literal notranslate"><span class="pre">STS_epr.make_individual_return_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skmob.models.sts_epr.STS_epr.make_social_action"><code class="docutils literal notranslate"><span class="pre">STS_epr.make_social_action()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
@@ -75,8 +133,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Models</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Models</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/models.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,7 +145,7 @@
            <div itemprop="articleBody">
              
   <section id="models">
-<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline"></a></h1>
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -121,7 +179,7 @@
 </tbody>
 </table>
 <section id="module-skmob.models.epr">
-<span id="epr"></span><h2>EPR<a class="headerlink" href="#module-skmob.models.epr" title="Permalink to this headline"></a></h2>
+<span id="epr"></span><h2>EPR<a class="headerlink" href="#module-skmob.models.epr" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.epr.DensityEPR">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.epr.</span></span><span class="sig-name descname"><span class="pre">DensityEPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Density</span> <span class="pre">EPR</span> <span class="pre">model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">17</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_wait_time_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.epr.DensityEPR" title="Permalink to this definition"></a></dt>
@@ -421,7 +479,7 @@
 
 </section>
 <section id="module-skmob.models.markov_diary_generator">
-<span id="markov-diary-generator"></span><h2>Markov Diary Generator<a class="headerlink" href="#module-skmob.models.markov_diary_generator" title="Permalink to this headline"></a></h2>
+<span id="markov-diary-generator"></span><h2>Markov Diary Generator<a class="headerlink" href="#module-skmob.models.markov_diary_generator" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.markov_diary_generator.MarkovDiaryGenerator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.markov_diary_generator.</span></span><span class="sig-name descname"><span class="pre">MarkovDiaryGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Markov</span> <span class="pre">diary'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.markov_diary_generator.MarkovDiaryGenerator" title="Permalink to this definition"></a></dt>
@@ -521,10 +579,10 @@
 
 </section>
 <section id="module-skmob.models.gravity">
-<span id="gravity"></span><h2>Gravity<a class="headerlink" href="#module-skmob.models.gravity" title="Permalink to this headline"></a></h2>
+<span id="gravity"></span><h2>Gravity<a class="headerlink" href="#module-skmob.models.gravity" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.gravity.Gravity">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.gravity.</span></span><span class="sig-name descname"><span class="pre">Gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deterrence_func_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'power_law'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterrence_func_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[-</span> <span class="pre">2.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_exp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_exp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'singly</span> <span class="pre">constrained'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Gravity</span> <span class="pre">model'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.gravity.</span></span><span class="sig-name descname"><span class="pre">Gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deterrence_func_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'power_law'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterrence_func_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[-2.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_exp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination_exp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'singly</span> <span class="pre">constrained'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Gravity</span> <span class="pre">model'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.gravity.Gravity" title="Permalink to this definition"></a></dt>
 <dd><p>Gravity model.</p>
 <p>The Gravity model of human migration. In its original formulation, the probability <span class="math notranslate nohighlight">\(T_{ij}\)</span> of moving from a location <span class="math notranslate nohighlight">\(i\)</span> to location <span class="math notranslate nohighlight">\(j\)</span> is defined as <a class="reference internal" href="#z1946" id="id22"><span>[Z1946]</span></a>:</p>
 <div class="math notranslate nohighlight">
@@ -710,7 +768,7 @@
 
 </section>
 <section id="module-skmob.models.radiation">
-<span id="radiation"></span><h2>Radiation<a class="headerlink" href="#module-skmob.models.radiation" title="Permalink to this headline"></a></h2>
+<span id="radiation"></span><h2>Radiation<a class="headerlink" href="#module-skmob.models.radiation" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.radiation.Radiation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.radiation.</span></span><span class="sig-name descname"><span class="pre">Radiation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Radiation</span> <span class="pre">model'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.radiation.Radiation" title="Permalink to this definition"></a></dt>
@@ -821,7 +879,7 @@
 
 </section>
 <section id="module-skmob.models.geosim">
-<span id="geosim"></span><h2>GeoSim<a class="headerlink" href="#module-skmob.models.geosim" title="Permalink to this headline"></a></h2>
+<span id="geosim"></span><h2>GeoSim<a class="headerlink" href="#module-skmob.models.geosim" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.geosim.GeoSim">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.geosim.</span></span><span class="sig-name descname"><span class="pre">GeoSim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GeoSim'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">17</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_wait_time_hours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.geosim.GeoSim" title="Permalink to this definition"></a></dt>
@@ -967,7 +1025,7 @@ to C’s visitation frequency</p>
 
 </section>
 <section id="module-skmob.models.sts_epr">
-<span id="sts-epr"></span><h2>STS-EPR<a class="headerlink" href="#module-skmob.models.sts_epr" title="Permalink to this headline"></a></h2>
+<span id="sts-epr"></span><h2>STS-EPR<a class="headerlink" href="#module-skmob.models.sts_epr" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="skmob.models.sts_epr.STS_epr">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">skmob.models.sts_epr.</span></span><span class="sig-name descname"><span class="pre">STS_epr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'STS-EPR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.models.sts_epr.STS_epr" title="Permalink to this definition"></a></dt>

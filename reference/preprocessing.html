@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -45,7 +47,13 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.preprocessing.filtering.filter"><code class="docutils literal notranslate"><span class="pre">filter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.preprocessing.compression.compress"><code class="docutils literal notranslate"><span class="pre">compress()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.preprocessing.detection.stay_locations"><code class="docutils literal notranslate"><span class="pre">stay_locations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.preprocessing.clustering.cluster"><code class="docutils literal notranslate"><span class="pre">cluster()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
@@ -66,8 +74,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Preprocessing</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Preprocessing</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/preprocessing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,7 +86,7 @@
            <div itemprop="articleBody">
              
   <section id="preprocessing">
-<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline"></a></h1>
+<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -95,7 +103,7 @@
 <td><p>Stops detection.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skmob.preprocessing.clustering.cluster" title="skmob.preprocessing.clustering.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering.cluster</span></code></a>(tdf[, cluster_radius_km, ...])</p></td>
-<td><p>Clustering of locations.</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +220,7 @@
 <dt class="sig sig-object py" id="skmob.preprocessing.detection.stay_locations">
 <span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.detection.</span></span><span class="sig-name descname"><span class="pre">stay_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_radius_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes_for_a_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaving_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_data_for_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_speed_kmh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.detection.stay_locations" title="Permalink to this definition"></a></dt>
 <dd><p>Stops detection.</p>
-<p>Detect the stay locations (or stops) for each individual in a TrajDataFrame. A stop is detected when the individual spends at least <cite>minutes_for_a_stop</cite> minutes within a distance <cite>stop_radius_factor * spatial_radius</cite> km from a given trajectory point. The stop’s coordinates are the median latitude and longitude values of the points found within the specified distance <a class="reference internal" href="#id9" id="id4"><span>[RT2004]</span></a> <a class="reference internal" href="#id6" id="id5"><span>[Z2015]</span></a>.</p>
+<p>Detect the stay locations (or stops) for each individual in a TrajDataFrame. A stop is detected when the individual spends at least <cite>minutes_for_a_stop</cite> minutes within a distance <cite>stop_radius_factor * spatial_radius</cite> km from a given trajectory point. The stop’s coordinates are the median latitude and longitude values of the points found within the specified distance <a class="reference internal" href="#rt2004" id="id4"><span>[RT2004]</span></a> <a class="reference internal" href="#id6" id="id5"><span>[Z2015]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -266,7 +274,7 @@ then this is interpreted as missing data and does not count as a stop. The defau
 </div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="rt2004"><span class="brackets">RT2004</span></dt>
+<dt class="label" id="rt2004"><span class="brackets"><a class="fn-backref" href="#id4">RT2004</a></span></dt>
 <dd><p>Ramaswamy, H. &amp; Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, <a class="reference external" href="http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf">http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf</a></p>
 </dd>
 <dt class="label" id="id6"><span class="brackets">Z2015</span></dt>
@@ -278,63 +286,7 @@ then this is interpreted as missing data and does not count as a stop. The defau
 <dl class="py function">
 <dt class="sig sig-object py" id="skmob.preprocessing.clustering.cluster">
 <span class="sig-prename descclassname"><span class="pre">skmob.preprocessing.clustering.</span></span><span class="sig-name descname"><span class="pre">cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_radius_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#skmob.preprocessing.clustering.cluster" title="Permalink to this definition"></a></dt>
-<dd><p>Clustering of locations.</p>
-<p>Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity <a class="reference internal" href="#id9" id="id7"><span>[RT2004]</span></a>. The clustering algorithm used is DBSCAN (by sklearn <a class="reference internal" href="#dbscan" id="id8"><span>[DBSCAN]</span></a>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf</strong> (<em>TrajDataFrame</em>) – the input TrajDataFrame that should contain the stops, i.e., the output of a <cite>preprocessing.detection</cite> function.</p></li>
-<li><p><strong>cluster_radius_km</strong> (<em>float, optional</em>) – the parameter <cite>eps</cite> of the function sklearn.cluster.DBSCAN, in kilometers. The default is <cite>0.1</cite>.</p></li>
-<li><p><strong>min_samples</strong> (<em>int, optional</em>) – the parameter <cite>min_samples</cite> of the function sklearn.cluster.DBSCAN indicating the minimum number of stops to form a cluster. The default is <cite>1</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a TrajDataFrame with the additional column ‘cluster’ containing the cluster labels. The stops that belong to the same cluster have the same label. The labels are integers corresponding to the ranks of clusters according to the frequency of visitation (the most visited cluster has label 0, the second most visited has label 1, etc.).</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="data_structures.html#skmob.core.trajectorydataframe.TrajDataFrame" title="skmob.core.trajectorydataframe.TrajDataFrame">TrajDataFrame</a></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skmob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skmob.preprocessing</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">clustering</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># read the trajectory data (GeoLife)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">GEOLIFE_SAMPLE</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tdf</span> <span class="o">=</span> <span class="n">skmob</span><span class="o">.</span><span class="n">TrajDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-<span class="go">         lat         lng            datetime  uid</span>
-<span class="go">0  39.984094  116.319236 2008-10-23 05:53:05    1</span>
-<span class="go">1  39.984198  116.319322 2008-10-23 05:53:06    1</span>
-<span class="go">2  39.984224  116.319402 2008-10-23 05:53:11    1</span>
-<span class="go">3  39.984211  116.319389 2008-10-23 05:53:16    1</span>
-<span class="go">4  39.984217  116.319422 2008-10-23 05:53:21    1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># detect the stops first</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stdf</span> <span class="o">=</span> <span class="n">detection</span><span class="o">.</span><span class="n">stops</span><span class="p">(</span><span class="n">tdf</span><span class="p">,</span> <span class="n">stop_radius_factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">minutes_for_a_stop</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">spatial_radius_km</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">leaving_time</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># cluster the stops</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cstdf</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">cluster</span><span class="p">(</span><span class="n">stdf</span><span class="p">,</span> <span class="n">cluster_radius_km</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cstdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-<span class="go">         lat         lng            datetime  uid    leaving_datetime  cluster</span>
-<span class="go">0  39.978030  116.327481 2008-10-23 06:01:37    1 2008-10-23 10:32:53        0</span>
-<span class="go">1  40.013820  116.306532 2008-10-23 11:10:19    1 2008-10-23 23:45:27        1</span>
-<span class="go">2  39.978419  116.326870 2008-10-24 00:21:52    1 2008-10-24 01:47:30        0</span>
-<span class="go">3  39.981166  116.308475 2008-10-24 02:02:31    1 2008-10-24 02:30:29       42</span>
-<span class="go">4  39.981431  116.309902 2008-10-24 02:30:29    1 2008-10-24 03:16:35       41</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cstdf</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
-<span class="go">{&#39;detect&#39;: {&#39;function&#39;: &#39;stay_locations&#39;, &#39;stop_radius_factor&#39;: 0.5, &#39;minutes_for_a_stop&#39;: 20.0, &#39;spatial_radius_km&#39;: 0.2, &#39;leaving_time&#39;: True, &#39;no_data_for_minutes&#39;: 1000000000000.0, &#39;min_speed_kmh&#39;: None}, &#39;cluster&#39;: {&#39;function&#39;: &#39;cluster&#39;, &#39;cluster_radius_km&#39;: 0.1, &#39;min_samples&#39;: 1}}</span>
-</pre></div>
-</div>
-<p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="dbscan"><span class="brackets"><a class="fn-backref" href="#id8">DBSCAN</a></span></dt>
-<dd><p>DBSCAN implementation, scikit-learn, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html">https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html</a></p>
-</dd>
-<dt class="label" id="id9"><span class="brackets">RT2004</span></dt>
-<dd><p>Ramaswamy, H. &amp; Toyama, K. (2004) Project Lachesis: parsing and modeling location histories. In International Conference on Geographic Information Science, 106-124, <a class="reference external" href="http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf">http://kentarotoyama.com/papers/Hariharan_2004_Project_Lachesis.pdf</a></p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </section>
 

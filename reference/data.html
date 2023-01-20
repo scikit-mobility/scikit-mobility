@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -49,7 +51,12 @@
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="privacy.html">Privacy</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.data.load.get_dataset_info"><code class="docutils literal notranslate"><span class="pre">get_dataset_info()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.data.load.list_datasets"><code class="docutils literal notranslate"><span class="pre">list_datasets()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.data.load.load_dataset"><code class="docutils literal notranslate"><span class="pre">load_dataset()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -65,8 +72,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Data</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/data.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,7 +84,7 @@
            <div itemprop="articleBody">
              
   <section id="data">
-<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline"></a></h1>
+<h1>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h1>
 <p>The data module of scikit-mobility provides users with an easy way to: 1) Download ready-to-use mobility data (e.g., trajectories, flows, spatial tessellations, and auxiliary data); 2) Load and transform the downloaded dataset into standard skmob structures (TrajDataFrame, GeoDataFrame, FlowDataFrame, DataFrame); 3) Allow developers and contributors to add new datasets to the library.</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>

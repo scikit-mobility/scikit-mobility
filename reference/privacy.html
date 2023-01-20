@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -49,7 +51,41 @@
 <li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Privacy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Privacy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.HomeWorkAttack"><code class="docutils literal notranslate"><span class="pre">HomeWorkAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.HomeWorkAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">HomeWorkAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationAttack"><code class="docutils literal notranslate"><span class="pre">LocationAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationFrequencyAttack"><code class="docutils literal notranslate"><span class="pre">LocationFrequencyAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationFrequencyAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationFrequencyAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationProbabilityAttack"><code class="docutils literal notranslate"><span class="pre">LocationProbabilityAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationProbabilityAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationProbabilityAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationProportionAttack"><code class="docutils literal notranslate"><span class="pre">LocationProportionAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationProportionAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationProportionAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationSequenceAttack"><code class="docutils literal notranslate"><span class="pre">LocationSequenceAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationSequenceAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationSequenceAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.LocationTimeAttack"><code class="docutils literal notranslate"><span class="pre">LocationTimeAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.LocationTimeAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">LocationTimeAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#skmob.privacy.attacks.UniqueLocationAttack"><code class="docutils literal notranslate"><span class="pre">UniqueLocationAttack</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skmob.privacy.attacks.UniqueLocationAttack.assess_risk"><code class="docutils literal notranslate"><span class="pre">UniqueLocationAttack.assess_risk()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data</a></li>
 </ul>
 
@@ -66,8 +102,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Privacy</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Privacy</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/privacy.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,7 +114,7 @@
            <div itemprop="articleBody">
              
   <section id="privacy">
-<h1>Privacy<a class="headerlink" href="#privacy" title="Permalink to this headline"></a></h1>
+<h1>Privacy<a class="headerlink" href="#privacy" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />

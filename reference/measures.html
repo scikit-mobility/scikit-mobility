@@ -15,7 +15,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -71,8 +73,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Measures</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Measures</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/reference/measures.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -83,13 +85,53 @@
            <div itemprop="articleBody">
              
   <section id="measures">
-<h1>Measures<a class="headerlink" href="#measures" title="Permalink to this headline"></a></h1>
+<h1>Measures<a class="headerlink" href="#measures" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="collective_measures.html">Collective measures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="individual_measures.html">Individual measures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluation_measures.html">Evaluation measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collective_measures.html">Collective measures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.homes_per_location"><code class="docutils literal notranslate"><span class="pre">homes_per_location()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.mean_square_displacement"><code class="docutils literal notranslate"><span class="pre">mean_square_displacement()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.random_location_entropy"><code class="docutils literal notranslate"><span class="pre">random_location_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.uncorrelated_location_entropy"><code class="docutils literal notranslate"><span class="pre">uncorrelated_location_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.visits_per_location"><code class="docutils literal notranslate"><span class="pre">visits_per_location()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collective_measures.html#skmob.measures.collective.visits_per_time_unit"><code class="docutils literal notranslate"><span class="pre">visits_per_time_unit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="individual_measures.html">Individual measures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.distance_straight_line"><code class="docutils literal notranslate"><span class="pre">distance_straight_line()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.frequency_rank"><code class="docutils literal notranslate"><span class="pre">frequency_rank()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.home_location"><code class="docutils literal notranslate"><span class="pre">home_location()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.individual_mobility_network"><code class="docutils literal notranslate"><span class="pre">individual_mobility_network()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.jump_lengths"><code class="docutils literal notranslate"><span class="pre">jump_lengths()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.k_radius_of_gyration"><code class="docutils literal notranslate"><span class="pre">k_radius_of_gyration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.location_frequency"><code class="docutils literal notranslate"><span class="pre">location_frequency()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.max_distance_from_home"><code class="docutils literal notranslate"><span class="pre">max_distance_from_home()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.maximum_distance"><code class="docutils literal notranslate"><span class="pre">maximum_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.number_of_locations"><code class="docutils literal notranslate"><span class="pre">number_of_locations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.number_of_visits"><code class="docutils literal notranslate"><span class="pre">number_of_visits()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.radius_of_gyration"><code class="docutils literal notranslate"><span class="pre">radius_of_gyration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.random_entropy"><code class="docutils literal notranslate"><span class="pre">random_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.real_entropy"><code class="docutils literal notranslate"><span class="pre">real_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.recency_rank"><code class="docutils literal notranslate"><span class="pre">recency_rank()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.uncorrelated_entropy"><code class="docutils literal notranslate"><span class="pre">uncorrelated_entropy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="individual_measures.html#skmob.measures.individual.waiting_times"><code class="docutils literal notranslate"><span class="pre">waiting_times()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation_measures.html">Evaluation measures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.common_part_of_commuters"><code class="docutils literal notranslate"><span class="pre">common_part_of_commuters()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.common_part_of_commuters_distance"><code class="docutils literal notranslate"><span class="pre">common_part_of_commuters_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.common_part_of_links"><code class="docutils literal notranslate"><span class="pre">common_part_of_links()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.information_gain"><code class="docutils literal notranslate"><span class="pre">information_gain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.kullback_leibler_divergence"><code class="docutils literal notranslate"><span class="pre">kullback_leibler_divergence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.max_error"><code class="docutils literal notranslate"><span class="pre">max_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.nrmse"><code class="docutils literal notranslate"><span class="pre">nrmse()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.pearson_correlation"><code class="docutils literal notranslate"><span class="pre">pearson_correlation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.r_squared"><code class="docutils literal notranslate"><span class="pre">r_squared()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.rmse"><code class="docutils literal notranslate"><span class="pre">rmse()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_measures.html#skmob.measures.evaluation.spearman_correlation"><code class="docutils literal notranslate"><span class="pre">spearman_correlation()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

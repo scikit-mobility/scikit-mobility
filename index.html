@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
         <script src="_static/copybutton.js"></script>
@@ -65,8 +67,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Scikit-mobility</li>
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Scikit-mobility</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,7 +79,7 @@
            <div itemprop="articleBody">
              
   <section id="scikit-mobility">
-<h1>Scikit-mobility<a class="headerlink" href="#scikit-mobility" title="Permalink to this headline"></a></h1>
+<h1>Scikit-mobility<a class="headerlink" href="#scikit-mobility" title="Permalink to this heading"></a></h1>
 <p>scikit-mobility is a library for human mobility analysis in Python. The library allows to:</p>
 <ul class="simple">
 <li><p>represent trajectories and mobility flows with proper data structures, TrajDataFrame and FlowDataFrame.</p></li>
@@ -88,13 +90,13 @@
 <li><p>assess the privacy risk associated with a mobility dataset</p></li>
 </ul>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Full instructions to install the library are available in the <a class="reference external" href="https://github.com/scikit-mobility/scikit-mobility">scikit-mobilty repository</a>.</p>
 </div>
 <section id="installation-with-pip-python-3-7-required">
-<h3>Installation with pip (python &gt;= 3.7 required)<a class="headerlink" href="#installation-with-pip-python-3-7-required" title="Permalink to this headline"></a></h3>
+<h3>Installation with pip (python &gt;= 3.7 required)<a class="headerlink" href="#installation-with-pip-python-3-7-required" title="Permalink to this heading"></a></h3>
 <ol class="arabic">
 <li><p>Create an environment <cite>skmob</cite></p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv skmob</span>
@@ -139,7 +141,7 @@
 </div></blockquote>
 </section>
 <section id="installation-with-conda-miniconda">
-<h3>Installation with conda - miniconda<a class="headerlink" href="#installation-with-conda-miniconda" title="Permalink to this headline"></a></h3>
+<h3>Installation with conda - miniconda<a class="headerlink" href="#installation-with-conda-miniconda" title="Permalink to this heading"></a></h3>
 <ol class="arabic">
 <li><p>Create an environment <cite>skmob</cite> and install pip</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda create -n skmob pip python=3.7 rtree</span>
@@ -180,7 +182,7 @@
 </pre></div>
 </div>
 <section id="known-issues">
-<h4>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline"></a></h4>
+<h4>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this heading"></a></h4>
 <p>the installation of package rtree could not work with pip within a conda environment. If so, try</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install &quot;rtree&gt;=0.8,&lt;0.9&quot;</span>
 </pre></div>
@@ -201,7 +203,13 @@
 <li class="toctree-l2"><a class="reference internal" href="reference/data_structures.html#module-skmob.core.flowdataframe">FlowDataframe</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference/preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/preprocessing.html">Preprocessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/preprocessing.html#skmob.preprocessing.filtering.filter"><code class="docutils literal notranslate"><span class="pre">filter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/preprocessing.html#skmob.preprocessing.compression.compress"><code class="docutils literal notranslate"><span class="pre">compress()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/preprocessing.html#skmob.preprocessing.detection.stay_locations"><code class="docutils literal notranslate"><span class="pre">stay_locations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/preprocessing.html#skmob.preprocessing.clustering.cluster"><code class="docutils literal notranslate"><span class="pre">cluster()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reference/measures.html">Measures</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/collective_measures.html">Collective measures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/individual_measures.html">Individual measures</a></li>
@@ -217,9 +225,29 @@
 <li class="toctree-l2"><a class="reference internal" href="reference/models.html#module-skmob.models.sts_epr">STS-EPR</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference/io.html">Input/Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/privacy.html">Privacy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/data.html">Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/io.html">Input/Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/io.html#skmob.io.file.load_geolife_trajectories"><code class="docutils literal notranslate"><span class="pre">load_geolife_trajectories()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/io.html#skmob.io.file.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/io.html#skmob.io.file.write"><code class="docutils literal notranslate"><span class="pre">write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/privacy.html">Privacy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.HomeWorkAttack"><code class="docutils literal notranslate"><span class="pre">HomeWorkAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationAttack"><code class="docutils literal notranslate"><span class="pre">LocationAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationFrequencyAttack"><code class="docutils literal notranslate"><span class="pre">LocationFrequencyAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationProbabilityAttack"><code class="docutils literal notranslate"><span class="pre">LocationProbabilityAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationProportionAttack"><code class="docutils literal notranslate"><span class="pre">LocationProportionAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationSequenceAttack"><code class="docutils literal notranslate"><span class="pre">LocationSequenceAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.LocationTimeAttack"><code class="docutils literal notranslate"><span class="pre">LocationTimeAttack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/privacy.html#skmob.privacy.attacks.UniqueLocationAttack"><code class="docutils literal notranslate"><span class="pre">UniqueLocationAttack</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/data.html">Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/data.html#skmob.data.load.get_dataset_info"><code class="docutils literal notranslate"><span class="pre">get_dataset_info()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/data.html#skmob.data.load.list_datasets"><code class="docutils literal notranslate"><span class="pre">list_datasets()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/data.html#skmob.data.load.load_dataset"><code class="docutils literal notranslate"><span class="pre">load_dataset()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
