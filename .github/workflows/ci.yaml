@@ -84,18 +84,18 @@ jobs:
       # we need nojekyll or github will ignore folders starting with "_"
       - name: "Copy static files"
         run: |
-          mv .nojekyll static/html
-          mv logo_skmob.png static/html
-          mkdir static/html/coverage
+          mv .nojekyll public/static/html
+          mv logo_skmob.png public/static/html
+          mkdir public/static/html/coverage
 
       - name: "Download Artifact"
         uses: actions/download-artifact@v2
         with:
           name: code-coverage
-          path: static/html/coverage
+          path: public/static/html/coverage
 
       - name: "Deploy Docs 🚀"
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: static/html # The folder the action should deploy.
+          folder: public/static/html # The folder the action should deploy.
