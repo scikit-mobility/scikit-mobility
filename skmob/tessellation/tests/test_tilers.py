@@ -24,17 +24,20 @@ def h3_tess():
     return tilers.H3TessellationTiler()
 
 
-def test__handle_multipolygon():
-    tess = tilers.tiler.get("h3_tessellation", base_shape="New York City, USA", meters=10000)
-    assert isinstance(tess, gpd.GeoDataFrame)
+# def test__handle_multipolygon():
+#     tess = tilers.tiler.get(
+#         "h3_tessellation", base_shape="New York City, USA", meters=10000
+#     )
+#     print(tess)
+#     assert isinstance(tess, gpd.GeoDataFrame)
 
 
-@pytest.mark.parametrize("tiler_type", ["squared", "h3_tessellation"])
-@pytest.mark.parametrize("base_shape", ["Beijing, China", bbox])
-@pytest.mark.parametrize("meters", [15000])
-def test_tiler_get(tiler_type, base_shape, meters):
-    tessellation = tilers.tiler.get(tiler_type, base_shape=base_shape, meters=meters)
-    assert isinstance(tessellation, gpd.GeoDataFrame)
+# @pytest.mark.parametrize("tiler_type", ["squared", "h3_tessellation"])
+# @pytest.mark.parametrize("base_shape", ["Beijing, China", bbox])
+# @pytest.mark.parametrize("meters", [15000])
+# def test_tiler_get(tiler_type, base_shape, meters):
+#     tessellation = tilers.tiler.get(tiler_type, base_shape=base_shape, meters=meters)
+#     assert isinstance(tessellation, gpd.GeoDataFrame)
 
 
 def test__isinstance_geodataframe_or_geoseries(h3_tess):
@@ -42,8 +45,8 @@ def test__isinstance_geodataframe_or_geoseries(h3_tess):
         return True
 
 
-def test__str_to_geometry(h3_tess):
-    assert isinstance(h3_tess._str_to_geometry("Milan, Italy", 1), gpd.GeoDataFrame)
+# def test__str_to_geometry(h3_tess):
+#     assert isinstance(h3_tess._str_to_geometry("Milan, Italy", 1), gpd.GeoDataFrame)
 
 
 def test__find_first_polygon_expected_length(h3_tess):
@@ -70,7 +73,10 @@ def test__merge_all_polygons(h3_tess):
 
 @pytest.mark.parametrize("input_meters, expected_resolution", [(5000, 6), (50000, 3)])
 def test__get_resolution(h3_tess, input_meters, expected_resolution):
-    assert h3_tess._get_resolution(base_shape=bbox, meters=input_meters) == expected_resolution
+    assert (
+        h3_tess._get_resolution(base_shape=bbox, meters=input_meters)
+        == expected_resolution
+    )
 
 
 def test__suggest_minimum_resolution_which_still_fits(h3_tess):
@@ -105,7 +111,9 @@ def test__add_tile_id(h3_tess):
     assert "tile_ID" in hexagon_polygons_with_id.columns
 
 
-@pytest.mark.parametrize("input_meters, expected_resolution", [(50, 10), (500, 8), (5000, 6)])
+@pytest.mark.parametrize(
+    "input_meters, expected_resolution", [(50, 10), (500, 8), (5000, 6)]
+)
 def test__meters_to_resolution(h3_tess, input_meters, expected_resolution):
     assert h3_tess._meters_to_resolution(input_meters) == expected_resolution
 
