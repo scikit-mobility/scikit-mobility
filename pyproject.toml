@@ -29,7 +29,7 @@ classifiers=['Intended Audience :: Science/Research',
                  ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4"
+python = ">=3.8.0, <4"
 pandas = "^1.1.5"
 python-igraph = "^0.9.1"
 powerlaw = "^1.4.6"
@@ -45,7 +45,7 @@ geopandas = "^0.10.2"
 jupyter = "^1.0.0"
 ipykernel = "^6.20.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 tox = "^3.23.1"
 pytest = "^6.2.4"
 coverage = "^5.5"
@@ -53,9 +53,17 @@ pre-commit = "^2.12.1"
 poetry = "^1.1.6"
 Rtree = "^0.9.7"
 coverage-badge = "^1.0.1"
+black = "^22.12.0"
+ruff = "^0.0.226"
+sphinx = "<6.0.0"
+sphinx-copybutton = "^0.5.1"
+sphinx-rtd-theme = "^1.1.1"
+
+[tool.ruff]
+line-length = 88
 
 [tool.black]
-line-length = 120
+line-length = 88
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -77,7 +85,6 @@ include_trailing_comma = "True"
 force_grid_wrap = 0
 use_parentheses = "True"
 ensure_newline_before_comments = "True"
-line_length = 100
 
 [tool.tox]
 legacy_tox_ini = """

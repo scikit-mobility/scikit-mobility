@@ -444,6 +444,44 @@ class TrajDataFrame(pd.DataFrame):
         parameters=None,
     ):
 
+        """
+        Read a trajectory file and return a TrajDataFrame.
+
+        Parameters
+        ----------
+        filename : str
+            the path to the file
+        latitude : str, optional
+            the name of the column containing the latitude values
+        longitude : str, optional
+            the name of the column containing the longitude values
+        datetime : str, optional    
+            the name of the column containing the datetime values
+        user_id : str, optional 
+            the name of the column containing the user id values
+        trajectory_id : str, optional   
+            the name of the column containing the trajectory id values
+        encoding : str, optional
+            the encoding of the file
+        usecols : list, optional
+            the columns to read
+        header : int, optional
+            the row number of the header
+        timestamp : bool, optional
+            if True, the datetime column contains timestamps
+        crs : dict, optional
+            the coordinate reference system of the TrajDataFrame
+        sep : str, optional
+            the separator of the file
+        parameters : dict, optional
+            the parameters of the TrajDataFrame
+
+        Returns
+        -------
+        TrajDataFrame
+            The loaded TrajDataFrame
+
+        """
         df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=encoding)
 
         if parameters is None:
