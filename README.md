@@ -60,19 +60,20 @@ The documentation of scikit-mobility's classes and functions is available at: ht
 
 if you use scikit-mobility please cite the following paper:
 
-> Luca Pappalardo, Filippo Simini, Gianni Barlacchi and Roberto Pellungrini.
-> **scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data**,
-> 2019, https://arxiv.org/abs/1907.07062
+Pappalardo, L., Simini, F., Barlacchi, G., & Pellungrini, R. (2022). scikit-mobility: A Python Library for the Analysis, Generation, and Risk Assessment of Mobility Data. Journal of Statistical Software, 103(1), 1–38. https://doi.org/10.18637/jss.v103.i04
 
 Bibtex:
 ```
-@misc{pappalardo2019scikitmobility,
-    title={scikit-mobility: a Python library for the analysis, generation and risk assessment of mobility data},
-    author={Luca Pappalardo and Filippo Simini and Gianni Barlacchi and Roberto Pellungrini},
-    year={2019},
-    eprint={1907.07062},
-    archivePrefix={arXiv},
-    primaryClass={physics.soc-ph}
+@article{JSSv103i04,
+ title={scikit-mobility: A Python Library for the Analysis, Generation, and Risk Assessment of Mobility Data},
+ volume={103},
+ url={https://www.jstatsoft.org/index.php/jss/article/view/v103i04},
+ doi={10.18637/jss.v103.i04},
+ number={1},
+ journal={Journal of Statistical Software},
+ author={Pappalardo, Luca and Simini, Filippo and Barlacchi, Gianni and Pellungrini, Roberto},
+ year={2022},
+ pages={1–38}
 }
 ```
 
@@ -648,7 +649,7 @@ The following code generate synthetic trajectories using the `DensityEPR` model:
 
 <a id='privacy'></a>
 ### Privacy
-Mobility data is sensitive since the movements of individuals can reveal confidential personal information or allow the re-identification of individuals in a database, creating serious privacy risks. In the literature, privacy risk assessment relies on the concept of re-identification of a moving object in a database through an attack by a malicious adversary. A common framework for privacy risk assessment assumes that during the attack a malicious adversary acquires, in some way, the access to an anonymized mobility data set, i.e., a mobility data set in which the moving object associated with a trajectory is not known. Moreover, it is assumed that the malicious adversary acquires, in some way, information about the trajectory (or a portion of it) of an individual represented in the acquired data set. Based on this information, the risk of re-identification of that individual is computed estimating how unique that individual's mobility data are with respect to the mobility data of the other individuals represented inthe acquired data set.
+Mobility data is sensitive since the movements of individuals can reveal confidential personal information or allow the re-identification of individuals in a database, creating serious privacy risks. In the literature, privacy risk assessment relies on the concept of re-identification of a moving object in a database through an attack by a malicious adversary. A common framework for privacy risk assessment assumes that during the attack a malicious adversary acquires, in some way, the access to an anonymized mobility data set, i.e., a mobility data set in which the moving object associated with a trajectory is not known. Moreover, it is assumed that the malicious adversary acquires, in some way, information about the trajectory (or a portion of it) of an individual represented in the acquired data set. Based on this information, the risk of re-identification of that individual is computed estimating how unique that individual's mobility data are with respect to the mobility data of the other individuals represented in the acquired data set.
 
 scikit-mobility provides several attack models, each implemented as a python class. For example in a location attack model, implemented in the `LocationAttack` class, the malicious adversary knows a certain number of locations visited by an individual, but they do not know the temporal order of the visits. To instantiate a `LocationAttack` object we can run the following code:
 

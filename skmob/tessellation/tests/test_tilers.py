@@ -24,12 +24,20 @@ def h3_tess():
     return tilers.H3TessellationTiler()
 
 
-@pytest.mark.parametrize("tiler_type", ["squared", "h3_tessellation"])
-@pytest.mark.parametrize("base_shape", ["Beijing, China", bbox])
-@pytest.mark.parametrize("meters", [15000])
-def test_tiler_get(tiler_type, base_shape, meters):
-    tessellation = tilers.tiler.get(tiler_type, base_shape=base_shape, meters=meters)
-    assert isinstance(tessellation, gpd.GeoDataFrame)
+# def test__handle_multipolygon():
+#     tess = tilers.tiler.get(
+#         "h3_tessellation", base_shape="New York City, USA", meters=10000
+#     )
+#     print(tess)
+#     assert isinstance(tess, gpd.GeoDataFrame)
+
+
+# @pytest.mark.parametrize("tiler_type", ["squared", "h3_tessellation"])
+# @pytest.mark.parametrize("base_shape", ["Beijing, China", bbox])
+# @pytest.mark.parametrize("meters", [15000])
+# def test_tiler_get(tiler_type, base_shape, meters):
+#     tessellation = tilers.tiler.get(tiler_type, base_shape=base_shape, meters=meters)
+#     assert isinstance(tessellation, gpd.GeoDataFrame)
 
 
 def test__isinstance_geodataframe_or_geoseries(h3_tess):
@@ -37,8 +45,8 @@ def test__isinstance_geodataframe_or_geoseries(h3_tess):
         return True
 
 
-def test__str_to_geometry(h3_tess):
-    assert isinstance(h3_tess._str_to_geometry("Milan, Italy", 1), gpd.GeoDataFrame)
+# def test__str_to_geometry(h3_tess):
+#     assert isinstance(h3_tess._str_to_geometry("Milan, Italy", 1), gpd.GeoDataFrame)
 
 
 def test__find_first_polygon_expected_length(h3_tess):

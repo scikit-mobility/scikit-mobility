@@ -102,3 +102,22 @@ class TestClustering:
 
         # assert
         pd.testing.assert_frame_equal(output, expected)
+
+    def test_dbscan(self):
+        output = clustering.dbscan(self.trjdat)
+
+        expected_cluster = [3, 2, 1, 0, 0, 2, 0, 1, 3, 2, 1, 0, 2, 1, 0, 2, 1, 0, 1, 0]
+        expected = self.trjdat
+        expected["cluster"] = expected_cluster
+
+        # assert
+        pd.testing.assert_frame_equal(output, expected)
+
+        output = clustering.dbscan(self.trjdat, cluster_radius_km=40)
+
+        expected_cluster = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0]
+        expected = self.trjdat
+        expected["cluster"] = expected_cluster
+
+        # assert
+        pd.testing.assert_frame_equal(output, expected)

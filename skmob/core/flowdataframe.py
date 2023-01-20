@@ -20,7 +20,7 @@ class FlowSeries(pd.Series):
 
 class FlowDataFrame(pd.DataFrame):
     """
-    A FlowDataFrame object is a pandas.DataFrame that has three columns origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:
+    A FlowDataFrame object is a pandas.DataFrame that has three columns: origin, destination, and flow. FlowDataFrame accepts the following keyword arguments:
     
     Parameters
     ----------
@@ -332,13 +332,93 @@ class FlowDataFrame(pd.DataFrame):
                   tessellation=None, tile_id=constants.TILE_ID, usecols=None, header='infer', parameters=None,
                   remove_na=False):
 
+        """
+        Load a comma-separated values (CSV) into a FlowDataFrame. A FlowDataFrame can be loaded from a file in two ways:
+        
+        1. Passing the name of the origin column and destination column. 
+        This way all the origin and destination IDs in the flows file should be present in the tessellation object.
+
+        2. Passing the name of the origin latitude column, origin longitude column, destination latitude column and destination longitude column.
+        This way, the tessellation will be created automatically, by matching the origin and destination coordinates to the closest tile in the
+        tessellation.
+
+        
+        Parameters
+        ----------
+        filename : str
+            The file path.
+        
+        encoding : str, default None
+            The encoding of the file.
+
+        origin : str, default None
+            The name of the column containing the origin tile ID.
+
+        destination : str, default None
+            The name of the column containing the destination tile ID.
+
+        origin_lat : str, default None
+            The name of the column containing the origin latitude.
+
+        origin_lng : str, default None
+            The name of the column containing the origin longitude.
+        
+        destination_lat : str, default None
+            The name of the column containing the destination latitude.
+        
+        destination_lng : str, default None
+            The name of the column containing the destination longitude.
+
+        flow : str, default 'flow'
+            The name of the column containing the flow value.
+        
+        datetime : str, default 'datetime'
+            The name of the column containing the datetime.
+
+        timestamp : bool, default False
+            If True, the datetime column is interpreted as a timestamp.
+
+        sep : str, default ','
+            The separator of the file.
+
+        tessellation : GeoDataFrame, default None
+            The tessellation of the data.
+        
+        tile_id : str, default 'tile_id'
+            The name of the column containing the tile ID.
+
+        usecols : list, default None
+            The columns to load.
+
+        header : int or list of ints, default 'infer'  
+            Row number(s) to use as the column names, and the start of the data. Default behavior is as if set to 0 if no
+            ``names`` passed, otherwise ``None``. Explicitly pass ``header=0`` to be able to replace existing names. The
+            header can be a list of integers that specify row locations for a multi-index on the columns e.g. [0,1,3].
+            Intervening rows that are not specified will be skipped (e.g. 2 in this example are skipped). Note that this
+            parameter ignores commented lines and empty lines if ``skip_blank_lines=True``, so header=0 denotes the first
+            line of data rather than the first line of the file.
+
+        parameters : dict, default None
+            The parameters of the FlowDataFrame.
+
+        remove_na : bool, default False
+            If True, remove rows with NaN values.
+
+
+            
+        Returns
+        -------
+        FlowDataFrame
+            The loaded FlowDataFrame.
+        """
+
         # Case 1: origin, destination, flow, [datetime]
         if (origin is not None) and (destination is not None):
 
             if not isinstance(tessellation, gpd.GeoDataFrame):
                 raise AttributeError("tessellation must be a GeoDataFrame.")
 
-        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=None)
+        df = pd.read_csv(filename, sep=sep, header=header, usecols=usecols, encoding=encoding)
 
         # Case 2: origin_lat, origin_lng, destination_lat, destination_lng, flow, [datetime]
         if (origin_lat is not None) and (origin_lng is not None) and (destination_lat is not None) and \
