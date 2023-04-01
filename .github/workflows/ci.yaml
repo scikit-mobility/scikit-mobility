@@ -21,7 +21,7 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          python -m pip install --upgrade pre-commit poetry
+          python -m pip install --upgrade pre-commit
 
       - name: Lint
         run: pre-commit run --show-diff-on-failure --files  skmob/tessellation/*
@@ -30,10 +30,10 @@ jobs:
     # runs only when lint step succeeds
     needs: lint
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
-        python-version: ['3.8', '3.9']
+        python-version: ["3.8", "3.9"]
 
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
 
       - name: "Test and coverage"
         run: |
-          python3 -m poetry run tox 
+          python3 -m poetry run tox
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v2
@@ -75,29 +75,29 @@ jobs:
       - name: "Install dependencies"
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade poetry sphinx sphinx_rtd_theme sphinx-copybutton
-          poetry export --dev -f requirements.txt > requirements.txt
-          pip install -r requirements.txt
+          python -m pip install --upgrade poetry
+          poetry install
 
       - name: "Build documentation"
-        working-directory: docs
-        run: make html
+        run: poetry run sphinx-build docs static
 
       # we need nojekyll or github will ignore folders starting with "_"
       - name: "Copy static files"
         run: |
-          mv .nojekyll static/html
-          mv logo_skmob.png static/html
-          mkdir static/html/coverage
+
+          mv .nojekyll static
+          mv logo_skmob.png static
+          mkdir static/coverage
+
 
       - name: "Download Artifact"
         uses: actions/download-artifact@v2
         with:
           name: code-coverage
-          path: static/html/coverage
+          path: static/coverage
 
       - name: "Deploy Docs 🚀"
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: static/html # The folder the action should deploy.
+          folder: static # The folder the action should deploy.

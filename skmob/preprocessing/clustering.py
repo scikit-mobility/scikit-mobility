@@ -1,14 +1,21 @@
-from ..utils import utils, constants
 from ..core.trajectorydataframe import *
 from sklearn.cluster import DBSCAN
 import numpy as np
 import inspect
+from warnings import warn
 
 kms_per_radian = 6371.0088   # Caution: this is only true at the Equator!
                              # This may cause problems at high latitudes.
 
 
+def dbscan(tdf, cluster_radius_km=0.1, min_samples=1):
+    #TODO: when removing cluster, remove the depecraton test function too.
+    return cluster(tdf, cluster_radius_km=cluster_radius_km, min_samples=min_samples)
+
+
 def cluster(tdf, cluster_radius_km=0.1, min_samples=1):
+    warn('This method will be deprecated in version 2.0. Instead, use the dbscan() method.', DeprecationWarning,
+         stacklevel=2)
     """Clustering of locations.
     
     Cluster the stops of each individual in a TrajDataFrame. The stops correspond to visits to the same location at different times, based on spatial proximity [RT2004]_. The clustering algorithm used is DBSCAN (by sklearn [DBSCAN]_).
