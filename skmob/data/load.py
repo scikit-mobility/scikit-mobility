@@ -13,6 +13,7 @@ import skmob
 from skmob.core.flowdataframe import FlowDataFrame
 from skmob.core.trajectorydataframe import TrajDataFrame
 
+from requests.exceptions import SSLError
 
 class DatasetBuilder(ABC):
     def __init__(self):
@@ -24,6 +25,17 @@ class DatasetBuilder(ABC):
     def prepare(self, full_path_files):
         pass
 
+def _download_manager(url, known_hash, processor, auth, show_progress, verify_SSL = True):
+
+    download_auth = HTTPDownloader(auth=auth, progressbar=show_progress, verify = verify_SSL)
+
+    full_path_files = pooch.retrieve(
+                                     url=url, path=pooch.os_cache("skmob_data"), 
+                                     known_hash=known_hash, processor=processor, 
+                                     downloader=download_auth
+                                    )
+
+    return full_path_files
 
 def _skmob_downloader(url, known_hash, download_format=None, auth=(), show_progress=False):
 
@@ -33,12 +45,20 @@ def _skmob_downloader(url, known_hash, download_format=None, auth=(), show_progr
         processor = Untar()
     else:
         processor = None
+        
+    try:
+        full_path_files = _download_manager(url, known_hash, processor, auth, show_progress)
 
-    download_auth = HTTPDownloader(auth=auth, progressbar=show_progress)
+    except SSLError:
+        error_message = f'SSLError was raised, the file hash provided is "{known_hash}"'
+        
+        if known_hash is None:
+            error_message += '\nThere is no hash to check. Downloading may not be safe.'
+        
+        check_SSL = input(f'{error_message}\nDo you want to try to bypass the error (y/n)? ')
+        verify_SSL = False if check_SSL.lower() == 'y' else True
 
-    full_path_files = pooch.retrieve(
-        url=url, path=pooch.os_cache("skmob_data"), known_hash=known_hash, processor=processor, downloader=download_auth
-    )
+        full_path_files = _download_manager(url, known_hash, processor, auth, show_progress, verify_SSL)
 
     if type(full_path_files) != list:
         full_path_files = [full_path_files]
