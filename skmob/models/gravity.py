@@ -40,7 +40,8 @@ def powerlaw_deterrence_func(x, exponent):
     """
     Power law deterrence function
     """
-    return np.power(x, exponent)
+    with np.errstate(divide='ignore'):
+        return np.power(x, exponent)
 
 
 def compute_distance_matrix(spatial_tessellation, origins):
