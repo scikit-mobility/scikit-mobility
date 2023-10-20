@@ -19,7 +19,7 @@ def filter(tdf, max_speed_kmh=500., include_loops=False, speed_kmh=5., max_loop=
     include_loops: boolean, optional
         If `True`, trajectory points belonging to short and fast "loops" are removed. Specifically, points are removed if within the next `max_loop` points the individual has come back to a distance (`ratio_max` * the maximum distance reached), AND the average speed (in km/h) is higher than `speed`. The default is `False`.
     
-    speed : float, optional 
+    speed_kmh : float, optional 
         the default is 5km/h (walking speed).
 
     max_loop : int, optional
