@@ -6,7 +6,7 @@ import geopandas as gpd
 import h3.api.numpy_int as h3
 import numpy as np
 from shapely.geometry import MultiPolygon, Point, Polygon
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 
 from skmob.utils import constants, utils
 
@@ -125,7 +125,7 @@ class SquaredTessellationTiler(TessellationTiler):
                     # Merge all the polygons
                     polygons = base_shape.geometry.values
                     base_shape = gpd.GeoSeries(
-                        cascaded_union(polygons), crs=base_shape.crs
+                        unary_union(polygons), crs=base_shape.crs
                     )
 
             else:
@@ -272,7 +272,7 @@ class H3TessellationTiler(TessellationTiler):
 
     def _merge_all_polygons(self, base_shape):
         polygons = base_shape.geometry.values
-        base_shape = gpd.GeoSeries(cascaded_union(polygons), crs=base_shape.crs)
+        base_shape = gpd.GeoSeries(unary_union(polygons), crs=base_shape.crs)
         return base_shape
 
     def _build(self, base_shape, meters, crs=constants.DEFAULT_CRS):
