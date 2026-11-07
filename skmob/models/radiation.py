@@ -8,6 +8,17 @@ from ..core.flowdataframe import FlowDataFrame
 distfunc = gislib.getDistance
 
 
+def _survival_prob(s, m_i, lambd):
+    """
+    Cumulative probability of refusing all offers within s intervening opportunities
+    in the radiation model with selection [SMN2013]_.
+    """
+    a = s / m_i
+    if lambd <= 0.0:
+        return 1.0 / (a + 1.0)
+    return (1.0 - np.power(lambd, a + 1.0)) / ((a + 1.0) * (1.0 - lambd))
+
+
 class Radiation:
     """Radiation model.
     
@@ -94,10 +105,19 @@ class Radiation:
     .. [MSJB2013] Masucci, A. P., Serras, J., Johansson, A., & Batty, M. (2013). Gravity versus radiation models: On the importance of scale and heterogeneity in commuting flows. Physical Review E, 88(2), 022812.
     """
 
-    def __init__(self, name='Radiation model'):
+    def __init__(self, lambd=0.0, name="Radiation model"):
         self.name_ = name
         self._spatial_tessellation = None
         self._out_format = None
+        if not (0.0 <= lambd < 1.0):
+            raise ValueError(
+                f"Selection parameter lambd must be in [0, 1), got {lambd}."
+            )
+        self._lambd = float(lambd)
+
+    @property
+    def lambd(self):
+        return self._lambd
 
     def _get_flows(self, origin, total_relevance):
         """
@@ -144,13 +164,27 @@ class Radiation:
         if origin_outflow > 0.0:
 
             # compute the normalization factor
-            normalization_factor = 1.0 / (1.0 - origin_relevance / total_relevance)
+            if self._lambd <= 0.0:
+                normalization_factor = 1.0 / (1.0 - origin_relevance / total_relevance)
+            else:
+                normalization_factor = 1.0 / (
+                    1.0
+                    - _survival_prob(
+                        total_relevance - origin_relevance,
+                        origin_relevance,
+                        self._lambd,
+                    )
+                )
 
             destinations_and_distances = []
             for destination, (dest_lat, dest_lng) in enumerate(self.lats_lngs):
                 if destination != origin:
-                    destinations_and_distances += \
-                        [(destination, distfunc((origin_lat, origin_lng), (dest_lat, dest_lng)))]
+                    destinations_and_distances += [
+                        (
+                            destination,
+                            distfunc((origin_lat, origin_lng), (dest_lat, dest_lng)),
+                        )
+                    ]
 
             # sort the destinations by distance (from the closest to the farthest)
             destinations_and_distances.sort(key=operator.itemgetter(1))
@@ -158,10 +192,24 @@ class Radiation:
             sum_inside = 0.0
             for destination, _ in destinations_and_distances:
                 destination_relevance = self.relevances[destination]
-                prob_origin_destination = normalization_factor * \
-                                          (origin_relevance * destination_relevance) / \
-                                          ((origin_relevance + sum_inside) * (
-                                                      origin_relevance + sum_inside + destination_relevance))
+                if self._lambd <= 0.0:
+                    prob_origin_destination = (
+                        normalization_factor
+                        * (origin_relevance * destination_relevance)
+                        / (
+                            (origin_relevance + sum_inside)
+                            * (origin_relevance + sum_inside + destination_relevance)
+                        )
+                    )
+                else:
+                    prob_origin_destination = normalization_factor * (
+                        _survival_prob(sum_inside, origin_relevance, self._lambd)
+                        - _survival_prob(
+                            sum_inside + destination_relevance,
+                            origin_relevance,
+                            self._lambd,
+                        )
+                    )
 
                 sum_inside += destination_relevance
                 edges += [[origin, destination]]
@@ -169,9 +217,9 @@ class Radiation:
 
             probs = np.array(probs)
 
-            if self._out_format == 'flows':
+            if self._out_format == "flows":
                 quantities = np.rint(origin_outflow * probs)
-            elif self._out_format == 'flows_sample':
+            elif self._out_format == "flows_sample":
                 quantities = np.random.multinomial(origin_outflow, probs)
             else:
                 quantities = probs
@@ -180,29 +228,34 @@ class Radiation:
 
         return edges
 
-    def generate(self, spatial_tessellation, tile_id_column=constants.TILE_ID,
-                 tot_outflows_column=constants.TOT_OUTFLOW,
-                 relevance_column=constants.RELEVANCE, out_format='flows'):
+    def generate(
+        self,
+        spatial_tessellation,
+        tile_id_column=constants.TILE_ID,
+        tot_outflows_column=constants.TOT_OUTFLOW,
+        relevance_column=constants.RELEVANCE,
+        out_format="flows",
+    ):
         """
         Start the simulation of the Radiation model.
-        
+
         Parameters
         ----------
         spatial_tessellation : GeoDataFrame
-            the spatial tessellation on which to perform the simulation. 
-        
+            the spatial tessellation on which to perform the simulation.
+
         tile_id_column : str, optional
             the column in `spatial_tessellation` of the location identifier. The default is `constants.TILE_ID`.
-            
+
         tot_outflows_column : str, optional
             the column in `spatial_tessellation` with the outflow of the location. The default is `constants.TOT_OUTFLOW`.
-            
+
         relevance_column : str, optional
             the column in `spatial_tessellation` with the relevance of the location. The default is `constants.RELEVANCE`.
-            
+
         out_format : str, optional
             the format of the generated flows. Possible values are: "flows" (average flow between two locations), "flows_sample" (random sample of flows), and "probabilities" (probability of a unit flow between two locations). The default is "flows".
-            
+
         Returns
         -------
         FlowDataFrame
@@ -210,24 +263,34 @@ class Radiation:
         """
         self._out_format = out_format
         self._tile_id_column = tile_id_column
-        self.lats_lngs = spatial_tessellation.geometry.apply(utils.get_geom_centroid, args=[True]).values
+        self.lats_lngs = spatial_tessellation.geometry.apply(
+            utils.get_geom_centroid, args=[True]
+        ).values
         self.relevances = spatial_tessellation[relevance_column].fillna(0).values
-        if 'flows' in out_format:
+        if "flows" in out_format:
             if tot_outflows_column not in spatial_tessellation.columns:
                 raise KeyError(
-                    "The column %s for the 'tot_outflows' must be present in the tessellation." % tot_outflows_column)
-            self.tot_outflows = spatial_tessellation[tot_outflows_column].fillna(0).values
+                    "The column %s for the 'tot_outflows' must be present in the tessellation."
+                    % tot_outflows_column
+                )
+            self.tot_outflows = (
+                spatial_tessellation[tot_outflows_column].fillna(0).values
+            )
 
         # check if arguments are valid
-        if out_format not in ['flows', 'flows_sample', 'probabilities']:
+        if out_format not in ["flows", "flows_sample", "probabilities"]:
             raise ValueError(
-                'Value of out_format "%s" is not valid. \nValid values: flows, flows_sample, probabilities.' % out_format)
+                'Value of out_format "%s" is not valid. \nValid values: flows, flows_sample, probabilities.'
+                % out_format
+            )
 
         # compute the total relevance, i.e., the sum of relevances of all the locations
         total_relevance = np.sum(self.relevances)
 
         all_flows = []
-        for origin in tqdm(range(len(spatial_tessellation))):  # tqdm print a progress bar
+        for origin in tqdm(
+            range(len(spatial_tessellation))
+        ):  # tqdm print a progress bar
 
             # get the edges for the current origin location
             flows_from_origin = self._get_flows(origin, total_relevance)
@@ -242,7 +305,59 @@ class Radiation:
             return all_flows
 
     def _from_matrix_to_flowdf(self, all_flows, spatial_tessellation):
-        index2tileid = dict([(i, tileid) for i, tileid in enumerate(spatial_tessellation[self._tile_id_column].values)])
-        output_list = [[index2tileid[i], index2tileid[j], flow] for i, j, flow in all_flows if flow > 0.]
-        return FlowDataFrame(output_list, origin=0, destination=1, flow=2,
-                             tile_id=self._tile_id_column, tessellation=spatial_tessellation)
+        index2tileid = dict(
+            [
+                (i, tileid)
+                for i, tileid in enumerate(
+                    spatial_tessellation[self._tile_id_column].values
+                )
+            ]
+        )
+        output_list = [
+            [index2tileid[i], index2tileid[j], flow]
+            for i, j, flow in all_flows
+            if flow > 0.0
+        ]
+        return FlowDataFrame(
+            output_list,
+            origin=0,
+            destination=1,
+            flow=2,
+            tile_id=self._tile_id_column,
+            tessellation=spatial_tessellation,
+        )
+
+
+class RadiationWithSelection(Radiation):
+    """Radiation model with selection.
+
+    The radiation model with selection for human mobility and migration [SMN2013]_.
+    In contrast to the parameter-free radiation model, the model with selection incorporates a parameter
+    :math:`\\lambda \\in [0, 1)` representing the probability of evaluating or rejecting offers based on a
+    selection mechanism, enabling better calibration to empirical commuting and long-range mobility patterns.
+
+    The probability that an individual looks through at least :math:`a = s / m_i` intervening opportunities
+    without accepting any is given by [SMN2013]_:
+
+    .. math::
+        P_{>}(a) = \\frac{1 - \\lambda^{a + 1}}{(a + 1)(1 - \\lambda)}
+
+    where :math:`s` is the number of intervening opportunities between origin and destination, and
+    :math:`m_i` is the population (or opportunities) of the origin location. In the limit :math:`\\lambda \\to 0`,
+    this smoothly reduces to the classic parameter-free radiation model :math:`P_{>}(a) = \\frac{1}{a + 1}`.
+
+    Parameters
+    ----------
+    lambd : float, optional
+        the selection parameter :math:`\\lambda \\in [0, 1)`. The default is 0.1.
+
+    name : str, optional
+        the name of the instantiation of the radiation model with selection. The default is 'Radiation model with selection'.
+
+    References
+    ----------
+    .. [SMN2013] Simini, F., Maritan, A., & Néda, Z. (2013). Human mobility in a continuum approach. PLoS ONE 8(3), e60069, https://doi.org/10.1371/journal.pone.0060069
+    """
+
+    def __init__(self, lambd=0.1, name="Radiation model with selection"):
+        super().__init__(lambd=lambd, name=name)
